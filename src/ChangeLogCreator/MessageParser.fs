@@ -110,50 +110,57 @@ module MessageParser =
         | Parsed of ConventionalCommit
         | Failed of ParseError
 
+
+    type private ParserState = {
+        CurrentResult : ParseResult
+        UnparsedTokens : Token list
+    }
+
     let parse (input: string) : ParseResult =                 
 
         //
         // parsing helper functions
         //
-        let checkForError parseLogic (state:ParseResult) (tokens: Token list) : ParseResult * (Token list)  = 
-            match state with 
-                | Failed parseError -> Failed parseError,tokens
-                | _ -> parseLogic state tokens
+        let checkForError parseLogic (state:ParserState) : ParserState  = 
+            match state.CurrentResult with 
+                | Failed parseError -> state
+                | _ -> parseLogic state
            
         // matching a single token
-        let matchToken expectedToken state tokens : ParseResult * (Token list) =
-            match tokens with
+        let matchToken expectedToken (state:ParserState) : ParserState =
+            match state.UnparsedTokens with
                 | head::tail ->
                     if head = expectedToken then
-                        state,tail
+                        { state with UnparsedTokens = tail }
                     else
-                        Failed (UnexpectedToken (head,expectedToken)),tokens
-                | [] -> Failed EmptyInput,tokens
+                        { state with CurrentResult = Failed (UnexpectedToken (head,expectedToken)) }
+                | [] -> state
         
-        let updateParsed dataUpdater state value =
+        let updateParsed dataUpdater (result:ParseResult) value : ParseResult =
             let currentData = 
-                match state with 
+                match result with 
                     | Parsed d -> d
                     | _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'matchString' should not be called without error checking")
-            dataUpdater currentData value
+            Parsed (dataUpdater currentData value)
 
         // matches a string token and updates the parsed data using the specified function
-        let matchString dataUpdater state tokens = 
-            match tokens with
+        let matchString dataUpdater (state:ParserState) = 
+            match state.UnparsedTokens with
                 | head::tail -> 
                     match head with 
-                        | StringToken strValue -> Parsed (updateParsed dataUpdater state strValue),tail
-                        | t -> Failed (UnexpectedToken (t, StringToken "")),tokens
-                | [] -> Failed EmptyInput,tokens
+                        | StringToken strValue -> { CurrentResult = (updateParsed dataUpdater state.CurrentResult strValue); 
+                                                    UnparsedTokens = tail}
+                        | t -> { state with CurrentResult = Failed (UnexpectedToken (t, StringToken "")) }
+                | [] -> { state with CurrentResult = Failed EmptyInput }
 
         let testToken (tokens: Token list) (expectedToken:Token) =
             match tokens with
                 | head::_ -> head = expectedToken                    
                 | [] -> false
 
-        let matchTextLine dataUpdater state tokens =
+        let matchTextLine dataUpdater (state:ParserState) =
             let processableTokens = 
-                tokens 
+                state.UnparsedTokens
                     |> List.takeWhile (fun token ->
                         match token with
                             | StringToken _  -> true
@@ -166,24 +173,25 @@ module MessageParser =
                             | LineBreakToken _ -> false)
 
             if (List.isEmpty processableTokens) then
-                Failed EmptyText, tokens
+                { state with CurrentResult = Failed EmptyText }
             else
                 let strValue = 
                     processableTokens  
                     |> Seq.map tokenToString
                     |> Seq.reduce( fun a b -> a + b)                        
-                Parsed (updateParsed dataUpdater state strValue), tokens |> List.skip(Seq.length processableTokens)                        
+                { CurrentResult = (updateParsed dataUpdater state.CurrentResult strValue); 
+                  UnparsedTokens = state.UnparsedTokens |> List.skip(Seq.length processableTokens) }
         
         //
         // high-level parsing functions
         //
-        let ensureNotEmpty state tokens =
-                match tokens with
+        let ensureNotEmpty (state:ParserState) =
+                match state.UnparsedTokens with
                     | head::_ ->
                         match head with
-                            | EofToken -> Failed EmptyInput,tokens
-                            | _ -> state,tokens
-                    | [] -> Failed EmptyInput,tokens
+                            | EofToken -> { state with CurrentResult = Failed EmptyInput }
+                            | _ -> state
+                    | [] -> { state with CurrentResult = Failed EmptyInput }
 
         let parseType  = checkForError (matchString (fun data value -> { data with Type = value }))
 
@@ -191,46 +199,45 @@ module MessageParser =
 
         let parseToken token = checkForError (matchToken token)
 
-        let parseScope state tokens : ParseResult * (Token list) =
-            let doParseScope (state:ParseResult) (tokens: Token list) : ParseResult * (Token list) = 
-                if (testToken tokens OpenParenthesisToken) then                                    
-                        (state,tokens)
-                            ||> matchToken OpenParenthesisToken
-                            ||> matchString (fun data value -> { data with Scope = Some value })
-                            ||> matchToken CloseParenthesisToken                
-                else                
-                    state,tokens
-            checkForError doParseScope state tokens
+        let parseScope (state:ParserState) : ParserState =
+            let doParseScope (state:ParserState) : ParserState =
+                if (testToken state.UnparsedTokens OpenParenthesisToken) then                                    
+                    state
+                        |> matchToken OpenParenthesisToken
+                        |> matchString (fun data value -> { data with Scope = Some value })
+                        |> matchToken CloseParenthesisToken                
+                else
+                    state
+            checkForError doParseScope state
            
-        let ignoreTrailingLineBreaks state tokens =
-            let rec doIgnoreTrailingLineBreaks state tokens =
-                match tokens with
+        let ignoreTrailingLineBreaks (state:ParserState) =
+            let rec doIgnoreTrailingLineBreaks (state:ParserState) =
+                match state.UnparsedTokens with
                     | head::tail ->
                         match head with 
-                            | LineBreakToken _ -> doIgnoreTrailingLineBreaks state tail
-                            | _ -> state,tokens
-                    | [] -> state, tokens
-            checkForError doIgnoreTrailingLineBreaks state tokens
+                            | LineBreakToken _ -> doIgnoreTrailingLineBreaks { state with UnparsedTokens = tail }
+                            | _ -> state
+                    | [] -> state
+            checkForError doIgnoreTrailingLineBreaks state
 
-        let parseBreakingChange state tokens =
-            if testToken tokens ExclamationMarkToken then              
-              let newState,remainingTokens = matchToken ExclamationMarkToken state tokens
-              Parsed (updateParsed (fun d value -> { d with IsBreakingChange = value }) newState true),remainingTokens
+        let parseBreakingChange (state:ParserState) =
+            if testToken state.UnparsedTokens ExclamationMarkToken then              
+              let newState = matchToken ExclamationMarkToken state
+              { newState with CurrentResult =  (updateParsed (fun d value -> { d with IsBreakingChange = value }) newState.CurrentResult true) }
             else
-                state,tokens
+                state
 
-        let tokens = tokenize input |> List.ofSeq
-
-        let result,_ = 
-            (Parsed { Type = ""; Scope = None; Description = ""; IsBreakingChange = false }, tokens)
-                ||> ensureNotEmpty
-                ||> parseType
-                ||> parseScope
-                ||> parseBreakingChange
-                ||> parseToken ColonAndSpaceToken
-                ||> parseDescription
-                ||> ignoreTrailingLineBreaks
-                ||> parseToken EofToken                           
-        result
+        let state  = 
+             { CurrentResult = Parsed { Type = ""; Scope = None; Description = ""; IsBreakingChange = false };
+               UnparsedTokens = tokenize input |> List.ofSeq } 
+                |> ensureNotEmpty
+                |> parseType
+                |> parseScope
+                |> parseBreakingChange
+                |> parseToken ColonAndSpaceToken
+                |> parseDescription
+                |> ignoreTrailingLineBreaks
+                |> parseToken EofToken
+        state.CurrentResult
 
         
