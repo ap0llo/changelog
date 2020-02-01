@@ -103,6 +103,7 @@ module MessageParser =
         Type : string
         Scope : string option
         Description : string
+        IsBreakingChange : bool
     }
     
     type ParseResult =
@@ -129,12 +130,12 @@ module MessageParser =
                         Failed (UnexpectedToken (head,expectedToken)),tokens
                 | [] -> Failed EmptyInput,tokens
         
-        let updateParsed dataUpdater state value =
+        let updateParsed dataUpdater state =
             let currentData = 
                 match state with 
                     | Parsed d -> d
                     | _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'matchString' should not be called without error checking")
-            dataUpdater currentData value
+            dataUpdater currentData
 
         // matches a string token and updates the parsed data using the specified function
         let matchString dataUpdater state tokens = 
@@ -211,13 +212,21 @@ module MessageParser =
                     | [] -> state, tokens
             checkForError doIgnoreTrailingLineBreaks state tokens
 
+        let parseBreakingChange state tokens =
+            if testToken tokens ExclamationMarkToken then              
+              let newState,remainingTokens = matchToken ExclamationMarkToken state tokens
+              Parsed (updateParsed (fun d -> { d with IsBreakingChange = true }) newState),remainingTokens
+            else
+                state,tokens
+
         let tokens = tokenize input |> List.ofSeq
 
         let result,_ = 
-            (Parsed { Type = ""; Scope = None; Description = "" }, tokens)
+            (Parsed { Type = ""; Scope = None; Description = ""; IsBreakingChange = false }, tokens)
                 ||> ensureNotEmpty
                 ||> parseType
                 ||> parseScope
+                ||> parseBreakingChange
                 ||> parseToken ColonAndSpaceToken
                 ||> parseDescription
                 ||> ignoreTrailingLineBreaks

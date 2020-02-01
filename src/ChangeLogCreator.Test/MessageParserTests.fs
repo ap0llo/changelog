@@ -132,8 +132,9 @@ let parserTestCases =
             "Some description\n"  // trailing line breaks are valid but ignored by the parser
         ]
         for descr in descriptions do            
-            yield testCase ("feat: " + descr) (Parsed { Type = "feat"; Scope = None; Description = descr.TrimEnd('\r', '\n')})
-            yield testCase ("feat(scope): " + descr) (Parsed { Type = "feat"; Scope = Some "scope"; Description = descr.TrimEnd('\r', '\n') })
+            yield testCase ("feat: " + descr) (Parsed { Type = "feat"; Scope = None; Description = descr.TrimEnd('\r', '\n'); IsBreakingChange = false})
+            yield testCase ("feat(scope): " + descr) (Parsed { Type = "feat"; Scope = Some "scope"; Description = descr.TrimEnd('\r', '\n') ; IsBreakingChange = false})
+            yield testCase ("feat(scope)!: " + descr) (Parsed { Type = "feat"; Scope = Some "scope"; Description = descr.TrimEnd('\r', '\n'); IsBreakingChange = true })
     }
 
 [<Theory>]
