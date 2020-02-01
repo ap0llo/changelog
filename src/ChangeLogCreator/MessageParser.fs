@@ -130,12 +130,12 @@ module MessageParser =
                         Failed (UnexpectedToken (head,expectedToken)),tokens
                 | [] -> Failed EmptyInput,tokens
         
-        let updateParsed dataUpdater state =
+        let updateParsed dataUpdater state value =
             let currentData = 
                 match state with 
                     | Parsed d -> d
                     | _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'matchString' should not be called without error checking")
-            dataUpdater currentData
+            dataUpdater currentData value
 
         // matches a string token and updates the parsed data using the specified function
         let matchString dataUpdater state tokens = 
@@ -215,7 +215,7 @@ module MessageParser =
         let parseBreakingChange state tokens =
             if testToken tokens ExclamationMarkToken then              
               let newState,remainingTokens = matchToken ExclamationMarkToken state tokens
-              Parsed (updateParsed (fun d -> { d with IsBreakingChange = true }) newState),remainingTokens
+              Parsed (updateParsed (fun d value -> { d with IsBreakingChange = value }) newState true),remainingTokens
             else
                 state,tokens
 
