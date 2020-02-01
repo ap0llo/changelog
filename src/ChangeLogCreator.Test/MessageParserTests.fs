@@ -16,8 +16,8 @@ let tokenizeTestCases =
         yield testCase "(" [ OpenParenthesisToken ; EofToken]
         yield testCase ")" [ CloseParenthesisToken; EofToken ]
         yield testCase ": " [ ColonAndSpaceToken; EofToken ]
-        yield testCase "\n" [ LineBreakToken; EofToken ]
-        yield testCase "\r\n" [ LineBreakToken; EofToken ]
+        yield testCase "\n" [ LineBreakToken "\n"; EofToken ]
+        yield testCase "\r\n" [ LineBreakToken "\r\n"; EofToken ]
         yield testCase "!" [ ExclamationMarkToken; EofToken ]
         yield testCase " #" [ SpaceAndHashToken; EofToken ]
 
@@ -27,10 +27,10 @@ let tokenizeTestCases =
         yield testCase "chore: " [ StringToken "chore"; ColonAndSpaceToken ; EofToken ] 
         yield testCase "someOtherType: " [ StringToken "someOtherType"; ColonAndSpaceToken; EofToken ] 
         yield testCase "feat(scope): " [ StringToken "feat"; OpenParenthesisToken; StringToken "scope"; CloseParenthesisToken; ColonAndSpaceToken ; EofToken ] 
-        yield testCase "feat(scope): \r\n" [ StringToken "feat"; OpenParenthesisToken; StringToken "scope"; CloseParenthesisToken; ColonAndSpaceToken; LineBreakToken ; EofToken ] 
-        yield testCase "feat(scope): \n" [ StringToken "feat"; OpenParenthesisToken; StringToken "scope"; CloseParenthesisToken; ColonAndSpaceToken; LineBreakToken ; EofToken ] 
-        yield testCase "feat: \r\n" [ StringToken "feat"; ColonAndSpaceToken; LineBreakToken ; EofToken ] 
-        yield testCase "feat: \n" [ StringToken "feat"; ColonAndSpaceToken; LineBreakToken ; EofToken ]         
+        yield testCase "feat(scope): \r\n" [ StringToken "feat"; OpenParenthesisToken; StringToken "scope"; CloseParenthesisToken; ColonAndSpaceToken; LineBreakToken "\r\n"; EofToken ] 
+        yield testCase "feat(scope): \n" [ StringToken "feat"; OpenParenthesisToken; StringToken "scope"; CloseParenthesisToken; ColonAndSpaceToken; LineBreakToken "\n"; EofToken ] 
+        yield testCase "feat: \r\n" [ StringToken "feat"; ColonAndSpaceToken; LineBreakToken "\r\n" ; EofToken ] 
+        yield testCase "feat: \n" [ StringToken "feat"; ColonAndSpaceToken; LineBreakToken "\n" ; EofToken ]         
         yield testCase "feat!: " [ StringToken "feat"; ExclamationMarkToken; ColonAndSpaceToken ; EofToken ] 
         yield testCase "feat(scope)!: " [ 
             StringToken "feat"; 
@@ -44,25 +44,25 @@ let tokenizeTestCases =
         // Full, valid commit messages
         //// Single line messages without body or footer
         yield testCase "type: New feature added" [ 
-            StringToken "type"; 
-            ColonAndSpaceToken; 
+            StringToken "type"
+            ColonAndSpaceToken
             StringToken "New feature added"
             EofToken ]
         yield testCase "type(scope): New feature added" [ 
-            StringToken "type"; 
-            OpenParenthesisToken;
+            StringToken "type"
+            OpenParenthesisToken
             StringToken "scope"
-            CloseParenthesisToken;
-            ColonAndSpaceToken; 
+            CloseParenthesisToken
+            ColonAndSpaceToken
             StringToken "New feature added"
             EofToken ]
         yield testCase "type(scope)!: New feature added" [ 
-            StringToken "type"; 
-            OpenParenthesisToken;
+            StringToken "type"
+            OpenParenthesisToken
             StringToken "scope"
-            CloseParenthesisToken;
+            CloseParenthesisToken
             ExclamationMarkToken
-            ColonAndSpaceToken; 
+            ColonAndSpaceToken
             StringToken "New feature added"
             EofToken ]
         //// Messages with commit body
@@ -70,15 +70,15 @@ let tokenizeTestCases =
             ("type(scope)!: New feature added\r\n" + 
              "\r\n" +
              "Message body")
-            [  StringToken "type"; 
-               OpenParenthesisToken;
+            [  StringToken "type"
+               OpenParenthesisToken
                StringToken "scope"
-               CloseParenthesisToken;
+               CloseParenthesisToken
                ExclamationMarkToken
-               ColonAndSpaceToken; 
+               ColonAndSpaceToken 
                StringToken "New feature added"
-               LineBreakToken
-               LineBreakToken
+               LineBreakToken "\r\n"
+               LineBreakToken "\r\n"
                StringToken "Message body"
                EofToken ]
         yield testCase 
@@ -87,21 +87,20 @@ let tokenizeTestCases =
              "Message body\r\n" +
              "\r\n" +
              "Second paragraph")
-            [  StringToken "type"; 
-               OpenParenthesisToken;
+            [  StringToken "type"
+               OpenParenthesisToken
                StringToken "scope"
-               CloseParenthesisToken;
+               CloseParenthesisToken
                ExclamationMarkToken
-               ColonAndSpaceToken; 
-               StringToken "New feature added"
-               LineBreakToken
-               LineBreakToken
+               ColonAndSpaceToken
+               StringToken "New feature added" 
+               LineBreakToken "\r\n" 
+               LineBreakToken "\r\n" 
                StringToken "Message body"
-               LineBreakToken
-               LineBreakToken
+               LineBreakToken "\r\n" 
+               LineBreakToken "\r\n"
                StringToken "Second paragraph"
                EofToken ]
-
     }
 
 [<Theory>]

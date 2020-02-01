@@ -14,7 +14,7 @@ module MessageParser =
         | OpenParenthesisToken      // '('
         | CloseParenthesisToken     // ')'
         | ColonAndSpaceToken        // ': '
-        | LineBreakToken            // '\r\n' or '\n'
+        | LineBreakToken of string  // '\r\n' or '\n'
         | ExclamationMarkToken      // '!'
         | SpaceAndHashToken         // ' #'
         | EofToken                  // end of input / last token
@@ -49,13 +49,13 @@ module MessageParser =
                     | '\r', Some '\n', _ ->
                         if currentValueBuilder.Length > 0 then
                             yield getStringTokenAndReset currentValueBuilder
-                        yield LineBreakToken
+                        yield LineBreakToken "\r\n"
                         // next already matched => skip next iteration
                         i <- i + 1
                     | '\n', _, _ -> 
                         if currentValueBuilder.Length > 0 then
                             yield getStringTokenAndReset currentValueBuilder
-                        yield LineBreakToken
+                        yield LineBreakToken "\n"
                     | ':', (Some ' '), _ ->
                         if currentValueBuilder.Length > 0 then
                             yield getStringTokenAndReset currentValueBuilder
@@ -79,6 +79,16 @@ module MessageParser =
             yield EofToken
         }
 
+    let tokenToString (token : Token) : string =
+        match token with 
+            | StringToken str -> str
+            | OpenParenthesisToken -> "("
+            | CloseParenthesisToken -> ")"
+            | ColonAndSpaceToken -> ": "
+            | LineBreakToken lb -> lb
+            | ExclamationMarkToken -> "!"
+            | SpaceAndHashToken -> " #"
+            | EofToken -> ""
 
     // 
     // Parser
@@ -119,18 +129,19 @@ module MessageParser =
                         Failed (UnexpectedToken (head,expectedToken)),tokens
                 | [] -> Failed EmptyInput,tokens
         
+        let updateParsed dataUpdater state value =
+            let currentData = 
+                match state with 
+                    | Parsed d -> d
+                    | _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'matchString' should not be called without error checking")
+            dataUpdater currentData value
+
         // matches a string token and updates the parsed data using the specified function
         let matchString dataUpdater state tokens = 
             match tokens with
                 | head::tail -> 
                     match head with 
-                        | StringToken strValue -> 
-                            let currentData = 
-                                match state with 
-                                    | Parsed d -> d
-                                    | _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'matchString' should not be called without error checking")
-                            let newData = dataUpdater currentData strValue
-                            Parsed newData,tail
+                        | StringToken strValue -> Parsed (updateParsed dataUpdater state strValue),tail
                         | t -> Failed (UnexpectedToken (t, StringToken "")),tokens
                 | [] -> Failed EmptyInput,tokens
 
@@ -151,40 +162,27 @@ module MessageParser =
                             | ExclamationMarkToken -> true
                             | SpaceAndHashToken -> true
                             | EofToken -> false
-                            | LineBreakToken -> false)
+                            | LineBreakToken _ -> false)
 
             if (List.isEmpty processableTokens) then
                 Failed EmptyText, tokens
             else
                 let strValue = 
                     processableTokens  
-                    |> Seq.map (fun token -> 
-                            match token with
-                                | StringToken str  -> str
-                                | OpenParenthesisToken -> "("
-                                | CloseParenthesisToken -> ")"
-                                | ColonAndSpaceToken -> ": "
-                                | ExclamationMarkToken -> "!"
-                                | SpaceAndHashToken -> " #"
-                                | EofToken | LineBreakToken -> raise (InvalidOperationException (sprintf "Unexpected token %A" token)) )                        
-                    |> Seq.reduce( fun a b -> a + b)                
-                let currentData = 
-                        match state with 
-                            | Parsed d -> d
-                            | _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'matchString' should not be called without error checking")
-                let newData = dataUpdater currentData strValue
-                Parsed newData, tokens |> List.skip(Seq.length processableTokens)                        
+                    |> Seq.map tokenToString
+                    |> Seq.reduce( fun a b -> a + b)                        
+                Parsed (updateParsed dataUpdater state strValue), tokens |> List.skip(Seq.length processableTokens)                        
         
         //
         // high-level parsing functions
         //
         let ensureNotEmpty state tokens =
                 match tokens with
-                    | head::tail ->
+                    | head::_ ->
                         match head with
                             | EofToken -> Failed EmptyInput,tokens
                             | _ -> state,tokens
-                    | _ -> state, tokens
+                    | [] -> Failed EmptyInput,tokens
 
         let parseType  = checkForError (matchString (fun data value -> { data with Type = value }))
 
@@ -205,10 +203,9 @@ module MessageParser =
            
 
         let tokens = tokenize input |> List.ofSeq
-        let emptyData = Parsed { Type = ""; Scope = None; Description = "" }
 
         let result,_ = 
-            (emptyData,tokens)
+            (Parsed { Type = ""; Scope = None; Description = "" },tokens)
                 ||> ensureNotEmpty
                 ||> parseType
                 ||> parseScope
