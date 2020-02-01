@@ -6,14 +6,14 @@ module MessageParser =
                
     // Tokenizer types
     type Token =
-        | StringToken of string
-        | OpenParenthesisToken
-        | CloseParenthesisToken
-        | ColonToken
-        | LineBreakToken
-        | SpaceToken
-        | ExclamationMarkToken
-        | EofToken
+        | StringToken of string     // any string value
+        | OpenParenthesisToken      // '('
+        | CloseParenthesisToken     // ')'
+        | ColonAndSpaceToken        // ': '
+        | LineBreakToken            // '\r\n' or '\n'
+        | ExclamationMarkToken      // '!'
+        | SpaceAndHashToken         // ' #'
+        | EofToken                  // end of input / last token
     
     let tokenize (input: string) =
         seq {
@@ -27,10 +27,8 @@ module MessageParser =
 
             let getSingleCharToken char =
                 match char with 
-                    | ':' -> Some ColonToken
                     | '(' -> Some OpenParenthesisToken
                     | ')' -> Some CloseParenthesisToken
-                    | ' ' -> Some SpaceToken
                     | '!' -> Some ExclamationMarkToken
                     | _ -> None
            
@@ -54,9 +52,25 @@ module MessageParser =
                         if currentValueBuilder.Length > 0 then
                             yield getStringTokenAndReset currentValueBuilder
                         yield LineBreakToken
+                    | ':', (Some ' '), _ ->
+                        if currentValueBuilder.Length > 0 then
+                            yield getStringTokenAndReset currentValueBuilder
+                        yield ColonAndSpaceToken   
+                        // next already matched => skip next iteration
+                        i <- i + 1
+                    | ' ', (Some '#'), _ ->
+                        if currentValueBuilder.Length > 0 then
+                            yield getStringTokenAndReset currentValueBuilder
+                        yield SpaceAndHashToken   
+                        // next already matched => skip next iteration
+                        i <- i + 1
                     | _ ->  currentValueBuilder.Append(input.[i]) |> ignore
 
                 i <- i + 1
+
+            // if any input is left in currentValueBuilder, return it as StringToken
+            if currentValueBuilder.Length > 0 then
+                yield getStringTokenAndReset currentValueBuilder
 
             yield EofToken
         }
