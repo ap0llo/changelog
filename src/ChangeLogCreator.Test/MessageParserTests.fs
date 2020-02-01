@@ -123,15 +123,17 @@ let parserTestCases =
 
         // Valid inputs
         let descriptions = [
-            "Some description";
-            "Description: ";
-            "Description ()";
-            "Description!";
+            "Some description"
+            "Description: "
+            "Description ()"
+            "Description!"
             "Description #" 
+            "Some description\r\n"  // trailing line breaks are valid but ignored by the parser
+            "Some description\n"  // trailing line breaks are valid but ignored by the parser
         ]
         for descr in descriptions do            
-            yield testCase ("feat: " + descr) (Parsed { Type = "feat"; Scope = None; Description = descr})
-            yield testCase ("feat(scope): " + descr) (Parsed { Type = "feat"; Scope = Some "scope"; Description = descr})
+            yield testCase ("feat: " + descr) (Parsed { Type = "feat"; Scope = None; Description = descr.TrimEnd('\r', '\n')})
+            yield testCase ("feat(scope): " + descr) (Parsed { Type = "feat"; Scope = Some "scope"; Description = descr.TrimEnd('\r', '\n') })
     }
 
 [<Theory>]

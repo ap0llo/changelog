@@ -147,8 +147,8 @@ module MessageParser =
 
         let testToken (tokens: Token list) (expectedToken:Token) =
             match tokens with
-                | head::tails -> head = expectedToken                    
-                | _ -> false
+                | head::_ -> head = expectedToken                    
+                | [] -> false
 
         let matchTextLine dataUpdater state tokens =
             let processableTokens = 
@@ -201,16 +201,26 @@ module MessageParser =
                     state,tokens
             checkForError doParseScope state tokens
            
+        let ignoreTrailingLineBreaks state tokens =
+            let rec doIgnoreTrailingLineBreaks state tokens =
+                match tokens with
+                    | head::tail ->
+                        match head with 
+                            | LineBreakToken _ -> doIgnoreTrailingLineBreaks state tail
+                            | _ -> state,tokens
+                    | [] -> state, tokens
+            checkForError doIgnoreTrailingLineBreaks state tokens
 
         let tokens = tokenize input |> List.ofSeq
 
         let result,_ = 
-            (Parsed { Type = ""; Scope = None; Description = "" },tokens)
+            (Parsed { Type = ""; Scope = None; Description = "" }, tokens)
                 ||> ensureNotEmpty
                 ||> parseType
                 ||> parseScope
                 ||> parseToken ColonAndSpaceToken
                 ||> parseDescription
+                ||> ignoreTrailingLineBreaks
                 ||> parseToken EofToken                           
         result
 
