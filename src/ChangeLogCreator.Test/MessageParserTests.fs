@@ -119,12 +119,20 @@ let parserTestCases =
         yield testCase "" (Failed EmptyInput)
         //// Missing ': '
         yield testCase "feat" (Failed (UnexpectedToken (EofToken,ColonAndSpaceToken)))   
-        //// Duplicate ': '
-        yield testCase "feat: : Description" (Failed (UnexpectedToken (ColonAndSpaceToken, StringToken "")))  
+        //// Incomplete scope / missing ')'
+        yield testCase "feat(scope: Description" (Failed (UnexpectedToken (ColonAndSpaceToken,CloseParenthesisToken)))   
 
         // Valid inputs
-        yield testCase "feat: New feature added" (Parsed { Type = "feat"; Scope = None; Description = "New feature added"})
-        yield testCase "feat(scope): New feature added" (Parsed { Type = "feat"; Scope = Some "scope"; Description = "New feature added"})
+        let descriptions = [
+            "Some description";
+            "Description: ";
+            "Description ()";
+            "Description!";
+            "Description #" 
+        ]
+        for descr in descriptions do            
+            yield testCase ("feat: " + descr) (Parsed { Type = "feat"; Scope = None; Description = descr})
+            yield testCase ("feat(scope): " + descr) (Parsed { Type = "feat"; Scope = Some "scope"; Description = descr})
     }
 
 [<Theory>]
