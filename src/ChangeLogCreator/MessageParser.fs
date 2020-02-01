@@ -99,29 +99,25 @@ module MessageParser =
         | Parsed of ConventionalCommit
         | Failed of ParseError
 
-    type private ParseState =
-        | Error of ParseError
-        | Data of ConventionalCommit
-
     let parse (input: string) : ParseResult =                 
 
         //
         // parsing helper functions
         //
-        let checkForError parseLogic (state:ParseState) (tokens: Token list) : ParseState * (Token list)  = 
+        let checkForError parseLogic (state:ParseResult) (tokens: Token list) : ParseResult * (Token list)  = 
             match state with 
-                | Error parseError -> Error parseError,tokens
+                | Failed parseError -> Failed parseError,tokens
                 | _ -> parseLogic state tokens
            
         // matching a single token
-        let matchToken expectedToken state tokens : ParseState * (Token list) =
+        let matchToken expectedToken state tokens : ParseResult * (Token list) =
             match tokens with
                 | head::tail ->
                     if head = expectedToken then
                         state,tail
                     else
-                        Error (UnexpectedToken (head,expectedToken)),tokens
-                | [] -> Error EmptyInput,tokens
+                        Failed (UnexpectedToken (head,expectedToken)),tokens
+                | [] -> Failed EmptyInput,tokens
         
         // matches a string token and updates the parsed data using the specified function
         let matchString dataUpdater state tokens = 
@@ -131,12 +127,12 @@ module MessageParser =
                         | StringToken strValue -> 
                             let currentData = 
                                 match state with 
-                                    | Data d -> d
-                                    | _ -> raise (InvalidOperationException "Data from invalid ParseState requested. 'matchString' should not be called without error checking")
+                                    | Parsed d -> d
+                                    | _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'matchString' should not be called without error checking")
                             let newData = dataUpdater currentData strValue
-                            Data newData,tail
-                        | t -> Error (UnexpectedToken (t, StringToken "")),tokens
-                | [] -> Error EmptyInput,tokens
+                            Parsed newData,tail
+                        | t -> Failed (UnexpectedToken (t, StringToken "")),tokens
+                | [] -> Failed EmptyInput,tokens
 
         let testToken (tokens: Token list) (expectedToken:Token) =
             match tokens with
@@ -158,7 +154,7 @@ module MessageParser =
                             | LineBreakToken -> false)
 
             if (List.isEmpty processableTokens) then
-                Error EmptyText, tokens
+                Failed EmptyText, tokens
             else
                 let strValue = 
                     processableTokens  
@@ -174,10 +170,10 @@ module MessageParser =
                     |> Seq.reduce( fun a b -> a + b)                
                 let currentData = 
                         match state with 
-                            | Data d -> d
-                            | _ -> raise (InvalidOperationException "Data from invalid ParseState requested. 'matchString' should not be called without error checking")
+                            | Parsed d -> d
+                            | _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'matchString' should not be called without error checking")
                 let newData = dataUpdater currentData strValue
-                Data newData, tokens |> List.skip(Seq.length processableTokens)                        
+                Parsed newData, tokens |> List.skip(Seq.length processableTokens)                        
         
         //
         // high-level parsing functions
@@ -186,7 +182,7 @@ module MessageParser =
                 match tokens with
                     | head::tail ->
                         match head with
-                            | EofToken -> Error EmptyInput,tokens
+                            | EofToken -> Failed EmptyInput,tokens
                             | _ -> state,tokens
                     | _ -> state, tokens
 
@@ -196,8 +192,8 @@ module MessageParser =
 
         let parseToken token = checkForError (matchToken token)
 
-        let parseScope state tokens : ParseState * (Token list) =
-            let doParseScope (state:ParseState) (tokens: Token list) : ParseState * (Token list) = 
+        let parseScope state tokens : ParseResult * (Token list) =
+            let doParseScope (state:ParseResult) (tokens: Token list) : ParseResult * (Token list) = 
                 if (testToken tokens OpenParenthesisToken) then                                    
                         (state,tokens)
                             ||> matchToken OpenParenthesisToken
@@ -209,7 +205,7 @@ module MessageParser =
            
 
         let tokens = tokenize input |> List.ofSeq
-        let emptyData = Data { Type = ""; Scope = None; Description = "" }
+        let emptyData = Parsed { Type = ""; Scope = None; Description = "" }
 
         let result,_ = 
             (emptyData,tokens)
@@ -218,10 +214,7 @@ module MessageParser =
                 ||> parseScope
                 ||> parseToken ColonAndSpaceToken
                 ||> parseDescription
-                ||> parseToken EofToken
-                           
-        match result with
-            | Error error -> Failed error
-            | Data data -> Parsed data
+                ||> parseToken EofToken                           
+        result
 
         
