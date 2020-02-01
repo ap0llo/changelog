@@ -5,15 +5,9 @@ open Xunit.Sdk
 open ChangeLogCreator;
 open ChangeLogCreator.MessageParser;
 
-let rec listIsEqualTo (expected:'a list) (actual:'a list) =        
-    match expected,actual with
-        | expectedHead :: expectedTail, actualHead :: actualTail ->
-            Assert.Equal<'a>(expectedHead, actualHead)
-            actualTail |> listIsEqualTo expectedTail
-        | [],[] -> ()
-        | _ -> raise (XunitException (sprintf "List comparison failed:\r\nExpected %A\r\nActual:%A" expected actual))
+let isEqualTo (expected:'a) (actual:'a) = Assert.Equal<'a>(expected, actual)
     
-let tokenizeTestData = 
+let tokenizeTestCases = 
     let testCase input tokens = [| input :> obj; Array.ofList tokens :> obj|]
     seq {
         // Base test cases: single matchable token (& and EOF to indicate the end of the string)
@@ -111,7 +105,30 @@ let tokenizeTestData =
     }
 
 [<Theory>]
-[<MemberData("tokenizeTestData")>]
+[<MemberData("tokenizeTestCases")>]
 let ``tokenize returns expected tokens`` input (expectedTokens : Token[]) =
     let actualTokens = MessageParser.tokenize input 
-    List.ofSeq actualTokens |> listIsEqualTo (List.ofArray expectedTokens)
+    List.ofSeq actualTokens |> isEqualTo (List.ofArray expectedTokens)
+
+
+
+let parserTestCases = 
+    let testCase (input: string) (expectedResult: ParseResult) = [| input :> obj; expectedResult :> obj|]
+    seq {
+        // Invalid inputs 
+        yield testCase "" (Failed EmptyInput)
+        //// Missing ': '
+        yield testCase "feat" (Failed (UnexpectedToken (EofToken,ColonAndSpaceToken)))   
+        //// Duplicate ': '
+        yield testCase "feat: : Description" (Failed (UnexpectedToken (ColonAndSpaceToken, StringToken "")))  
+
+        // Valid inputs
+        yield testCase "feat: New feature added" (Parsed { Type = "feat"; Scope = None; Description = "New feature added"})
+        yield testCase "feat(scope): New feature added" (Parsed { Type = "feat"; Scope = Some "scope"; Description = "New feature added"})
+    }
+
+[<Theory>]
+[<MemberData("parserTestCases")>]
+let ``parse returns expected ParseResult`` input expectedResult =
+    let actualResult = MessageParser.parse input 
+    actualResult |> isEqualTo expectedResult

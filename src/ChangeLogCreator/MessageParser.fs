@@ -1,10 +1,14 @@
 ﻿namespace ChangeLogCreator
 
+open System
 open System.Text
 
 module MessageParser =
                
-    // Tokenizer types
+    //
+    // Tokenizer 
+    //
+
     type Token =
         | StringToken of string     // any string value
         | OpenParenthesisToken      // '('
@@ -74,3 +78,112 @@ module MessageParser =
 
             yield EofToken
         }
+
+
+    // 
+    // Parser
+    //
+    type ParseError =
+        | EmptyInput
+        | UnspecifiedError
+        | UnexpectedToken of Token * Token
+
+    type ConventionalCommit = {
+        Type : string
+        Scope : string option
+        Description : string
+    }
+    
+    type ParseResult =
+        | Parsed of ConventionalCommit
+        | Failed of ParseError
+
+    type private ParseState =
+        | Error of ParseError
+        | Data of ConventionalCommit
+
+    let parse (input: string) : ParseResult =                 
+
+        //
+        // parsing helper functions
+        //
+        let checkForError parseLogic (state:ParseState) (tokens: Token list) : ParseState * (Token list)  = 
+            match state with 
+                | Error parseError -> Error parseError,tokens
+                | _ -> parseLogic state tokens
+           
+        // matching a single token
+        let matchToken expectedToken state tokens : ParseState * (Token list) =
+            match tokens with
+                | head::tail ->
+                    if head = expectedToken then
+                        state,tail
+                    else
+                        Error (UnexpectedToken (head,expectedToken)),tokens
+                | [] -> Error EmptyInput,tokens
+        
+        // matches a string token and updates the parsed data using the specified function
+        let matchString dataUpdater state tokens = 
+            match tokens with
+                | head::tail -> 
+                    match head with 
+                        | StringToken strValue -> 
+                            let currentData = 
+                                match state with 
+                                    | Data d -> d
+                                    | _ -> raise (InvalidOperationException "Data from invalid ParseState requested. 'matchString' should not be called without error checking")
+                            let newData = dataUpdater currentData strValue
+                            Data newData,tail
+                        | t -> Error (UnexpectedToken (t, StringToken "")),tokens
+                | [] -> Error EmptyInput,tokens
+
+        let testToken (tokens: Token list) (expectedToken:Token) =
+            match tokens with
+                | head::tails -> head = expectedToken                    
+                | _ -> false
+        //
+        // high-level parsing functions
+        //
+        let ensureNotEmpty state tokens =
+                match tokens with
+                    | head::tail ->
+                        match head with
+                            | EofToken -> Error EmptyInput,tokens
+                            | _ -> state,tokens
+                    | _ -> state, tokens
+
+        let parseType  = checkForError (matchString (fun data value -> { data with Type = value }) )
+
+        let parseDescription = checkForError (matchString (fun data value -> { data with Description = value }))
+
+        let parseToken token = checkForError (matchToken token)
+
+        let parseScope state tokens : ParseState * (Token list) =
+            let doParseScope (state:ParseState) (tokens: Token list) : ParseState * (Token list) = 
+                if (testToken tokens OpenParenthesisToken) then                                    
+                        (state,tokens)
+                            ||> matchToken OpenParenthesisToken
+                            ||> matchString (fun data value -> { data with Scope = Some value })
+                            ||> matchToken CloseParenthesisToken                
+                else                
+                    state,tokens
+            checkForError doParseScope state tokens
+           
+
+        let tokens = tokenize input |> List.ofSeq
+        let emptyData = Data { Type = ""; Scope = None; Description = "" }
+
+        let result,_ = 
+            (emptyData,tokens)
+                ||> ensureNotEmpty
+                ||> parseType
+                ||> parseScope
+                ||> parseToken ColonAndSpaceToken
+                ||> parseDescription
+                ||> parseToken EofToken
+                           
+        match result with
+            | Error error -> Failed error
+            | Data data -> Parsed data
+
+        
