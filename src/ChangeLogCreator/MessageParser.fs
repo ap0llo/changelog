@@ -8,7 +8,6 @@ module MessageParser =
     //
     // Tokenizer 
     //
-
     type Token =
         | StringToken of string     // any string value
         | OpenParenthesisToken      // '('
@@ -119,21 +118,10 @@ module MessageParser =
         | UnspecifiedError
         | EmptyText
         | UnexpectedToken of Token
-
-    type Paragraph = Paragraph of string
-        
-    type ConventionalCommit = {
-        Type : string
-        Scope : string option
-        Description : string
-        IsBreakingChange : bool
-        Body : Paragraph list
-    }
     
     type ParseResult =
         | Parsed of ConventionalCommit
         | Failed of ParseError
-
 
     type private ParserState = {
         CurrentResult : ParseResult
