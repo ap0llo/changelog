@@ -117,9 +117,9 @@ let parserTestCases =
         // Invalid inputs 
         yield testCase "" (Failed EmptyInput)
         //// Missing ': '
-        yield testCase "feat" (Failed (UnexpectedToken (EofToken,ColonAndSpaceToken)))   
+        yield testCase "feat" (Failed (UnexpectedToken EofToken))   
         //// Incomplete scope / missing ')'
-        yield testCase "feat(scope: Description" (Failed (UnexpectedToken (ColonAndSpaceToken,CloseParenthesisToken)))   
+        yield testCase "feat(scope: Description" (Failed (UnexpectedToken ColonAndSpaceToken))   
 
         // Valid inputs
         let descriptions = [
@@ -131,10 +131,76 @@ let parserTestCases =
             "Some description\r\n"  // trailing line breaks are valid but ignored by the parser
             "Some description\n"  // trailing line breaks are valid but ignored by the parser
         ]
-        for descr in descriptions do            
-            yield testCase ("feat: " + descr) (Parsed { Type = "feat"; Scope = None; Description = descr.TrimEnd('\r', '\n'); IsBreakingChange = false})
-            yield testCase ("feat(scope): " + descr) (Parsed { Type = "feat"; Scope = Some "scope"; Description = descr.TrimEnd('\r', '\n') ; IsBreakingChange = false})
-            yield testCase ("feat(scope)!: " + descr) (Parsed { Type = "feat"; Scope = Some "scope"; Description = descr.TrimEnd('\r', '\n'); IsBreakingChange = true })
+        for descr in descriptions do     
+            let template = { Type = "feat"; Scope = None; Description = descr.TrimEnd('\r', '\n'); IsBreakingChange = false; Body = []}
+            yield testCase ("feat: " + descr) (Parsed template)
+            yield testCase ("feat(scope): " + descr) (Parsed { template with Scope = Some "scope"; })
+            yield testCase ("feat(scope)!: " + descr) (Parsed { template with Scope = Some "scope"; IsBreakingChange = true })        
+
+        // single line body
+        yield testCase 
+            "type(scope): Description\r\n\r\nSingle Line Body" 
+            (Parsed {
+                Type = "type"; 
+                Scope = Some "scope"; 
+                Description = "Description"; 
+                IsBreakingChange = false; 
+                Body = [Paragraph "Single Line Body"]
+            })
+
+        // multi-line body
+        yield testCase 
+            "type(scope): Description\r\n\r\nBody line 1\r\nBody line 2" 
+            (Parsed {
+                Type = "type"; 
+                Scope = Some "scope"; 
+                Description = "Description"; 
+                IsBreakingChange = false; 
+                Body = [Paragraph "Body line 1\r\nBody line 2"]
+            })
+
+        // multi-paragraph body (1)
+        yield testCase 
+            (
+            "type(scope): Description\r\n" + 
+            "\r\n" + 
+            "Body line 1.1\r\n" + 
+            "Body line 1.2\r\n" + 
+            "\r\n" +
+            "Body line 2.1\r\n" + 
+            "Body line 2.2\r\n"
+            )
+            (Parsed {
+                Type = "type"; 
+                Scope = Some "scope"; 
+                Description = "Description"; 
+                IsBreakingChange = false; 
+                Body = [
+                    Paragraph "Body line 1.1\r\nBody line 1.2"
+                    Paragraph "Body line 2.1\r\nBody line 2.2"
+                ]
+            })
+
+        // multi-paragraph body (2)
+        yield testCase 
+            (
+            "type(scope): Description\r\n" + 
+            "\r\n" + 
+            "Body line 1.1\r\n" + 
+            "Body line 1.2\r\n" + 
+            "\r\n" +
+            "Body line 2.1"
+            )
+            (Parsed {
+                Type = "type"; 
+                Scope = Some "scope"; 
+                Description = "Description"; 
+                IsBreakingChange = false; 
+                Body = [
+                    Paragraph "Body line 1.1\r\nBody line 1.2"
+                    Paragraph "Body line 2.1"
+                ]
+            })
     }
 
 [<Theory>]
