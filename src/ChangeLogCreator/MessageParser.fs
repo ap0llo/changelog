@@ -238,10 +238,12 @@ module MessageParser =
         let testFooterStart (state:ParserState<LineToken>) : bool =
             match state.UnparsedTokens with
                 | (LineToken.Line str)::_ -> 
-                    let tokens = tokenizeFooter str |> Seq.take 4 |>List.ofSeq
+                    let tokens = tokenizeFooter str |> List.ofSeq
                     match tokens with 
-                        | (FooterToken.String _)::(FooterToken.Colon)::(FooterToken.Space)::_ -> true
-                        | (FooterToken.String _)::(FooterToken.Space)::(FooterToken.Hash)::_ -> true
+                        | FooterToken.String "BREAKING"::FooterToken.Space::FooterToken.String "CHANGE"::FooterToken.Colon::FooterToken.Space::_ -> true
+                        | FooterToken.String "BREAKING"::FooterToken.Space::FooterToken.String "CHANGE"::FooterToken.Space::FooterToken.Hash::_ -> true
+                        | FooterToken.String _::FooterToken.Colon::FooterToken.Space::_ -> true
+                        | FooterToken.String _::FooterToken.Space::FooterToken.Hash::_ -> true
                         | _ -> false
                 | _ -> false
 
@@ -283,8 +285,22 @@ module MessageParser =
 
             let parseFooterTokens (state:ParserState<FooterToken>) : ParserState<FooterToken> = 
                 match state.UnparsedTokens with
+                    | FooterToken.String "BREAKING"::FooterToken.Space::FooterToken.String "CHANGE"::FooterToken.Colon::FooterToken.Space::tail 
+                    | FooterToken.String "BREAKING"::FooterToken.Space::FooterToken.String "CHANGE"::FooterToken.Space::FooterToken.Hash::tail ->
+                        let tokens =  tail |> List.takeWhile (fun t -> t <> FooterToken.Eof)
+                        let description = tokens
+                                            |> List.map tokenToString
+                                            |> joinString ""
+
+                        let remainingTokens = tail |> List.skip tokens.Length
+                        if tokens.Length = 0 then
+                            { state with CurrentResult = Failed "Footer description must not be empty"}
+                        else
+                            let footer = { Type = "BREAKING CHANGE"; Description = description } 
+                            { state with UnparsedTokens = remainingTokens ; CurrentResult = (updateResult (fun c footer -> { c with Footers = c.Footers @ [ footer ]}) state.CurrentResult footer )}    
+                                |> matchToken Eof
                     | FooterToken.String footerType::FooterToken.Colon::FooterToken.Space::tail 
-                    | FooterToken.String footerType::FooterToken.Space::FooterToken.Hash::tail ->
+                    | FooterToken.String footerType::FooterToken.Space::FooterToken.Hash::tail ->                    
                         
                         let tokens =  tail |> List.takeWhile (fun t -> t <> FooterToken.Eof)
                         let description = tokens
@@ -315,7 +331,7 @@ module MessageParser =
                 if (testToken LineToken.Blank newState || testToken LineToken.Eof newState) then 
                     newState
                 else
-                    parseSingleFooter newState
+                    withErrorCheck parseSingleFooter newState
 
             if testToken Blank state then
                 let newState = state |> (matchToken Blank)

@@ -209,7 +209,22 @@ let parserTestCases =
                ]
            })
 
-        //TODO Commit with footer 
+        yield testCase 
+           (
+           "type(scope): Description\r\n" + 
+           "\r\n" +           
+           "BREAKING CHANGE: description"
+           )
+           (Parsed {
+               Type = "type"; 
+               Scope = Some "scope"; 
+               Description = "Description"; 
+               IsBreakingChange = false; 
+               Body = [ ]
+               Footers = [
+                   { Type = "BREAKING CHANGE"; Description =  "description" }
+               ]
+           })
 
         //TODO: footer description must not be empty
     }
