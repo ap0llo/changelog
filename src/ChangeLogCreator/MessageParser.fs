@@ -77,6 +77,18 @@ module MessageParser =
     let parse (input: string) : ParserResult =
 
         let joinString (separator:string) (values : string seq) = String.Join(separator, values |> Array.ofSeq)
+        
+        let isLineTokenType (left:LineToken) (right:LineToken) : bool =
+            match left,right with
+                | Line _,Line _ -> true
+                | Blank,Blank -> true
+                | LineToken.Eof,LineToken.Eof -> true
+                | _ -> false
+
+        let testToken2 (predicate:'tokenType -> bool) (state:ParserState<'tokenType>) : bool =
+            match state.UnparsedTokens with
+                | head::_ -> predicate head
+                | _ -> false
 
         let testToken (expected:'tokenType) (state:ParserState<'tokenType>) : bool =
             match state.UnparsedTokens with
@@ -214,9 +226,13 @@ module MessageParser =
                 let description = tokens
                                     |> Seq.map tokenToString
                                     |> joinString ""
-                let remainingTokens = state.UnparsedTokens |> List.skip tokens.Length
-                let newResult = updateResult (fun c x -> { c with Description = x }) state.CurrentResult description
-                matchToken HeaderToken.Eof { CurrentResult = newResult; UnparsedTokens = remainingTokens }
+
+                if String.IsNullOrWhiteSpace description then
+                    { state with CurrentResult = Failed "Failed to parse header: Description must not be empty" }
+                else
+                    let remainingTokens = state.UnparsedTokens |> List.skip tokens.Length
+                    let newResult = updateResult (fun c x -> { c with Description = x }) state.CurrentResult description
+                    matchToken HeaderToken.Eof { CurrentResult = newResult; UnparsedTokens = remainingTokens }
 
             match state.UnparsedTokens with
                 | (Line str)::tail ->
@@ -250,17 +266,22 @@ module MessageParser =
         let rec parseBody (state:ParserState<LineToken>) : ParserState<LineToken> =
 
             let parseParagraph (state:ParserState<LineToken>) =
-                let lines = state.UnparsedTokens |> List.takeWhile (fun line -> line <> LineToken.Eof && line <> LineToken.Blank)
-                if lines |> Seq.length > 0 then
-                    let text = lines
-                                |> Seq.map lineTokenToString
-                                |> joinString Environment.NewLine
-                    let unparsedTokens =  state.UnparsedTokens |> List.skip lines.Length
-                    { CurrentResult = ( (updateResult (fun commit paragraph -> { commit with Body = commit.Body @[paragraph] } )) state.CurrentResult (Paragraph text) );
-                      UnparsedTokens = unparsedTokens
-                    }
+                
+                if testToken2 (isLineTokenType (Line"")) state then
+
+                    let lines = state.UnparsedTokens |> List.takeWhile (fun line -> line <> LineToken.Eof && line <> LineToken.Blank)
+                    if lines |> Seq.length > 0 then
+                        let text = lines
+                                    |> Seq.map lineTokenToString
+                                    |> joinString Environment.NewLine
+                        let unparsedTokens =  state.UnparsedTokens |> List.skip lines.Length
+                        { CurrentResult = ( (updateResult (fun commit paragraph -> { commit with Body = commit.Body @[paragraph] } )) state.CurrentResult (Paragraph text) );
+                          UnparsedTokens = unparsedTokens
+                        }
+                    else
+                        state
                 else
-                    state
+                    { state with CurrentResult = ( Failed "Failed to parse body: Expected 'Line' token") }
 
             if testToken Blank state then
                 let newState = state |> (matchToken Blank)
@@ -293,8 +314,8 @@ module MessageParser =
                                             |> joinString ""
 
                         let remainingTokens = tail |> List.skip tokens.Length
-                        if tokens.Length = 0 then
-                            { state with CurrentResult = Failed "Footer description must not be empty"}
+                        if tokens.Length = 0 || String.IsNullOrWhiteSpace(description) then
+                            { state with CurrentResult = Failed "Failed to parse footer: Description must not be empty"}
                         else
                             let footer = { Type = "BREAKING CHANGE"; Description = description } 
                             { state with UnparsedTokens = remainingTokens ; CurrentResult = (updateResult (fun c footer -> { c with Footers = c.Footers @ [ footer ]}) state.CurrentResult footer )}    
@@ -308,8 +329,8 @@ module MessageParser =
                                             |> joinString ""
 
                         let remainingTokens = tail |> List.skip tokens.Length
-                        if tokens.Length = 0 then
-                            { state with CurrentResult = Failed "Footer description must not be empty"}
+                        if tokens.Length = 0 || String.IsNullOrWhiteSpace(description) then
+                            { state with CurrentResult = Failed "Failed to parse footer: Description must not be empty"}
                         else
                             let footer = { Type = footerType; Description = description } 
                             { state with UnparsedTokens = remainingTokens ; CurrentResult = (updateResult (fun c footer -> { c with Footers = c.Footers @ [ footer ]}) state.CurrentResult footer )}    

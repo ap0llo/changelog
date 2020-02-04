@@ -1,33 +1,37 @@
 module ``MessageParser Tests``
 
+open System
 open Xunit
 open ChangeLogCreator;
 open ChangeLogCreator.MessageParser;
 
 let isEqualTo (expected:'a) (actual:'a) = Assert.Equal<'a>(expected, actual)
     
+/// Test cases for the "line tokenizer"
 let readLinesTestCases = 
-    let testCase input tokens = [| input :> obj; Array.ofList tokens :> obj|]
+    let testCase (input : string) (tokens : LineToken list) : obj array = [| input :> obj; Array.ofList tokens :> obj|]
     seq {
+
+        yield testCase "" [ Eof ]
         
-        yield testCase "" [ Eof]
-        yield testCase "\r\n" [ Blank ; Eof ]
-        yield testCase "\n" [ Blank ; Eof ]
+        for lineBreak in ["\n"; "\r\n"] do
+            // just a line break
+            yield testCase lineBreak [ Blank ; Eof ]
+            yield testCase lineBreak [ Blank ; Eof ]
 
-        // One line
-        yield testCase "Line1\r\n" [ Line "Line1"; Eof ]
-        yield testCase "Line1\n" [ Line "Line1"; Eof ]
+            // 1 line without line break
+            yield testCase "Line1" [ Line "Line1"; Eof ]
 
-        // 2 lines
-        yield testCase "Line1\r\nLine2" [ Line "Line1"; Line "Line2"; Eof ]
-        yield testCase "Line1\nLine2" [ Line "Line1"; Line "Line2"; Eof ]
-        yield testCase "Line1\r\nLine2\r\n" [ Line "Line1"; Line "Line2"; Eof ]
-        yield testCase "Line1\nLine2\r\n" [ Line "Line1"; Line "Line2"; Eof ]
-        // 3 Lines
-        yield testCase "Line1\r\n\r\nLine2" [ Line "Line1"; Blank; Line "Line2"; Eof ]
-        yield testCase "Line1\n\nLine2" [ Line "Line1"; Blank; Line "Line2"; Eof ]
-        yield testCase "Line1\r\n\r\nLine2\r\n" [ Line "Line1"; Blank; Line "Line2"; Eof ]
-        yield testCase "Line1\n\nLine2\n" [ Line "Line1"; Blank; Line "Line2"; Eof ]
+            // 1 line with line break
+            yield testCase ("Line1" + lineBreak)  [ Line "Line1"; Eof ]
+
+            // 2 lines (with and without trailing line break)
+            yield testCase ("Line1" + lineBreak + "Line2" + lineBreak) [ Line "Line1"; Line "Line2"; Eof ]
+            yield testCase ("Line1" + lineBreak + "Line2") [ Line "Line1"; Line "Line2"; Eof ]
+            
+            // 2 lines with blank line in between (with and without trailing line break)
+            yield testCase ("Line1" + lineBreak + lineBreak + "Line2") [ Line "Line1"; Blank; Line "Line2"; Eof ]
+            yield testCase ("Line1" + lineBreak + lineBreak + "Line2" + lineBreak) [ Line "Line1"; Blank; Line "Line2"; Eof ]
     }
 
 [<Theory>]
@@ -37,38 +41,110 @@ let ``readLines returns expected lines`` input (expectedTokens : LineToken[]) =
     List.ofSeq actualTokens |> isEqualTo (List.ofArray expectedTokens)
 
 
-
+/// parser test cases
 let parserTestCases = 
-    let testCase (input: string) (expectedResult: ParserResult) = [| input :> obj; expectedResult :> obj|]
+    let lineBreak = "\r\n"
+    let joinString (separator:string) (values : string list) = String.Join(separator, values |> Array.ofList)
+    let testCase (input: string) (expectedResult: ParserResult) : obj array = [| input :> obj; expectedResult :> obj|]    
+    let multiLineTestCase (input:string list) = testCase (joinString lineBreak input)
+
     seq {
-        //TODO: Description must not be empty
 
-        // Invalid inputs 
-        yield testCase "" (Failed "Unexpected token Eof")
-        //// Missing ': '
-        yield testCase "feat" (Failed "Expected token Colon")
-        //// Incomplete scope / missing ')'
-        yield testCase "feat(scope: Description" (Failed "Expected token CloseParenthesis")
 
+        // ---------------------------
+        // Invalid Inputs            
+        // ---------------------------
+
+        // empty 
+        yield testCase "" (Failed "Unexpected token Eof")           
+        
+        // Missing ': ' in header
+        yield testCase "feat" (Failed "Expected token Colon")       
+        
+        // Incomplete scope / missing ')' in header
+        yield testCase "feat(scope: Description" (Failed "Expected token CloseParenthesis") 
+        
+        // missing description in header
+        for invalidDescription in [ ""; "\t" ] do
+            yield testCase ("feat:" + invalidDescription) (Failed "Expected token Space") 
+            yield testCase ("feat(scope):" + invalidDescription) (Failed "Expected token Space")             
+        
+        for invalidDescription in [ " "; "  " ] do
+            yield testCase ("feat:" + invalidDescription) (Failed "Failed to parse header: Description must not be empty") 
+            yield testCase ("feat(scope):" + invalidDescription) (Failed "Failed to parse header: Description must not be empty")    
+            
+        // missing description in footer       
+        for invalidFooter in [ "Footer: "; "BREAKING CHANGE: "; "Footer: \t"; "Footer:  "; "Footer # "; "BREAKING CHANGE #\t" ] do
+            yield testCase ("type(scope): Description" + lineBreak + lineBreak + invalidFooter) (Failed "Failed to parse footer: Description must not be empty")
+
+        // multiple blank lines between header and body        
+        yield multiLineTestCase 
+            [
+                "type: Description"
+                ""
+                ""
+                "Body"
+            ]
+            (Failed "Failed to parse body: Expected 'Line' token")
+
+        // multiple blank lines between body and footer
+        yield multiLineTestCase
+            [
+                "type: Description"
+                ""
+                "Body 1"            
+                "Body 2"
+                ""
+                ""
+                "Footer: Value"
+            ]
+            (Failed "Failed to parse body: Expected 'Line' token")
+
+        // footer with empty description
+        yield multiLineTestCase
+            [
+                "type: Description"
+                ""
+                "Footer: "
+            ]
+            (Failed "Failed to parse footer: Description must not be empty")
+        yield multiLineTestCase
+            [
+                "type: Description"
+                ""
+                "Footer #"
+            ]
+            (Failed "Failed to parse footer: Description must not be empty")
+
+
+        // ---------------------------
         // Valid inputs
-        let descriptions = [
-            "Some description"
-            "Description: "
-            "Description ()"
-            "Description!"
-            "Description #" 
-            "Some description\r\n"  // trailing line breaks are valid but ignored by the parser
-            "Some description\n"  // trailing line breaks are valid but ignored by the parser
-        ]
+        // ---------------------------
+        let descriptions = 
+            [
+                "Some description"
+                "Description: "
+                "Description ()"
+                "Description!"
+                "Description #" 
+                "Some description\r\n"  // trailing line breaks are valid but ignored by the parser
+                "Some description\n"  // trailing line breaks are valid but ignored by the parser
+            ]
         for descr in descriptions do     
             let template = { Type = "feat"; Scope = None; Description = descr.TrimEnd('\r', '\n'); IsBreakingChange = false; Body = []; Footers = [] }
             yield testCase ("feat: " + descr) (Parsed template)
             yield testCase ("feat(scope): " + descr) (Parsed { template with Scope = Some "scope"; })
             yield testCase ("feat(scope)!: " + descr) (Parsed { template with Scope = Some "scope"; IsBreakingChange = true })        
 
+        // TODO: Ignore trailing blank lines
+
         // single line body
-        yield testCase 
-            "type(scope): Description\r\n\r\nSingle Line Body" 
+        yield multiLineTestCase 
+            [
+                "type(scope): Description"
+                ""
+                "Single Line Body" 
+            ]
             (Parsed {
                 Type = "type"; 
                 Scope = Some "scope"; 
@@ -79,8 +155,13 @@ let parserTestCases =
             })
 
         // multi-line body
-        yield testCase 
-            "type(scope): Description\r\n\r\nBody line 1\r\nBody line 2" 
+        yield multiLineTestCase 
+            [
+                "type(scope): Description"
+                ""
+                "Body line 1"
+                "Body line 2" 
+            ]
             (Parsed {
                 Type = "type"; 
                 Scope = Some "scope"; 
@@ -91,16 +172,16 @@ let parserTestCases =
             })
 
         // multi-paragraph body (1)
-        yield testCase 
-            (
-            "type(scope): Description\r\n" + 
-            "\r\n" + 
-            "Body line 1.1\r\n" + 
-            "Body line 1.2\r\n" + 
-            "\r\n" +
-            "Body line 2.1\r\n" + 
-            "Body line 2.2\r\n"
-            )
+        yield multiLineTestCase
+            [
+                "type(scope): Description"
+                ""
+                "Body line 1.1"
+                "Body line 1.2" 
+                ""
+                "Body line 2.1" 
+                "Body line 2.2"
+            ]
             (Parsed {
                 Type = "type"; 
                 Scope = Some "scope"; 
@@ -113,16 +194,16 @@ let parserTestCases =
                 Footers = []
             })
 
-        // multi-paragraph body (2)
-        yield testCase 
-            (
-            "type(scope): Description\r\n" + 
-            "\r\n" + 
-            "Body line 1.1\r\n" + 
-            "Body line 1.2\r\n" + 
-            "\r\n" +
-            "Body line 2.1"
-            )
+        // multi-paragraph body with trailing line break
+        yield multiLineTestCase 
+            [
+                "type(scope): Description"
+                ""
+                "Body line 1.1"
+                "Body line 1.2"
+                ""
+                "Body line 2.1\r\n"
+            ]            
             (Parsed {
                 Type = "type"; 
                 Scope = Some "scope"; 
@@ -135,20 +216,57 @@ let parserTestCases =
                 Footers = []
             })
 
-        //TODO: tests for all footer separators
-        //TODO: tests for all footer types (no space and BREAKING CHANGE)
+               
+        // messages with footer
+        for footerType in ["footer-type"; "BREAKING CHANGE"; "BREAKING-CHANGE"] do
+            for separator in [": "; " #"] do
+                yield multiLineTestCase 
+                    [
+                        "type: Description"
+                        ""
+                        footerType + separator + "Footer Description"
+                    ]
+                    (Parsed {
+                        Type = "type"; 
+                        Scope = None
+                        Description = "Description"; 
+                        IsBreakingChange = false; 
+                        Body = []
+                        Footers = [
+                            { Type = footerType; Description = "Footer Description" }
+                        ]
+                    })
+
+        yield multiLineTestCase 
+            [
+                "type: Description"
+                ""
+                "Footer1: Footer Description1"
+                "Footer2 #Footer Description2"
+            ]
+            (Parsed {
+                Type = "type"; 
+                Scope = None
+                Description = "Description"; 
+                IsBreakingChange = false; 
+                Body = []
+                Footers = [
+                    { Type = "Footer1"; Description = "Footer Description1" }
+                    { Type = "Footer2"; Description = "Footer Description2" }
+                ]
+            })
         // message with body AND footer
-        yield testCase 
-            (
-            "type(scope): Description\r\n" + 
-            "\r\n" + 
-            "Body line 1.1\r\n" + 
-            "Body line 1.2\r\n" + 
-            "\r\n" +
-            "Body line 2.1\r\n" +
-            "\r\n" +
-            "Reviewed-by: Z"
-            )
+        yield multiLineTestCase
+            [
+                "type(scope): Description" 
+                ""
+                "Body line 1.1" 
+                "Body line 1.2" 
+                ""
+                "Body line 2.1"
+                ""
+                "Reviewed-by: Z"
+            ]
             (Parsed {
                 Type = "type"; 
                 Scope = Some "scope"; 
@@ -163,18 +281,18 @@ let parserTestCases =
                 ]
             })
 
-        yield testCase 
-            (
-            "type(scope): Description\r\n" + 
-            "\r\n" + 
-            "Body line 1.1\r\n" + 
-            "Body line 1.2\r\n" + 
-            "\r\n" +
-            "Body line 2.1\r\n" +
-            "\r\n" +
-            "Reviewed-by: Z\r\n" +
-            "Footer2: description"
-            )
+        yield multiLineTestCase
+            [
+                "type(scope): Description"
+                ""
+                "Body line 1.1"
+                "Body line 1.2"
+                ""
+                "Body line 2.1"
+                ""
+                "Reviewed-by: Z"
+                "Footer2: description"
+            ]
             (Parsed {
                 Type = "type"; 
                 Scope = Some "scope"; 
@@ -189,44 +307,6 @@ let parserTestCases =
                     { Type = "Footer2"; Description =  "description" }
                 ]
             })
-
-        yield testCase 
-           (
-           "type(scope): Description\r\n" + 
-           "\r\n" +
-           "Reviewed-by: Z\r\n" +
-           "Footer2: description"
-           )
-           (Parsed {
-               Type = "type"; 
-               Scope = Some "scope"; 
-               Description = "Description"; 
-               IsBreakingChange = false; 
-               Body = [ ]
-               Footers = [
-                   { Type = "Reviewed-by"; Description =  "Z" }
-                   { Type = "Footer2"; Description =  "description" }
-               ]
-           })
-
-        yield testCase 
-           (
-           "type(scope): Description\r\n" + 
-           "\r\n" +           
-           "BREAKING CHANGE: description"
-           )
-           (Parsed {
-               Type = "type"; 
-               Scope = Some "scope"; 
-               Description = "Description"; 
-               IsBreakingChange = false; 
-               Body = [ ]
-               Footers = [
-                   { Type = "BREAKING CHANGE"; Description =  "description" }
-               ]
-           })
-
-        //TODO: footer description must not be empty
     }
 
 [<Theory>]
