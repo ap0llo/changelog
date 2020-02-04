@@ -50,7 +50,6 @@ let parserTestCases =
 
     seq {
 
-
         // ---------------------------
         // Invalid Inputs            
         // ---------------------------
@@ -136,7 +135,7 @@ let parserTestCases =
             yield testCase ("feat(scope): " + descr) (Parsed { template with Scope = Some "scope"; })
             yield testCase ("feat(scope)!: " + descr) (Parsed { template with Scope = Some "scope"; IsBreakingChange = true })        
 
-        // TODO: Ignore trailing blank lines
+        //// TODO: Ignore trailing blank lines
 
         // single line body
         yield multiLineTestCase 
@@ -171,7 +170,7 @@ let parserTestCases =
                 Footers = []
             })
 
-        // multi-paragraph body (1)
+        //multi-paragraph body (1)
         yield multiLineTestCase
             [
                 "type(scope): Description"

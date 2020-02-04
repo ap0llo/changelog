@@ -5,12 +5,98 @@ open System.Text
 
 module MessageParser =
 
+    // Token types
+    //
     type LineToken =
         | Line of string
         | Blank
         | Eof
 
-    let readLines (input:string) =
+    type internal HeaderToken =
+        | String of string     // any string value
+        | OpenParenthesis     // '('
+        | CloseParenthesis     // ')'
+        | Colon                // ':'
+        | Space                // ' '
+        | ExclamationMark      // '!'
+        | Eof                  // end of input / last token
+
+    type internal FooterToken =
+        | String of string     // any string value
+        | Colon                // ':'
+        | Space                // ' '
+        | Hash                 // '#'
+        | Eof                  // end of input / last token
+
+    // Parser state and result types
+    //
+    type ParserResult =
+        | Parsed of ConventionalCommit
+        | Failed of string               //TODO: Add union type for parser errors
+
+    type internal ParserState<'a> = {
+        CurrentResult : ParserResult;
+        UnparsedTokens : 'a list
+    }
+
+    // Helper methods
+    //
+    let internal joinString (separator:string) (values : string seq) = String.Join(separator, values |> Array.ofSeq)
+
+    let internal lineTokenToString token =
+          match token with
+              | LineToken.Line str -> str
+              | LineToken.Blank -> Environment.NewLine
+              | LineToken.Eof -> ""
+
+    let internal headerTokenToString token =
+        match token with
+            | HeaderToken.Colon -> ":"
+            | HeaderToken.ExclamationMark -> "!"
+            | HeaderToken.OpenParenthesis -> "("
+            | HeaderToken.CloseParenthesis -> ")"
+            | HeaderToken.Space -> " "
+            | HeaderToken.String str ->  str
+            | HeaderToken.Eof -> ""
+
+    let internal footerTokenToString token = 
+        match token with
+            | FooterToken.String str -> str
+            | FooterToken.Colon -> ":"
+            | FooterToken.Space -> " "
+            | FooterToken.Hash -> "#"
+            | FooterToken.Eof -> ""
+
+    let internal isLineTokenType (a:LineToken) (b:LineToken) : bool =
+        match a, b with
+            | LineToken.Line _, LineToken.Line _ -> true
+            | LineToken.Blank,  LineToken.Blank  -> true
+            | LineToken.Eof,    LineToken.Eof    -> true
+            | _                                  -> false
+
+    let internal isHeaderTokenType (a:HeaderToken) (b:HeaderToken) : bool =
+        match a, b with
+            | HeaderToken.String _,         HeaderToken.String _         -> true
+            | HeaderToken.OpenParenthesis,  HeaderToken.OpenParenthesis  -> true
+            | HeaderToken.CloseParenthesis, HeaderToken.CloseParenthesis -> true
+            | HeaderToken.Colon,            HeaderToken.Colon            -> true
+            | HeaderToken.Space,            HeaderToken.Space            -> true
+            | HeaderToken.ExclamationMark,  HeaderToken.ExclamationMark  -> true
+            | HeaderToken.Eof,              HeaderToken.Eof              -> true
+            |_                                                           -> false
+
+    let internal isFooterTokenType (a:FooterToken) (b:FooterToken) : bool = 
+        match a, b with
+            | FooterToken.String _, FooterToken.String _  -> true
+            | FooterToken.Colon   , FooterToken.Colon     -> true       
+            | FooterToken.Space   , FooterToken.Space     -> true
+            | FooterToken.Hash    , FooterToken.Hash      -> true
+            | FooterToken.Eof     , FooterToken.Eof       -> true
+            | _                                           -> false
+
+    // Tokenizer
+    //
+    let readLines (input:string) : LineToken seq =
         seq {
 
             let getStringTokenAndReset (stringBuilder: StringBuilder) =
@@ -45,79 +131,80 @@ module MessageParser =
             if currentValueBuilder.Length > 0 then
                 yield getStringTokenAndReset currentValueBuilder
 
-            yield Eof
+            yield LineToken.Eof
         }
 
-    type ParserResult =
-        | Parsed of ConventionalCommit
-        | Failed of string               //TODO: Add union type for parser errors
 
-    type internal ParserState<'a> = {
-        CurrentResult : ParserResult;
-        UnparsedTokens : 'a list
-    }
+    // Parser
+    //
+    module internal Commit =
+        let setType commit newType = { commit with ConventionalCommit.Type = newType }
+        let setScope commit newScope = { commit with Scope = Some newScope }
+        let setIsBreakingChange commit value = { commit with IsBreakingChange = value }
+        let setDescription commit value = { commit with ConventionalCommit.Description = value }
+        let addParagraph commit paragraph = { commit with Body = commit.Body @[ paragraph ] }
+        let addFooter commit footer = { commit with Footers = commit.Footers @ [ footer ] }
 
-    type internal HeaderToken =
-        | String of string     // any string value
-        | OpenParenthesis     // '('
-        | CloseParenthesis     // ')'
-        | Colon                // ':'
-        | Space                // ' '
-        | ExclamationMark      // '!'
-        | Eof                  // end of input / last token
+    module internal Parser = 
+        let fromResult currentResult tokens = { CurrentResult = currentResult; UnparsedTokens = tokens }
 
-    type internal FooterToken =
-        | String of string     // any string value
-        | Colon                // ':'
-        | Space                // ' '
-        | Hash                 // '#'
-        | Eof                  // end of input / last token
-
-
-    let parse (input: string) : ParserResult =
-
-        let joinString (separator:string) (values : string seq) = String.Join(separator, values |> Array.ofSeq)
+        let start tokens = {
+                CurrentResult = Parsed { Type = ""; Scope = None; Description = ""; IsBreakingChange = false; Body = []; Footers = [] };
+                UnparsedTokens = tokens }
         
-        let isLineTokenType (left:LineToken) (right:LineToken) : bool =
-            match left,right with
-                | Line _,Line _ -> true
-                | Blank,Blank -> true
-                | LineToken.Eof,LineToken.Eof -> true
-                | _ -> false
-
-        let testToken2 (predicate:'tokenType -> bool) (state:ParserState<'tokenType>) : bool =
-            match state.UnparsedTokens with
-                | head::_ -> predicate head
-                | _ -> false
-
-        let testToken (expected:'tokenType) (state:ParserState<'tokenType>) : bool =
-            match state.UnparsedTokens with
-                | head::_ -> head = expected
-                | _ -> false
-
-        let matchToken (expected:'a) (state:ParserState<'a>) : ParserState<'a> =
-            if testToken expected state then
-                { state with UnparsedTokens = state.UnparsedTokens |> List.skip 1 }
-            else
-                { state with CurrentResult = Failed (sprintf "Expected token %A" expected ) }
+        let internal failure error state = { state with CurrentResult = Failed error }
 
         let withErrorCheck parseFunction state =
               match state.CurrentResult with
                   | Failed _ -> state
                   | _ -> parseFunction state
 
-        let updateResult (mapper: ConventionalCommit -> 'a -> ConventionalCommit) (state : ParserResult) (param: 'a): ParserResult =
+        let testToken (expected:'tokenType) (state:ParserState<'tokenType>) : bool =
+            match state.UnparsedTokens with
+                | head::_ -> 
+                    let foo = head = expected
+                    foo
+                | _ -> false
+
+        let testToken2 predicate (state:ParserState<'tokenType>) : bool =
+               match state.UnparsedTokens with
+                   | head::_ -> predicate head
+                   | _ -> false
+
+        let matchToken (expected:'a) (state:ParserState<'a>) : ParserState<'a> =
+            if testToken expected state then
+                { state with UnparsedTokens = state.UnparsedTokens |> List.skip 1 }
+            else
+                failure (sprintf "Expected token %A" expected ) state
+
+        let updateResult updater state param =
             let currentCommit = match state with
                                 | Parsed d -> d
                                 | Failed _ -> raise (InvalidOperationException "Data from invalid ParseResult requested. 'updateParsed' must not be called without error checking")
-            let newCommit = mapper currentCommit param
+            let newCommit = updater currentCommit param
             Parsed newCommit
 
-        let lineTokenToString token =
-              match token with
-                  | LineToken.Line str -> str
-                  | LineToken.Blank -> Environment.NewLine
-                  | LineToken.Eof -> ""
+        let currentResult state = state.CurrentResult
+
+        let parseLine parser state =
+            match state.UnparsedTokens with 
+                | Line str::tail -> 
+                    let innerParserResult = parser state str 
+                    match innerParserResult.CurrentResult with
+                        | Parsed p -> { CurrentResult = Parsed p ; UnparsedTokens = tail }
+                        | Failed f -> { state with CurrentResult = Failed f }
+                | _ -> failure (sprintf "Unexpected token %A" state.UnparsedTokens.Head)  state
+
+        let parseIf (predicate:ParserState<'a> -> bool) parser state = if predicate state then parser state else state
+
+        let ref parseRec (predicate:ParserState<'a> -> bool) parser state = 
+            let newState = parser state
+            if predicate newState then
+                parseRec predicate parser newState
+            else
+                newState
+
+    let parse (message: string) : ParserResult =
 
         let tokenizeFooter (input:string) : FooterToken seq =
             seq {
@@ -151,7 +238,7 @@ module MessageParser =
                 yield FooterToken.Eof
             }
 
-        let parseHeader (state:ParserState<LineToken>) : ParserState<LineToken> =
+        let parseHeaderLine (initialState:ParserState<LineToken>) (input:string) : ParserState<HeaderToken> =
 
             let tokenizeHeader (input:string) : HeaderToken seq =
                 seq {
@@ -186,71 +273,54 @@ module MessageParser =
 
                     yield HeaderToken.Eof
                 }
-
-            let tokenToString token =
-                match token with
-                    | HeaderToken.Colon -> ":"
-                    | HeaderToken.ExclamationMark -> "!"
-                    | HeaderToken.OpenParenthesis -> "("
-                    | HeaderToken.CloseParenthesis -> ")"
-                    | HeaderToken.Space -> " "
-                    | HeaderToken.String str ->  str
-                    | HeaderToken.Eof -> ""
-
+           
             let matchString (onMatch: ParserResult -> string -> ParserResult) (state: ParserState<HeaderToken>) =
                 match state.UnparsedTokens with
                     | (HeaderToken.String str)::tail ->  { CurrentResult = (onMatch state.CurrentResult str); UnparsedTokens = tail }
-                    | _ -> { state with CurrentResult = (Failed "Expected string token") }
+                    | _ -> Parser.failure "Expected string token" state
 
-            let parseType state = matchString (updateResult (fun commit newType -> { commit with Type = newType }) ) state
+            let parseType state = matchString (Parser.updateResult Commit.setType) state
 
             let parseScope state =
-                if testToken OpenParenthesis state then
+                if Parser.testToken OpenParenthesis state then
                     state
-                        |> withErrorCheck (matchToken OpenParenthesis)
-                        |> withErrorCheck (matchString (updateResult (fun commit newScope -> { commit with Scope = Some newScope } ) ) )
-                        |> withErrorCheck (matchToken CloseParenthesis)
+                        |> Parser.withErrorCheck (Parser.matchToken OpenParenthesis)
+                        |> Parser.withErrorCheck (matchString (Parser.updateResult Commit.setScope ))
+                        |> Parser.withErrorCheck (Parser.matchToken CloseParenthesis)
                 else
                     state
 
             let parseBreakingChange state =
-                if (testToken ExclamationMark state) then
-                    { CurrentResult = (updateResult (fun commit isBreakingChange -> { commit with IsBreakingChange = isBreakingChange }) state.CurrentResult true);
+                if (Parser.testToken ExclamationMark state) then
+                    { CurrentResult = (Parser.updateResult Commit.setIsBreakingChange state.CurrentResult true);
                       UnparsedTokens = state.UnparsedTokens |> List.skip 1 }
                 else
                     state
-
-            //TODO
+            
             let parseDescription (state:ParserState<HeaderToken>) : ParserState<HeaderToken> =
                 let tokens =  state.UnparsedTokens |> List.takeWhile (fun t -> t <> HeaderToken.Eof)
                 let description = tokens
-                                    |> Seq.map tokenToString
+                                    |> Seq.map headerTokenToString
                                     |> joinString ""
 
                 if String.IsNullOrWhiteSpace description then
-                    { state with CurrentResult = Failed "Failed to parse header: Description must not be empty" }
+                    Parser.failure "Failed to parse header: Description must not be empty" state
                 else
                     let remainingTokens = state.UnparsedTokens |> List.skip tokens.Length
-                    let newResult = updateResult (fun c x -> { c with Description = x }) state.CurrentResult description
-                    matchToken HeaderToken.Eof { CurrentResult = newResult; UnparsedTokens = remainingTokens }
+                    let newResult = Parser.updateResult Commit.setDescription state.CurrentResult description
+                    Parser.matchToken HeaderToken.Eof { CurrentResult = newResult; UnparsedTokens = remainingTokens }
 
-            match state.UnparsedTokens with
-                | (Line str)::tail ->
-                    let headerParserState =
-                        {  CurrentResult = state.CurrentResult; UnparsedTokens = tokenizeHeader str  |> List.ofSeq }
-                            |> withErrorCheck parseType
-                            |> withErrorCheck parseScope
-                            |> withErrorCheck parseBreakingChange
-                            |> withErrorCheck (matchToken HeaderToken.Colon)
-                            |> withErrorCheck (matchToken HeaderToken.Space)
-                            |> withErrorCheck parseDescription
-
-                    match headerParserState.CurrentResult with
-                        | Parsed p -> { CurrentResult = Parsed p ; UnparsedTokens = tail }
-                        | Failed f -> { state with CurrentResult = Failed f }
-                | _ -> { state with CurrentResult = (Failed (sprintf "Unexpected token %A" state.UnparsedTokens.Head ) ) }
-
-
+            input 
+                |> tokenizeHeader
+                |> List.ofSeq
+                |> Parser.fromResult initialState.CurrentResult
+                |> Parser.withErrorCheck parseType
+                |> Parser.withErrorCheck parseScope
+                |> Parser.withErrorCheck parseBreakingChange
+                |> Parser.withErrorCheck (Parser.matchToken HeaderToken.Colon)
+                |> Parser.withErrorCheck (Parser.matchToken HeaderToken.Space)
+                |> Parser.withErrorCheck parseDescription
+                
         let testFooterStart (state:ParserState<LineToken>) : bool =
             match state.UnparsedTokens with
                 | (LineToken.Line str)::_ -> 
@@ -267,7 +337,7 @@ module MessageParser =
 
             let parseParagraph (state:ParserState<LineToken>) =
                 
-                if testToken2 (isLineTokenType (Line"")) state then
+                if Parser.testToken2 (isLineTokenType (Line"")) state then
 
                     let lines = state.UnparsedTokens |> List.takeWhile (fun line -> line <> LineToken.Eof && line <> LineToken.Blank)
                     if lines |> Seq.length > 0 then
@@ -275,102 +345,73 @@ module MessageParser =
                                     |> Seq.map lineTokenToString
                                     |> joinString Environment.NewLine
                         let unparsedTokens =  state.UnparsedTokens |> List.skip lines.Length
-                        { CurrentResult = ( (updateResult (fun commit paragraph -> { commit with Body = commit.Body @[paragraph] } )) state.CurrentResult (Paragraph text) );
+                        { CurrentResult = Parser.updateResult Commit.addParagraph state.CurrentResult (Paragraph text);
                           UnparsedTokens = unparsedTokens
                         }
                     else
                         state
                 else
-                    { state with CurrentResult = ( Failed "Failed to parse body: Expected 'Line' token") }
+                    Parser.failure "Failed to parse body: Expected 'Line' token" state
 
-            if testToken Blank state then
-                let newState = state |> (matchToken Blank)
+            if Parser.testToken Blank state then
+                let newState = state |> (Parser.matchToken Blank)
                 if(testFooterStart newState) then
                     state
                 else
                     newState
-                        |> withErrorCheck parseParagraph
-                        |> withErrorCheck parseBody
+                        |> Parser.withErrorCheck parseParagraph
+                        |> Parser.withErrorCheck parseBody
             else
                 state
         
-        let parseFooters (state:ParserState<LineToken>) : ParserState<LineToken> = 
-
-            let tokenToString token = 
-                match token with
-                    | FooterToken.String str -> str
-                    | FooterToken.Colon -> ":"
-                    | FooterToken.Space -> " "
-                    | FooterToken.Hash -> "#"
-                    | FooterToken.Eof -> ""
+        
+        let rec parseFooters (state:ParserState<LineToken>) : ParserState<LineToken> = 
 
             let parseFooterTokens (state:ParserState<FooterToken>) : ParserState<FooterToken> = 
-                match state.UnparsedTokens with
-                    | FooterToken.String "BREAKING"::FooterToken.Space::FooterToken.String "CHANGE"::FooterToken.Colon::FooterToken.Space::tail 
-                    | FooterToken.String "BREAKING"::FooterToken.Space::FooterToken.String "CHANGE"::FooterToken.Space::FooterToken.Hash::tail ->
-                        let tokens =  tail |> List.takeWhile (fun t -> t <> FooterToken.Eof)
-                        let description = tokens
-                                            |> List.map tokenToString
-                                            |> joinString ""
+                let footerType,descriptionTokens = 
+                    match state.UnparsedTokens with
+                        | String "BREAKING"::Space::String "CHANGE"::Colon::Space::tail 
+                        | String "BREAKING"::Space::String "CHANGE"::Space::Hash::tail -> "BREAKING CHANGE",tail
+                        | String footerType::Colon::Space::tail 
+                        | String footerType::Space::Hash::tail -> footerType,tail
+                        | _ -> "",[]
 
-                        let remainingTokens = tail |> List.skip tokens.Length
-                        if tokens.Length = 0 || String.IsNullOrWhiteSpace(description) then
-                            { state with CurrentResult = Failed "Failed to parse footer: Description must not be empty"}
-                        else
-                            let footer = { Type = "BREAKING CHANGE"; Description = description } 
-                            { state with UnparsedTokens = remainingTokens ; CurrentResult = (updateResult (fun c footer -> { c with Footers = c.Footers @ [ footer ]}) state.CurrentResult footer )}    
-                                |> matchToken Eof
-                    | FooterToken.String footerType::FooterToken.Colon::FooterToken.Space::tail 
-                    | FooterToken.String footerType::FooterToken.Space::FooterToken.Hash::tail ->                    
-                        
-                        let tokens =  tail |> List.takeWhile (fun t -> t <> FooterToken.Eof)
-                        let description = tokens
-                                            |> List.map tokenToString
-                                            |> joinString ""
+                let tokens =  descriptionTokens |> List.takeWhile (fun t -> t <> FooterToken.Eof)
+                let description = tokens
+                                    |> List.map footerTokenToString
+                                    |> joinString ""
 
-                        let remainingTokens = tail |> List.skip tokens.Length
-                        if tokens.Length = 0 || String.IsNullOrWhiteSpace(description) then
-                            { state with CurrentResult = Failed "Failed to parse footer: Description must not be empty"}
-                        else
-                            let footer = { Type = footerType; Description = description } 
-                            { state with UnparsedTokens = remainingTokens ; CurrentResult = (updateResult (fun c footer -> { c with Footers = c.Footers @ [ footer ]}) state.CurrentResult footer )}    
-                                |> matchToken Eof                            
-                    | _ -> { state with CurrentResult = Failed "Expected footer"}
+                let remainingTokens = descriptionTokens |> List.skip tokens.Length
 
-            let rec parseSingleFooter (state:ParserState<LineToken>) : ParserState<LineToken> =
-                let newState = match state.UnparsedTokens with
-                                | (LineToken.Line value)::tail -> 
-                                    let footerTokens = tokenizeFooter value |> List.ofSeq
-                                    let innerParserState = 
-                                        { CurrentResult = state.CurrentResult; UnparsedTokens = footerTokens }
-                                            |> parseFooterTokens
-                                    match innerParserState.CurrentResult with 
-                                        | (Parsed commit) -> { state with CurrentResult = Parsed commit; UnparsedTokens = tail }
-                                        | (Failed err) -> { state with CurrentResult = (Failed err) }
-                                | _ ->  { state with CurrentResult = Failed (sprintf "Unexpected token %A" state.UnparsedTokens.Head )  }
-
-                if (testToken LineToken.Blank newState || testToken LineToken.Eof newState) then 
-                    newState
+                if tokens.Length = 0 || String.IsNullOrWhiteSpace(description) then
+                    Parser.failure "Failed to parse footer: Description must not be empty" state
                 else
-                    withErrorCheck parseSingleFooter newState
+                    let footer = { Type = footerType; Description = description } 
+                    { UnparsedTokens = remainingTokens ;
+                      CurrentResult = (Parser.updateResult Commit.addFooter state.CurrentResult footer ) }    
+                        
+            let parseFooterLine (initialState: ParserState<LineToken>) (input:string) : ParserState<FooterToken> = 
+                input
+                    |> tokenizeFooter
+                    |> List.ofSeq
+                    |> Parser.fromResult initialState.CurrentResult
+                    |> Parser.withErrorCheck parseFooterTokens       
+                    |> Parser.withErrorCheck (Parser.matchToken Eof)
+                    
 
-            if testToken Blank state then
-                let newState = state |> (matchToken Blank)
-                newState 
-                    |> parseSingleFooter
+            let newState = Parser.parseLine parseFooterLine state
+
+            if Parser.testToken2 (isLineTokenType (LineToken.Line "")) newState then
+                Parser.withErrorCheck parseFooters newState
             else
-                state
-
-
-        let lines = input |> readLines |> List.ofSeq
-        let initalParserState = {
-            CurrentResult = Parsed { Type = ""; Scope = None; Description = ""; IsBreakingChange = false; Body = []; Footers = [] };
-            UnparsedTokens = lines
-        }
-        let result =
-            initalParserState
-                |> withErrorCheck parseHeader
-                |> withErrorCheck parseBody
-                |> withErrorCheck parseFooters
-                |> withErrorCheck (matchToken LineToken.Eof)
-        result.CurrentResult
+                newState
+            
+        message
+            |> readLines
+            |> List.ofSeq
+            |> Parser.start
+            |> Parser.withErrorCheck (Parser.parseLine parseHeaderLine)
+            |> Parser.withErrorCheck parseBody
+            |> Parser.withErrorCheck (Parser.parseIf (Parser.testToken Blank) ((Parser.matchToken Blank) >> parseFooters))
+            |> Parser.withErrorCheck (Parser.matchToken LineToken.Eof)
+            |> Parser.currentResult
