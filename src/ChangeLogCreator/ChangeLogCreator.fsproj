@@ -8,6 +8,7 @@
     <Compile Include="Domain.fs" />
     <Compile Include="ListEx.fs" />
     <Compile Include="MessageParser.fs" />
+    <Compile Include="Properties\AssemblyInfo.fs" />
   </ItemGroup>
 
 </Project>
