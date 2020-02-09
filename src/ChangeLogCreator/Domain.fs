@@ -45,19 +45,18 @@ type GitCommit = {
     Author: GitAuthor
 }
 
-type ChangeLogEntryType = 
+type ChangeLogEntryType =
     | Feature
     | BugFix
     | WorkInProgress
     | Other of string
 
 type ChangeLogEntry = {
-    Type : ChangeLogEntryType
-    CommitId : string
-    Scope: string option
     Date : DateTime
-    RawCommit : GitCommit
-    ParsedCommit : ConventionalCommit
+    Type : ChangeLogEntryType
+    Scope: string option
+    Summary : string
+    CommitId : string
 }
 
 type ChangeLog = {

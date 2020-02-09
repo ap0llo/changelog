@@ -20,24 +20,16 @@ module ChangeLogBuilder =
                     printfn "Failed to parse commit %s: %s" commit.Id err
                     None
                 | Parsed parsed -> Some { 
+                    Date = commit.Date
                     Type = getChangeType parsed
                     Scope = parsed.Scope
+                    Summary = parsed.Description
                     CommitId = commit.Id
-                    Date = commit.Date
-                    RawCommit = commit
-                    ParsedCommit = parsed 
                 }
-
-        let getPriority changeType =
-            match changeType with
-                | "fix" -> 0
-                | "feat" -> 1
-                | _ -> 2
 
         commits 
             |> Seq.choose tryParseMessage
-            |> Seq.where (fun e -> e.Type <> WorkInProgress)
-            |> Seq.sortBy (fun e -> (getPriority e.ParsedCommit.Type), e.ParsedCommit.Type)
+            |> Seq.where (fun e -> e.Type <> WorkInProgress)           
 
     let getChangeLog commits = 
         let entries = getEntries commits

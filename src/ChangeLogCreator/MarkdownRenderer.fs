@@ -11,7 +11,7 @@ module MarkdownRenderer =
             [|  match entry.Scope with
                     | Some scope ->  toCompositeSpan [| toStrongEmphasisSpan (scope + ":"); toTextSpan " " |]
                     | None -> upcast MdEmptySpan.Instance : MdSpan
-                toTextSpan  entry.ParsedCommit.Description; 
+                toTextSpan  entry.Summary; 
                 toTextSpan " (";
                 toCodeSpan entry.CommitId;
                 toTextSpan ")"
