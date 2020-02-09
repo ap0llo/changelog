@@ -7,8 +7,9 @@
 
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.fs" />
-    <Compile Include="Markdown.fs" />
     <Compile Include="Domain.fs" />
+    <Compile Include="SemanticVersion.fs" />
+    <Compile Include="Markdown.fs" />
     <Compile Include="Git.fs" />
     <Compile Include="MessageParser.fs" />
     <Compile Include="ChangeLogBuilder.fs" />
@@ -20,6 +21,7 @@
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0034" />
     <PackageReference Include="Grynwald.MarkdownGenerator" Version="2.4.30" />
+    <PackageReference Include="NuGet.Versioning" Version="5.5.0-preview.2.6382" />
   </ItemGroup>
 
 </Project>

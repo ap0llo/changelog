@@ -5,27 +5,35 @@ open Grynwald.MarkdownGenerator;
 // Helper functions for generating Markdown (with helper function wrapping the MarkdownGenerator library)
 module Markdown =
 
-    let toTextSpan (content:string) : MdSpan = upcast MdTextSpan content
+    let textSpan (content:string) : MdSpan = upcast MdTextSpan content
     
-    let toCodeSpan (content:string) : MdSpan = upcast MdCodeSpan content
+    let codeSpan (content:string) : MdSpan = upcast MdCodeSpan content
 
-    let toStrongEmphasisSpan (content:string) : MdSpan = upcast MdStrongEmphasisSpan (toTextSpan content)
+    let emphasisSpan (content:string) : MdSpan = upcast MdEmphasisSpan (textSpan content)
 
-    let toCompositeSpan (content: MdSpan seq) : MdSpan = upcast MdCompositeSpan (Array.ofSeq content)
+    let strongEmphasisSpan (content:string) : MdSpan = upcast MdStrongEmphasisSpan (textSpan content)
 
-    let toRawMarkdownSpan  (content:string) : MdSpan = upcast MdRawMarkdownSpan content
+    let compositeSpan (content: MdSpan seq) : MdSpan = upcast MdCompositeSpan (Array.ofSeq content)
+
+    let rawMarkdownSpan  (content:string) : MdSpan = upcast MdRawMarkdownSpan content
+
+    let linkSpan  (uri: string) (content:MdSpan) : MdSpan = upcast MdLinkSpan(content, uri)
+    
+    let toAnchor (content: MdSpan) : string =         
+        let anchor = MdHeading(1, content).Anchor
+        anchor
 
     let heading (level:int) (content:string) : MdBlock = 
-        let contentSpan = toTextSpan content
+        let contentSpan = textSpan content
         upcast MdHeading(level, contentSpan)
 
-    let h1 = heading 1
-    let h2 = heading 2
-    let h3 = heading 3
-    let h4 = heading 4
+    // TODO: This should be a feature of the Markdown Generator Library
+    let headingWithExplicitAnchor (level:int) (content:MdSpan) : MdBlock =        
+        let anchor = toAnchor content
+        upcast MdHeading(level, compositeSpan [ rawMarkdownSpan (sprintf "<a name=\"%s\"></a>" anchor) ; content ])
 
     let htmlBlock (html:string) : MdBlock =
-        let span = toRawMarkdownSpan html
+        let span = rawMarkdownSpan html
         upcast MdParagraph [| span |]
 
     let containerBlock (content: MdBlock seq) : MdBlock =
@@ -45,3 +53,5 @@ module Markdown =
             yield htmlBlock "</details>"
         } 
         blocks |> containerBlock
+
+    let thematicBreak : MdBlock = upcast MdThematicBreak () : MdBlock

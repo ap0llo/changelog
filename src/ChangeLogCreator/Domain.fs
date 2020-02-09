@@ -1,7 +1,5 @@
 ﻿namespace ChangeLogCreator
 
-open System;
-
 type Paragraph = Paragraph of string
 
 type ConventionalCommitFooter = {
@@ -41,8 +39,13 @@ type GitAuthor = {
 type GitCommit = {
     Id : string
     Message : string
-    Date : DateTime
+    Date : System.DateTime
     Author: GitAuthor
+}
+
+type GitTag = {
+    Name : string
+    CommitId : string
 }
 
 type ChangeLogEntryType =
@@ -52,15 +55,26 @@ type ChangeLogEntryType =
     | Other of string
 
 type ChangeLogEntry = {
-    Date : DateTime
+    Date : System.DateTime
     Type : ChangeLogEntryType
     Scope: string option
     Summary : string
+    Body: Paragraph list
     CommitId : string
 }
 
-type ChangeLog = {
+type VersionInfo = {
+    Version : NuGet.Versioning.SemanticVersion
+    Tag : GitTag
+}
+
+type VersionChangeLog = {    
+    VersionInfo: VersionInfo
     BugFixes : ChangeLogEntry list
     Features : ChangeLogEntry list
     OtherChanges : (string * ChangeLogEntry list) list
+}
+
+type ChangeLog = {
+    Versions : VersionChangeLog list
 }
