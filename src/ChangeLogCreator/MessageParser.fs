@@ -149,12 +149,12 @@ module MessageParser =
     /// Provides helper method for changing data in a <see cref="ConventionalCommit" />
     /// </summary>
     module internal Commit =
-        let setType commit newType = { commit with ConventionalCommit.Type = newType }
-        let setScope commit newScope = { commit with Scope = Some newScope }
-        let setIsBreakingChange commit value = { commit with IsBreakingChange = value }
-        let setDescription commit value = { commit with ConventionalCommit.Description = value }
-        let addParagraph commit paragraph = { commit with Body = commit.Body @ [ paragraph ] }
-        let addFooter commit footer = { commit with Footers = commit.Footers @ [ footer ] }
+        let setType (commit:ConventionalCommit) newType = { commit with ConventionalCommit.Type = newType }
+        let setScope (commit:ConventionalCommit) newScope = { commit with Scope = Some newScope }
+        let setIsBreakingChange (commit:ConventionalCommit) value = { commit with IsBreakingChange = value }
+        let setDescription (commit:ConventionalCommit) value = { commit with ConventionalCommit.Description = value }
+        let addParagraph (commit:ConventionalCommit) paragraph = { commit with Body = commit.Body @ [ paragraph ] }
+        let addFooter (commit:ConventionalCommit) footer = { commit with Footers = commit.Footers @ [ footer ] }
 
     /// Provides helper methods for parsing
     module internal Parser =

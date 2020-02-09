@@ -1,14 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Domain.fs" />
-    <Compile Include="ListEx.fs" />
-    <Compile Include="MessageParser.fs" />
     <Compile Include="Properties\AssemblyInfo.fs" />
+    <Compile Include="Markdown.fs" />
+    <Compile Include="Domain.fs" />
+    <Compile Include="Git.fs" />
+    <Compile Include="MessageParser.fs" />
+    <Compile Include="ChangeLogBuilder.fs" />
+    <Compile Include="MarkdownRenderer.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.7.82" />
+    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0034" />
+    <PackageReference Include="Grynwald.MarkdownGenerator" Version="2.4.30" />
   </ItemGroup>
 
 </Project>

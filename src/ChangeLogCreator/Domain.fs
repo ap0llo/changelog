@@ -1,8 +1,10 @@
 ﻿namespace ChangeLogCreator
 
+open System;
+
 type Paragraph = Paragraph of string
 
-type CommitFooter = {
+type ConventionalCommitFooter = {
     Type : string
     Description : string
 }
@@ -28,5 +30,38 @@ type ConventionalCommit = {
     Body : Paragraph list
 
     /// The message's footers.
-    Footers : CommitFooter list
+    Footers : ConventionalCommitFooter list
+}
+
+type GitAuthor = {
+    Email : string
+    Name : string
+}
+
+type GitCommit = {
+    Id : string
+    Message : string
+    Date : DateTime
+    Author: GitAuthor
+}
+
+type ChangeLogEntryType = 
+    | Feature
+    | BugFix
+    | WorkInProgress
+    | Other of string
+
+type ChangeLogEntry = {
+    Type : ChangeLogEntryType
+    CommitId : string
+    Scope: string option
+    Date : DateTime
+    RawCommit : GitCommit
+    ParsedCommit : ConventionalCommit
+}
+
+type ChangeLog = {
+    BugFixes : ChangeLogEntry list
+    Features : ChangeLogEntry list
+    OtherChanges : (string * ChangeLogEntry list) list
 }
