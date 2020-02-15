@@ -2,10 +2,10 @@ module ``MessageParser Tests``
 
 open System
 open Xunit
-open ChangeLogCreator;
-open ChangeLogCreator.MessageParser;
+open ChangeLogCreator
+open ChangeLogCreator.MessageParser
+open Assertions
 
-let isEqualTo (expected:'a) (actual:'a) = Assert.Equal<'a>(expected, actual)
 
 /// Test cases for the "line tokenizer"
 let readLinesTestCases =
@@ -39,7 +39,7 @@ let readLinesTestCases =
 let ``readLines returns expected lines`` input (expectedTokens : obj[]) =
     let objectToLineToken (obj:obj) : LineToken = downcast obj
     let actualTokens = MessageParser.readLines input
-    List.ofSeq actualTokens |> isEqualTo (expectedTokens |> Seq.map objectToLineToken |> List.ofSeq)
+    List.ofSeq actualTokens |> mustBeEqualTo (expectedTokens |> Seq.map objectToLineToken |> List.ofSeq)
 
 
 /// parser test cases
@@ -313,4 +313,4 @@ let parserTestCases =
 [<MemberData("parserTestCases")>]
 let ``parse returns expected ParseResult`` input expectedResult =
     let actualResult = MessageParser.parse input
-    actualResult |> isEqualTo expectedResult
+    actualResult |> mustBeEqualTo expectedResult

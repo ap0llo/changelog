@@ -37,27 +37,28 @@ module ChangeLogBuilder =
     let getVersions (tags: GitTag list) : VersionInfo list =
         let tryGetVersionInfo (tag: GitTag) : VersionInfo option =
             let versionString = tag.Name.TrimStart('v') //TODO: Prefix should be configurable
-            match SemanticVersion.parse versionString with
+            match SemVer.tryParse versionString with
                 | Some version -> Some { Tag = tag; Version = version }
                 | None -> 
-                    printfn "Failed to parse version tag '%s'" tag.Name
+                    printfn "Failed to parse version tag '%s'" tag.Name  //TODO: Use logger instead
                     None
 
         tags |> List.choose tryGetVersionInfo
+
+    /// Selects the predecessor version of the specified version from the list of all versions
+    let getPreviousVersion (allVersions: VersionInfo seq) (currentVersion: VersionInfo) : VersionInfo option =
+        let lowerVersions = allVersions 
+                                |> Seq.where (fun (v:VersionInfo) -> v.Version < currentVersion.Version)
+                                |> Seq.sortByDescending (fun v -> v)
+                                |> List.ofSeq
+        match lowerVersions with 
+            | head::_ -> Some head
+            | _ -> None
   
-    // Gets the changelog for the specified version
+    /// Gets the change log for the specified version
     let getChangeLogForVersion (commitLoader: getCommits) (allVersions: VersionInfo seq) (version:VersionInfo)  : VersionChangeLog =
 
-        let previousVersion : VersionInfo option =
-            let lowerVersions = allVersions 
-                                    |> Seq.where (fun (v:VersionInfo) -> v.Version < version.Version)
-                                    |> Seq.sortByDescending (fun v -> v)
-                                    |> List.ofSeq
-            match lowerVersions with 
-                | head::_ -> Some head
-                | _ -> None
-
-        let commits = commitLoader previousVersion version
+        let commits = commitLoader (getPreviousVersion allVersions version) version
         let entries = getEntries commits
 
         let entriesOfType changeType = entries |> Seq.where (fun e -> e.Type = changeType) |> List.ofSeq
