@@ -19,18 +19,9 @@ module Markdown =
 
     let linkSpan  (uri: string) (content:MdSpan) : MdSpan = upcast MdLinkSpan(content, uri)
     
-    let toAnchor (content: MdSpan) : string =         
-        let anchor = MdHeading(1, content).Anchor
-        anchor
-
-    let heading (level:int) (content:string) : MdBlock = 
+    let heading (level:int) (content:string) (id:string) : MdBlock = 
         let contentSpan = textSpan content
-        upcast MdHeading(level, contentSpan)
-
-    // TODO: This should be a feature of the Markdown Generator Library
-    let headingWithExplicitAnchor (level:int) (content:MdSpan) : MdBlock =        
-        let anchor = toAnchor content
-        upcast MdHeading(level, compositeSpan [ rawMarkdownSpan (sprintf "<a name=\"%s\"></a>" anchor) ; content ])
+        upcast MdHeading(level, contentSpan, Anchor = id)
 
     let htmlBlock (html:string) : MdBlock =
         let span = rawMarkdownSpan html

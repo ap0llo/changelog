@@ -37,7 +37,7 @@ let main argv =
                         |> ChangeLogBuilder.getVersions
                         |> ChangeLogBuilder.getChangeLog commitLoader
                         |> MarkdownRenderer.renderChangeLog 
-        document.Save opts.OutputPath
+        document.Save(opts.OutputPath, MarkdownRenderer.serializationOptions)
         0
 
     match parserResult with

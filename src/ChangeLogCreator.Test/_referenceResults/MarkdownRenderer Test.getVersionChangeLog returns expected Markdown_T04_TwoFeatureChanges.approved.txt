@@ -1,25 +1,25 @@
-﻿# 1.2.3
+﻿# <a id="heading-v123"></a> 1.2.3
 
-## Overview
+## <a id="heading-v123-overview"></a> Overview
 
-### Features
+### <a id="heading-v123-overview-features"></a> Features
 
-- [**scope1:** A new feature](#scope1-a-new-feature)
-- [**scope2:** Another feature](#scope2-another-feature)
+- [**scope1:** A new feature](#heading-some-id)
+- [**scope2:** Another feature](#heading-some-other-id)
 
 ___
 
-## Details
+## <a id="heading-v123-details"></a> Details
 
-### Features
+### <a id="heading-v123-details-features"></a> Features
 
-#### <a name="scope1-a-new-feature"></a>**scope1:** A new feature
+#### <a id="heading-some-id"></a> **scope1:** A new feature
 
 Commit: `Some ID`
 
 ___
 
-#### <a name="scope2-another-feature"></a>**scope2:** Another feature
+#### <a id="heading-some-other-id"></a> **scope2:** Another feature
 
 Commit: `Some other ID`
 

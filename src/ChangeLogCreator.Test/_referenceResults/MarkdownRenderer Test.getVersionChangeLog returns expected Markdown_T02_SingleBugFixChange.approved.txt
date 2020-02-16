@@ -1,18 +1,18 @@
-﻿# 1.2.3\-alpha
+﻿# <a id="heading-v123alpha"></a> 1.2.3\-alpha
 
-## Overview
+## <a id="heading-v123alpha-overview"></a> Overview
 
-### Bug Fixes
+### <a id="heading-v123alpha-overview-bugfixes"></a> Bug Fixes
 
-- [Fixed a bug](#fixed-a-bug)
+- [Fixed a bug](#heading-some-id)
 
 ___
 
-## Details
+## <a id="heading-v123alpha-details"></a> Details
 
-### Bug Fixes
+### <a id="heading-v123alpha-details-bugfixes"></a> Bug Fixes
 
-#### <a name="fixed-a-bug"></a>Fixed a bug
+#### <a id="heading-some-id"></a> Fixed a bug
 
 Commit: `Some ID`
 

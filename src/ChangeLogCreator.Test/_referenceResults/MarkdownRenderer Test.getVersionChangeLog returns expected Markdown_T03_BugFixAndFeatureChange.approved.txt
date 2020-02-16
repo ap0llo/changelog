@@ -1,30 +1,30 @@
-﻿# 1.2.3\-alpha
+﻿# <a id="heading-v123alpha"></a> 1.2.3\-alpha
 
-## Overview
+## <a id="heading-v123alpha-overview"></a> Overview
 
-### Features
+### <a id="heading-v123alpha-overview-features"></a> Features
 
-- [A new feature](#a-new-feature)
+- [A new feature](#heading-some-other-id)
 
-### Bug Fixes
+### <a id="heading-v123alpha-overview-bugfixes"></a> Bug Fixes
 
-- [Fixed a bug](#fixed-a-bug)
+- [Fixed a bug](#heading-some-id)
 
 ___
 
-## Details
+## <a id="heading-v123alpha-details"></a> Details
 
-### Features
+### <a id="heading-v123alpha-details-features"></a> Features
 
-#### <a name="a-new-feature"></a>A new feature
+#### <a id="heading-some-other-id"></a> A new feature
 
 Commit: `Some other ID`
 
 ___
 
-### Bug Fixes
+### <a id="heading-v123alpha-details-bugfixes"></a> Bug Fixes
 
-#### <a name="fixed-a-bug"></a>Fixed a bug
+#### <a id="heading-some-id"></a> Fixed a bug
 
 Commit: `Some ID`
 

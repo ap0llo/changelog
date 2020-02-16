@@ -66,6 +66,9 @@ let getVersionChangeLogTestCases =
               OtherChanges = []  }
 
         // TODO: Messages with body
+        // TODO: Scope
+        // TODO: Breaking changes
+        // TODO: Full changelog (multiple versions)
 
         yield testCase
             "T05_MultipleOtherChanges"
@@ -86,7 +89,7 @@ let getVersionChangeLogTestCases =
 [<MemberData("getVersionChangeLogTestCases")>]
 [<UseReporter(typedefof<DiffReporter>)>]
 let ``getVersionChangeLog returns expected Markdown`` (testCase: MarkdownRendererTestCase) =    
-    let actualMarkdown = (MarkdownRenderer.renderVersionChangeLog testCase.Input).ToString()
+    let actualMarkdown = (MarkdownRenderer.renderVersionChangeLog testCase.Input).ToString(MarkdownRenderer.serializationOptions)
     let writer = new ApprovalTextWriter(actualMarkdown)
     Approvals.Verify(writer, ApprovalNamer(testCase.Name),Approvals.GetReporter())
     ()

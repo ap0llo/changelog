@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0034" />
-    <PackageReference Include="Grynwald.MarkdownGenerator" Version="2.4.30" />
+    <PackageReference Include="Grynwald.MarkdownGenerator" Version="2.5.9-pre" />
     <PackageReference Include="NuGet.Versioning" Version="5.5.0-preview.2.6382" />
   </ItemGroup>
 
