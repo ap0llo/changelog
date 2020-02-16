@@ -21,8 +21,7 @@ module MarkdownRenderer =
 
         let isEmpty versionChangeLog =
             versionChangeLog.Features |> List.isEmpty &&
-            versionChangeLog.BugFixes |> List.isEmpty &&
-            versionChangeLog.OtherChanges |> List.isEmpty        
+            versionChangeLog.BugFixes |> List.isEmpty    
  
         let scopeAndDescriptionSpan (entry: ChangeLogEntry) : MdSpan =
             compositeSpan ([  
@@ -81,14 +80,7 @@ module MarkdownRenderer =
                     if not (List.isEmpty versionChangeLog.BugFixes) then
                         yield h3 "Bug Fixes"
                         yield changeList versionChangeLog.BugFixes
-
-                    if not (List.isEmpty versionChangeLog.OtherChanges) then
-                        yield h3 "Other Changes"
-                        yield versionChangeLog.OtherChanges 
-                                                |> List.map (fun (changeType,changes:ChangeLogEntry list) -> [h3 changeType; changeList changes]) 
-                                                |> List.reduce (fun a b -> a @ b)
-                                                |> collapsibleSection "Expand for details" 
-
+                    
                     yield thematicBreak 
                     yield h2 "Details"
 
@@ -100,7 +92,6 @@ module MarkdownRenderer =
                         yield h3 "Bug Fixes"
                         yield changeDetailSections versionChangeLog.BugFixes
 
-                //TODO: collapsible sections don't work for some markdown implementations, e.g. MkDocs
                 //TODO: Ensure changes are ordered the same way in both overview and details
             })
         

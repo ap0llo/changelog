@@ -64,6 +64,19 @@ let getVersionChangeLogTestCases =
                 { Date = DateTime.Now; Type = Feature; Scope = Some "scope2"; Summary = "Another feature"; Body = []; CommitId= "Some other ID"}
               ]
               OtherChanges = []  }
+
+        // TODO: Messages with body
+
+        yield testCase
+            "T05_MultipleOtherChanges"
+            { VersionInfo = stringToVersionInfo "1.2.3"
+              BugFixes = [ ]
+              Features = [ ]
+              OtherChanges = [
+                "docs",[ { Date = DateTime.Now; Type = Other "docs"; Scope = Some "scope1"; Summary = "An docs update"; Body = []; CommitId= "Some ID"} ]
+                "build",[ { Date = DateTime.Now; Type = Other "build"; Scope = Some "scope1"; Summary = "A change to the build system"; Body = []; CommitId= "Some ID"} ]
+              ]  
+            }
             
     }
 
