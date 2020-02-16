@@ -1,0 +1,31 @@
+﻿# 1.2.3\-alpha
+
+## Overview
+
+### Features
+
+- [A new feature](#a-new-feature)
+
+### Bug Fixes
+
+- [Fixed a bug](#fixed-a-bug)
+
+___
+
+## Details
+
+### Features
+
+#### <a name="a-new-feature"></a>A new feature
+
+Commit: `Some other ID`
+
+___
+
+### Bug Fixes
+
+#### <a name="fixed-a-bug"></a>Fixed a bug
+
+Commit: `Some ID`
+
+___

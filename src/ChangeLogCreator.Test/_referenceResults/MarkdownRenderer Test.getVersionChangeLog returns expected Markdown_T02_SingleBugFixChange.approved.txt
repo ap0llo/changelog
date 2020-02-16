@@ -1,0 +1,19 @@
+﻿# 1.2.3\-alpha
+
+## Overview
+
+### Bug Fixes
+
+- [Fixed a bug](#fixed-a-bug)
+
+___
+
+## Details
+
+### Bug Fixes
+
+#### <a name="fixed-a-bug"></a>Fixed a bug
+
+Commit: `Some ID`
+
+___

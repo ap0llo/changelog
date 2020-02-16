@@ -1,0 +1,26 @@
+﻿# 1.2.3
+
+## Overview
+
+### Features
+
+- [**scope1:** A new feature](#scope1-a-new-feature)
+- [**scope2:** Another feature](#scope2-another-feature)
+
+___
+
+## Details
+
+### Features
+
+#### <a name="scope1-a-new-feature"></a>**scope1:** A new feature
+
+Commit: `Some ID`
+
+___
+
+#### <a name="scope2-another-feature"></a>**scope2:** Another feature
+
+Commit: `Some other ID`
+
+___

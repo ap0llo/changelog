@@ -104,10 +104,10 @@ module MarkdownRenderer =
                 //TODO: Ensure changes are ordered the same way in both overview and details
             })
         
-    /// Renders a changelog for the specified version
+    /// Renders a change log for the specified version
     let renderVersionChangeLog (changeLog : VersionChangeLog) : MdDocument = getChangeLogForVersion 1 changeLog |> MdDocument
     
-    /// Renders a full changelog for the application
+    /// Renders a full change log for the application
     let renderChangeLog (changeLog : ChangeLog) : MdDocument =
             seq {        
                 yield heading 1 "Change Log"
