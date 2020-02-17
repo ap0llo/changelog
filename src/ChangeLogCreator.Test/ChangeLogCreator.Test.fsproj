@@ -8,8 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Assertions.fs" />
     <None Include="App.config" />
+    <Compile Include="XunitAdapters.fs" />
+    <Compile Include="Assertions.fs" />
     <Compile Include="MessageParserTests.fs" />
     <Compile Include="ChangeLogBuilderTest.fs" />
     <Compile Include="MarkdownRendererTest.fs" />
@@ -18,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />

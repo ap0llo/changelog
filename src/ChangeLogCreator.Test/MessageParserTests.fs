@@ -1,4 +1,4 @@
-module ``MessageParser Tests``
+module ChangeLogCreator.Test.MessageParserTest
 
 open System
 open Xunit
@@ -6,10 +6,11 @@ open ChangeLogCreator
 open ChangeLogCreator.MessageParser
 open Assertions
 
-
 /// Test cases for the "line tokenizer"
 let readLinesTestCases =
-    let testCase (input : string) (tokens : LineToken list) : obj array = [| input :> obj; Array.ofList tokens :> obj|]
+    let testCase (input : string) (tokens : LineToken list) : obj array = 
+        let serializableTokens = tokens |> List.map XunitSerializableLineToken
+        [| input :> obj; Array.ofList serializableTokens :> obj|]
     seq {
 
         yield testCase "" [ Eof ]
@@ -37,16 +38,25 @@ let readLinesTestCases =
 [<Theory>]
 [<MemberData("readLinesTestCases")>]
 let ``readLines returns expected lines`` input (expectedTokens : obj[]) =
-    let objectToLineToken (obj:obj) : LineToken = downcast obj
-    let actualTokens = MessageParser.readLines input
-    List.ofSeq actualTokens |> mustBeEqualTo (expectedTokens |> Seq.map objectToLineToken |> List.ofSeq)
 
+    let unpackToken (obj:obj) : LineToken =
+        let serializableLineToken = (downcast obj : XunitSerializableLineToken)
+        serializableLineToken.Value
+
+    let actualTokens = MessageParser.readLines input
+
+    List.ofSeq actualTokens |> mustBeEqualTo (expectedTokens |> Seq.map unpackToken |> List.ofSeq)
 
 /// parser test cases
 let parserTestCases =
     let lineBreak = "\r\n"
+    
     let joinString (separator:string) (values : string list) = String.Join(separator, values |> Array.ofList)
-    let testCase (input: string) (expectedResult: ParserResult) : obj array = [| input :> obj; expectedResult :> obj|]
+    
+    let testCase (input: string) (expectedResult: ParserResult) : obj array = 
+        let serializableResult = XunitSerializableParserResult expectedResult
+        [| input :> obj; serializableResult :> obj|]
+    
     let multiLineTestCase (input:string list) = testCase (joinString lineBreak input)
 
     seq {
@@ -311,6 +321,7 @@ let parserTestCases =
 
 [<Theory>]
 [<MemberData("parserTestCases")>]
-let ``parse returns expected ParseResult`` input expectedResult =
+let ``parse returns expected ParseResult`` (input:string) (expectedResult: obj) =
+    let serialzableResult = downcast expectedResult : XunitSerializableParserResult
     let actualResult = MessageParser.parse input
-    actualResult |> mustBeEqualTo expectedResult
+    actualResult |> mustBeEqualTo serialzableResult.Value
