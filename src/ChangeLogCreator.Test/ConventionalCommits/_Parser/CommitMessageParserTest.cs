@@ -186,7 +186,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                             Body = Array.Empty<string>(),
                             Footers = new[]
                             {
-                                new CommitMessageFooter() { Type = footerType, Description = "Footer Description" }
+                                new CommitMessageFooter(type: footerType, description: "Footer Description")
                             }
                         },
                         "type: Description",
@@ -210,8 +210,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     Body = Array.Empty<string>(),
                     Footers = new[]
                     {
-                        new CommitMessageFooter() { Type = "Footer1", Description = "Footer Description1" },
-                        new CommitMessageFooter() { Type = "Footer2", Description = "Footer Description2" }
+                        new CommitMessageFooter(type: "Footer1", description: "Footer Description1"),
+                        new CommitMessageFooter(type: "Footer2", description: "Footer Description2")
                     }
                 },
                 "type: Description",
@@ -226,7 +226,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 {
                     Header = new CommitMessageHeader()
                     {
-                        Type = "type",
+                        Type =  "type",
                         Scope = "scope",
                         Description = "Description",
                         IsBreakingChange = false,
@@ -238,7 +238,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     },
                     Footers = new[]
                     {
-                        new CommitMessageFooter() { Type = "Reviewed-by", Description = "Z" }
+                        new CommitMessageFooter(type: "Reviewed-by", description: "Z")
                     }
                 },
                 "type(scope): Description",
@@ -268,8 +268,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     },
                     Footers = new[]
                     {
-                        new CommitMessageFooter() { Type = "Reviewed-by", Description = "Z" },    
-                        new CommitMessageFooter() { Type = "Footer2", Description = "description" }
+                        new CommitMessageFooter(type: "Reviewed-by", description: "Z"),    
+                        new CommitMessageFooter(type: "Footer2", description: "description")
                     }
                 },
                 "type(scope): Description",

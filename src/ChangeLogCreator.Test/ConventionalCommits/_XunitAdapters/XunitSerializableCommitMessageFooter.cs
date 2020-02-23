@@ -20,11 +20,10 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            Value = new CommitMessageFooter()
-            {
-                Type = info.GetValue<string>(nameof(CommitMessageFooter.Type)),
-                Description = info.GetValue<string>(nameof(CommitMessageFooter.Description))
-            };
+            var type = info.GetValue<string>(nameof(CommitMessageFooter.Type));
+            var description = info.GetValue<string>(nameof(CommitMessageFooter.Description));
+
+            Value = new CommitMessageFooter(type, description);            
         }
 
         public void Serialize(IXunitSerializationInfo info)

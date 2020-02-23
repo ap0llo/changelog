@@ -5,9 +5,22 @@ namespace ChangeLogCreator.ConventionalCommits
 {
     public sealed class CommitMessageFooter : IEquatable<CommitMessageFooter>
     {
-        public string Type { get; set; } = "";
+        public string Type { get; }
 
-        public string Description { get; set; } = "";
+        public string Description { get; }
+
+
+        public CommitMessageFooter(string type, string description)
+        {
+            if (String.IsNullOrEmpty(type))
+                throw new ArgumentException("Value must not be null or empty", nameof(type));
+
+            if (String.IsNullOrEmpty(description))
+                throw new ArgumentException("Value must not be null or empty", nameof(description));
+
+            Type = type;
+            Description = description;
+        }
 
 
         public override int GetHashCode()

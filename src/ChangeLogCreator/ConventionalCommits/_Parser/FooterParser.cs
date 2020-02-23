@@ -5,6 +5,7 @@ using System.Text;
 
 namespace ChangeLogCreator.ConventionalCommits
 {
+    //TODO: Add tests
     class FooterParser : Parser<FooterToken, FooterTokenKind>
     {
         private readonly LineToken m_Input;
@@ -39,10 +40,9 @@ namespace ChangeLogCreator.ConventionalCommits
         {
             Tokens = FooterTokenizer.GetTokens(m_Input).ToArray();
             m_Position = 0;
+            
 
-            var footer = new CommitMessageFooter();
-
-            footer.Type = ParseFooterType();
+            var footerType = ParseFooterType();
 
             // remaining tokens are the description
             var desciptionBuilder = new StringBuilder();
@@ -50,16 +50,16 @@ namespace ChangeLogCreator.ConventionalCommits
             {
                 desciptionBuilder.Append(MatchToken(Current.Kind).Value);
             }
-            footer.Description = desciptionBuilder.ToString();
+            var footerDescription = desciptionBuilder.ToString();
 
-            if (String.IsNullOrWhiteSpace(footer.Description))
+            if (String.IsNullOrWhiteSpace(footerDescription))
             {
                 throw new CommitMessageParserException("Footer description must not be empty");
             }
 
             MatchToken(FooterTokenKind.Eol);
 
-            return footer;          
+            return new CommitMessageFooter(footerType, footerDescription);          
         }
 
         private bool IsFooterStart()
