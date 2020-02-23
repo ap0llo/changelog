@@ -5,7 +5,10 @@ using System.Text;
 
 namespace ChangeLogCreator.ConventionalCommits
 {
-    enum FooterTokenKind
+    /// <summary>
+    /// Enumerates the types of tokens emitted by <see cref="FooterTokenizer"/>
+    /// </summary>
+    public enum FooterTokenKind
     {
         String,     // any string value
         Colon,      // ':'
@@ -14,14 +17,15 @@ namespace ChangeLogCreator.ConventionalCommits
         Eol         // end of input / last token
     }
 
-    internal class FooterToken : Token<FooterTokenKind>
+    public sealed class FooterToken : Token<FooterTokenKind>
     {
-        private FooterToken(FooterTokenKind kind, string? value, int lineNumber, int columnNumber) : base(kind, value, lineNumber, columnNumber)
+        // Constructor should be private but internal for testing
+        internal FooterToken(FooterTokenKind kind, string? value, int lineNumber, int columnNumber) : base(kind, value, lineNumber, columnNumber)
         { }
 
 
         public static FooterToken String(string value, int lineNumber, int columnNumber) =>
-            new FooterToken(FooterTokenKind.String, value, lineNumber, columnNumber);
+            new FooterToken(FooterTokenKind.String, value ?? throw new ArgumentNullException(nameof(value)), lineNumber, columnNumber);
 
         public static FooterToken Colon(int lineNumber, int columnNumber) =>
             new FooterToken(FooterTokenKind.Colon, ":", lineNumber, columnNumber);
@@ -35,11 +39,13 @@ namespace ChangeLogCreator.ConventionalCommits
         public static FooterToken Eol(int lineNumber, int columnNumber) =>
             new FooterToken(FooterTokenKind.Eol, null, lineNumber, columnNumber);
     }
-
-    //TODO: Tests
+    
     //TODO: Share code with HeaderTokenizer
-    internal static class FooterTokenizer
-    {       
+    /// <summary>
+    /// Tokenizer that splits the input into a sequence of <see cref="FooterToken"/> values to be parsed by <see cref="FooterParser"/>
+    /// </summary>
+    public static class FooterTokenizer
+    {
         public static IEnumerable<FooterToken> GetTokens(LineToken input)
         {
             if (input == null)
@@ -51,7 +57,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
             var currentValue = new StringBuilder();
 
-            int startColumn = 1;
+            var startColumn = 1;
 
             if (input.Value!.Length == 0)
             {

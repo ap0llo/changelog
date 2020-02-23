@@ -13,7 +13,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
     {
         public static IEnumerable<object[]> TokenizerTestCases()
         {
-            object[] testCase(string input, params LineToken[] tokens) =>
+            static object[] testCase(string input, params LineToken[] tokens) =>
                 new object[]
                 {
                     input,

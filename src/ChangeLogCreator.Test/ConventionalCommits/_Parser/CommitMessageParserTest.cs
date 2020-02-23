@@ -30,8 +30,6 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             foreach (var descr in descriptions)
             {
-                ;
-
                 yield return TestCase(
                     "feat: " + descr,
                     new CommitMessage(
@@ -51,8 +49,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     new CommitMessage(                    
                         header: new CommitMessageHeader(
                             type:  "feat",
-                            scope: "scope",
                             description: descr.TrimEnd('\r', '\n'),
+                            scope: "scope",
                             isBreakingChange : false
                         ),
                         body: Array.Empty<string>(),
@@ -65,8 +63,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     new CommitMessage(
                         header: new CommitMessageHeader(
                             type:  "feat",
-                            scope: "scope",
                             description: descr.TrimEnd('\r', '\n'),
+                            scope: "scope",
                             isBreakingChange: true
                         ),
                         body: Array.Empty<string>(),
@@ -82,8 +80,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
-                        scope: "scope",
                         description: "Description",
+                        scope: "scope",
                         isBreakingChange: false
                     ),
                     body: new[] { "Single Line Body\r\n" },
@@ -100,8 +98,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
-                        scope: "scope",
                         description: "Description",
+                        scope: "scope",
                         isBreakingChange: false
                     ),
                     body: new[] { "Body line 1\r\nBody line 2\r\n" },
@@ -119,8 +117,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
-                        scope: "scope",
                         description: "Description",
+                        scope: "scope",
                         isBreakingChange: false
                     ),
                     body: new[]
@@ -143,8 +141,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
-                        scope: "scope",
                         description: "Description",
+                        scope: "scope",
                         isBreakingChange: false
                     ),
                     body: new[]
@@ -172,14 +170,14 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                         new CommitMessage(
                             header: new CommitMessageHeader(
                                 type:  "type",
-                                scope: null,
                                 description: "Description",
+                                scope: null,
                                 isBreakingChange: false
                             ),
                             body: Array.Empty<string>(),
                             footers: new[]
                             {
-                                new CommitMessageFooter(type: footerType, description: "Footer Description")
+                                new CommitMessageFooter(key: footerType, value: "Footer Description")
                             }
                         ),
                         "type: Description",
@@ -194,15 +192,15 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
-                        scope: null,
                         description: "Description",
+                        scope: null,
                         isBreakingChange: false
                     ),
                     body: Array.Empty<string>(),
                     footers: new[]
                     {
-                        new CommitMessageFooter(type: "Footer1", description: "Footer Description1"),
-                        new CommitMessageFooter(type: "Footer2", description: "Footer Description2")
+                        new CommitMessageFooter(key: "Footer1", value: "Footer Description1"),
+                        new CommitMessageFooter(key: "Footer2", value: "Footer Description2")
                     }
                 ),
                 "type: Description",
@@ -216,8 +214,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:   "type",
-                        scope: "scope",
                         description: "Description",
+                        scope: "scope",
                         isBreakingChange: false
                     ),
                     body: new[]
@@ -227,7 +225,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     },
                     footers: new[]
                     {
-                        new CommitMessageFooter(type: "Reviewed-by", description: "Z")
+                        new CommitMessageFooter(key: "Reviewed-by", value: "Z")
                     }
                 ),
                 "type(scope): Description",
@@ -244,8 +242,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
-                        scope: "scope",
                         description: "Description",
+                        scope: "scope",
                         isBreakingChange: false
                     ),
                     body: new[]
@@ -255,8 +253,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     },
                     footers: new[]
                     {
-                        new CommitMessageFooter(type: "Reviewed-by", description: "Z"),    
-                        new CommitMessageFooter(type: "Footer2", description: "description")
+                        new CommitMessageFooter(key: "Reviewed-by", value: "Z"),    
+                        new CommitMessageFooter(key: "Footer2", value: "description")
                     }
                 ),
                 "type(scope): Description",
@@ -346,7 +344,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         [MemberData(nameof(InvalidParserTestCases))]
         public void Parse_throws_CommitMessageParserException_for_invalid_input(string input)
         {
-            Assert.ThrowsAny<CommitMessageParserException>(() => CommitMessageParser.Parse(input));
+            Assert.ThrowsAny<ParserException>(() => CommitMessageParser.Parse(input));
             //TODO: Check exception includes information about position where the error occurred
         }
     }

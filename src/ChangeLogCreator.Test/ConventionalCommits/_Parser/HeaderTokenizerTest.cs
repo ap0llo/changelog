@@ -13,16 +13,16 @@ namespace ChangeLogCreator.Test.ConventionalCommits
     {
         public static IEnumerable<object[]> TokenizerTestCases()
         {
-            object[] testCase(string input, params HeaderToken[] tokens) =>
+            static object[] TestCase(string input, params HeaderToken[] tokens) =>
                 new object[]
                 {
                     new XunitSerializableLineToken(LineToken.Line(input, 1)),
                     tokens.Select(t => new XunitSerializableHeaderToken(t)).ToArray()
                 };
 
-            yield return testCase("", HeaderToken.Eol(1, 1));
+            yield return TestCase("", HeaderToken.Eol(1, 1));
 
-            yield return testCase(
+            yield return TestCase(
                 "type: Description text",
                 HeaderToken.String("type", 1, 1),
                 HeaderToken.Colon(1, 5),
@@ -34,7 +34,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
             );
 
 
-            yield return testCase(
+            yield return TestCase(
                "type(scope): Description",
                HeaderToken.String("type", 1, 1),
                HeaderToken.OpenParenthesis(1, 5),
@@ -46,7 +46,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                HeaderToken.Eol(1, 26)
            );
 
-            yield return testCase(
+            yield return TestCase(
                "type(scope)!: Description",
                HeaderToken.String("type", 1, 1),
                HeaderToken.OpenParenthesis(1, 5),
@@ -59,7 +59,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                HeaderToken.Eol(1, 27)
            );
 
-            yield return testCase(
+            yield return TestCase(
                "type(scope): Description!",
                HeaderToken.String("type", 1, 1),
                HeaderToken.OpenParenthesis(1, 5),

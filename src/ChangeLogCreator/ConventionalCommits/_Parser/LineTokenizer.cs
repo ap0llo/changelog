@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ChangeLogCreator.ConventionalCommits
 {
+    /// <summary>
+    /// Enumerates the types of tokens emitted by <see cref="LineTokenizer"/>
+    /// </summary>
     public enum LineTokenKind
     {
         Line,
@@ -13,24 +16,23 @@ namespace ChangeLogCreator.ConventionalCommits
 
     public sealed class LineToken : Token<LineTokenKind>
     {
+        // Constructor should be private but internal for testing
         internal LineToken(LineTokenKind kind, string? value, int lineNumber) : base(kind, value, lineNumber, 1)
         { }
 
-        public static LineToken Line(string value, int lineNumber)
-        {
-            if (value is null)
-                throw new ArgumentNullException(nameof(value));
-
-            return new LineToken(LineTokenKind.Line, value, lineNumber);
-        }
+        public static LineToken Line(string value, int lineNumber) =>
+            new LineToken(LineTokenKind.Line, value ?? throw new ArgumentNullException(nameof(value)), lineNumber);
 
         public static LineToken Blank(int lineNumber) => new LineToken(LineTokenKind.Blank, "", lineNumber);
 
         public static LineToken Eof(int lineNumber) => new LineToken(LineTokenKind.Eof, null, lineNumber);
     }
 
-    internal static class LineTokenizer 
-    {        
+    /// <summary>
+    /// Tokenizer that splits the input into a series of "Blank Line" and "Line" (= non-blank) tokens. 
+    /// </summary>
+    internal static class LineTokenizer
+    {
         public static IEnumerable<LineToken> GetTokens(string input)
         {
             if (input is null)

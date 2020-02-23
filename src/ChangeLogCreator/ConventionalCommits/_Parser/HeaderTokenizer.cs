@@ -5,7 +5,10 @@ using System.Text;
 
 namespace ChangeLogCreator.ConventionalCommits
 {
-    internal enum HeaderTokenKind
+    /// <summary>
+    /// Enumerates the types of tokens emitted by <see cref="HeaderTokenizer"/>
+    /// </summary>
+    public enum HeaderTokenKind
     {
         String,             // any string value
         OpenParenthesis,    // '('
@@ -16,14 +19,15 @@ namespace ChangeLogCreator.ConventionalCommits
         Eol                 // end of input / last token
     }
 
-    internal class HeaderToken : Token<HeaderTokenKind>
+    public sealed class HeaderToken : Token<HeaderTokenKind>
     {
+        // Constructor should be private but internal for testing
         internal HeaderToken(HeaderTokenKind kind, string? value, int lineNumber, int columnNumber) : base(kind, value, lineNumber, columnNumber)
         { }
 
 
         public static HeaderToken String(string value, int lineNumber, int columnNumber) =>
-            new HeaderToken(HeaderTokenKind.String, value, lineNumber, columnNumber);
+            new HeaderToken(HeaderTokenKind.String, value ?? throw new ArgumentNullException(nameof(value)), lineNumber, columnNumber);
 
         public static HeaderToken OpenParenthesis(int lineNumber, int columnNumber) =>
             new HeaderToken(HeaderTokenKind.OpenParenthesis, "(", lineNumber, columnNumber);
@@ -44,9 +48,11 @@ namespace ChangeLogCreator.ConventionalCommits
             new HeaderToken(HeaderTokenKind.Eol, null, lineNumber, columnNumber);
     }
 
-    internal static class HeaderTokenizer
+    /// <summary>
+    /// Tokenizer that splits the input into a sequence of <see cref="HeaderToken"/> values to be parsed by <see cref="HeaderParser"/>
+    /// </summary>
+    public static class HeaderTokenizer
     {
-
         public static IEnumerable<HeaderToken> GetTokens(LineToken input)
         {
             if (input is null)
@@ -55,9 +61,9 @@ namespace ChangeLogCreator.ConventionalCommits
             if (input.Kind != LineTokenKind.Line)
                 throw new ArgumentException($"Input must be line token of kind '{LineTokenKind.Line}', but is kind '{input.Kind}'");
 
-            var currentValue = new StringBuilder();
 
-            int startColumn = 1;
+            var currentValue = new StringBuilder();
+            var startColumn = 1;
 
             if (input.Value!.Length == 0)
             {

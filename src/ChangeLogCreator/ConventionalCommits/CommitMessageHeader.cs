@@ -1,14 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace ChangeLogCreator.ConventionalCommits
 {
+    /// <summary>
+    /// Encapsulates a commit message's header.  
+    /// </summary>
+    /// <remarks>
+    /// The header encapsulates all information provided in the commit message subject and is mandatory for all commit messages.
+    /// </remarks>
+    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</see>
+    /// <seealso cref="CommitMessage"/>
     public sealed class CommitMessageHeader : IEquatable<CommitMessageHeader>
     {
         /// <summary>
-        /// The type of change, e.g. 'feat' or 'fix'
+        /// Gets the type of change, e.g. <c>feat</c> or <c>fix</c>.
         /// </summary>
         public string Type { get; }
 
@@ -18,20 +24,54 @@ namespace ChangeLogCreator.ConventionalCommits
         public string? Scope { get; }
 
         /// <summary>
-        /// Indicates whether a breaking changes hint was included in the header 
-        /// (breaking changes are indicated by a '!' after the scope)
-        /// Note: Breaking changes might also be indicated using a "BREAKING CHANGE" footer.
+        /// Gets whether the commit was marked as breaking change.
         /// </summary>
+        /// <remarks>
+        /// A commit can be marked as breaking change including by a <c>!</c> after the scope.
+        /// <para>
+        /// Note: Breaking changes might also be indicated using a "BREAKING CHANGE" footer.
+        /// This property only indicates if the change was marked as breaking change in the header.
+        /// </para>
+        /// </remarks>
         public bool IsBreakingChange { get; }
 
         /// <summary>
-        /// The description of the change, i.e. the summary.
-        /// Value does not include the feature/scope prefix.
+        /// Gets the description of the change.
         /// </summary>
+        /// <remarks>
+        /// The description is a short summary of the change.
+        /// <para>
+        /// Note: The value of this property does not include the type of change (see <see cref="Type"/>).
+        /// </para>
+        /// </remarks>
         public string Description { get; }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="CommitMessageHeader"/>
+        /// </summary>
+        /// <param name="type">The type of the change (see <see cref="Type"/> property).</param>
+        /// <param name="description">The change's description (see <see cref="Description"/> property).</param>
+        public CommitMessageHeader(string type, string description) : this(type, description, null, false)
+        { }
 
-        public CommitMessageHeader(string type, string? scope, bool isBreakingChange, string description)
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CommitMessageHeader"/>
+        /// </summary>
+        /// <param name="type">The type of the change (see <see cref="Type"/> property).</param>
+        /// <param name="description">The change's description (see <see cref="Description"/> property).</param>
+        /// <param name="scope">The (optional) scope of the change (see <see cref="Scope"/> property).</param>
+        public CommitMessageHeader(string type, string description, string? scope) : this(type, description, scope, false)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CommitMessageHeader"/>
+        /// </summary>
+        /// <param name="type">The type of the change (see <see cref="Type"/> property).</param>
+        /// <param name="description">The change's description (see <see cref="Description"/> property).</param>
+        /// <param name="scope">The (optional) scope of the change (see <see cref="Scope"/> property).</param>
+        /// <param name="isBreakingChange">Indicates whether the change is marked as a breaking change (see <see cref="IsBreakingChange"/> property).</param>
+        public CommitMessageHeader(string type, string description, string? scope, bool isBreakingChange)
         {
             if (String.IsNullOrWhiteSpace(type))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(type));
@@ -65,5 +105,4 @@ namespace ChangeLogCreator.ConventionalCommits
             IsBreakingChange == other.IsBreakingChange &&
             StringComparer.Ordinal.Equals(Description, other.Description);
     }
-
 }

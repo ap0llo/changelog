@@ -26,7 +26,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
             var isBreakingChange = info.GetValue<bool>(nameof(CommitMessageHeader.IsBreakingChange));
             var description = info.GetValue<string>(nameof(CommitMessageHeader.Description));
 
-            Value = new CommitMessageHeader(type, scope, isBreakingChange, description);
+            Value = new CommitMessageHeader(type: type, description: description, scope: scope, isBreakingChange: isBreakingChange);
         }
 
         public void Serialize(IXunitSerializationInfo info)

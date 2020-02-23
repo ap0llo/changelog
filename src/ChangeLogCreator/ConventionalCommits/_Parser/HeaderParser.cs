@@ -5,9 +5,14 @@ using System.Text;
 
 namespace ChangeLogCreator.ConventionalCommits
 {
-    internal class HeaderParser : Parser<HeaderToken, HeaderTokenKind>
+    /// <summary>
+    /// Parser for the commit message header/subject.
+    /// </summary>
+    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</seealso>
+    public sealed class HeaderParser : Parser<HeaderToken, HeaderTokenKind>
     {
-        private readonly LineToken m_Input;        
+        private readonly LineToken m_Input;
+
 
         private HeaderParser(LineToken input)
         {
@@ -21,61 +26,54 @@ namespace ChangeLogCreator.ConventionalCommits
         }
 
 
-        public static CommitMessageHeader Parse(LineToken input)
-        {
-            var parser = new HeaderParser(input);
-            return parser.Parse();
-        }
-
+        protected override IReadOnlyList<HeaderToken> GetTokens() => HeaderTokenizer.GetTokens(m_Input).ToArray();
 
         private CommitMessageHeader Parse()
         {
-            Tokens = HeaderTokenizer.GetTokens(m_Input).ToArray();
-            m_Position = 0;
+            // Reset parser
+            Reset();
 
-            
             // parse type
             var type = MatchToken(HeaderTokenKind.String).Value!;
 
-            string? scope = null;
             // parse (optional) scope
-            if(TestAndMatchToken(HeaderTokenKind.OpenParenthesis, out _))
+            string? scope = null;
+            if (TestAndMatchToken(HeaderTokenKind.OpenParenthesis, out _))
             {
                 scope = MatchToken(HeaderTokenKind.String).Value;
                 MatchToken(HeaderTokenKind.CloseParenthesis);
             }
 
-            // parse "breaking change" (optional '!' after scope)
+            // parse "breaking change" (a optional '!' after the scope)
             var isBreakingChange = TestAndMatchToken(HeaderTokenKind.ExclamationMark, out _);
 
             // type and scope must be followed by ': '
             MatchToken(HeaderTokenKind.Colon);
             MatchToken(HeaderTokenKind.Space);
 
-            // remaining tokens are the description
-            
+            // remaining tokens are the description            
             var desciptionBuilder = new StringBuilder();
-            while(!TestToken(HeaderTokenKind.Eol))
+            while (!TestToken(HeaderTokenKind.Eol))
             {
-                desciptionBuilder.Append(MatchToken(Current.Kind).Value);                
+                desciptionBuilder.Append(MatchToken(Current.Kind).Value);
             }
             var description = desciptionBuilder.ToString();
 
-
             // description must not be empty
             if (String.IsNullOrWhiteSpace(description))
-            {
-                throw new CommitMessageParserException("Description must not be empty");
-            }
+                throw new ParserException("Description must not be empty");
 
             // ensure the entire line was parsed
             MatchToken(HeaderTokenKind.Eol);
 
-            return new CommitMessageHeader(type, scope, isBreakingChange, description);
+            return new CommitMessageHeader(type: type, description: description, scope: scope, isBreakingChange: isBreakingChange);
         }
 
 
-        
-
+        public static CommitMessageHeader Parse(LineToken input)
+        {
+            var parser = new HeaderParser(input);
+            return parser.Parse();
+        }
     }
 }
