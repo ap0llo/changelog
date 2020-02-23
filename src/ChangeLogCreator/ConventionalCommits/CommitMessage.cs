@@ -7,19 +7,26 @@ namespace ChangeLogCreator.ConventionalCommits
 {
     public sealed class CommitMessage : IEquatable<CommitMessage>
     {
-        public CommitMessageHeader Header { get; set; } = new CommitMessageHeader();
+        public CommitMessageHeader Header { get; }
 
         /// <summary>
         /// The paragraphs of the message's body.
         /// Value is an empty list if no body was provided.
         /// </summary>
-        public IReadOnlyList<string> Body { get; set; } = Array.Empty<string>();
+        public IReadOnlyList<string> Body { get; }
 
         /// <summary>
         /// The message's footers.
         /// </summary>
-        public IReadOnlyList<CommitMessageFooter> Footers { get; set; } = Array.Empty<CommitMessageFooter>();
+        public IReadOnlyList<CommitMessageFooter> Footers { get; }
 
+
+        public CommitMessage(CommitMessageHeader header, IReadOnlyList<string> body, IReadOnlyList<CommitMessageFooter> footers)
+        {
+            Header = header ?? throw new ArgumentNullException(nameof(header));
+            Body = body ?? throw new ArgumentNullException(nameof(body));
+            Footers = footers ?? throw new ArgumentNullException(nameof(footers));
+        }
 
         public override int GetHashCode()
         {

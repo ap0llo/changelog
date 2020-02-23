@@ -10,27 +10,41 @@ namespace ChangeLogCreator.ConventionalCommits
         /// <summary>
         /// The type of change, e.g. 'feat' or 'fix'
         /// </summary>
-        public string Type { get; set; } = "";
+        public string Type { get; }
 
         /// <summary>
         /// The optional scope of the change
         /// </summary>
-        public string? Scope { get; set; } = null;
+        public string? Scope { get; }
 
         /// <summary>
         /// Indicates whether a breaking changes hint was included in the header 
         /// (breaking changes are indicated by a '!' after the scope)
         /// Note: Breaking changes might also be indicated using a "BREAKING CHANGE" footer.
         /// </summary>
-        public bool IsBreakingChange { get; set; }
+        public bool IsBreakingChange { get; }
 
         /// <summary>
         /// The description of the change, i.e. the summary.
         /// Value does not include the feature/scope prefix.
         /// </summary>
-        public string Description { get; set; } = "";
+        public string Description { get; }
 
-      
+
+        public CommitMessageHeader(string type, string? scope, bool isBreakingChange, string description)
+        {
+            if (String.IsNullOrWhiteSpace(type))
+                throw new ArgumentException("Value must not be null or whitespace", nameof(type));
+
+            if (String.IsNullOrWhiteSpace(description))
+                throw new ArgumentException("Value must not be null or whitespace", nameof(description));
+
+            Type = type;
+            Scope = scope;
+            IsBreakingChange = isBreakingChange;
+            Description = description;
+        }
+
         public override int GetHashCode()
         {
             unchecked

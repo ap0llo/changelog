@@ -22,12 +22,11 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            Value = new CommitMessage()
-            {
-                Header = info.GetValue<XunitSerializableCommitMessageHeader>(nameof(CommitMessage.Header)).Value,
-                Body = info.GetValue<string[]>(nameof(CommitMessage.Body)),
-                Footers = info.GetValue<XunitSerializableCommitMessageFooter[]>(nameof(CommitMessage.Footers)).Select(x => x.Value).ToArray(),
-            };
+            var header = info.GetValue<XunitSerializableCommitMessageHeader>(nameof(CommitMessage.Header)).Value;
+            var body = info.GetValue<string[]>(nameof(CommitMessage.Body));
+            var footers = info.GetValue<XunitSerializableCommitMessageFooter[]>(nameof(CommitMessage.Footers)).Select(x => x.Value).ToArray();
+
+            Value = new CommitMessage(header, body, footers);
         }
 
         public void Serialize(IXunitSerializationInfo info)

@@ -29,30 +29,32 @@ namespace ChangeLogCreator.ConventionalCommits
             Tokens = LineTokenizer.GetTokens(m_Input).ToArray();
             m_Position = 0;
 
-            var commit = new CommitMessage();
-
+            
             // Parse Header
             //TODO: Add a separate type for the header, similar to footer
             var firstLine = MatchToken(LineTokenKind.Line);
-            commit.Header = HeaderParser.Parse(firstLine);
+            var header = HeaderParser.Parse(firstLine);
 
+            
             // Parse Body
+            IReadOnlyList<string> body = Array.Empty<string>();
             if(!TestToken(LineTokenKind.Eof))
             {
-                commit.Body = ParseBody();
+                body = ParseBody();
             }
 
             // Parse Footer(s)
+            IReadOnlyList<CommitMessageFooter> footers = Array.Empty<CommitMessageFooter>();
             if (!TestToken(LineTokenKind.Eof))
             {
                 MatchToken(LineTokenKind.Blank);
-                commit.Footers = ParseFooters();
+                footers = ParseFooters();
             }
 
             // Ensure all tokens were parsed
             MatchToken(LineTokenKind.Eof);
 
-            return commit;
+            return new CommitMessage(header, body, footers);
         }
 
 

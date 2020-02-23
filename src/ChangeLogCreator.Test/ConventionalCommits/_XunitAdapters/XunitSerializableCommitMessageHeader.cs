@@ -21,13 +21,12 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            Value = new CommitMessageHeader()
-            {
-                Type = info.GetValue<string>(nameof(CommitMessageHeader.Type)),
-                Scope = info.GetValue<string>(nameof(CommitMessageHeader.Scope)),
-                IsBreakingChange = info.GetValue<bool>(nameof(CommitMessageHeader.IsBreakingChange)),
-                Description = info.GetValue<string>(nameof(CommitMessageHeader.Description)),
-            };
+            var type = info.GetValue<string>(nameof(CommitMessageHeader.Type));
+            var scope = info.GetValue<string>(nameof(CommitMessageHeader.Scope));
+            var isBreakingChange = info.GetValue<bool>(nameof(CommitMessageHeader.IsBreakingChange));
+            var description = info.GetValue<string>(nameof(CommitMessageHeader.Description));
+
+            Value = new CommitMessageHeader(type, scope, isBreakingChange, description);
         }
 
         public void Serialize(IXunitSerializationInfo info)

@@ -34,41 +34,44 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
                 yield return TestCase(
                     "feat: " + descr,
-                    new CommitMessage()
-                    {
-                        Header = new CommitMessageHeader()
-                        {
-                            Type = "feat",
-                            Description = descr.TrimEnd('\r', '\n'),
-                        }
-                    }
+                    new CommitMessage(
+                        header: new CommitMessageHeader(
+                            type:  "feat",
+                            description: descr.TrimEnd('\r', '\n'),
+                            scope: null,
+                            isBreakingChange: false
+                        ),
+                        body: Array.Empty<string>(),
+                        footers: Array.Empty<CommitMessageFooter>()
+                    )
                 );
 
                 yield return TestCase(
                     $"feat(scope): {descr}",
-                    new CommitMessage()
-                    {
-                        Header = new CommitMessageHeader()
-                        {
-                            Type = "feat",
-                            Scope = "scope",
-                            Description = descr.TrimEnd('\r', '\n'),
-                        }
-                    }
+                    new CommitMessage(                    
+                        header: new CommitMessageHeader(
+                            type:  "feat",
+                            scope: "scope",
+                            description: descr.TrimEnd('\r', '\n'),
+                            isBreakingChange : false
+                        ),
+                        body: Array.Empty<string>(),
+                        footers: Array.Empty<CommitMessageFooter>()
+                    )
                 );
 
                 yield return TestCase(
                     $"feat(scope)!: {descr}",
-                    new CommitMessage()
-                    {
-                        Header = new CommitMessageHeader()
-                        {
-                            Type = "feat",
-                            Scope = "scope",
-                            Description = descr.TrimEnd('\r', '\n'),
-                            IsBreakingChange = true
-                        }
-                    }
+                    new CommitMessage(
+                        header: new CommitMessageHeader(
+                            type:  "feat",
+                            scope: "scope",
+                            description: descr.TrimEnd('\r', '\n'),
+                            isBreakingChange: true
+                        ),
+                        body: Array.Empty<string>(),
+                        footers: Array.Empty<CommitMessageFooter>()
+                    )
                 );
             }
 
@@ -76,19 +79,17 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             // single line body
             yield return MultiLineTestCase(
-                new CommitMessage()
-                {
-                    Header = new CommitMessageHeader()
-                    {
-                        Type = "type",
-                        Scope = "scope",
-                        Description = "Description",
-                        IsBreakingChange = false,
-                    },
-                    Body = new[] { "Single Line Body\r\n" },
-                    Footers = Array.Empty<CommitMessageFooter>()
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type:  "type",
+                        scope: "scope",
+                        description: "Description",
+                        isBreakingChange: false
+                    ),
+                    body: new[] { "Single Line Body\r\n" },
+                    footers: Array.Empty<CommitMessageFooter>()
 
-                },
+                ),
                 "type(scope): Description",
                 "",
                 "Single Line Body"
@@ -96,18 +97,16 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             // multi-line body
             yield return MultiLineTestCase(
-                new CommitMessage()
-                {
-                    Header = new CommitMessageHeader()
-                    {
-                        Type = "type",
-                        Scope = "scope",
-                        Description = "Description",
-                        IsBreakingChange = false,
-                    },
-                    Body = new[] { "Body line 1\r\nBody line 2\r\n" },
-                    Footers = Array.Empty<CommitMessageFooter>()
-                },
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type:  "type",
+                        scope: "scope",
+                        description: "Description",
+                        isBreakingChange: false
+                    ),
+                    body: new[] { "Body line 1\r\nBody line 2\r\n" },
+                    footers: Array.Empty<CommitMessageFooter>()
+                ),
                 "type(scope): Description",
                 "",
                 "Body line 1",
@@ -117,22 +116,20 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             //multi-paragraph body (1)
             yield return MultiLineTestCase(
-                new CommitMessage()
-                {
-                    Header = new CommitMessageHeader()
-                    {
-                        Type = "type",
-                        Scope = "scope",
-                        Description = "Description",
-                        IsBreakingChange = false,
-                    },
-                    Body = new[]
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type:  "type",
+                        scope: "scope",
+                        description: "Description",
+                        isBreakingChange: false
+                    ),
+                    body: new[]
                     {
                         "Body line 1.1\r\nBody line 1.2\r\n",
                         "Body line 2.1\r\nBody line 2.2\r\n"
                     },
-                    Footers = Array.Empty<CommitMessageFooter>()
-                },
+                    footers: Array.Empty<CommitMessageFooter>()
+                ),
                 "type(scope): Description",
                     "",
                     "Body line 1.1",
@@ -143,22 +140,20 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             // multi-paragraph body with trailing line break
             yield return MultiLineTestCase(
-                new CommitMessage()
-                {
-                    Header = new CommitMessageHeader()
-                    {
-                        Type = "type",
-                        Scope = "scope",
-                        Description = "Description",
-                        IsBreakingChange = false,
-                    },
-                    Body = new[]
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type:  "type",
+                        scope: "scope",
+                        description: "Description",
+                        isBreakingChange: false
+                    ),
+                    body: new[]
                     {
                         "Body line 1.1\r\nBody line 1.2\r\n",
                         "Body line 2.1\r\n"
                     },
-                    Footers = Array.Empty<CommitMessageFooter>()
-                },
+                    footers: Array.Empty<CommitMessageFooter>()
+                ),
                 "type(scope): Description",
                 "",
                 "Body line 1.1",
@@ -174,21 +169,19 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 foreach (var separator in new[] { ": ", " #" })
                 {
                     yield return MultiLineTestCase(
-                        new CommitMessage()
-                        {
-                            Header = new CommitMessageHeader()
-                            {
-                                Type = "type",
-                                Scope = null,
-                                Description = "Description",
-                                IsBreakingChange = false,
-                            },
-                            Body = Array.Empty<string>(),
-                            Footers = new[]
+                        new CommitMessage(
+                            header: new CommitMessageHeader(
+                                type:  "type",
+                                scope: null,
+                                description: "Description",
+                                isBreakingChange: false
+                            ),
+                            body: Array.Empty<string>(),
+                            footers: new[]
                             {
                                 new CommitMessageFooter(type: footerType, description: "Footer Description")
                             }
-                        },
+                        ),
                         "type: Description",
                         "",
                         $"{footerType}{separator}Footer Description"
@@ -198,22 +191,20 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
 
             yield return MultiLineTestCase(
-                new CommitMessage()
-                {
-                    Header = new CommitMessageHeader()
-                    {
-                        Type = "type",
-                        Scope = null,
-                        Description = "Description",
-                        IsBreakingChange = false,
-                    },
-                    Body = Array.Empty<string>(),
-                    Footers = new[]
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type:  "type",
+                        scope: null,
+                        description: "Description",
+                        isBreakingChange: false
+                    ),
+                    body: Array.Empty<string>(),
+                    footers: new[]
                     {
                         new CommitMessageFooter(type: "Footer1", description: "Footer Description1"),
                         new CommitMessageFooter(type: "Footer2", description: "Footer Description2")
                     }
-                },
+                ),
                 "type: Description",
                 "",
                 "Footer1: Footer Description1",
@@ -222,25 +213,23 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             // message with body AND footer
             yield return MultiLineTestCase(
-                new CommitMessage()
-                {
-                    Header = new CommitMessageHeader()
-                    {
-                        Type =  "type",
-                        Scope = "scope",
-                        Description = "Description",
-                        IsBreakingChange = false,
-                    },
-                    Body = new[]
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type:   "type",
+                        scope: "scope",
+                        description: "Description",
+                        isBreakingChange: false
+                    ),
+                    body: new[]
                     {
                         "Body line 1.1\r\nBody line 1.2\r\n",
                         "Body line 2.1\r\n"
                     },
-                    Footers = new[]
+                    footers: new[]
                     {
                         new CommitMessageFooter(type: "Reviewed-by", description: "Z")
                     }
-                },
+                ),
                 "type(scope): Description",
                 "",
                 "Body line 1.1",
@@ -252,26 +241,24 @@ namespace ChangeLogCreator.Test.ConventionalCommits
             );
 
             yield return MultiLineTestCase(
-                new CommitMessage()
-                {
-                    Header = new CommitMessageHeader()
-                    {
-                        Type = "type",
-                        Scope = "scope",
-                        Description = "Description",
-                        IsBreakingChange = false,
-                    },
-                    Body = new[]
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type:  "type",
+                        scope: "scope",
+                        description: "Description",
+                        isBreakingChange: false
+                    ),
+                    body: new[]
                     {
                             "Body line 1.1\r\nBody line 1.2\r\n",
                             "Body line 2.1\r\n"
                     },
-                    Footers = new[]
+                    footers: new[]
                     {
                         new CommitMessageFooter(type: "Reviewed-by", description: "Z"),    
                         new CommitMessageFooter(type: "Footer2", description: "description")
                     }
-                },
+                ),
                 "type(scope): Description",
                 "",
                 "Body line 1.1",

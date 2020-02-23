@@ -33,20 +33,20 @@ namespace ChangeLogCreator.ConventionalCommits
             Tokens = HeaderTokenizer.GetTokens(m_Input).ToArray();
             m_Position = 0;
 
-            var parsed = new CommitMessageHeader();
-
+            
             // parse type
-            parsed.Type = MatchToken(HeaderTokenKind.String).Value!;
+            var type = MatchToken(HeaderTokenKind.String).Value!;
 
+            string? scope = null;
             // parse (optional) scope
             if(TestAndMatchToken(HeaderTokenKind.OpenParenthesis, out _))
             {
-                parsed.Scope = MatchToken(HeaderTokenKind.String).Value;
+                scope = MatchToken(HeaderTokenKind.String).Value;
                 MatchToken(HeaderTokenKind.CloseParenthesis);
             }
 
             // parse "breaking change" (optional '!' after scope)
-            parsed.IsBreakingChange = TestAndMatchToken(HeaderTokenKind.ExclamationMark, out _);
+            var isBreakingChange = TestAndMatchToken(HeaderTokenKind.ExclamationMark, out _);
 
             // type and scope must be followed by ': '
             MatchToken(HeaderTokenKind.Colon);
@@ -59,11 +59,11 @@ namespace ChangeLogCreator.ConventionalCommits
             {
                 desciptionBuilder.Append(MatchToken(Current.Kind).Value);                
             }
-            parsed.Description = desciptionBuilder.ToString();
+            var description = desciptionBuilder.ToString();
 
 
             // description must not be empty
-            if (String.IsNullOrWhiteSpace(parsed.Description))
+            if (String.IsNullOrWhiteSpace(description))
             {
                 throw new CommitMessageParserException("Description must not be empty");
             }
@@ -71,7 +71,7 @@ namespace ChangeLogCreator.ConventionalCommits
             // ensure the entire line was parsed
             MatchToken(HeaderTokenKind.Eol);
 
-            return parsed;
+            return new CommitMessageHeader(type, scope, isBreakingChange, description);
         }
 
 
