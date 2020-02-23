@@ -37,7 +37,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
         private CommitMessageFooter Parse()
         {
-            Tokens = new FooterTokenizer(m_Input).ToArray();
+            Tokens = FooterTokenizer.GetTokens(m_Input).ToArray();
             m_Position = 0;
 
             var footer = new CommitMessageFooter();
@@ -64,7 +64,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
         private bool IsFooterStart()
         {
-            Tokens = new FooterTokenizer(m_Input).ToArray();
+            Tokens = FooterTokenizer.GetTokens(m_Input).ToArray();
             m_Position = 0;
 
 

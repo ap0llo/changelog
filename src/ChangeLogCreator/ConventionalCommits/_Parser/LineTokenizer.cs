@@ -29,24 +29,20 @@ namespace ChangeLogCreator.ConventionalCommits
         public static LineToken Eof(int lineNumber) => new LineToken(LineTokenKind.Eof, null, lineNumber);
     }
 
-    internal class LineTokenizer : Tokenizer<LineToken, LineTokenKind>
-    {
-        private readonly string m_Text;
-
-        public LineTokenizer(string text)
+    internal static class LineTokenizer 
+    {        
+        public static IEnumerable<LineToken> GetTokens(string input)
         {
-            m_Text = text ?? throw new ArgumentNullException(nameof(text));
-        }
+            if (input is null)
+                throw new ArgumentNullException(nameof(input));
 
-        public override IEnumerator<LineToken> GetEnumerator()
-        {
             var currentLine = new StringBuilder();
             var lineNumber = 1;
 
-            for (var i = 0; i < m_Text.Length; i++)
+            for (var i = 0; i < input.Length; i++)
             {
-                var currentChar = m_Text[i];
-                var nextChar = i + 1 < m_Text.Length ? (char?)m_Text[i + 1] : null;
+                var currentChar = input[i];
+                var nextChar = i + 1 < input.Length ? (char?)input[i + 1] : null;
 
                 switch ((currentChar, nextChar))
                 {

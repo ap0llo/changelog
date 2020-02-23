@@ -30,7 +30,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
         private CommitMessage Parse()
         {
-            Tokens = new HeaderTokenizer(m_Input).ToArray();
+            Tokens = HeaderTokenizer.GetTokens(m_Input).ToArray();
             m_Position = 0;
 
             var commit = new CommitMessage();

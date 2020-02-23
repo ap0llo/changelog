@@ -58,7 +58,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         [Theory]
         [MemberData(nameof(TokenizerTestCases))]
-        public void Tokenizer_returns_expected_tokens(string input, IEnumerable<XunitSerializableLineToken> expectedTokens)
+        public void GetTokens_returns_expected_tokens(string input, IEnumerable<XunitSerializableLineToken> expectedTokens)
         {
             // ARRANGE
             var inspectors = expectedTokens
@@ -66,10 +66,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 .Select<LineToken, Action<LineToken>>(token => (t => Assert.Equal(token, t)))
                 .ToArray();
 
-            var sut = new LineTokenizer(input);
-
             // ACT
-            var actualTokens = sut.ToArray();
+            var actualTokens = LineTokenizer.GetTokens(input).ToArray();
 
             // ASSERT
             Assert.Collection(actualTokens, inspectors);

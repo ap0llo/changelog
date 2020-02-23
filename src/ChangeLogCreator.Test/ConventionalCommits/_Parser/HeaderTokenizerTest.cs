@@ -75,34 +75,32 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         [Theory]
         [MemberData(nameof(TokenizerTestCases))]
-        public void Tokenizer_returns_expected_tokens(XunitSerializableLineToken input, IEnumerable<XunitSerializableHeaderToken> expectedTokens)
+        public void GetTokens_returns_expected_tokens(XunitSerializableLineToken input, IEnumerable<XunitSerializableHeaderToken> expectedTokens)
         {
             // ARRANGE
             var inspectors = expectedTokens
                 .Select(x => x.Value)
                 .Select<HeaderToken, Action<HeaderToken>>(token => (t => Assert.Equal(token, t)))
                 .ToArray();
-
-            var sut = new HeaderTokenizer(input.Value);
-
+            
             // ACT
-            var actualTokens = sut.ToArray();
+            var actualTokens = HeaderTokenizer.GetTokens(input.Value).ToArray();
 
             // ASSERT
             Assert.Collection(actualTokens, inspectors);
         }
 
         [Fact]
-        public void Tokenizer_throws_ArgumentException_if_input_token_is_null()
+        public void GetTokens_throws_ArgumentException_if_input_token_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new HeaderTokenizer(null));
+            Assert.Throws<ArgumentNullException>(() => HeaderTokenizer.GetTokens(null).ToArray());
         }
 
         [Fact]
-        public void Tokenizer_throws_ArgumentException_if_input_token_is_invalid()
+        public void GetTokens_throws_ArgumentException_if_input_token_is_invalid()
         {
-            Assert.Throws<ArgumentException>(() => new HeaderTokenizer(LineToken.Eof(1)));
-            Assert.Throws<ArgumentException>(() => new HeaderTokenizer(LineToken.Blank(1)));
+            Assert.Throws<ArgumentException>(() => HeaderTokenizer.GetTokens(LineToken.Eof(1)).ToArray());
+            Assert.Throws<ArgumentException>(() => HeaderTokenizer.GetTokens(LineToken.Blank(1)).ToArray());
         }
     }
 }

@@ -38,11 +38,9 @@ namespace ChangeLogCreator.ConventionalCommits
 
     //TODO: Tests
     //TODO: Share code with HeaderTokenizer
-    class FooterTokenizer : Tokenizer<FooterToken, FooterTokenKind>
-    {
-        private readonly LineToken m_Input;
-
-        public FooterTokenizer(LineToken input)
+    internal static class FooterTokenizer
+    {       
+        public static IEnumerable<FooterToken> GetTokens(LineToken input)
         {
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
@@ -50,29 +48,25 @@ namespace ChangeLogCreator.ConventionalCommits
             if (input.Kind != LineTokenKind.Line)
                 throw new ArgumentException($"Input must be line token of kind '{LineTokenKind.Line}', but is kind '{input.Kind}'");
 
-            m_Input = input;
-        }
 
-        public override IEnumerator<FooterToken> GetEnumerator()
-        {
             var currentValue = new StringBuilder();
 
             int startColumn = 1;
 
-            if (m_Input.Value!.Length == 0)
+            if (input.Value!.Length == 0)
             {
-                yield return FooterToken.Eol(m_Input.LineNumber, startColumn);
+                yield return FooterToken.Eol(input.LineNumber, startColumn);
                 yield break;
             }
 
-            for (var i = 0; i < m_Input.Value.Length; i++)
+            for (var i = 0; i < input.Value.Length; i++)
             {
-                var currentChar = m_Input.Value[i];
-                if (TryMatchChar(currentChar, i + 1, out var matchedToken))
+                var currentChar = input.Value[i];
+                if (TryMatchChar(currentChar, input.LineNumber, i + 1, out var matchedToken))
                 {
                     if (currentValue.Length > 0)
                     {
-                        yield return FooterToken.String(currentValue.GetValueAndClear(), m_Input.LineNumber, startColumn);
+                        yield return FooterToken.String(currentValue.GetValueAndClear(), input.LineNumber, startColumn);
                     }
                     yield return matchedToken;
                     startColumn = i + 2;
@@ -84,22 +78,22 @@ namespace ChangeLogCreator.ConventionalCommits
 
             }
 
-            // if any input is left in currentValueBuilder, return it as StringToken
+            // if any input is left in currentValue, return it as String token
             if (currentValue.Length > 0)
             {
-                yield return FooterToken.String(currentValue.GetValueAndClear(), m_Input.LineNumber, startColumn);
+                yield return FooterToken.String(currentValue.GetValueAndClear(), input.LineNumber, startColumn);
             }
 
-            yield return FooterToken.Eol(m_Input.LineNumber, startColumn + 1);
+            yield return FooterToken.Eol(input.LineNumber, startColumn + 1);
         }
 
-        private bool TryMatchChar(char value, int columnNumber, [NotNullWhen(true)] out FooterToken? token)
+        private static bool TryMatchChar(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out FooterToken? token)
         {
             token = value switch
             {
-                ':' => FooterToken.Colon(m_Input.LineNumber, columnNumber),
-                ' ' => FooterToken.Space(m_Input.LineNumber, columnNumber),
-                '#' => FooterToken.Hash(m_Input.LineNumber, columnNumber),
+                ':' => FooterToken.Colon(lineNumber, columnNumber),
+                ' ' => FooterToken.Space(lineNumber, columnNumber),
+                '#' => FooterToken.Hash(lineNumber, columnNumber),
                 _ => null
             };
 

@@ -21,6 +21,7 @@ namespace ChangeLogCreator.ConventionalCommits
         internal HeaderToken(HeaderTokenKind kind, string? value, int lineNumber, int columnNumber) : base(kind, value, lineNumber, columnNumber)
         { }
 
+
         public static HeaderToken String(string value, int lineNumber, int columnNumber) =>
             new HeaderToken(HeaderTokenKind.String, value, lineNumber, columnNumber);
 
@@ -43,41 +44,35 @@ namespace ChangeLogCreator.ConventionalCommits
             new HeaderToken(HeaderTokenKind.Eol, null, lineNumber, columnNumber);
     }
 
-    internal class HeaderTokenizer : Tokenizer<HeaderToken, HeaderTokenKind>
+    internal static class HeaderTokenizer
     {
-        private readonly LineToken m_Input;
 
-        public HeaderTokenizer(LineToken input)
+        public static IEnumerable<HeaderToken> GetTokens(LineToken input)
         {
-            if (input == null)
+            if (input is null)
                 throw new ArgumentNullException(nameof(input));
 
             if (input.Kind != LineTokenKind.Line)
                 throw new ArgumentException($"Input must be line token of kind '{LineTokenKind.Line}', but is kind '{input.Kind}'");
 
-            m_Input = input;
-        }
-
-        public override IEnumerator<HeaderToken> GetEnumerator()
-        {
             var currentValue = new StringBuilder();
 
             int startColumn = 1;
 
-            if(m_Input.Value!.Length == 0)
+            if (input.Value!.Length == 0)
             {
-                yield return HeaderToken.Eol(m_Input.LineNumber, startColumn);
+                yield return HeaderToken.Eol(input.LineNumber, startColumn);
                 yield break;
             }
 
-            for (var i = 0; i < m_Input.Value.Length; i++)
+            for (var i = 0; i < input.Value.Length; i++)
             {
-                var currentChar = m_Input.Value[i];
-                if(TryMatchChar(currentChar, i + 1, out var matchedToken))
+                var currentChar = input.Value[i];
+                if (TryMatchChar(currentChar, input.LineNumber, i + 1, out var matchedToken))
                 {
                     if (currentValue.Length > 0)
                     {
-                        yield return HeaderToken.String(currentValue.GetValueAndClear(), m_Input.LineNumber, startColumn);
+                        yield return HeaderToken.String(currentValue.GetValueAndClear(), input.LineNumber, startColumn);
                     }
                     yield return matchedToken;
                     startColumn = i + 2;
@@ -86,33 +81,30 @@ namespace ChangeLogCreator.ConventionalCommits
                 {
                     currentValue.Append(currentChar);
                 }
-
             }
 
             // if any input is left in currentValueBuilder, return it as StringToken
             if (currentValue.Length > 0)
             {
-                yield return HeaderToken.String(currentValue.GetValueAndClear(), m_Input.LineNumber, startColumn);
+                yield return HeaderToken.String(currentValue.GetValueAndClear(), input.LineNumber, startColumn);
             }
 
-            yield return HeaderToken.Eol(m_Input.LineNumber, startColumn + 1);
+            yield return HeaderToken.Eol(input.LineNumber, startColumn + 1);
         }
-        
-        private bool TryMatchChar(char value, int columnNumber, [NotNullWhen(true)] out HeaderToken? token)
+
+        private static bool TryMatchChar(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out HeaderToken? token)
         {
             token = value switch
             {
-                '(' => HeaderToken.OpenParenthesis(m_Input.LineNumber, columnNumber),
-                ')' => HeaderToken.CloseParenthesis(m_Input.LineNumber, columnNumber),
-                ':' => HeaderToken.Colon(m_Input.LineNumber, columnNumber),
-                ' ' => HeaderToken.Space(m_Input.LineNumber, columnNumber),
-                '!' => HeaderToken.ExclamationMark(m_Input.LineNumber, columnNumber),
+                '(' => HeaderToken.OpenParenthesis(lineNumber, columnNumber),
+                ')' => HeaderToken.CloseParenthesis(lineNumber, columnNumber),
+                ':' => HeaderToken.Colon(lineNumber, columnNumber),
+                ' ' => HeaderToken.Space(lineNumber, columnNumber),
+                '!' => HeaderToken.ExclamationMark(lineNumber, columnNumber),
                 _ => null
             };
 
-            return token != null;            
+            return token != null;
         }
-
-
     }
 }

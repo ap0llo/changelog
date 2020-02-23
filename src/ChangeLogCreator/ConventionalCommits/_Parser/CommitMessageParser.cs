@@ -26,7 +26,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
         private CommitMessage Parse()
         {
-            Tokens = new LineTokenizer(m_Input).ToArray();
+            Tokens = LineTokenizer.GetTokens(m_Input).ToArray();
             m_Position = 0;
 
             // Parse Header

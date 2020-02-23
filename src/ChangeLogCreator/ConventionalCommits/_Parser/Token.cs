@@ -44,13 +44,16 @@ namespace ChangeLogCreator.ConventionalCommits
     {
         public TTokenKind Kind { get; }
 
+
         protected Token(TTokenKind kind, string? value, int lineNumber, int columnNumber)
             : base(value, lineNumber, columnNumber)
         {
             Kind = kind;
         }
 
-        
+
+        public override int GetHashCode() => base.GetHashCode();
+
         public override bool Equals(object? obj) => Equals(obj as Token<TTokenKind>);
 
         public bool Equals(Token<TTokenKind>? other) =>
@@ -59,21 +62,5 @@ namespace ChangeLogCreator.ConventionalCommits
             Kind.Equals(other.Kind);
 
         public override string ToString() => $"({LineNumber}:{ColumnNumber}, {Kind}, '{Value}')";
-
-
-        public void Deconstruct(out TTokenKind kind, out string? value)
-        {
-            kind = Kind;
-            value = Value;
-        }
-    }
-
-    internal abstract class Tokenizer<TToken, TTokenKind> : IEnumerable<TToken>
-        where TToken : Token<TTokenKind>
-        where TTokenKind : Enum
-    {
-        public abstract IEnumerator<TToken> GetEnumerator();
-        
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
