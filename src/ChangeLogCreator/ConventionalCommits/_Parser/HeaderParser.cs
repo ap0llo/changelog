@@ -21,32 +21,32 @@ namespace ChangeLogCreator.ConventionalCommits
         }
 
 
-        public static CommitMessage Parse(LineToken input)
+        public static CommitMessageHeader Parse(LineToken input)
         {
             var parser = new HeaderParser(input);
             return parser.Parse();
         }
 
 
-        private CommitMessage Parse()
+        private CommitMessageHeader Parse()
         {
             Tokens = HeaderTokenizer.GetTokens(m_Input).ToArray();
             m_Position = 0;
 
-            var commit = new CommitMessage();
+            var parsed = new CommitMessageHeader();
 
             // parse type
-            commit.Type = MatchToken(HeaderTokenKind.String).Value!;
+            parsed.Type = MatchToken(HeaderTokenKind.String).Value!;
 
             // parse (optional) scope
             if(TestAndMatchToken(HeaderTokenKind.OpenParenthesis, out _))
             {
-                commit.Scope = MatchToken(HeaderTokenKind.String).Value;
+                parsed.Scope = MatchToken(HeaderTokenKind.String).Value;
                 MatchToken(HeaderTokenKind.CloseParenthesis);
             }
 
             // parse "breaking change" (optional '!' after scope)
-            commit.IsBreakingChange = TestAndMatchToken(HeaderTokenKind.ExclamationMark, out _);
+            parsed.IsBreakingChange = TestAndMatchToken(HeaderTokenKind.ExclamationMark, out _);
 
             // type and scope must be followed by ': '
             MatchToken(HeaderTokenKind.Colon);
@@ -59,11 +59,11 @@ namespace ChangeLogCreator.ConventionalCommits
             {
                 desciptionBuilder.Append(MatchToken(Current.Kind).Value);                
             }
-            commit.Description = desciptionBuilder.ToString();
+            parsed.Description = desciptionBuilder.ToString();
 
 
             // description must not be empty
-            if (String.IsNullOrWhiteSpace(commit.Description))
+            if (String.IsNullOrWhiteSpace(parsed.Description))
             {
                 throw new CommitMessageParserException("Description must not be empty");
             }
@@ -71,7 +71,7 @@ namespace ChangeLogCreator.ConventionalCommits
             // ensure the entire line was parsed
             MatchToken(HeaderTokenKind.Eol);
 
-            return commit;
+            return parsed;
         }
 
 

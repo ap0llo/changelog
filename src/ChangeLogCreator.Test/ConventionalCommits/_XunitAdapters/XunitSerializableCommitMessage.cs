@@ -24,10 +24,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         {
             Value = new CommitMessage()
             {
-                Type = info.GetValue<string>(nameof(CommitMessage.Type)),
-                Scope = info.GetValue<string>(nameof(CommitMessage.Scope)),
-                IsBreakingChange = info.GetValue<bool>(nameof(CommitMessage.IsBreakingChange)),
-                Description = info.GetValue<string>(nameof(CommitMessage.Description)),
+                Header = info.GetValue<XunitSerializableCommitMessageHeader>(nameof(CommitMessage.Header)).Value,
                 Body = info.GetValue<string[]>(nameof(CommitMessage.Body)),
                 Footers = info.GetValue<XunitSerializableCommitMessageFooter[]>(nameof(CommitMessage.Footers)).Select(x => x.Value).ToArray(),
             };
@@ -35,13 +32,9 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         public void Serialize(IXunitSerializationInfo info)
         {
-            info.AddValue(nameof(Value.Type), Value.Type);
-            info.AddValue(nameof(Value.Scope), Value.Scope);
-            info.AddValue(nameof(Value.IsBreakingChange), Value.IsBreakingChange);
-            info.AddValue(nameof(Value.Description), Value.Description);
+            info.AddValue(nameof(Value.Header), new XunitSerializableCommitMessageHeader(Value.Header));
             info.AddValue(nameof(Value.Body), Value.Body.ToArray());
             info.AddValue(nameof(Value.Footers), Value.Footers.Select(x => new XunitSerializableCommitMessageFooter(x)).ToArray());
-
         }
     }
 }

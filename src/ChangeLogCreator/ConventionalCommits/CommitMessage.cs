@@ -7,28 +7,7 @@ namespace ChangeLogCreator.ConventionalCommits
 {
     public sealed class CommitMessage : IEquatable<CommitMessage>
     {
-        /// <summary>
-        /// The type of change, e.g. 'feat' or 'fix'
-        /// </summary>
-        public string Type { get; set; } = "";
-
-        /// <summary>
-        /// The optional scope of the change
-        /// </summary>
-        public string? Scope { get; set; } = null;
-
-        /// <summary>
-        /// Indicates whether a breaking changes hint was included in the header 
-        /// (breaking changes are indicated by a '!' after the scope)
-        /// Note: Breaking changes might also be indicated using a "BREAKING CHANGE" footer.
-        /// </summary>
-        public bool IsBreakingChange { get; set; }
-
-        /// <summary>
-        /// The description of the change, i.e. the summary.
-        /// Value does not include the feature/scope prefix.
-        /// </summary>
-        public string Description { get; set; } = "";
+        public CommitMessageHeader Header { get; set; } = new CommitMessageHeader();
 
         /// <summary>
         /// The paragraphs of the message's body.
@@ -46,9 +25,7 @@ namespace ChangeLogCreator.ConventionalCommits
         {
             unchecked
             {
-                var hash = StringComparer.OrdinalIgnoreCase.GetHashCode(Type) * 397;
-                hash ^= (Scope == null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(Scope));
-                hash ^= StringComparer.Ordinal.GetHashCode(Description);
+                var hash = Header.GetHashCode() * 397;
                 hash ^= Body.Count;
                 hash ^= Footers.Count;
                 return hash;
@@ -59,10 +36,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
         public bool Equals([AllowNull] CommitMessage other) =>
             other != null &&
-            StringComparer.OrdinalIgnoreCase.Equals(Type, other.Type) &&
-            StringComparer.OrdinalIgnoreCase.Equals(Scope, other.Scope) &&
-            IsBreakingChange == other.IsBreakingChange &&
-            StringComparer.Ordinal.Equals(Description, other.Description) &&
+            Header.Equals(other.Header) && 
             Body.SequenceEqual(other.Body) &&
             Footers.SequenceEqual(other.Footers);
     }
