@@ -61,6 +61,7 @@ type ChangeLogEntry = {
     Summary : string
     Body: Paragraph list
     CommitId : string
+    IsBreakingChange: bool
 }
 
 type VersionInfo = {

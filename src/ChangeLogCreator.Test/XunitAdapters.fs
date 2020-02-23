@@ -141,3 +141,32 @@ type XunitSerializableOption<'a>(value: 'a option) =
                         info.AddValue("IsSome", true)
                         info.AddValue("Value", data)
                     | None -> info.AddValue("IsSome", false)
+
+
+type XunitSerializableVersionChangeLog(value: VersionChangeLog) =
+    let mutable _value = value
+
+    member this.Value with get() = _value
+
+    new() = XunitSerializableVersionChangeLog { VersionInfo = { Version = null; Tag = { Name = ""; CommitId = ""}}; BugFixes = []; Features = []; OtherChanges = [] }
+
+    interface IXunitSerializable with
+        member this.Deserialize (info: IXunitSerializationInfo) =            
+            let versionInfo = JsonConvert.DeserializeObject<XunitSerializableVersionInfo>(info.GetValue("VersionInfo"))
+            let features = JsonConvert.DeserializeObject<ChangeLogEntry[]>(info.GetValue("Features"))
+            let bugfixes = JsonConvert.DeserializeObject<ChangeLogEntry[]>(info.GetValue("BugFixes"))
+            let otherChanges = JsonConvert.DeserializeObject<(string*ChangeLogEntry list)[]>(info.GetValue("OtherChanges"))
+            _value <- { VersionInfo = versionInfo.Value; Features = features |> List.ofArray ; BugFixes = bugfixes  |> List.ofArray ; OtherChanges = otherChanges |> List.ofArray }
+
+        member this.Serialize (info: IXunitSerializationInfo) =
+            info.AddValue("VersionInfo", (XunitSerializableVersionInfo _value.VersionInfo))
+            info.AddValue("Features", JsonConvert.SerializeObject(_value.Features |> Array.ofList))
+            info.AddValue("BugFixes", JsonConvert.SerializeObject(_value.BugFixes|> Array.ofList))
+            info.AddValue("OtherChanges", JsonConvert.SerializeObject(_value.OtherChanges|> Array.ofList))
+
+
+
+            //VersionInfo: VersionInfo
+            //   BugFixes : ChangeLogEntry list
+            //   Features : ChangeLogEntry list
+            //   OtherChanges : (string * ChangeLogEntry list) list

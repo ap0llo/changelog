@@ -57,6 +57,9 @@ module MarkdownRenderer =
                     yield new MdHeading(4, scopeAndDescriptionSpan entry, Anchor = getEntryHtmlId entry)
                     yield MdParagraph (compositeSpan [textSpan "Commit: "; codeSpan entry.CommitId])
 
+                    if entry.IsBreakingChange then
+                        yield MdParagraph(strongEmphasisSpan "💥 This is a breaking change.")
+
                     yield entry.Body 
                             |> Seq.map convertParagraph 
                             |> containerBlock

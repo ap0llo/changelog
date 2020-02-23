@@ -28,6 +28,7 @@ module ChangeLogBuilder =
                     Summary = parsed.Description
                     CommitId = commit.Id
                     Body = parsed.Body
+                    IsBreakingChange = parsed.IsBreakingChange  //TODO: check for BREAKING CHANGE footer
                 }
         commits 
             |> Seq.choose tryParseMessage
