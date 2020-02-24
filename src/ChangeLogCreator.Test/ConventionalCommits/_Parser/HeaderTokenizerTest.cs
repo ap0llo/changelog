@@ -71,6 +71,11 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                HeaderToken.ExclamationMark(1, 26),
                HeaderToken.Eol(1, 27)
             );
+
+
+            yield return TestCase("feat:",   HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Eol(1, 6) );
+            yield return TestCase("feat: ",  HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Space(1,6), HeaderToken.Eol(1, 7));
+            yield return TestCase("feat:  ", HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Space(1,6), HeaderToken.Space(1, 7), HeaderToken.Eol(1, 8));           
         }
 
         [Theory]

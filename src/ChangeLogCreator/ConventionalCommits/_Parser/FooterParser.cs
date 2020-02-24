@@ -38,6 +38,7 @@ namespace ChangeLogCreator.ConventionalCommits
             var key = ParseKey();
 
             // remaining tokens are the description
+            var descriptionStartToken = Current;
             var desciptionBuilder = new StringBuilder();
             while (!TestToken(FooterTokenKind.Eol))
             {
@@ -47,7 +48,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
 
             if (String.IsNullOrWhiteSpace(footerDescription))
-                throw new ParserException("Footer description must not be empty");
+                throw new ParserException(descriptionStartToken, "Footer description must not be empty");
 
             // make sure all input was parsed
             MatchToken(FooterTokenKind.Eol);

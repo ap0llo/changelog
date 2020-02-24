@@ -41,18 +41,22 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         }
 
         [Theory]
-        [InlineData("")]
-        [InlineData("value")]
-        [InlineData("BREAKING Change: Description")] // "BREAKING CHANGE" must be upper-case
-        [InlineData("key:value")]
-        [InlineData("key : value")]
-        [InlineData("key#value")]
-        public void Parse_throws_CommitMessageParserException_for_invalid_input(string input)
+        [InlineData("T01", "", 1)]
+        [InlineData("T02", "value", 6)]
+        [InlineData("T03", "BREAKING Change: Description", 10)] // "BREAKING CHANGE" must be upper-case
+        [InlineData("T04", "key:value", 5)]
+        [InlineData("T05", "key : value", 5)]
+        [InlineData("T06", "key#value", 4)]
+        public void Parse_throws_CommitMessageParserException_for_invalid_input(string _, string input, int columnNumber)
         {
-            var inputToken = LineToken.Line(input, 1);
-            Assert.ThrowsAny<ParserException>(() => FooterParser.Parse(inputToken));
+            // ARRANGE
+            var lineNumber = 23;
+            var inputToken = LineToken.Line(input, lineNumber);
 
-            //TODO: Check exception includes information about position where the error occurred
+            // ACT / ASSERT
+            var ex = Assert.ThrowsAny<ParserException>(() => FooterParser.Parse(inputToken));
+            Assert.Equal(lineNumber, ex.LineNumber);
+            Assert.Equal(columnNumber, ex.ColumnNumber);
         }
     }
 }

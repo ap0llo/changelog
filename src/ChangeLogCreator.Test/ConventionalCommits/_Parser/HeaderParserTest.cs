@@ -38,29 +38,33 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         }
 
         [Theory]
-        [InlineData("")]
+        [InlineData("T01", "", 1)]
         // Missing ': '
-        [InlineData("feat")]
-        [InlineData("feat Description")]
-        [InlineData("feat(scope) Description")]
+        [InlineData("T02", "feat", 5)]
+        [InlineData("T03", "feat Description", 5)]
+        [InlineData("T04", "feat(scope) Description", 12)]
         // // Incomplete scope / missing ')' 
-        [InlineData("type(scope: Description")]
-        [InlineData("type scope): Description")]
+        [InlineData("T05", "type(scope: Description", 11)]
+        [InlineData("T06", "type scope): Description", 5)]
         // missing description 
-        [InlineData("feat:")]
-        [InlineData("feat(scope):")]
-        [InlineData("feat:\t")]
-        [InlineData("feat(scope):\t")]
-        [InlineData("feat: ")]
-        [InlineData("feat(scope): ")]
-        [InlineData("feat:  ")]
-        [InlineData("feat(scope):  ")]
-        public void Parse_throws_CommitMessageParserException_for_invalid_input(string input)
+        [InlineData("T07", "feat:", 6)]
+        [InlineData("T08", "feat(scope):", 13)]
+        [InlineData("T09", "feat:\t", 6)]
+        [InlineData("T10", "feat(scope):\t", 13)]
+        [InlineData("T11", "feat: ", 7)]
+        [InlineData("T12", "feat(scope): ", 14)]
+        [InlineData("T13", "feat:  ", 7)]
+        [InlineData("T14", "feat(scope):  ", 14)]
+        public void Parse_throws_CommitMessageParserException_for_invalid_input(string _, string input, int columnNumber)
         {
-            var inputToken = LineToken.Line(input, 1);
-            Assert.ThrowsAny<ParserException>(() => HeaderParser.Parse(inputToken));
+            // ARRANGE
+            var lineNumber = 5;
+            var inputToken = LineToken.Line(input, lineNumber);
 
-            //TODO: Check exception includes information about position where the error occurred
+            // ACT / ASSERT
+            var exception = Assert.ThrowsAny<ParserException>(() => HeaderParser.Parse(inputToken));
+            Assert.Equal(lineNumber, exception.LineNumber);
+            Assert.Equal(columnNumber, exception.ColumnNumber);            
         }
     }
 }

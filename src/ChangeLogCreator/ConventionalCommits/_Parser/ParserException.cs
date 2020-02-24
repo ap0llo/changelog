@@ -1,26 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ChangeLogCreator.ConventionalCommits
 {
     public class ParserException : Exception
     {
-        public ParserException()
-        {
-        }
-        //TODO: Include current token and position in input
-        public ParserException(string message) : base(message)
-        {
+        /// <summary>
+        /// Gets the line number in the input where the parser error occurred
+        /// </summary>
+        public int LineNumber { get; }
 
+        /// <summary>
+        /// Gets the column number in the input where the parser error occurred
+        /// </summary>
+        public int ColumnNumber { get; }
+
+
+        public ParserException(Token currentToken, string message) : base(message)
+        {
+            LineNumber = currentToken.LineNumber;
+            ColumnNumber = currentToken.ColumnNumber;
         }
     }
 
-    internal class UnexpectedTokenException<TToken, TTokenKind> : ParserException
+    public class UnexpectedTokenException<TToken, TTokenKind> : ParserException where TToken : Token
     {
-        //TODO: Include current token and position in input
-        public UnexpectedTokenException(TTokenKind expectedKind, TToken actualToken)
-        {
-        }
+        public UnexpectedTokenException(TTokenKind expectedKind, TToken actualToken) : base(actualToken, $"Unexpected token '{actualToken}', expected '{expectedKind}' token")
+        { }
     }
 }

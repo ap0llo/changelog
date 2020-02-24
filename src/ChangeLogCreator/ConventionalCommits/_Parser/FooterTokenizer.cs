@@ -72,10 +72,12 @@ namespace ChangeLogCreator.ConventionalCommits
                 {
                     if (currentValue.Length > 0)
                     {
-                        yield return FooterToken.String(currentValue.GetValueAndClear(), input.LineNumber, startColumn);
+                        var value = currentValue.GetValueAndClear();
+                        yield return FooterToken.String(value, input.LineNumber, startColumn);
+                        startColumn += value.Length;
                     }
                     yield return matchedToken;
-                    startColumn = i + 2;
+                    startColumn += 1;
                 }
                 else
                 {
@@ -87,10 +89,12 @@ namespace ChangeLogCreator.ConventionalCommits
             // if any input is left in currentValue, return it as String token
             if (currentValue.Length > 0)
             {
-                yield return FooterToken.String(currentValue.GetValueAndClear(), input.LineNumber, startColumn);
+                var value = currentValue.GetValueAndClear();
+                yield return FooterToken.String(value, input.LineNumber, startColumn);
+                startColumn += value.Length;
             }
 
-            yield return FooterToken.Eol(input.LineNumber, startColumn + 1);
+            yield return FooterToken.Eol(input.LineNumber, startColumn);
         }
 
         private static bool TryMatchChar(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out FooterToken? token)

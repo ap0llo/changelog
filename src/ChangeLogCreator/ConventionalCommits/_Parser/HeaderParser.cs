@@ -51,7 +51,8 @@ namespace ChangeLogCreator.ConventionalCommits
             MatchToken(HeaderTokenKind.Colon);
             MatchToken(HeaderTokenKind.Space);
 
-            // remaining tokens are the description            
+            // remaining tokens are the description
+            var descriptionStartToken = Current;
             var desciptionBuilder = new StringBuilder();
             while (!TestToken(HeaderTokenKind.Eol))
             {
@@ -61,7 +62,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
             // description must not be empty
             if (String.IsNullOrWhiteSpace(description))
-                throw new ParserException("Description must not be empty");
+                throw new ParserException(descriptionStartToken, "Description must not be empty");
 
             // ensure the entire line was parsed
             MatchToken(HeaderTokenKind.Eol);

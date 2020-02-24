@@ -13,9 +13,9 @@ namespace ChangeLogCreator.Test.ConventionalCommits
     {
         public static IEnumerable<object[]> ValidParserTestCases()
         {
-            static object[] TestCase(string input, CommitMessage parsed) => new object[] { input, new XunitSerializableCommitMessage(parsed) };
+            static object[] TestCase(string id, string input, CommitMessage parsed) => new object[] { id, input, new XunitSerializableCommitMessage(parsed) };
 
-            static object[] MultiLineTestCase(CommitMessage parsed, params string[] input) => new object[] { String.Join("\r\n", input), new XunitSerializableCommitMessage(parsed) };
+            static object[] MultiLineTestCase(string id, CommitMessage parsed, params string[] input) => new object[] { id, String.Join("\r\n", input), new XunitSerializableCommitMessage(parsed) };
 
             var descriptions = new[]
             {
@@ -26,11 +26,13 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 "Description #",
                 "Some description\r\n", // trailing line breaks are valid but ignored by the parser
                 "Some description\n"    // trailing line breaks are valid but ignored by the parser
-	        };
+            };
 
+            var i = 1;
             foreach (var descr in descriptions)
             {
                 yield return TestCase(
+                    $"T{i++:00}",
                     "feat: " + descr,
                     new CommitMessage(
                         header: new CommitMessageHeader(
@@ -45,6 +47,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 );
 
                 yield return TestCase(
+                    $"T{i++:00}",
                     $"feat(scope): {descr}",
                     new CommitMessage(                    
                         header: new CommitMessageHeader(
@@ -59,6 +62,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 );
 
                 yield return TestCase(
+                    $"T{i++:00}",
                     $"feat(scope)!: {descr}",
                     new CommitMessage(
                         header: new CommitMessageHeader(
@@ -77,6 +81,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             // single line body
             yield return MultiLineTestCase(
+                "T22",
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
@@ -95,6 +100,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             // multi-line body
             yield return MultiLineTestCase(
+                "T23",
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
@@ -114,6 +120,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             //multi-paragraph body (1)
             yield return MultiLineTestCase(
+                "T24",
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
@@ -138,6 +145,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             // multi-paragraph body with trailing line break
             yield return MultiLineTestCase(
+                "T25",
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
@@ -162,11 +170,13 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
 
             // messages with footer
+            i = 26;
             foreach (var footerType in new[] { "footer-type", "BREAKING CHANGE", "BREAKING-CHANGE" })
             {
                 foreach (var separator in new[] { ": ", " #" })
                 {
                     yield return MultiLineTestCase(
+                        $"T{i++:00}",
                         new CommitMessage(
                             header: new CommitMessageHeader(
                                 type:  "type",
@@ -189,6 +199,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
 
             yield return MultiLineTestCase(
+                "T32",
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
@@ -211,6 +222,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             // message with body AND footer
             yield return MultiLineTestCase(
+                "T33",
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:   "type",
@@ -239,6 +251,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
             );
 
             yield return MultiLineTestCase(
+                "T34",
                 new CommitMessage(
                     header: new CommitMessageHeader(
                         type:  "type",
@@ -271,70 +284,84 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         public static IEnumerable<object[]> InvalidParserTestCases()
         {           
-            static object[] TestCase(string input) => new object[] { input };
+            static object[] TestCase(string id, int lineNumber, int columnNumber, string input) => new object[] { id, lineNumber, columnNumber, input };
 
-            static object[] MultiLineTestCase(params string[] input) => new object[] { String.Join("\r\n", input) };
+            static object[] MultiLineTestCase(string id, int lineNumber, int columnNumber, params string[] input) => new object[] { id, lineNumber, columnNumber, String.Join("\r\n", input) };
 
             // empty
-            yield return TestCase("");
+            yield return TestCase("T01", lineNumber: 1, columnNumber: 1, "");
 
             // Missing ': ' in header
-            yield return TestCase("feat");
+            yield return TestCase("T02", lineNumber: 1, columnNumber: 5, "feat");
 
             // Incomplete scope / missing ')' in header
-            yield return TestCase("feat(scope: Description");
+            yield return TestCase("T03", lineNumber: 1, columnNumber: 11, "feat(scope: Description");
 
             // missing description in header
-            foreach (var invalidDescription in new[] { "", "\t", " ", "  " })
-            {
-                yield return TestCase($"feat:{invalidDescription}");
-                yield return TestCase($"feat(scope):{invalidDescription}");
-            }
+            yield return TestCase($"T04", lineNumber: 1, columnNumber: 6, $"feat:");
+            yield return TestCase($"T05", lineNumber: 1, columnNumber: 6, $"feat:\t");
+            yield return TestCase($"T06", lineNumber: 1, columnNumber: 7, $"feat: ");
+            yield return TestCase($"T07", lineNumber: 1, columnNumber: 7, $"feat:  ");
+                                     
+            yield return TestCase($"T08", lineNumber: 1, columnNumber: 13, $"feat(scope):");
+            yield return TestCase($"T09", lineNumber: 1, columnNumber: 13, $"feat(scope):\t");
+            yield return TestCase($"T10", lineNumber: 1, columnNumber: 14, $"feat(scope): ");
+            yield return TestCase($"T11", lineNumber: 1, columnNumber: 14, $"feat(scope):  ");
 
-            // missing description in footer
-            foreach (var invalidFooter in new[] { "Footer: ", "BREAKING CHANGE: ", "Footer: \t", "Footer:  ", "Footer # ", "BREAKING CHANGE #\t" })
-            {
-                yield return TestCase($"type(scope): Description\r\n\r\n{invalidFooter}");
-            }
+            // missing description in footer            
+            yield return TestCase($"T12", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter: ");
+            yield return TestCase($"T13", lineNumber: 3, columnNumber: 18, $"type(scope): Description\r\n\r\nBREAKING CHANGE: ");
+            yield return TestCase($"T14", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter: \t");
+            yield return TestCase($"T15", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter:  ");
+            yield return TestCase($"T16", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter # ");
+            yield return TestCase($"T17", lineNumber: 3, columnNumber: 18, $"type(scope): Description\r\n\r\nBREAKING CHANGE #\t");
 
             // multiple blank lines between header and body
             yield return MultiLineTestCase(
-                    "type: Description",
-                    "",
-                    "",
-                    "Body"
-                );
+                "T18",
+                lineNumber: 3, columnNumber: 1,
+                "type: Description",
+                "",
+                "",
+                "Body"
+            );
 
             // multiple blank lines between body and footer
             yield return MultiLineTestCase(
-                    "type: Description",
-                    "",
-                    "Body 1",
-                    "Body 2",
-                    "",
-                    "",
-                    "Footer: Value"
-                );
+                "T19",
+                lineNumber: 6, columnNumber: 1,
+                "type: Description",
+                "",
+                "Body 1",
+                "Body 2",
+                "",
+                "",
+                "Footer: Value"
+            );
 
             // footer with empty description
             yield return MultiLineTestCase(
-                    "type: Description",
-                    "",
-                    "Footer: "
-                );
+                "T20",
+                lineNumber: 3, columnNumber: 9,
+                "type: Description",
+                "",
+                "Footer: "
+            );
 
             yield return MultiLineTestCase(
-                    "type: Description",
-                    "",
-                    "Footer #"
-                );
+                "T21",
+                lineNumber: 3, columnNumber: 9,
+                "type: Description",
+                "",
+                "Footer #"
+            );
 
         }
 
 
         [Theory]
         [MemberData(nameof(ValidParserTestCases))]
-        public void Parse_returns_expected_commit_message(string commitMessage, XunitSerializableCommitMessage expected)
+        public void Parse_returns_expected_commit_message(string _, string commitMessage, XunitSerializableCommitMessage expected)
         {
             var parsed = CommitMessageParser.Parse(commitMessage);
             Assert.Equal(expected.Value, parsed);
@@ -342,10 +369,11 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         [Theory]
         [MemberData(nameof(InvalidParserTestCases))]
-        public void Parse_throws_CommitMessageParserException_for_invalid_input(string input)
-        {
-            Assert.ThrowsAny<ParserException>(() => CommitMessageParser.Parse(input));
-            //TODO: Check exception includes information about position where the error occurred
+        public void Parse_throws_CommitMessageParserException_for_invalid_input(string _, int lineNumber, int columnNumber, string input)
+        {            
+            var ex = Assert.ThrowsAny<ParserException>(() => CommitMessageParser.Parse(input));
+            Assert.Equal(lineNumber, ex.LineNumber);
+            Assert.Equal(columnNumber, ex.ColumnNumber);
         }
     }
 }
