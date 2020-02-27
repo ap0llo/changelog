@@ -4,14 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
-    <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="App.config" />
-    <Compile Include="MessageParserTests.fs" />
-    <Compile Include="Program.fs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
@@ -21,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ChangeLogCreator\ChangeLogCreator.fsproj" />
+    <ProjectReference Include="..\ChangeLogCreator\ChangeLogCreator.csproj" />
   </ItemGroup>
 
 </Project>
