@@ -12,6 +12,7 @@ namespace ChangeLogCreator.ConventionalCommits
     public sealed class FooterParser : Parser<FooterToken, FooterTokenKind>
     {
         private readonly LineToken m_Input;
+        private readonly FooterTokenizer m_Tokenizer = new FooterTokenizer();
 
 
         private FooterParser(LineToken input)
@@ -26,7 +27,7 @@ namespace ChangeLogCreator.ConventionalCommits
         }
 
 
-        protected override IReadOnlyList<FooterToken> GetTokens() => FooterTokenizer.GetTokens(m_Input).ToArray();
+        protected override IReadOnlyList<FooterToken> GetTokens() => m_Tokenizer.GetTokens(m_Input).ToArray();
 
 
         private CommitMessageFooter Parse()
@@ -85,7 +86,7 @@ namespace ChangeLogCreator.ConventionalCommits
             // - "BREAKING" Space "CHANGE" Colon Space
             // - "BREAKING" Space "CHANGE" Space Hash
 
-            // the first token is alsways a string
+            // the first token is always a string
             var typeToken = MatchToken(FooterTokenKind.String);
 
             if (TestAndMatchToken(FooterTokenKind.Space, out _))

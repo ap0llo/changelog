@@ -40,64 +40,18 @@ namespace ChangeLogCreator.ConventionalCommits
             new FooterToken(FooterTokenKind.Eol, null, lineNumber, columnNumber);
     }
     
-    //TODO: Share code with HeaderTokenizer
     /// <summary>
     /// Tokenizer that splits the input into a sequence of <see cref="FooterToken"/> values to be parsed by <see cref="FooterParser"/>
     /// </summary>
-    public static class FooterTokenizer
+    public class FooterTokenizer : TokenizerBase<FooterToken>
     {
-        public static IEnumerable<FooterToken> GetTokens(LineToken input)
-        {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+        protected override FooterToken CreateEolToken(int lineNumber, int columnNumber) =>
+            FooterToken.Eol(lineNumber, columnNumber);
 
-            if (input.Kind != LineTokenKind.Line)
-                throw new ArgumentException($"Input must be line token of kind '{LineTokenKind.Line}', but is kind '{input.Kind}'");
+        protected override FooterToken CreateStringToken(string value, int lineNumber, int columnNumber) =>
+            FooterToken.String(value, lineNumber, columnNumber);
 
-
-            var currentValue = new StringBuilder();
-
-            var startColumn = 1;
-
-            if (input.Value!.Length == 0)
-            {
-                yield return FooterToken.Eol(input.LineNumber, startColumn);
-                yield break;
-            }
-
-            for (var i = 0; i < input.Value.Length; i++)
-            {
-                var currentChar = input.Value[i];
-                if (TryMatchChar(currentChar, input.LineNumber, i + 1, out var matchedToken))
-                {
-                    if (currentValue.Length > 0)
-                    {
-                        var value = currentValue.GetValueAndClear();
-                        yield return FooterToken.String(value, input.LineNumber, startColumn);
-                        startColumn += value.Length;
-                    }
-                    yield return matchedToken;
-                    startColumn += 1;
-                }
-                else
-                {
-                    currentValue.Append(currentChar);
-                }
-
-            }
-
-            // if any input is left in currentValue, return it as String token
-            if (currentValue.Length > 0)
-            {
-                var value = currentValue.GetValueAndClear();
-                yield return FooterToken.String(value, input.LineNumber, startColumn);
-                startColumn += value.Length;
-            }
-
-            yield return FooterToken.Eol(input.LineNumber, startColumn);
-        }
-
-        private static bool TryMatchChar(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out FooterToken? token)
+        protected override bool TryMatchSingleCharToken(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out FooterToken? token)
         {
             token = value switch
             {

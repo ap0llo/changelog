@@ -51,58 +51,15 @@ namespace ChangeLogCreator.ConventionalCommits
     /// <summary>
     /// Tokenizer that splits the input into a sequence of <see cref="HeaderToken"/> values to be parsed by <see cref="HeaderParser"/>
     /// </summary>
-    public static class HeaderTokenizer
+    public class HeaderTokenizer : TokenizerBase<HeaderToken>
     {
-        public static IEnumerable<HeaderToken> GetTokens(LineToken input)
-        {
-            if (input is null)
-                throw new ArgumentNullException(nameof(input));
+        protected override HeaderToken CreateEolToken(int lineNumber, int columnNumber) =>
+            HeaderToken.Eol(lineNumber, columnNumber);
 
-            if (input.Kind != LineTokenKind.Line)
-                throw new ArgumentException($"Input must be line token of kind '{LineTokenKind.Line}', but is kind '{input.Kind}'");
+        protected override HeaderToken CreateStringToken(string value, int lineNumber, int columnNumber) =>
+            HeaderToken.String(value, lineNumber, columnNumber);
 
-
-            var currentValue = new StringBuilder();
-            var startColumn = 1;
-
-            if (input.Value!.Length == 0)
-            {
-                yield return HeaderToken.Eol(input.LineNumber, startColumn);
-                yield break;
-            }
-
-            for (var i = 0; i < input.Value.Length; i++)
-            {
-                var currentChar = input.Value[i];
-                if (TryMatchChar(currentChar, input.LineNumber, i + 1, out var matchedToken))
-                {
-                    if (currentValue.Length > 0)
-                    {
-                        var value = currentValue.GetValueAndClear();
-                        yield return HeaderToken.String(value, input.LineNumber, startColumn);
-                        startColumn += value.Length;
-                    }
-                    yield return matchedToken;
-                    startColumn += 1;
-                }
-                else
-                {
-                    currentValue.Append(currentChar);
-                }
-            }
-
-            // if any input is left in currentValueBuilder, return it as StringToken
-            if (currentValue.Length > 0)
-            {
-                var value = currentValue.GetValueAndClear();
-                yield return HeaderToken.String(value, input.LineNumber, startColumn);
-                startColumn += value.Length;
-            }
-
-            yield return HeaderToken.Eol(input.LineNumber, startColumn);
-        }
-
-        private static bool TryMatchChar(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out HeaderToken? token)
+        protected override bool TryMatchSingleCharToken(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out HeaderToken? token)
         {
             token = value switch
             {

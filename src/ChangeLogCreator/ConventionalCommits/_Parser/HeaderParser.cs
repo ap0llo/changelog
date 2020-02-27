@@ -12,7 +12,7 @@ namespace ChangeLogCreator.ConventionalCommits
     public sealed class HeaderParser : Parser<HeaderToken, HeaderTokenKind>
     {
         private readonly LineToken m_Input;
-
+        private readonly HeaderTokenizer m_Tokenizer = new HeaderTokenizer();
 
         private HeaderParser(LineToken input)
         {
@@ -26,7 +26,7 @@ namespace ChangeLogCreator.ConventionalCommits
         }
 
 
-        protected override IReadOnlyList<HeaderToken> GetTokens() => HeaderTokenizer.GetTokens(m_Input).ToArray();
+        protected override IReadOnlyList<HeaderToken> GetTokens() => m_Tokenizer.GetTokens(m_Input).ToArray();
 
         private CommitMessageHeader Parse()
         {

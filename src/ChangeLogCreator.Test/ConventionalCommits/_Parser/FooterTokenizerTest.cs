@@ -92,7 +92,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 .ToArray();
             
             // ACT
-            var actualTokens = FooterTokenizer.GetTokens(input.Value).ToArray();
+            var actualTokens = new FooterTokenizer().GetTokens(input.Value).ToArray();
 
             // ASSERT
             Assert.Collection(actualTokens, inspectors);
@@ -101,14 +101,14 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         [Fact]
         public void GetTokens_throws_ArgumentException_if_input_token_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => FooterTokenizer.GetTokens(null).ToArray());
+            Assert.Throws<ArgumentNullException>(() => new FooterTokenizer().GetTokens(null).ToArray());
         }
 
         [Fact]
         public void GetTokens_throws_ArgumentException_if_input_token_is_invalid()
         {
-            Assert.Throws<ArgumentException>(() => FooterTokenizer.GetTokens(LineToken.Eof(1)).ToArray());
-            Assert.Throws<ArgumentException>(() => FooterTokenizer.GetTokens(LineToken.Blank(1)).ToArray());
+            Assert.Throws<ArgumentException>(() => new FooterTokenizer().GetTokens(LineToken.Eof(1)).ToArray());
+            Assert.Throws<ArgumentException>(() => new FooterTokenizer().GetTokens(LineToken.Blank(1)).ToArray());
         }
     }
 }
