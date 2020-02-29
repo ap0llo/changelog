@@ -7,6 +7,6 @@ namespace ChangeLogCreator.Git
     {
         IReadOnlyList<GitTag> GetTags();
 
-        IReadOnlyList<GitCommit> GetCommits(string? fromCommit, string toCommit);
+        IReadOnlyList<GitCommit> GetCommits(GitId? fromCommit, GitId toCommit);
     }
 }

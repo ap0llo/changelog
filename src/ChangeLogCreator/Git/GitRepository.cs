@@ -21,11 +21,11 @@ namespace ChangeLogCreator.Git
         }
 
 
-        public IReadOnlyList<GitCommit> GetCommits(string? fromCommit, string toCommit)
+        public IReadOnlyList<GitCommit> GetCommits(GitId? fromCommit, GitId toCommit)
         {
             // Set up commit filter
             var filter = new CommitFilter() { IncludeReachableFrom = toCommit };
-            if (fromCommit != null)
+            if (fromCommit.HasValue)
             {
                 filter.ExcludeReachableFrom = fromCommit;
 
@@ -44,15 +44,21 @@ namespace ChangeLogCreator.Git
         private GitCommit ToGitCommit(Commit commit)
         {
             return new GitCommit(
-                id: m_Repository.ObjectDatabase.ShortenObjectId(commit),
+                id: ToGitId(commit),
                 commitMessage: commit.Message,
                 date: commit.Author.When.DateTime,
                 author: ToGitAuthor(commit.Author)
             );
         }
 
+        private GitId ToGitId(GitObject gitObject)
+        {
+            var sha = m_Repository.ObjectDatabase.ShortenObjectId(gitObject);
+            return new GitId(sha);
+        }
+
         private GitAuthor ToGitAuthor(Signature signature) => new GitAuthor(name: signature.Name, email: signature.Email);
 
-        private GitTag ToGitTag(Tag tag) => new GitTag(tag.FriendlyName, m_Repository.ObjectDatabase.ShortenObjectId(tag.Target));
+        private GitTag ToGitTag(Tag tag) => new GitTag(tag.FriendlyName, ToGitId(tag.Target));
     }
 }

@@ -6,7 +6,7 @@ namespace ChangeLogCreator.Git
 
     public sealed class GitCommit : IEquatable<GitCommit>
     {
-        public string Id { get; }
+        public GitId Id { get; }
 
         public string CommitMessage { get; }
 
@@ -15,11 +15,8 @@ namespace ChangeLogCreator.Git
         public GitAuthor Author { get; }
 
 
-        public GitCommit(string id, string commitMessage, DateTime date, GitAuthor author)
-        {
-            if (String.IsNullOrWhiteSpace(id))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(id));
-
+        public GitCommit(GitId id, string commitMessage, DateTime date, GitAuthor author)
+        {            
             Id = id;
             CommitMessage = commitMessage ?? throw new ArgumentNullException(nameof(commitMessage));
             Date = date;
@@ -27,13 +24,13 @@ namespace ChangeLogCreator.Git
         }
 
 
-        public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(Id);
+        public override int GetHashCode() => Id.GetHashCode();
 
         public override bool Equals(object? obj) => Equals(obj as GitCommit);
 
         public bool Equals([AllowNull] GitCommit other) =>
             other != null &&
-            StringComparer.OrdinalIgnoreCase.Equals(Id, other.Id) &&
+            Id.Equals(other.Id) &&
             StringComparer.Ordinal.Equals(CommitMessage, other.CommitMessage) &&
             Date == other.Date &&
             Author.Equals(other.Author);

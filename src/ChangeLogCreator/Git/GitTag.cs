@@ -7,18 +7,16 @@ namespace ChangeLogCreator.Git
     {
         public string Name { get; }
 
-        public string CommitId { get; }
+        public GitId Commit { get; }
 
 
-        public GitTag(string name, string commitId)
+        public GitTag(string name, GitId commit)
         {
             if (String.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(name));
-
-            if (String.IsNullOrWhiteSpace(commitId))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(commitId));
+            
             Name = name;
-            CommitId = commitId;
+            Commit = commit;
         }
 
 
@@ -27,7 +25,7 @@ namespace ChangeLogCreator.Git
             unchecked
             {
                 var hash = StringComparer.Ordinal.GetHashCode(Name) * 397;
-                hash ^= StringComparer.OrdinalIgnoreCase.GetHashCode(CommitId);
+                hash ^= Commit.GetHashCode();
                 return hash;
             }
         }
@@ -37,6 +35,6 @@ namespace ChangeLogCreator.Git
         public bool Equals([AllowNull] GitTag other) =>
             other != null &&
             StringComparer.Ordinal.Equals(Name, other.Name) &&
-            StringComparer.OrdinalIgnoreCase.Equals(CommitId, other.CommitId);
+            Commit.Equals(other.Commit);
     }
 }

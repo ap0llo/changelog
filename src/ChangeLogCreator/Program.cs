@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ChangeLogCreator.ChangeLog;
+using ChangeLogCreator.Versions;
 using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Git;
 using CommandLine;
@@ -49,12 +49,10 @@ namespace ChangeLogCreator
         {
             Console.WriteLine($"Loading commits from repository '{parameters.RepositoryPath}'");
             using (var repo = new GitRepository(parameters.RepositoryPath))
-            {
-                var tags = repo.GetTags();
+            {                
+                var latestVersion = new GitTagVersionProvider(repo).AllVersions.OrderByDescending(x => x.Version).First();
 
-                var latestVersion = ChangeLogBuilder.GetVersions(tags).OrderByDescending(x => x.Version).First();
-
-                var commits = repo.GetCommits(null, latestVersion.Tag.CommitId);
+                var commits = repo.GetCommits(null, latestVersion.Commit);
 
                 foreach(var commit in commits)
                 {
