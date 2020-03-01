@@ -27,5 +27,7 @@ namespace ChangeLogCreator.Git
         public override bool Equals(object? obj) => obj is GitId otherId && Equals(otherId);
 
         public bool Equals(GitId other) => StringComparer.OrdinalIgnoreCase.Equals(Id, other.Id);
+
+        public override string ToString() => Id;
     }
 }

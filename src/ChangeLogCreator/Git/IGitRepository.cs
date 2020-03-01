@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ChangeLogCreator.Git
 {
-    internal interface IGitRepository : IDisposable
+    public interface IGitRepository : IDisposable
     {
         IReadOnlyList<GitTag> GetTags();
 

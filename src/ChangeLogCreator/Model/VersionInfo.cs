@@ -3,9 +3,9 @@ using System.Diagnostics.CodeAnalysis;
 using ChangeLogCreator.Git;
 using NuGet.Versioning;
 
-namespace ChangeLogCreator.Versions
+namespace ChangeLogCreator.Model
 {
-    internal sealed class VersionInfo : IEquatable<VersionInfo>
+    public sealed class VersionInfo : IEquatable<VersionInfo>
     {
         public SemanticVersion Version { get; }
 

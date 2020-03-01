@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ChangeLogCreator.Versions;
-using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Git;
+using ChangeLogCreator.Tasks;
 using CommandLine;
-using Pastel;
 
 namespace ChangeLogCreator
 {
@@ -47,28 +45,18 @@ namespace ChangeLogCreator
 
         private static int Run(CommandLineParameters parameters)
         {
+            if (!ValidateCommandlineParameters(parameters))
+                return 1;
+
             Console.WriteLine($"Loading commits from repository '{parameters.RepositoryPath}'");
             using (var repo = new GitRepository(parameters.RepositoryPath))
-            {                
-                var latestVersion = new GitTagVersionProvider(repo).AllVersions.OrderByDescending(x => x.Version).First();
+            {
+                var pipeline = new ChangeLogPipeline()
+                    .AddTask(new LoadVersionsTask(repo))
+                    .AddTask(new ParseCommitsTask(repo))
+                    .AddTask(new PrintToConsoleTask());
 
-                var commits = repo.GetCommits(null, latestVersion.Commit);
-
-                foreach(var commit in commits)
-                {
-                    Console.Write($"{commit.Id}: ");
-
-                    try
-                    {
-                        _ = CommitMessageParser.Parse(commit.CommitMessage);
-                        Console.WriteLine(" PARSED  ".Pastel("00000").PastelBg("68C355"));
-                    }
-                    catch (ParserException ex)
-                    {
-                        Console.WriteLine(" SKIPPED ".Pastel("00000").PastelBg("FF9800") + " " + ex.Message);
-                    }
-                }
-           
+                pipeline.Run();
             }
 
             return 0;
@@ -81,7 +69,6 @@ namespace ChangeLogCreator
                 return false;
             else
                 return Directory.Exists(parameters.RepositoryPath);
-
         }
     }
 }

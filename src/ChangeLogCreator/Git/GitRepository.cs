@@ -24,10 +24,10 @@ namespace ChangeLogCreator.Git
         public IReadOnlyList<GitCommit> GetCommits(GitId? fromCommit, GitId toCommit)
         {
             // Set up commit filter
-            var filter = new CommitFilter() { IncludeReachableFrom = toCommit };
+            var filter = new CommitFilter() { IncludeReachableFrom = toCommit .Id  };
             if (fromCommit.HasValue)
             {
-                filter.ExcludeReachableFrom = fromCommit;
+                filter.ExcludeReachableFrom = fromCommit.Value.Id;
 
             }
 
