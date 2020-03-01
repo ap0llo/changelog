@@ -48,7 +48,6 @@ namespace ChangeLogCreator
             if (!ValidateCommandlineParameters(parameters))
                 return 1;
 
-            Console.WriteLine($"Loading commits from repository '{parameters.RepositoryPath}'");
             using (var repo = new GitRepository(parameters.RepositoryPath))
             {
                 var pipeline = new ChangeLogPipeline()

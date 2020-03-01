@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using ChangeLogCreator.ConventionalCommits;
 
 namespace ChangeLogCreator.Model
 {
@@ -12,7 +14,11 @@ namespace ChangeLogCreator.Model
 
         public VersionInfo Version { get; }
 
-        public IReadOnlyList<ChangeLogEntry> Entries => m_Entries;
+        public IEnumerable<ChangeLogEntry> AllEntries => m_Entries.OrderBy(x => x.Date);
+
+        public IEnumerable<ChangeLogEntry> FeatureEntries => AllEntries.Where(e => e.Type == CommitType.Feature);
+
+        public IEnumerable<ChangeLogEntry> BugFixEntries => AllEntries.Where(e => e.Type == CommitType.BugFix);
 
 
         public SingleVersionChangeLog(VersionInfo version)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
@@ -71,11 +72,11 @@ namespace ChangeLogCreator.Test.Tasks
             // ASSERT
             repo.Verify(x => x.GetCommits(It.IsAny<GitId?>(), It.IsAny<GitId>()), Times.Once);
 
-            Assert.NotNull(versionChangeLog.Entries);
-            Assert.Equal(2, versionChangeLog.Entries.Count);
+            Assert.NotNull(versionChangeLog.AllEntries);
+            Assert.Equal(2, versionChangeLog.AllEntries.Count());
 
             {
-                var entry = Assert.Single(versionChangeLog.Entries, e => e.Type.Equals(CommitType.Feature));
+                var entry = Assert.Single(versionChangeLog.AllEntries, e => e.Type.Equals(CommitType.Feature));
                 Assert.Equal(new GitId("01"), entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some new feature", entry.Summary);
@@ -83,7 +84,7 @@ namespace ChangeLogCreator.Test.Tasks
                 Assert.Empty(entry.Body);
             }
             {
-                var entry = Assert.Single(versionChangeLog.Entries, e => e.Type.Equals(CommitType.BugFix));
+                var entry = Assert.Single(versionChangeLog.AllEntries, e => e.Type.Equals(CommitType.BugFix));
                 Assert.Equal(new GitId("02"), entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some bugfix", entry.Summary);
@@ -125,14 +126,14 @@ namespace ChangeLogCreator.Test.Tasks
             repo.Verify(x => x.GetCommits(null, It.IsAny<GitId>()), Times.Once);
             repo.Verify(x => x.GetCommits(It.IsAny<GitId>(), It.IsAny<GitId>()), Times.Once);
 
-            Assert.NotNull(versionChangeLog1.Entries);
-            Assert.Empty(versionChangeLog1.Entries);
+            Assert.NotNull(versionChangeLog1.AllEntries);
+            Assert.Empty(versionChangeLog1.AllEntries);
 
-            Assert.NotNull(versionChangeLog2.Entries);
-            Assert.Equal(2, versionChangeLog2.Entries.Count);
+            Assert.NotNull(versionChangeLog2.AllEntries);
+            Assert.Equal(2, versionChangeLog2.AllEntries.Count());
 
             {
-                var entry = Assert.Single(versionChangeLog2.Entries, e => e.Type.Equals(CommitType.Feature));
+                var entry = Assert.Single(versionChangeLog2.AllEntries, e => e.Type.Equals(CommitType.Feature));
                 Assert.Equal(new GitId("ab"), entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some new feature", entry.Summary);
@@ -140,7 +141,7 @@ namespace ChangeLogCreator.Test.Tasks
                 Assert.Empty(entry.Body);
             }
             {
-                var entry = Assert.Single(versionChangeLog2.Entries, e => e.Type.Equals(CommitType.BugFix));
+                var entry = Assert.Single(versionChangeLog2.AllEntries, e => e.Type.Equals(CommitType.BugFix));
                 Assert.Equal(new GitId("cd"), entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some bugfix", entry.Summary);
@@ -173,8 +174,8 @@ namespace ChangeLogCreator.Test.Tasks
             sut.Run(changelog);
 
             // ASSERT
-            Assert.NotNull(versionChangeLog.Entries);
-            Assert.Empty(versionChangeLog.Entries);
+            Assert.NotNull(versionChangeLog.AllEntries);
+            Assert.Empty(versionChangeLog.AllEntries);
         }
 
         //TODO: Scope, footers, body

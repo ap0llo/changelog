@@ -29,6 +29,10 @@ namespace ChangeLogCreator.ConventionalCommits
         public bool Equals(CommitType other) => StringComparer.OrdinalIgnoreCase.Equals(Type, other.Type);
 
         public override string ToString() => Type;
+
+        public static bool operator ==(CommitType left, CommitType right) => StringComparer.OrdinalIgnoreCase.Equals(left.Type, right.Type);
+
+        public static bool operator !=(CommitType left, CommitType right) => !StringComparer.OrdinalIgnoreCase.Equals(left.Type, right.Type);
     }
 }
 
