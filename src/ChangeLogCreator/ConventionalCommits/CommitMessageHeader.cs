@@ -16,7 +16,7 @@ namespace ChangeLogCreator.ConventionalCommits
         /// <summary>
         /// Gets the type of change, e.g. <c>feat</c> or <c>fix</c>.
         /// </summary>
-        public string Type { get; }
+        public CommitType Type { get; }
 
         /// <summary>
         /// The optional scope of the change
@@ -51,7 +51,7 @@ namespace ChangeLogCreator.ConventionalCommits
         /// </summary>
         /// <param name="type">The type of the change (see <see cref="Type"/> property).</param>
         /// <param name="description">The change's description (see <see cref="Description"/> property).</param>
-        public CommitMessageHeader(string type, string description) : this(type, description, null, false)
+        public CommitMessageHeader(CommitType type, string description) : this(type, description, null, false)
         { }
 
 
@@ -61,7 +61,7 @@ namespace ChangeLogCreator.ConventionalCommits
         /// <param name="type">The type of the change (see <see cref="Type"/> property).</param>
         /// <param name="description">The change's description (see <see cref="Description"/> property).</param>
         /// <param name="scope">The (optional) scope of the change (see <see cref="Scope"/> property).</param>
-        public CommitMessageHeader(string type, string description, string? scope) : this(type, description, scope, false)
+        public CommitMessageHeader(CommitType type, string description, string? scope) : this(type, description, scope, false)
         { }
 
         /// <summary>
@@ -71,11 +71,8 @@ namespace ChangeLogCreator.ConventionalCommits
         /// <param name="description">The change's description (see <see cref="Description"/> property).</param>
         /// <param name="scope">The (optional) scope of the change (see <see cref="Scope"/> property).</param>
         /// <param name="isBreakingChange">Indicates whether the change is marked as a breaking change (see <see cref="IsBreakingChange"/> property).</param>
-        public CommitMessageHeader(string type, string description, string? scope, bool isBreakingChange)
-        {
-            if (String.IsNullOrWhiteSpace(type))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(type));
-
+        public CommitMessageHeader(CommitType type, string description, string? scope, bool isBreakingChange)
+        {            
             if (String.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(description));
 

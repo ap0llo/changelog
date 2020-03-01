@@ -1,4 +1,5 @@
 ﻿using System;
+using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
@@ -74,7 +75,7 @@ namespace ChangeLogCreator.Test.Tasks
             Assert.Equal(2, versionChangeLog.Entries.Count);
 
             {
-                var entry = Assert.Single(versionChangeLog.Entries, e => e.Type == "feat");
+                var entry = Assert.Single(versionChangeLog.Entries, e => e.Type.Equals(CommitType.Feature));
                 Assert.Equal(new GitId("01"), entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some new feature", entry.Summary);
@@ -82,7 +83,7 @@ namespace ChangeLogCreator.Test.Tasks
                 Assert.Empty(entry.Body);
             }
             {
-                var entry = Assert.Single(versionChangeLog.Entries, e => e.Type == "fix");
+                var entry = Assert.Single(versionChangeLog.Entries, e => e.Type.Equals(CommitType.BugFix));
                 Assert.Equal(new GitId("02"), entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some bugfix", entry.Summary);
@@ -131,7 +132,7 @@ namespace ChangeLogCreator.Test.Tasks
             Assert.Equal(2, versionChangeLog2.Entries.Count);
 
             {
-                var entry = Assert.Single(versionChangeLog2.Entries, e => e.Type == "feat");
+                var entry = Assert.Single(versionChangeLog2.Entries, e => e.Type.Equals(CommitType.Feature));
                 Assert.Equal(new GitId("ab"), entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some new feature", entry.Summary);
@@ -139,7 +140,7 @@ namespace ChangeLogCreator.Test.Tasks
                 Assert.Empty(entry.Body);
             }
             {
-                var entry = Assert.Single(versionChangeLog2.Entries, e => e.Type == "fix");
+                var entry = Assert.Single(versionChangeLog2.Entries, e => e.Type.Equals(CommitType.BugFix));
                 Assert.Equal(new GitId("cd"), entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some bugfix", entry.Summary);

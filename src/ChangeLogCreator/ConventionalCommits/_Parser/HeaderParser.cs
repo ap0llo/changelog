@@ -34,7 +34,7 @@ namespace ChangeLogCreator.ConventionalCommits
             Reset();
 
             // parse type
-            var type = MatchToken(HeaderTokenKind.String).Value!;
+            var type = new CommitType(MatchToken(HeaderTokenKind.String).Value!);
 
             // parse (optional) scope
             string? scope = null;

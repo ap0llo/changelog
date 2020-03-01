@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ChangeLogCreator.ConventionalCommits;
 using Xunit;
 
@@ -13,9 +12,15 @@ namespace ChangeLogCreator.Test.ConventionalCommits
     {
         public static IEnumerable<object[]> ValidParserTestCases()
         {
-            static object[] TestCase(string id, string input, CommitMessage parsed) => new object[] { id, input, new XunitSerializableCommitMessage(parsed) };
+            static object[] TestCase(string id, string input, CommitMessage parsed)
+            {
+                return new object[] { id, input, new XunitSerializableCommitMessage(parsed) };
+            }
 
-            static object[] MultiLineTestCase(string id, CommitMessage parsed, params string[] input) => new object[] { id, String.Join("\r\n", input), new XunitSerializableCommitMessage(parsed) };
+            static object[] MultiLineTestCase(string id, CommitMessage parsed, params string[] input)
+            {
+                return new object[] { id, String.Join("\r\n", input), new XunitSerializableCommitMessage(parsed) };
+            }
 
             var descriptions = new[]
             {
@@ -36,7 +41,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     "feat: " + descr,
                     new CommitMessage(
                         header: new CommitMessageHeader(
-                            type:  "feat",
+                            type: new CommitType("feat"),
                             description: descr.TrimEnd('\r', '\n'),
                             scope: null,
                             isBreakingChange: false
@@ -49,12 +54,12 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 yield return TestCase(
                     $"T{i++:00}",
                     $"feat(scope): {descr}",
-                    new CommitMessage(                    
+                    new CommitMessage(
                         header: new CommitMessageHeader(
-                            type:  "feat",
+                            type: new CommitType("feat"),
                             description: descr.TrimEnd('\r', '\n'),
                             scope: "scope",
-                            isBreakingChange : false
+                            isBreakingChange: false
                         ),
                         body: Array.Empty<string>(),
                         footers: Array.Empty<CommitMessageFooter>()
@@ -66,7 +71,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     $"feat(scope)!: {descr}",
                     new CommitMessage(
                         header: new CommitMessageHeader(
-                            type:  "feat",
+                            type: new CommitType("feat"),
                             description: descr.TrimEnd('\r', '\n'),
                             scope: "scope",
                             isBreakingChange: true
@@ -84,7 +89,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 "T22",
                 new CommitMessage(
                     header: new CommitMessageHeader(
-                        type:  "type",
+                        type: new CommitType("type"),
                         description: "Description",
                         scope: "scope",
                         isBreakingChange: false
@@ -103,7 +108,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 "T23",
                 new CommitMessage(
                     header: new CommitMessageHeader(
-                        type:  "type",
+                        type: new CommitType("type"),
                         description: "Description",
                         scope: "scope",
                         isBreakingChange: false
@@ -123,7 +128,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 "T24",
                 new CommitMessage(
                     header: new CommitMessageHeader(
-                        type:  "type",
+                        type: new CommitType("type"),
                         description: "Description",
                         scope: "scope",
                         isBreakingChange: false
@@ -148,7 +153,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 "T25",
                 new CommitMessage(
                     header: new CommitMessageHeader(
-                        type:  "type",
+                        type: new CommitType("type"),
                         description: "Description",
                         scope: "scope",
                         isBreakingChange: false
@@ -179,7 +184,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                         $"T{i++:00}",
                         new CommitMessage(
                             header: new CommitMessageHeader(
-                                type:  "type",
+                                type: new CommitType("type"),
                                 description: "Description",
                                 scope: null,
                                 isBreakingChange: false
@@ -202,7 +207,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 "T32",
                 new CommitMessage(
                     header: new CommitMessageHeader(
-                        type:  "type",
+                        type: new CommitType("type"),
                         description: "Description",
                         scope: null,
                         isBreakingChange: false
@@ -225,7 +230,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 "T33",
                 new CommitMessage(
                     header: new CommitMessageHeader(
-                        type:   "type",
+                        type: new CommitType("type"),
                         description: "Description",
                         scope: "scope",
                         isBreakingChange: false
@@ -254,7 +259,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 "T34",
                 new CommitMessage(
                     header: new CommitMessageHeader(
-                        type:  "type",
+                        type: new CommitType("type"),
                         description: "Description",
                         scope: "scope",
                         isBreakingChange: false
@@ -266,7 +271,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     },
                     footers: new[]
                     {
-                        new CommitMessageFooter(key: "Reviewed-by", value: "Z"),    
+                        new CommitMessageFooter(key: "Reviewed-by", value: "Z"),
                         new CommitMessageFooter(key: "Footer2", value: "description")
                     }
                 ),
@@ -283,10 +288,16 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         }
 
         public static IEnumerable<object[]> InvalidParserTestCases()
-        {           
-            static object[] TestCase(string id, int lineNumber, int columnNumber, string input) => new object[] { id, lineNumber, columnNumber, input };
+        {
+            static object[] TestCase(string id, int lineNumber, int columnNumber, string input)
+            {
+                return new object[] { id, lineNumber, columnNumber, input };
+            }
 
-            static object[] MultiLineTestCase(string id, int lineNumber, int columnNumber, params string[] input) => new object[] { id, lineNumber, columnNumber, String.Join("\r\n", input) };
+            static object[] MultiLineTestCase(string id, int lineNumber, int columnNumber, params string[] input)
+            {
+                return new object[] { id, lineNumber, columnNumber, String.Join("\r\n", input) };
+            }
 
             // empty
             yield return TestCase("T01", lineNumber: 1, columnNumber: 1, "");
@@ -302,7 +313,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
             yield return TestCase($"T05", lineNumber: 1, columnNumber: 6, $"feat:\t");
             yield return TestCase($"T06", lineNumber: 1, columnNumber: 7, $"feat: ");
             yield return TestCase($"T07", lineNumber: 1, columnNumber: 7, $"feat:  ");
-                                     
+
             yield return TestCase($"T08", lineNumber: 1, columnNumber: 13, $"feat(scope):");
             yield return TestCase($"T09", lineNumber: 1, columnNumber: 13, $"feat(scope):\t");
             yield return TestCase($"T10", lineNumber: 1, columnNumber: 14, $"feat(scope): ");
@@ -370,7 +381,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         [Theory]
         [MemberData(nameof(InvalidParserTestCases))]
         public void Parse_throws_CommitMessageParserException_for_invalid_input(string _, int lineNumber, int columnNumber, string input)
-        {            
+        {
             var ex = Assert.ThrowsAny<ParserException>(() => CommitMessageParser.Parse(input));
             Assert.Equal(lineNumber, ex.LineNumber);
             Assert.Equal(columnNumber, ex.ColumnNumber);
