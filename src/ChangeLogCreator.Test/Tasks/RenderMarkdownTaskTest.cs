@@ -84,6 +84,27 @@ namespace ChangeLogCreator.Test.Tasks
             Approve(changeLog);
         }
 
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_06()
+        {
+            // Changelog uses simpler format if there is only a single entry for a version
+
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3");
+
+            versionChangeLog.Add(GetChangeLogEntry(
+                scope: "api",
+                type: "feat",
+                summary: "Some change",
+                body: new[]
+                {
+                    "Changelog entry body Line1\r\nLine2",
+                    "Changelog entry body Line3\r\nLine4",
+                }));            
+
+            var changeLog = new ChangeLog() { versionChangeLog };
+
+            Approve(changeLog);
+        }
 
         private void Approve(ChangeLog changeLog)
         {

@@ -57,31 +57,19 @@ namespace ChangeLogCreator.Tasks
                 new MdHeading(2, versionChangeLog.Version.Version.ToNormalizedString()) { Anchor = GetHtmlHeadingId(versionChangeLog) }
             };
 
-            var isEmpty = true;
 
             var features = versionChangeLog.FeatureEntries.ToArray();
-            if (features.Length > 0)
-            {
-                isEmpty = false;
-                block.Add(new MdHeading(3, "New Features") { Anchor = GetHtmlHeadingId(versionChangeLog, "features") } );
-                block.Add(new MdBulletList(features.Select(ToListItem)));
-            }
-
             var bugFixes = versionChangeLog.BugFixEntries.ToArray();
-            if (bugFixes.Length > 0)
+
+            var entryCount = features.Length + bugFixes.Length;
+
+            if(entryCount == 0)
             {
-                isEmpty = false;
-                block.Add(new MdHeading(3, "Bug Fixes") { Anchor = GetHtmlHeadingId(versionChangeLog, "bugfixes") });
-                block.Add(new MdBulletList(bugFixes.Select(ToListItem)));
+                block.Add(new MdParagraph(new MdEmphasisSpan("No changes found.")));
             }
-
-            if(!isEmpty)
-            {
-                //TODO: Option to omit details section
-
-                block.Add(new MdHeading(3, "Details") { Anchor = GetHtmlHeadingId(versionChangeLog, "details") });
-
-                foreach(var feature in features)
+            else if(entryCount == 1)
+            {                                             
+                foreach (var feature in features)
                 {
                     block.Add(GetDetailsBlock(feature));
                 }
@@ -90,10 +78,32 @@ namespace ChangeLogCreator.Tasks
                     block.Add(GetDetailsBlock(bugFix));
                 }
             }
-
-            if (isEmpty)
+            else
             {
-                block.Add(new MdParagraph(new MdEmphasisSpan("No changes found.")));
+                if (features.Length > 0)
+                {
+                    block.Add(new MdHeading(3, "New Features") { Anchor = GetHtmlHeadingId(versionChangeLog, "features") });
+                    block.Add(new MdBulletList(features.Select(ToListItem)));
+                }
+
+                if (bugFixes.Length > 0)
+                {
+                    block.Add(new MdHeading(3, "Bug Fixes") { Anchor = GetHtmlHeadingId(versionChangeLog, "bugfixes") });
+                    block.Add(new MdBulletList(bugFixes.Select(ToListItem)));
+                }
+
+                //TODO: Option to omit details section
+
+                block.Add(new MdHeading(3, "Details") { Anchor = GetHtmlHeadingId(versionChangeLog, "details") });
+
+                foreach (var feature in features)
+                {
+                    block.Add(GetDetailsBlock(feature));
+                }
+                foreach (var bugFix in bugFixes)
+                {
+                    block.Add(GetDetailsBlock(bugFix));
+                }
             }
 
             //TODO: Special handling for breaking changes

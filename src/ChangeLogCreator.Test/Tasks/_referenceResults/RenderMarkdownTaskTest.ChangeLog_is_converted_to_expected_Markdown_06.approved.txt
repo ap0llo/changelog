@@ -1,0 +1,13 @@
+﻿# <a id="changelog-heading-root"></a> Change Log
+
+## <a id="changelog-heading-123"></a> 1.2.3
+
+#### <a id="changelog-heading-00044C"></a> **api:** Some change
+
+Changelog entry body Line1  
+Line2
+
+Changelog entry body Line3  
+Line4
+
+- Commit: `00044C`
