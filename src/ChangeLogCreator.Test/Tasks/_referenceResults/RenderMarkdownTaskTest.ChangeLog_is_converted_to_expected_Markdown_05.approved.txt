@@ -5,7 +5,6 @@
 ### <a id="changelog-heading-123-features"></a> New Features
 
 - [**api:** Some change](#changelog-heading-00044C)
-- [Some other change](#changelog-heading-000514)
 
 ### <a id="changelog-heading-123-bugfixes"></a> Bug Fixes
 
@@ -15,11 +14,13 @@
 
 #### <a id="changelog-heading-00044C"></a> **api:** Some change
 
+Changelog entry body Line1  
+Line2
+
+Changelog entry body Line3  
+Line4
+
 - Commit: `00044C`
-
-#### <a id="changelog-heading-000514"></a> Some other change
-
-- Commit: `000514`
 
 #### <a id="changelog-heading-0004B0"></a> **cli:** A bug was fixed
 

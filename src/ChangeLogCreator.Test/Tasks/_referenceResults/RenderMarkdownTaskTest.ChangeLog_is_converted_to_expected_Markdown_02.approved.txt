@@ -1,9 +1,11 @@
-﻿# Change Log
+﻿# <a id="changelog-heading-root"></a> Change Log
 
-## 4.5.6
+## <a id="changelog-heading-456"></a> 4.5.6
 
 *No changes found.*
 
-## 1.2.3
+___
+
+## <a id="changelog-heading-123"></a> 1.2.3
 
 *No changes found.*

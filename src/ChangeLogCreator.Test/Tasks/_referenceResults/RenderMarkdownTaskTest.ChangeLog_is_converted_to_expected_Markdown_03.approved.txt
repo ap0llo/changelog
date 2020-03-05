@@ -1,12 +1,26 @@
-﻿# Change Log
+﻿# <a id="changelog-heading-root"></a> Change Log
 
-## 1.2.3
+## <a id="changelog-heading-123"></a> 1.2.3
 
-### New Features
+### <a id="changelog-heading-123-features"></a> New Features
 
-- Some change (0000)
-- Some other change (0000)
+- [Some change](#changelog-heading-00044C)
+- [Some other change](#changelog-heading-000514)
 
-### Bug Fixes
+### <a id="changelog-heading-123-bugfixes"></a> Bug Fixes
 
-- A bug was fixed (0000)
+- [A bug was fixed](#changelog-heading-0004B0)
+
+### <a id="changelog-heading-123-details"></a> Details
+
+#### <a id="changelog-heading-00044C"></a> Some change
+
+- Commit: `00044C`
+
+#### <a id="changelog-heading-000514"></a> Some other change
+
+- Commit: `000514`
+
+#### <a id="changelog-heading-0004B0"></a> A bug was fixed
+
+- Commit: `0004B0`

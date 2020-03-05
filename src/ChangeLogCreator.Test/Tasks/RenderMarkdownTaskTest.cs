@@ -31,11 +31,9 @@ namespace ChangeLogCreator.Test.Tasks
         {
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3");
 
-            var dates = new DateTimeSource();
-
-            versionChangeLog.Add(GetChangeLogEntry(type: "feat", summary: "Some change", date: dates.Next()));
-            versionChangeLog.Add(GetChangeLogEntry(type: "fix", summary: "A bug was fixed", date: dates.Next()));
-            versionChangeLog.Add(GetChangeLogEntry(type: "feat", summary: "Some other change", date: dates.Next()));
+            versionChangeLog.Add(GetChangeLogEntry(type: "feat", summary: "Some change"));
+            versionChangeLog.Add(GetChangeLogEntry(type: "fix", summary: "A bug was fixed"));
+            versionChangeLog.Add(GetChangeLogEntry(type: "feat", summary: "Some other change"));
 
             var changeLog = new ChangeLog()
             {
@@ -50,11 +48,33 @@ namespace ChangeLogCreator.Test.Tasks
         {
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3");
 
-            var dates = new DateTimeSource();
+            versionChangeLog.Add(GetChangeLogEntry(scope: "api", type: "feat", summary: "Some change"));
+            versionChangeLog.Add(GetChangeLogEntry(scope: "cli", type: "fix", summary: "A bug was fixed"));
+            versionChangeLog.Add(GetChangeLogEntry(scope: "", type: "feat", summary: "Some other change"));
 
-            versionChangeLog.Add(GetChangeLogEntry(scope: "api", type: "feat", summary: "Some change", date: dates.Next()));
-            versionChangeLog.Add(GetChangeLogEntry(scope: "cli", type: "fix", summary: "A bug was fixed", date: dates.Next()));
-            versionChangeLog.Add(GetChangeLogEntry(scope: "", type: "feat", summary: "Some other change", date: dates.Next()));
+            var changeLog = new ChangeLog()
+            {
+                versionChangeLog
+            };
+
+            Approve(changeLog);
+        }
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_05()
+        {
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3");
+
+            versionChangeLog.Add(GetChangeLogEntry(
+                scope: "api",
+                type: "feat",
+                summary: "Some change",
+                body: new[]
+                {
+                    "Changelog entry body Line1\r\nLine2",
+                    "Changelog entry body Line3\r\nLine4",
+                }));
+            versionChangeLog.Add(GetChangeLogEntry(scope: "cli", type: "fix", summary: "A bug was fixed"));
 
             var changeLog = new ChangeLog()
             {
@@ -73,7 +93,7 @@ namespace ChangeLogCreator.Test.Tasks
 
             Assert.NotNull(doc);
 
-            var markdown = doc.ToString();
+            var markdown = doc.ToString(sut.SerializationOptions);
 
             var writer = new ApprovalTextWriter(markdown);
             Approvals.Verify(writer, new ApprovalNamer(), Approvals.GetReporter());
