@@ -5,19 +5,21 @@ using Crayon;
 
 namespace ChangeLogCreator.Tasks
 {
-    public class PrintToConsoleTask : IChangeLogTask
+    internal sealed class PrintToConsoleTask : IChangeLogTask
     {
         public void Run(ChangeLog changeLog)
         {
             Output.Enable();
 
-            foreach (var versionChangeLog in changeLog.OrderByDescending(x => x.Version.Version))
+            //TODO: Breaking changes
+
+            foreach (var versionChangeLog in changeLog)
             {
                 Console.WriteLine();
-                Console.WriteLine(" " + $"Version {versionChangeLog.Version.Version}".Bold().Underline());
+                Console.WriteLine(" " + $"Version {versionChangeLog.Version.Version.ToNormalizedString()}".Bold().Underline());
                 Console.WriteLine();
 
-    
+
                 var features = versionChangeLog.FeatureEntries.ToArray();
                 if (features.Length > 0)
                 {
@@ -25,7 +27,7 @@ namespace ChangeLogCreator.Tasks
                     Console.WriteLine();
                     foreach (var entry in features)
                     {
-                        Console.WriteLine($"\t - {entry.Summary} ({entry.Commit})");
+                        PrintEntry(entry);
                     }
                     Console.WriteLine();
                 }
@@ -37,19 +39,29 @@ namespace ChangeLogCreator.Tasks
                     Console.WriteLine();
                     foreach (var entry in bugfixes)
                     {
-                        Console.WriteLine($"\t - {entry.Summary} ({entry.Commit})");
+                        PrintEntry(entry);
                     }
                     Console.WriteLine();
                 }
-
 
                 if (features.Length == 0 && bugfixes.Length == 0)
                 {
                     Console.WriteLine($"\t No Changes found");
                     Console.WriteLine();
                 }
+            }
+        }
 
 
+        private void PrintEntry(ChangeLogEntry entry)
+        {
+            if (!String.IsNullOrEmpty(entry.Scope))
+            {
+                Console.WriteLine($"\t - {entry.Scope.Bold()}: {entry.Summary} ({entry.Commit})");
+            }
+            else
+            {
+                Console.WriteLine($"\t - {entry.Summary} ({entry.Commit})");
             }
         }
     }

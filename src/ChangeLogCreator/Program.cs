@@ -53,7 +53,8 @@ namespace ChangeLogCreator
                 var pipeline = new ChangeLogPipeline()
                     .AddTask(new LoadVersionsTask(repo))
                     .AddTask(new ParseCommitsTask(repo))
-                    .AddTask(new PrintToConsoleTask());
+                    .AddTask(new PrintToConsoleTask())
+                    .AddTask(new RenderMarkdownTask(parameters.OutputPath));
 
                 pipeline.Run();
             }

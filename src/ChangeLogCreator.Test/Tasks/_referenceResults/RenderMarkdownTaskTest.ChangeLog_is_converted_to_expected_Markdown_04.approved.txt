@@ -1,0 +1,12 @@
+﻿# Change Log
+
+## 1.2.3
+
+### New Features
+
+- **api:** Some change (0000)
+- Some other change (0000)
+
+### Bug Fixes
+
+- **cli:** A bug was fixed (0000)

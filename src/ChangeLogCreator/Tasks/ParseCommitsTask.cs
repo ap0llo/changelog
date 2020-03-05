@@ -7,7 +7,7 @@ using ChangeLogCreator.Model;
 
 namespace ChangeLogCreator.Tasks
 {
-    public class ParseCommitsTask : IChangeLogTask
+    internal sealed class ParseCommitsTask : IChangeLogTask
     {
         private readonly IGitRepository m_Repository;
 

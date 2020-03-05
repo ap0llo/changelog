@@ -5,34 +5,12 @@ using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
 using Moq;
-using NuGet.Versioning;
 using Xunit;
 
 namespace ChangeLogCreator.Test.Tasks
 {
-    public class ParseCommitsTaskTest
+    public class ParseCommitsTaskTest : TestBase
     {
-        private SingleVersionChangeLog GetSingleVersionChangeLog(string version, string commitId)
-        {
-            return new SingleVersionChangeLog(
-                new VersionInfo(
-                    SemanticVersion.Parse(version),
-                    new GitId(commitId)
-                    ));
-        }
-
-        private GitCommit GetGitCommit(string? id = null, string? commitMessage = null)
-        {
-            return new GitCommit(
-                id: new GitId(id ?? "0000"),
-                commitMessage: commitMessage ?? "",
-                date: new DateTime(),
-                author: new GitAuthor("Someone", "someone@example.com")
-            );
-
-        }
-
-
         [Fact]
         public void Run_does_nothing_for_empty_changelog()
         {

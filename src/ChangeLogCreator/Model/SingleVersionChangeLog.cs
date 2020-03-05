@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ChangeLogCreator.ConventionalCommits;
 
 namespace ChangeLogCreator.Model
@@ -35,8 +34,8 @@ namespace ChangeLogCreator.Model
             m_Entries.Add(entry);
         }
 
-        public IEnumerator<ChangeLogEntry> GetEnumerator() => m_Entries.GetEnumerator();
+        public IEnumerator<ChangeLogEntry> GetEnumerator() => AllEntries.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => m_Entries.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => AllEntries.GetEnumerator();
     }
 }

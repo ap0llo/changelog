@@ -364,3 +364,4 @@ MigrationBackup/
 
 # End of https://www.gitignore.io/api/fsharp,visualstudio
 src/ChangeLogCreator/Properties/launchSettings.json
+src/ChangeLogCreator.Test/Tasks/*.received.txt

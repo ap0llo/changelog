@@ -6,7 +6,7 @@ using NuGet.Versioning;
 
 namespace ChangeLogCreator.Tasks
 {
-    class LoadVersionsTask : IChangeLogTask
+    internal sealed class LoadVersionsTask : IChangeLogTask
     {
         private readonly IGitRepository m_Repository;
 
