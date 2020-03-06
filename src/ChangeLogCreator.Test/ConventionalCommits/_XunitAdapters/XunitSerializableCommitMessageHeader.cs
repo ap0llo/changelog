@@ -1,4 +1,5 @@
-﻿using ChangeLogCreator.ConventionalCommits;
+﻿using System;
+using ChangeLogCreator.ConventionalCommits;
 using Xunit.Abstractions;
 
 namespace ChangeLogCreator.Test.ConventionalCommits
@@ -11,10 +12,10 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         internal CommitMessageHeader Value { get; private set; }
 
 
-        internal XunitSerializableCommitMessageHeader(CommitMessageHeader value) => Value = value
-                ;
+        internal XunitSerializableCommitMessageHeader(CommitMessageHeader value) => Value = value;
 
-        // parameterless constructor required by Xunit
+
+        [Obsolete("For use by Xunit only", true)]
         public XunitSerializableCommitMessageHeader()
         { }
 

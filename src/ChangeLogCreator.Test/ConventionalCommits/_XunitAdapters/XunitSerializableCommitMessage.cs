@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ChangeLogCreator.ConventionalCommits;
 using Xunit.Abstractions;
 
@@ -14,8 +15,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         internal XunitSerializableCommitMessage(CommitMessage value) => Value = value
                 ;
-
-        // parameterless constructor required by Xunit
+        
+        [Obsolete("For use by Xunit only", true)]
         public XunitSerializableCommitMessage()
         { }
 

@@ -1,4 +1,5 @@
-﻿using ChangeLogCreator.ConventionalCommits;
+﻿using System;
+using ChangeLogCreator.ConventionalCommits;
 using Xunit.Abstractions;
 
 namespace ChangeLogCreator.Test.ConventionalCommits
@@ -13,7 +14,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         internal XunitSerializableLineToken(LineToken value) => Value = value;
 
-        // parameterless constructor required by Xunit
+
+        [Obsolete("For use by Xunit only", true)]
         public XunitSerializableLineToken()
         { }
 
