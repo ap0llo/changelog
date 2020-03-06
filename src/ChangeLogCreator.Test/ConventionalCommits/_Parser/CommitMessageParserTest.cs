@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ChangeLogCreator.ConventionalCommits;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ChangeLogCreator.Test.ConventionalCommits
 {
@@ -10,6 +11,11 @@ namespace ChangeLogCreator.Test.ConventionalCommits
     /// </summary>
     public class CommitMessageParserTest
     {
+        private readonly ITestOutputHelper m_OutputHelper;
+
+        public CommitMessageParserTest(ITestOutputHelper outputHelper) => m_OutputHelper = outputHelper;
+
+
         public static IEnumerable<object[]> ValidParserTestCases()
         {
             static object[] TestCase(string id, string input, CommitMessage parsed)
@@ -372,16 +378,20 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         [Theory]
         [MemberData(nameof(ValidParserTestCases))]
-        public void Parse_returns_expected_commit_message(string _, string commitMessage, XunitSerializableCommitMessage expected)
+        public void Parse_returns_expected_commit_message(string id, string commitMessage, XunitSerializableCommitMessage expected)
         {
+            m_OutputHelper.WriteLine($"Test case {id}");
+
             var parsed = CommitMessageParser.Parse(commitMessage);
             Assert.Equal(expected.Value, parsed);
         }
 
         [Theory]
         [MemberData(nameof(InvalidParserTestCases))]
-        public void Parse_throws_CommitMessageParserException_for_invalid_input(string _, int lineNumber, int columnNumber, string input)
+        public void Parse_throws_CommitMessageParserException_for_invalid_input(string id, int lineNumber, int columnNumber, string input)
         {
+            m_OutputHelper.WriteLine($"Test case {id}");
+
             var ex = Assert.ThrowsAny<ParserException>(() => CommitMessageParser.Parse(input));
             Assert.Equal(lineNumber, ex.LineNumber);
             Assert.Equal(columnNumber, ex.ColumnNumber);

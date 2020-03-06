@@ -98,7 +98,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         [Fact]
         public void GetTokens_throws_ArgumentException_if_input_token_is_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new HeaderTokenizer().GetTokens(null).ToArray());
+            Assert.Throws<ArgumentNullException>(() => new HeaderTokenizer().GetTokens(null!).ToArray());
         }
 
         [Fact]

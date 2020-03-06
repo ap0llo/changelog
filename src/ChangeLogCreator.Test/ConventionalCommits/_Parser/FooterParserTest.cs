@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using ChangeLogCreator.ConventionalCommits;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ChangeLogCreator.Test.ConventionalCommits
 {
@@ -9,6 +10,11 @@ namespace ChangeLogCreator.Test.ConventionalCommits
     /// </summary>
     public class FooterParserTest
     {
+        private readonly ITestOutputHelper m_OutputHelper;
+
+        public FooterParserTest(ITestOutputHelper outputHelper) => m_OutputHelper = outputHelper;
+
+
         public static IEnumerable<object[]> FooterTestCases()
         {
             static object[] TestCase(string input, CommitMessageFooter expected)
@@ -47,8 +53,10 @@ namespace ChangeLogCreator.Test.ConventionalCommits
         [InlineData("T04", "key:value", 5)]
         [InlineData("T05", "key : value", 5)]
         [InlineData("T06", "key#value", 4)]
-        public void Parse_throws_CommitMessageParserException_for_invalid_input(string _, string input, int columnNumber)
+        public void Parse_throws_CommitMessageParserException_for_invalid_input(string id, string input, int columnNumber)
         {
+            m_OutputHelper.WriteLine($"Test case {id}");
+
             // ARRANGE
             var lineNumber = 23;
             var inputToken = LineToken.Line(input, lineNumber);

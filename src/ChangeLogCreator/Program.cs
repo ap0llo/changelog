@@ -13,10 +13,10 @@ namespace ChangeLogCreator
         private class CommandLineParameters
         {
             [Option('r', "repository")]
-            public string RepositoryPath { get; set; }
+            public string? RepositoryPath { get; set; }
 
             [Option('o', "outputpath")]
-            public string OutputPath { get; set; }
+            public string? OutputPath { get; set; }
         }
 
         private static int Main(string[] args)
@@ -48,12 +48,12 @@ namespace ChangeLogCreator
             if (!ValidateCommandlineParameters(parameters))
                 return 1;
 
-            using (var repo = new GitRepository(parameters.RepositoryPath))
+            using (var repo = new GitRepository(parameters.RepositoryPath!))
             {
                 var pipeline = new ChangeLogPipeline()
                     .AddTask(new LoadVersionsTask(repo))
                     .AddTask(new ParseCommitsTask(repo))
-                    .AddTask(new RenderMarkdownTask(parameters.OutputPath));
+                    .AddTask(new RenderMarkdownTask(parameters.OutputPath!));
 
                 pipeline.Run();
             }
