@@ -16,14 +16,14 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 return new object[] { input, new XunitSerializableCommitMessageFooter(expected) };
             }
 
-            yield return TestCase("key: value", new CommitMessageFooter("key", "value"));
-            yield return TestCase("key #value", new CommitMessageFooter("key", "value"));
-            yield return TestCase("key: value: with a colon", new CommitMessageFooter("key", "value: with a colon"));
-            yield return TestCase("key: value# with a hash", new CommitMessageFooter("key", "value# with a hash"));
-            yield return TestCase("breaking-change: change description", new CommitMessageFooter("breaking-change", "change description"));
-            yield return TestCase("breaking-change #change description", new CommitMessageFooter("breaking-change", "change description"));
-            yield return TestCase("BREAKING CHANGE: change description", new CommitMessageFooter("BREAKING CHANGE", "change description"));
-            yield return TestCase("BREAKING CHANGE #change description", new CommitMessageFooter("BREAKING CHANGE", "change description"));
+            yield return TestCase("key: value", new CommitMessageFooter(new CommitMessageFooterName("key"), "value"));
+            yield return TestCase("key #value", new CommitMessageFooter(new CommitMessageFooterName("key"), "value"));
+            yield return TestCase("key: value: with a colon", new CommitMessageFooter(new CommitMessageFooterName("key"), "value: with a colon"));
+            yield return TestCase("key: value# with a hash", new CommitMessageFooter(new CommitMessageFooterName("key"), "value# with a hash"));
+            yield return TestCase("breaking-change: change description", new CommitMessageFooter(new CommitMessageFooterName("breaking-change"), "change description"));
+            yield return TestCase("breaking-change #change description", new CommitMessageFooter(new CommitMessageFooterName("breaking-change"), "change description"));
+            yield return TestCase("BREAKING CHANGE: change description", new CommitMessageFooter(new CommitMessageFooterName("BREAKING CHANGE"), "change description"));
+            yield return TestCase("BREAKING CHANGE #change description", new CommitMessageFooter(new CommitMessageFooterName("BREAKING CHANGE"), "change description"));
         }
 
         [Theory]

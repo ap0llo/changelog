@@ -4,6 +4,8 @@
 
 #### <a id="changelog-heading-0003E8"></a> **api:** Some change
 
+**Breaking Change:** Description of breaking change
+
 Changelog entry body Line1  
 Line2
 

@@ -13,21 +13,30 @@ namespace ChangeLogCreator.Test
         private int m_NextCommitId = 1000;
 
 
-        protected SingleVersionChangeLog GetSingleVersionChangeLog(string version, string commitId = null)
+        protected SingleVersionChangeLog GetSingleVersionChangeLog(string version, string? commitId = null, params ChangeLogEntry[] entries)
         {
-            return new SingleVersionChangeLog(
+            var changelog = new SingleVersionChangeLog(
                 new VersionInfo(
                     SemanticVersion.Parse(version),
                     commitId == null ? NextGitId() : new GitId(commitId)
                 ));
+
+            foreach(var entry in entries)
+            {
+                changelog.Add(entry);
+            }
+
+            return changelog;
         }
 
         protected ChangeLogEntry GetChangeLogEntry(
             DateTime? date = null,
             string? type = null,
             string? scope = null,
+            bool? isBreakingChange = null,
             string? summary = null,
             IReadOnlyList<string>? body = null,
+            IReadOnlyList<CommitMessageFooter>? footers= null,
             string? commit = null)
         {
 
@@ -35,8 +44,10 @@ namespace ChangeLogCreator.Test
                 date: date ?? NextCommitDate(),
                 type: new CommitType(type ?? "feat"),
                 scope: scope,
+                isBreakingChange: isBreakingChange ?? false,
                 summary: summary ?? "Example Summary",
                 body: body ?? Array.Empty<string>(),
+                footers: footers ?? Array.Empty<CommitMessageFooter>(),
                 commit: commit == null ? NextGitId() : new GitId(commit));
         }
 

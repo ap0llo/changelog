@@ -22,15 +22,15 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         public void Deserialize(IXunitSerializationInfo info)
         {
-            var type = info.GetValue<string>(nameof(CommitMessageFooter.Key));
+            var type = info.GetValue<string>(nameof(CommitMessageFooter.Name));
             var description = info.GetValue<string>(nameof(CommitMessageFooter.Value));
 
-            Value = new CommitMessageFooter(type, description);            
+            Value = new CommitMessageFooter(new CommitMessageFooterName(type), description);            
         }
 
         public void Serialize(IXunitSerializationInfo info)
         {
-            info.AddValue(nameof(Value.Key), Value.Key);
+            info.AddValue(nameof(Value.Name), Value.Name.Key);
             info.AddValue(nameof(Value.Value), Value.Value);
         }
     }

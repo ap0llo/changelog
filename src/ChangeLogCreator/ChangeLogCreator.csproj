@@ -10,7 +10,6 @@
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0034" />
     <PackageReference Include="CommandLineParser" Version="2.7.82" />
     <PackageReference Include="NuGet.Versioning" Version="5.5.0-preview.2.6382" />
-    <PackageReference Include="Crayon" Version="1.2.48" />
   </ItemGroup>
 
 </Project>

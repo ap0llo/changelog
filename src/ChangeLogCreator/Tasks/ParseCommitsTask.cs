@@ -62,8 +62,10 @@ namespace ChangeLogCreator.Tasks
                 date: commit.Date,
                 type: commitMessage.Header.Type,
                 scope: commitMessage.Header.Scope,
+                isBreakingChange: commitMessage.Header.IsBreakingChange,
                 summary: commitMessage.Header.Description,
                 body: commitMessage.Body,
+                footers: commitMessage.Footers,
                 commit: commit.Id
             );
         }

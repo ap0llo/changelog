@@ -74,7 +74,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
         }
 
-        private string ParseKey()
+        private CommitMessageFooterName ParseKey()
         {
             // Footers consist of a Key and a Description separated by either ": " or " #".
             // The footer key must not contain a space with one exception: "BREAKING CHANGE" is a valid key, too.
@@ -124,7 +124,7 @@ namespace ChangeLogCreator.ConventionalCommits
                         MatchToken(FooterTokenKind.Hash);
                     }
 
-                    return "BREAKING CHANGE";
+                    return CommitMessageFooterName.BreakingChange;
                 }
                 else
                 {
@@ -136,7 +136,7 @@ namespace ChangeLogCreator.ConventionalCommits
                     //
                     MatchToken(FooterTokenKind.Hash);
 
-                    return typeToken.Value!;
+                    return new CommitMessageFooterName(typeToken.Value!);
                 }
             }
             else
@@ -150,7 +150,7 @@ namespace ChangeLogCreator.ConventionalCommits
                 MatchToken(FooterTokenKind.Colon);
                 MatchToken(FooterTokenKind.Space);
 
-                return typeToken.Value!;
+                return new CommitMessageFooterName(typeToken.Value!);
             }
         }
 

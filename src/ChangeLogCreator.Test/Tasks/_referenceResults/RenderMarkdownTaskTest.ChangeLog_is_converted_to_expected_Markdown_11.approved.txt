@@ -9,6 +9,13 @@
 ### <a id="changelog-heading-123-bugfixes"></a> Bug Fixes
 
 - [**cli:** A bug was fixed](#changelog-heading-00044C)
+- [A breaking bugfix](#changelog-heading-000514)
+
+### <a id="changelog-heading-123-breaking"></a> Breaking Changes
+
+- [Some breaking change](#changelog-heading-0004B0)
+- [Description of breaking change](#changelog-heading-000514)
+- [Another breaking change](#changelog-heading-000514)
 
 ### <a id="changelog-heading-123-details"></a> Details
 
@@ -25,3 +32,16 @@ Line4
 #### <a id="changelog-heading-00044C"></a> **cli:** A bug was fixed
 
 - Commit: `00044C`
+
+#### <a id="changelog-heading-000514"></a> A breaking bugfix
+
+- **Breaking Change:** Description of breaking change
+- **Breaking Change:** Another breaking change
+
+- Commit: `000514`
+
+#### <a id="changelog-heading-0004B0"></a> Some breaking change
+
+**Breaking Change**
+
+- Commit: `0004B0`

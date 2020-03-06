@@ -19,6 +19,8 @@ namespace ChangeLogCreator.Model
 
         public IEnumerable<ChangeLogEntry> BugFixEntries => AllEntries.Where(e => e.Type == CommitType.BugFix);
 
+        public IEnumerable<ChangeLogEntry> BreakingChanges => AllEntries.Where(e => e.ContainsBreakingChanges);
+
 
         public SingleVersionChangeLog(VersionInfo version)
         {

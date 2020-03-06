@@ -192,7 +192,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                             body: Array.Empty<string>(),
                             footers: new[]
                             {
-                                new CommitMessageFooter(key: footerType, value: "Footer Description")
+                                new CommitMessageFooter(key: new CommitMessageFooterName(footerType), value: "Footer Description")
                             }
                         ),
                         "type: Description",
@@ -215,8 +215,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     body: Array.Empty<string>(),
                     footers: new[]
                     {
-                        new CommitMessageFooter(key: "Footer1", value: "Footer Description1"),
-                        new CommitMessageFooter(key: "Footer2", value: "Footer Description2")
+                        new CommitMessageFooter(key: new CommitMessageFooterName("Footer1"), value: "Footer Description1"),
+                        new CommitMessageFooter(key: new CommitMessageFooterName("Footer2"), value: "Footer Description2")
                     }
                 ),
                 "type: Description",
@@ -242,7 +242,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     },
                     footers: new[]
                     {
-                        new CommitMessageFooter(key: "Reviewed-by", value: "Z")
+                        new CommitMessageFooter(key: new CommitMessageFooterName("Reviewed-by"), value: "Z")
                     }
                 ),
                 "type(scope): Description",
@@ -271,8 +271,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     },
                     footers: new[]
                     {
-                        new CommitMessageFooter(key: "Reviewed-by", value: "Z"),
-                        new CommitMessageFooter(key: "Footer2", value: "description")
+                        new CommitMessageFooter(key: new CommitMessageFooterName("Reviewed-by"), value: "Z"),
+                        new CommitMessageFooter(key: new CommitMessageFooterName("Footer2"), value: "description")
                     }
                 ),
                 "type(scope): Description",

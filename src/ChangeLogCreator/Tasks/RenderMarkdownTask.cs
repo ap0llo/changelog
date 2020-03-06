@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using ChangeLogCreator.Model;
 using Grynwald.MarkdownGenerator;
@@ -7,121 +8,191 @@ namespace ChangeLogCreator.Tasks
 {
     internal sealed class RenderMarkdownTask : IChangeLogTask
     {
+        private const string s_HeadingIdPrefix = "changelog-heading";
         private readonly string m_OutputPath;
 
 
-        public MdSerializationOptions SerializationOptions { get; }
+        /// <summary>
+        /// Gets the serialization options used for generating Markdown.
+        /// </summary>
+        internal MdSerializationOptions SerializationOptions { get; }
 
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RenderMarkdownTask"/>.
+        /// </summary>
+        /// <param name="outputPath">The file path to save the changelog to.</param>
         public RenderMarkdownTask(string outputPath)
         {
-            m_OutputPath = outputPath ?? throw new ArgumentNullException(nameof(outputPath));
+            if (String.IsNullOrWhiteSpace(outputPath))
+                throw new ArgumentException("Value must not be null or empty", nameof(outputPath));
+
+            m_OutputPath = outputPath;
 
             //TODO: Preset needs to be configurable
             SerializationOptions = MdSerializationOptions.Presets.MkDocs.With(opts => { opts.HeadingAnchorStyle = MdHeadingAnchorStyle.Tag; });
         }
 
 
+        /// <inheritdoc />
         public void Run(ChangeLog changeLog)
         {
             var document = GetChangeLogDocument(changeLog);
-            document.Save(m_OutputPath, SerializationOptions); 
+
+            var outputDirectory = Path.GetDirectoryName(m_OutputPath);
+            Directory.CreateDirectory(outputDirectory);
+
+            document.Save(m_OutputPath, SerializationOptions);
         }
 
 
+        /// <summary>
+        /// Gets the Markdown representation of the specified changelog without saving it to a file
+        /// </summary>
         internal MdDocument GetChangeLogDocument(ChangeLog changeLog)
         {
             var document = new MdDocument();
-            document.Root.Add(new MdHeading(1, "Change Log") { Anchor = "changelog-heading-root" } );
+            document.Root.AddHeading(1, "Change Log", $"{s_HeadingIdPrefix}-root");
 
-            var first = true;
+            // for each version, add the changes to the document
+            // (changeLog.ChangeLogs is ordered by version)
+            var firstElement = true;
             foreach (var versionChangeLog in changeLog.ChangeLogs)
             {
-                if (!first)
+                if (!firstElement)
                     document.Root.Add(new MdThematicBreak());
 
                 document.Root.Add(GetVersionSection(versionChangeLog));
-                first = false;
+                firstElement = false;
             }
 
             return document;
         }
 
 
+        /// <summary>
+        /// Gets the Markdown representation of the changes of a single version.
+        /// </summary>
         private MdBlock GetVersionSection(SingleVersionChangeLog versionChangeLog)
         {
-            //TODO: Different layout for versions with a single change
-
-            var block = new MdContainerBlock
-            {
-                new MdHeading(2, versionChangeLog.Version.Version.ToNormalizedString()) { Anchor = GetHtmlHeadingId(versionChangeLog) }
-            };
+            var container = new MdContainerBlock();
+            container.AddHeading(2, versionChangeLog.Version.Version.ToNormalizedString(), GetHtmlHeadingId(versionChangeLog));
 
 
             var features = versionChangeLog.FeatureEntries.ToArray();
             var bugFixes = versionChangeLog.BugFixEntries.ToArray();
+            var allBreakingChanges = versionChangeLog.BreakingChanges.ToArray();
+            var additionalBreakingChanges = allBreakingChanges.Except(features).Except(bugFixes).ToArray();  // breaking changes not in 'features' or 'bugFixes'
 
-            var entryCount = features.Length + bugFixes.Length;
+            var entryCount = features.Length + bugFixes.Length + additionalBreakingChanges.Length;
 
-            if(entryCount == 0)
+            if (entryCount == 0)
             {
-                block.Add(new MdParagraph(new MdEmphasisSpan("No changes found.")));
+                container.Add(new MdParagraph(new MdEmphasisSpan("No changes found.")));
             }
-            else if(entryCount == 1)
-            {                                             
+            else if (entryCount == 1)
+            {
+                // use simpler layout for versions that only contain a single changelog entry:
+                // - omit the list of changes at the beginning
+                // - omit the "Details" heading and directly insert the details section
+
                 foreach (var feature in features)
                 {
-                    block.Add(GetDetailsBlock(feature));
+                    container.Add(GetDetailsBlock(feature));
                 }
                 foreach (var bugFix in bugFixes)
                 {
-                    block.Add(GetDetailsBlock(bugFix));
+                    container.Add(GetDetailsBlock(bugFix));
+                }
+                foreach (var breakingChange in additionalBreakingChanges)
+                {
+                    container.Add(GetDetailsBlock(breakingChange));
                 }
             }
             else
             {
                 if (features.Length > 0)
                 {
-                    block.Add(new MdHeading(3, "New Features") { Anchor = GetHtmlHeadingId(versionChangeLog, "features") });
-                    block.Add(new MdBulletList(features.Select(ToListItem)));
+                    container.AddHeading(3, "New Features", GetHtmlHeadingId(versionChangeLog, "features"));
+                    container.Add(new MdBulletList(features.Select(GetSummaryListItem)));
                 }
 
                 if (bugFixes.Length > 0)
                 {
-                    block.Add(new MdHeading(3, "Bug Fixes") { Anchor = GetHtmlHeadingId(versionChangeLog, "bugfixes") });
-                    block.Add(new MdBulletList(bugFixes.Select(ToListItem)));
+                    container.AddHeading(3, "Bug Fixes", GetHtmlHeadingId(versionChangeLog, "bugfixes"));
+                    container.Add(new MdBulletList(bugFixes.Select(GetSummaryListItem)));
+                }
+
+                if (allBreakingChanges.Length > 0)
+                {
+                    container.AddHeading(3, "Breaking Changes", GetHtmlHeadingId(versionChangeLog, "breaking"));
+
+                    var breakingChangesList = container.AddBulletList();
+
+                    foreach (var entry in allBreakingChanges)
+                    {
+                        // If descriptions for breaking changes were provided,
+                        // add the descriptions to the list of breaking changes instead of
+                        // the entry description.
+                        // A single changelog entry may contain multiple breaking changes
+
+                        if (entry.BreakingChangeDescriptions.Any())
+                        {
+                            var link = $"#{GetHtmlHeadingId(entry)}";
+
+                            foreach (var description in entry.BreakingChangeDescriptions)
+                            {
+                                breakingChangesList.Add(
+                                    new MdListItem(
+                                        new MdLinkSpan(description, link)));
+                            }
+                        }
+                        else
+                        {
+                            // no breaking changes description provided
+                            // => add "normal" summary of changelog entry to list of breaking changes
+                            breakingChangesList.Add(GetSummaryListItem(entry));
+                        }
+                    }
+
                 }
 
                 //TODO: Option to omit details section
 
-                block.Add(new MdHeading(3, "Details") { Anchor = GetHtmlHeadingId(versionChangeLog, "details") });
-
+                container.AddHeading(3, "Details", GetHtmlHeadingId(versionChangeLog, "details"));
                 foreach (var feature in features)
                 {
-                    block.Add(GetDetailsBlock(feature));
+                    container.Add(GetDetailsBlock(feature));
                 }
                 foreach (var bugFix in bugFixes)
                 {
-                    block.Add(GetDetailsBlock(bugFix));
+                    container.Add(GetDetailsBlock(bugFix));
+                }
+                foreach (var breakingChange in additionalBreakingChanges)
+                {
+                    container.Add(GetDetailsBlock(breakingChange));
                 }
             }
 
-            //TODO: Special handling for breaking changes
-
-            return block;
+            return container;
         }
 
-        private MdListItem ToListItem(ChangeLogEntry entry)
+        /// <summary>
+        /// Gets a list item for the specified changelog entry
+        /// </summary>
+        private MdListItem GetSummaryListItem(ChangeLogEntry entry)
         {
             var text = GetSummaryText(entry);
             var id = GetHtmlHeadingId(entry);
 
-            return new MdListItem(new MdParagraph(
+            // make the list item a link to the details for this changelog entry
+            return new MdListItem(
                 new MdLinkSpan(text, $"#{id}")
-            ));
+            );
         }
 
-        private static MdSpan GetSummaryText(ChangeLogEntry entry)
+
+        private MdSpan GetSummaryText(ChangeLogEntry entry)
         {
             return entry.Scope switch
             {
@@ -134,41 +205,75 @@ namespace ChangeLogCreator.Tasks
             };
         }
 
+        /// <summary>
+        /// Gets the Markdown block of the specified entry for the details section
+        /// </summary>
         private MdBlock GetDetailsBlock(ChangeLogEntry entry)
         {
-            var block = new MdContainerBlock
-            {
-                new MdHeading(4, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) }
-            };
+            var block = new MdContainerBlock();
+            block.AddHeading(4, GetSummaryText(entry), GetHtmlHeadingId(entry));
 
+            // highlight breaking changes
+            if (entry.ContainsBreakingChanges)
+            {
+                // If descriptions for breaking changes were provided,
+                // add all descriptions, prefixed with "Breaking Change" to the output
+                if (entry.BreakingChangeDescriptions.Any())
+                {
+                    // Prefix all descriptions with a bold "Breaking Change"
+                    var descriptions = entry.BreakingChangeDescriptions
+                        .Select(x => new MdCompositeSpan(
+                                        new MdStrongEmphasisSpan("Breaking Change:"),
+                                        new MdTextSpan(" "),
+                                        new MdTextSpan(x)))
+                        .ToList();
+
+                    // if there is only a single description, add it to the output as paragraph
+                    if (descriptions.Count == 1)
+                    {
+                        block.Add(new MdParagraph(descriptions.Single()));
+                    }
+                    // if there are multiple descriptions, add them to the output as list
+                    else
+                    {
+                        block.Add(new MdBulletList(descriptions.Select(x => new MdListItem(x))));
+                    }
+                }
+                // If no description was provided but the entry itself was marked as breaking change
+                // add a plain "Breaking Change" hint to the output
+                else
+                {
+                    block.Add(new MdParagraph(new MdStrongEmphasisSpan("Breaking Change")));
+                }
+            }
+
+            // Add body of commit message
             foreach (var paragraph in entry.Body)
             {
                 block.Add(new MdParagraph(paragraph));
             }
 
-            block.Add(
-                new MdBulletList(
-                    new MdListItem("Commit: ", new MdCodeSpan(entry.Commit.Id))
-            ));
+            // add additional information (
+            block.AddBulletList().Add(
+                new MdListItem("Commit: ", new MdCodeSpan(entry.Commit.Id))
+            );
 
             return block;
         }
 
-        private string GetHtmlHeadingId(ChangeLogEntry entry)
-        {
-            return $"changelog-heading-{entry.Commit}";
-        }
+        private string GetHtmlHeadingId(ChangeLogEntry entry) => $"{s_HeadingIdPrefix}-{entry.Commit}";
 
         private string GetHtmlHeadingId(SingleVersionChangeLog changelog, string? suffix = null)
         {
-            var id = $"changelog-heading-{HtmlUtilities.ToUrlSlug(changelog.Version.Version.ToNormalizedString())}";
-            if(suffix != null)
+            var versionSlug = HtmlUtilities.ToUrlSlug(changelog.Version.Version.ToNormalizedString());
+
+            var id = $"{s_HeadingIdPrefix}-{versionSlug}";
+            if (suffix != null)
             {
                 id += "-" + suffix;
             }
 
             return id;
         }
-
     }
 }
