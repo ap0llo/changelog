@@ -1,0 +1,219 @@
+# Pipeline consists of 4 jobs
+# - Build_an_Test: 
+#   - Builds the project
+#   - Runs all the tests
+#   - creates a NuGet package
+# - Publish_to_MyGet: 
+#   - Pushes the NuGet package to MyGet (currently disabled)
+#   - Assumes a Service Connection for MyGet was set up in the Team project running the pipeline
+#   - The name of the service connection is stored in the variable myget_ServiceConnectionName (defined below)
+#   - Only runs when building a release branch or the master branch
+# - Publish_to_NuGet_org (currently disabled)
+#   - Pushes the NuGet package to NuGet.org 
+#   - Assumes a Service Connection for NuGet was set up in the Team project running the pipeline
+#   - The name of the service connection is stored in the variable nuget_org_ServiceConnectionName (defined below)
+#   - The variable nuget_org_PackageName defines which package is produced by the pipeline
+#   - Whether this step runs can be controlled by the variable 'Settings.PublishToNuGetOrg' (modify at queue time when necessary):
+#     - 'auto' or empty: Run when building a release branch
+#     - 'false': Do not run
+#     - 'true': Rn regardless of the current branch
+# - Create_GitHub_Release (currently disabled)
+#   - Creates a GitHub release for the build
+#   - Only runs if the build was published to NuGet.org
+
+trigger:
+- master
+- features/*
+- release/*
+
+variables:
+  # Build settings
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE : true    # do not populate NuGet caches on build agents (VM will be deleted afterwards anyways)
+  configuration: Release                      # the configuration (Debug/Release) to build
+  dotNetSdk_Version: 3.1.100                  # the version of the .NET SDK to use
+  solutionPath : src/ChangeLogCreator.sln     # The path of the solution to be buildt
+  artifactsName: drop
+  # # MyGet.org settings   
+  # myget_ServiceConnectionName: 'MyGet - ap0llo-markdown-generator'  # the name of the Azure DevOps service connection to use for MyGet.org
+  # # NuGet.org settings
+  # nuget_org_ServiceConnectionName: 'NuGet.org - markdown-generator'  # the name of the Azure DevOps service connection to use for NuGet.org
+  # nuget_org_PackageName: 'Grynwald.MarkdownGenerator'                # the name of the package being published
+  # # GitHub settings
+  # github_createRelease: true                          # enable creation of GitHub releases when a package was uploaded to NuGet.org
+  # github_ServiceConnectionName: 'GitHub: ap0llo'      # the name of the Azure DevOps service connection to use for creating GitHub releases
+  # github_repositoryName: 'ap0llo/markdown-generator'  # the name of the github repo to create the release in
+
+jobs:
+
+# Main Build and test job: Builds the projects and runs all tests
+- job: Build_and_Test
+  displayName: Build and Test
+  pool: Hosted VS2017
+  steps:
+
+  # Install .NET Core SDK and runtime (version specified in the variables section)
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core SDK $(dotNetSdk_Version)'
+    inputs:
+      packageType: sdk
+      version: $(dotNetSdk_Version)
+
+  # Restore local .NET Core tools
+  - task: DotNetCoreCLI@2
+    displayName: Restore local tools
+    inputs:
+      command: custom
+      custom: tool
+      arguments: restore
+
+  # Set the build number using Nerdbank.GitVersioning
+  - script: dotnet tool run nbgv cloud
+    displayName: Set Version
+
+  # Restore, Build, Test
+  - task: CmdLine@2
+    displayName: Restore NuGet packages
+    inputs:
+      script: dotnet restore $(solutionPath)
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: build
+      projects: $(solutionPath)
+      arguments: '--configuration $(configuration) --no-restore'  
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: $(solutionPath)
+      arguments: '--configuration $(configuration) --no-build'
+  
+  # Create NuGet Package and  publish as build artifact
+  - task: DotNetCoreCLI@2
+    displayName: Pack NuGet package
+    inputs:
+      command: pack
+      projects: $(solutionPath)
+      arguments: '--configuration $(configuration) --output $(Build.ArtifactStagingDirectory) --no-build'  
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifacts'
+    inputs:
+      artifactName: $(artifactsName)
+
+# # Job to push package to MyGet.org after build
+# - job: Publish_to_MyGet
+#   displayName: Publish to MyGet
+#   pool: Hosted VS2017
+#   # Only run after main build job and only if the current branch is master or a release branch
+#   dependsOn: Build_and_Test
+#   condition: and(succeeded('Build_and_Test'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/') ))
+#   steps:
+#   # Get artifacts
+#   - task: DownloadBuildArtifacts@0
+#     displayName: 'Download Build Artifacts'
+#     inputs: 
+#       buildType: current
+#       downloadType: single
+#       artifactName: $(artifactsName)
+#       downloadPath: $(Build.ArtifactStagingDirectory)
+#   # Upload to MyGet.org
+#   - task: NuGetCommand@2
+#     displayName: "Upload package"
+#     inputs:
+#       command: push
+#       nugetFeedType: external
+#       publishFeedCredentials: $(myget_ServiceConnectionName)
+
+# # Job to push package to NuGet.org after build (only for builds of release branches)
+# - job: Publish_to_NuGet_org
+#   displayName: Publish to NuGet.org
+#   pool: Hosted VS2017
+#   # Only run after main build job and only if the current branch is a release branch
+#   dependsOn: Build_and_Test
+#   condition: |
+#     and
+#     (
+#       succeeded('Build_and_Test'), 
+#       not(eq(variables['Settings.PublishToNuGetOrg'], 'false')),
+#       or(
+#         eq(variables['Settings.PublishToNuGetOrg'], 'true'),
+#         and
+#         (
+#           startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'),
+#           or
+#           (
+#             eq(variables['Settings.PublishToNuGetOrg'], ''),
+#             eq(variables['Settings.PublishToNuGetOrg'], 'auto')
+#           )
+#         )
+#       )
+#     )
+#   steps:
+#   # Get artifacts
+#   - task: DownloadBuildArtifacts@0
+#     displayName: 'Download Build Artifacts'
+#     inputs: 
+#       buildType: current
+#       downloadType: single
+#       artifactName: $(artifactsName)
+#       downloadPath: $(Build.ArtifactStagingDirectory)
+#   # Upload to NuGet.org
+#   - task: NuGetCommand@2
+#     displayName: 'Upload package to NuGet.org'
+#     inputs:
+#       command: push
+#       nugetFeedType: external
+#       publishFeedCredentials: $(nuget_org_ServiceConnectionName)
+
+# # Job to create a GitHub release (only if a package was uploaded to NuGet.org)
+# - job: Create_GitHub_Release
+#   displayName: Create GitHub Release
+#   pool: Hosted VS2017
+#   # Only run if build was successful and a package was uploaded to nuget.org
+#   dependsOn: 
+#   - Build_and_Test
+#   - Publish_to_NuGet_org
+#   condition: succeeded('Publish_to_NuGet_org')
+#   steps:
+
+#   # Install .NET Core SDK and runtime (version specified in the variables section)
+#   - task: UseDotNet@2
+#     displayName: 'Use .NET Core SDK $(dotNetSdk_Version)'
+#     inputs:
+#       packageType: sdk
+#       version: $(dotNetSdk_Version)
+
+#   # Restore local .NET Core tools
+#   - task: DotNetCoreCLI@2
+#     displayName: Restore local tools
+#     inputs:
+#       command: custom
+#       custom: tool
+#       arguments: restore
+
+#   # Set the build number using Nerdbank.GitVersioning
+#   - script: dotnet tool run nbgv cloud
+#     displayName: Set Version
+
+#   # Get build artifacts and create a GitHub release
+#   - task: DownloadBuildArtifacts@0
+#     displayName: 'Download Build Artifacts'
+#     inputs: 
+#       buildType: current
+#       downloadType: single
+#       artifactName: $(artifactsName)
+#       downloadPath: $(Build.ArtifactStagingDirectory)
+#   - task: GithubRelease@0
+#     inputs:
+#       gitHubConnection: $(github_ServiceConnectionName)
+#       repositoryName: $(github_repositoryName)
+#       action: 'create'
+#       target: '$(Build.SourceVersion)'
+#       tagSource: manual
+#       tag: v$(Build.BuildNumber)
+#       releaseNotesSource: input
+#       releaseNotes: 'Automatic release by Azure DevOps. Package available on [NuGet.org](https://www.nuget.org/packages/$(nuget_org_PackageName)/$(Build.BuildNumber))'
+#       assets: $(Build.ArtifactStagingDirectory)/$(artifactsName)/*.nupkg
+#       addChangeLog: true
+
+      

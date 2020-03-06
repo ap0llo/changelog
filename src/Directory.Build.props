@@ -1,0 +1,23 @@
+<Project>
+
+	<PropertyGroup>
+		<!-- Output paths -->
+		<BaseOutputPath Condition="'$(BUILD_BINARIESDIRECTORY)' != '' ">$(BUILD_BINARIESDIRECTORY)</BaseOutputPath>
+		<BaseOutputPath Condition="'$(BaseOutputPath)' == '' ">$(MSBuildThisFileDirectory)..\Build\</BaseOutputPath>
+		<BaseOutputPath Condition="!HasTrailingSlash('BaseOutputPath')">$(BaseOutputPath)\</BaseOutputPath>
+		<BaseIntermediateOutputPath>$(BaseOutputPath)intermediate\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+		<OutputPath>$(BaseOutputPath)$(Configuration)\$(MSBuildProjectName)\</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Nerdbank.GitVersioning" Version="2.1.65" PrivateAssets="all" />
+	</ItemGroup>
+	
+	
+	<PropertyGroup>
+		<LangVersion>8.0</LangVersion>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+</Project>
