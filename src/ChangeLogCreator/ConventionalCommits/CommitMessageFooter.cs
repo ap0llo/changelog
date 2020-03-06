@@ -11,9 +11,9 @@ namespace ChangeLogCreator.ConventionalCommits
     public sealed class CommitMessageFooter : IEquatable<CommitMessageFooter>
     {
         /// <summary>
-        /// Gets the footer's key.
+        /// Gets the footer's name.
         /// </summary>
-        public string Key { get; }
+        public CommitMessageFooterName Name { get; }
 
         /// <summary>
         /// Gets the footers value.
@@ -23,17 +23,14 @@ namespace ChangeLogCreator.ConventionalCommits
         /// <summary>
         /// Initializes a new instance of <see cref="CommitMessageFooter"/>.
         /// </summary>
-        /// <param name="key">The footer's key (see <see cref="Key"/> property).</param>
+        /// <param name="key">The footer's key (see <see cref="Name"/> property).</param>
         /// <param name="value">The footer's value (see <see cref="Value"/> property).</param>
-        public CommitMessageFooter(string key, string value)
+        public CommitMessageFooter(CommitMessageFooterName key, string value)
         {
-            if (String.IsNullOrWhiteSpace(key))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(key));
-
             if (String.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(value));
 
-            Key = key;
+            Name = key;
             Value = value;
         }
 
@@ -42,7 +39,7 @@ namespace ChangeLogCreator.ConventionalCommits
         {
             unchecked
             {
-                var hash = StringComparer.OrdinalIgnoreCase.GetHashCode(Key) * 397;
+                var hash = Name.GetHashCode() * 397;
                 hash ^= StringComparer.Ordinal.GetHashCode(Value);
                 return hash;
             }
@@ -54,7 +51,7 @@ namespace ChangeLogCreator.ConventionalCommits
         /// <inheritdoc />
         public bool Equals([AllowNull] CommitMessageFooter other) =>
             other != null &&
-            StringComparer.OrdinalIgnoreCase.Equals(Key, other.Key) &&
+            Name.Equals(other.Name) &&
             StringComparer.Ordinal.Equals(Value, other.Value);
     }
 }

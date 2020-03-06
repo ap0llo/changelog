@@ -16,11 +16,11 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                 return new object[] { input, new XunitSerializableCommitMessageHeader(expected) };
             }
 
-            yield return TestCase("type: description", new CommitMessageHeader("type", "description"));
-            yield return TestCase("type(scope): description", new CommitMessageHeader("type", "description", "scope"));
-            yield return TestCase("type(scope)!: description", new CommitMessageHeader("type", "description", "scope", true));
-            yield return TestCase("type!: description", new CommitMessageHeader("type", "description", null, true));
-            yield return TestCase("type(scope)!: description with special character: () !", new CommitMessageHeader("type", "description with special character: () !", "scope", true));
+            yield return TestCase("type: description", new CommitMessageHeader(new CommitType("type"), "description"));
+            yield return TestCase("type(scope): description", new CommitMessageHeader(new CommitType("type"), "description", "scope"));
+            yield return TestCase("type(scope)!: description", new CommitMessageHeader(new CommitType("type"), "description", "scope", true));
+            yield return TestCase("type!: description", new CommitMessageHeader(new CommitType("type"), "description", null, true));
+            yield return TestCase("type(scope)!: description with special character: () !", new CommitMessageHeader(new CommitType("type"), "description with special character: () !", "scope", true));
         }
 
         [Theory]

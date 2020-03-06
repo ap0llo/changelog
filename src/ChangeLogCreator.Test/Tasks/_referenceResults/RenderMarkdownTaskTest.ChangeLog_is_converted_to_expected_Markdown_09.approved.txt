@@ -1,0 +1,45 @@
+﻿# <a id="changelog-heading-root"></a> Change Log
+
+## <a id="changelog-heading-123"></a> 1.2.3
+
+### <a id="changelog-heading-123-features"></a> New Features
+
+- [**api:** Some change](#changelog-heading-0003E8)
+
+### <a id="changelog-heading-123-bugfixes"></a> Bug Fixes
+
+- [**cli:** A bug was fixed](#changelog-heading-00044C)
+- [A breaking bugfix](#changelog-heading-000514)
+
+### <a id="changelog-heading-123-breaking"></a> Breaking Changes
+
+- [Some breaking change](#changelog-heading-0004B0)
+- [Description of breaking change](#changelog-heading-000514)
+
+### <a id="changelog-heading-123-details"></a> Details
+
+#### <a id="changelog-heading-0003E8"></a> **api:** Some change
+
+Changelog entry body Line1  
+Line2
+
+Changelog entry body Line3  
+Line4
+
+- Commit: `0003E8`
+
+#### <a id="changelog-heading-00044C"></a> **cli:** A bug was fixed
+
+- Commit: `00044C`
+
+#### <a id="changelog-heading-000514"></a> A breaking bugfix
+
+**Breaking Change:** Description of breaking change
+
+- Commit: `000514`
+
+#### <a id="changelog-heading-0004B0"></a> Some breaking change
+
+**Breaking Change**
+
+- Commit: `0004B0`
