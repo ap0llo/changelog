@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Model;
 using Grynwald.MarkdownGenerator;
 
@@ -9,7 +10,7 @@ namespace ChangeLogCreator.Tasks
     internal sealed class RenderMarkdownTask : IChangeLogTask
     {
         private const string s_HeadingIdPrefix = "changelog-heading";
-        private readonly string m_OutputPath;
+        private readonly ChangeLogConfiguration m_Configuration;
 
 
         /// <summary>
@@ -22,15 +23,13 @@ namespace ChangeLogCreator.Tasks
         /// Initializes a new instance of <see cref="RenderMarkdownTask"/>.
         /// </summary>
         /// <param name="outputPath">The file path to save the changelog to.</param>
-        public RenderMarkdownTask(string outputPath)
+        public RenderMarkdownTask(ChangeLogConfiguration configuration)
         {
-            if (String.IsNullOrWhiteSpace(outputPath))
-                throw new ArgumentException("Value must not be null or empty", nameof(outputPath));
+            m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-            m_OutputPath = outputPath;
-
-            //TODO: Preset needs to be configurable
-            SerializationOptions = MdSerializationOptions.Presets.MkDocs.With(opts => { opts.HeadingAnchorStyle = MdHeadingAnchorStyle.Tag; });
+            SerializationOptions = MdSerializationOptions.Presets
+                .Get(configuration.Markdown.Preset.ToString())
+                .With(opts => { opts.HeadingAnchorStyle = MdHeadingAnchorStyle.Tag; });
         }
 
 
@@ -39,10 +38,12 @@ namespace ChangeLogCreator.Tasks
         {
             var document = GetChangeLogDocument(changeLog);
 
-            var outputDirectory = Path.GetDirectoryName(m_OutputPath);
+            var outputPath = m_Configuration.GetFullOutputPath();
+
+            var outputDirectory = Path.GetDirectoryName(outputPath);
             Directory.CreateDirectory(outputDirectory);
 
-            document.Save(m_OutputPath, SerializationOptions);
+            document.Save(outputPath, SerializationOptions);
         }
 
 
@@ -194,11 +195,13 @@ namespace ChangeLogCreator.Tasks
 
         private MdSpan GetSummaryText(ChangeLogEntry entry)
         {
-            return entry.Scope switch
+            var scope = entry.GetScopeDisplayName(m_Configuration);
+
+            return scope switch
             {
                 string s when !String.IsNullOrEmpty(s) =>
                     new MdCompositeSpan(
-                        new MdStrongEmphasisSpan($"{entry.Scope}:"),
+                        new MdStrongEmphasisSpan($"{scope}:"),
                         new MdTextSpan($" {entry.Summary}")),
 
                 _ => new MdTextSpan(entry.Summary),

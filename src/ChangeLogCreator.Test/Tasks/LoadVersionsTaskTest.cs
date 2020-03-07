@@ -1,4 +1,6 @@
-﻿using ChangeLogCreator.Git;
+﻿using System;
+using ChangeLogCreator.Configuration;
+using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
 using Moq;
@@ -7,9 +9,11 @@ using Xunit;
 
 namespace ChangeLogCreator.Test.Tasks
 {
+    /// <summary>
+    /// Unit tests for <see cref="LoadVersionsTask"/>.
+    /// </summary>
     public class LoadVersionsTaskTest
     {
-
         [Fact]
         public void Run_adds_versions_from_tags()
         {
@@ -23,7 +27,7 @@ namespace ChangeLogCreator.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(repoMock.Object);
+            var sut = new LoadVersionsTask(ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ChangeLog();
@@ -37,6 +41,32 @@ namespace ChangeLogCreator.Test.Tasks
                     var version = SemanticVersion.Parse(tag.Name);
                     Assert.Contains(new VersionInfo(version, tag.Commit), changeLog.Versions);
                 });
+        }
+
+        [Fact]
+        public void Run_does_not_add_any_versions_if_no_tag_patterns_are_specified()
+        {
+            // ARRANGE
+            var tags = new GitTag[]
+            {
+                new GitTag("1.2.3-alpha", new GitId("01")),
+                new GitTag("4.5.6", new GitId("02"))
+            };
+
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.GetTags()).Returns(tags);
+
+            var config = new ChangeLogConfiguration() { TagPatterns = Array.Empty<string>() };
+
+            var sut = new LoadVersionsTask(config, repoMock.Object);
+
+            // ACT
+            var changeLog = new ChangeLog();
+            sut.Run(changeLog);
+
+            // ASSERT
+            Assert.NotNull(changeLog.Versions);
+            Assert.Empty(changeLog.Versions);
         }
 
         [Theory]
@@ -53,7 +83,7 @@ namespace ChangeLogCreator.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(repoMock.Object);
+            var sut = new LoadVersionsTask(ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ChangeLog();
@@ -69,7 +99,9 @@ namespace ChangeLogCreator.Test.Tasks
         // Tags may be prefixed with "v"
         [InlineData("v1.2.3-alpha", "1.2.3-alpha")]
         [InlineData("v4.5.6", "4.5.6")]
-        public void Run_correctly_gets_version_from_tag_name(string tagName, string version)
+        [InlineData("V1.2.3-alpha", "1.2.3-alpha")]
+        [InlineData("V4.5.6", "4.5.6")]
+        public void Run_correctly_gets_version_from_tag_name_using_default_configuration(string tagName, string version)
         {
             // ARRANGE
             var tags = new GitTag[]
@@ -82,7 +114,7 @@ namespace ChangeLogCreator.Test.Tasks
 
             var expectedVersion = SemanticVersion.Parse(version);
 
-            var sut = new LoadVersionsTask(repoMock.Object);
+            var sut = new LoadVersionsTask(ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ChangeLog();
