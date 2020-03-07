@@ -11,14 +11,6 @@ namespace ChangeLogCreator
 {
     internal class Program
     {
-        private class CommandLineParameters
-        {
-            [Option('r', "repository", Required = true)]
-            public string RepositoryPath { get; set; } = "";
-
-            [Option('o', "outputpath", Required = true)]
-            public string OutputPath { get; set; } = "";
-        }
 
         private static int Main(string[] args)
         {
@@ -44,19 +36,19 @@ namespace ChangeLogCreator
         }
 
 
-        private static int Run(CommandLineParameters parameters)
+        private static int Run(CommandLineParameters commandlineParameters)
         {
-            if (!ValidateCommandlineParameters(parameters))
+            if (!ValidateCommandlineParameters(commandlineParameters))
                 return 1;
 
-            var configuration = ChangeLogConfigurationLoader.GetConfiguation(parameters.RepositoryPath);
+            var configuration = ChangeLogConfigurationLoader.GetConfiguation(commandlineParameters.RepositoryPath, commandlineParameters);
 
-            using (var repo = new GitRepository(parameters.RepositoryPath))
+            using (var repo = new GitRepository(commandlineParameters.RepositoryPath))
             {
                 var pipeline = new ChangeLogPipeline()
                     .AddTask(new LoadVersionsTask(configuration, repo))
                     .AddTask(new ParseCommitsTask(repo))
-                    .AddTask(new RenderMarkdownTask(parameters.OutputPath, configuration));
+                    .AddTask(new RenderMarkdownTask(configuration));
 
                 pipeline.Run();
             }

@@ -32,7 +32,10 @@
     "tagPatterns": [
       "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
       "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
-    ]
+    ],
 
+    // Specifies the output path of the changelog.
+    // When path is not rooted, it is interpreted as relative to the repository root path
+    "outputPath": "changelog.md"
   }
 }

@@ -10,7 +10,6 @@ namespace ChangeLogCreator.Tasks
     internal sealed class RenderMarkdownTask : IChangeLogTask
     {
         private const string s_HeadingIdPrefix = "changelog-heading";
-        private readonly string m_OutputPath;
         private readonly ChangeLogConfiguration m_Configuration;
 
 
@@ -24,12 +23,8 @@ namespace ChangeLogCreator.Tasks
         /// Initializes a new instance of <see cref="RenderMarkdownTask"/>.
         /// </summary>
         /// <param name="outputPath">The file path to save the changelog to.</param>
-        public RenderMarkdownTask(string outputPath, ChangeLogConfiguration configuration)
+        public RenderMarkdownTask(ChangeLogConfiguration configuration)
         {
-            if (String.IsNullOrWhiteSpace(outputPath))
-                throw new ArgumentException("Value must not be null or empty", nameof(outputPath));
-
-            m_OutputPath = outputPath;
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             SerializationOptions = MdSerializationOptions.Presets
@@ -43,10 +38,12 @@ namespace ChangeLogCreator.Tasks
         {
             var document = GetChangeLogDocument(changeLog);
 
-            var outputDirectory = Path.GetDirectoryName(m_OutputPath);
+            var outputPath = m_Configuration.GetFullOutputPath();
+
+            var outputDirectory = Path.GetDirectoryName(outputPath);
             Directory.CreateDirectory(outputDirectory);
 
-            document.Save(m_OutputPath, SerializationOptions);
+            document.Save(outputPath, SerializationOptions);
         }
 
 

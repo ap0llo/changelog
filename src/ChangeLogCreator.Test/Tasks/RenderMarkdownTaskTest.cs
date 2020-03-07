@@ -347,7 +347,7 @@ namespace ChangeLogCreator.Test.Tasks
 
         private void Approve(ChangeLog changeLog, ChangeLogConfiguration? configuration = null)
         {
-            var sut = new RenderMarkdownTask("DummyPath", configuration ?? new ChangeLogConfiguration());
+            var sut = new RenderMarkdownTask(configuration ?? new ChangeLogConfiguration());
 
             var doc = sut.GetChangeLogDocument(changeLog);
 

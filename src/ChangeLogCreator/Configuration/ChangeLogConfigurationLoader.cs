@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using ChangeLogCreator.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace ChangeLogCreator.Configuration
@@ -9,7 +11,7 @@ namespace ChangeLogCreator.Configuration
         public const string ConfigurationFileName = "changelog.settings.json";
 
 
-        public static ChangeLogConfiguration GetConfiguation(string repositoryDirectoy)
+        public static ChangeLogConfiguration GetConfiguation(string repositoryDirectoy, object? settingsObject = null)
         {
             using var defaultSettingsStream = GetDefaultSettingsStream();
 
@@ -17,19 +19,30 @@ namespace ChangeLogCreator.Configuration
             builder.AddJsonStream(defaultSettingsStream);
 
             var configurationFilePath = Path.Combine(repositoryDirectoy, ConfigurationFileName);
-            if(File.Exists(configurationFilePath))
+            if (File.Exists(configurationFilePath))
             {
                 // Open file stream and use AddJsonStream() because AddJsonFile() assumes the file name
                 // is relative to the ConfigurationBuilder's base directory and does not seem to properly
                 // handle absolute paths
                 using var configStream = File.Open(configurationFilePath, FileMode.Open, FileAccess.Read);
                 builder.AddJsonStream(configStream);
+
+                if (settingsObject is object)
+                {
+                    builder.AddObject(settingsObject);
+                }
+
                 return builder.Load();
             }
             else
             {
+                if (settingsObject is object)
+                {
+                    builder.AddObject(settingsObject);
+                }
+
                 return builder.Load();
-            }                
+            }
         }
 
         internal static ChangeLogConfiguration GetDefaultConfiguration()

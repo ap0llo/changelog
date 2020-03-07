@@ -42,6 +42,11 @@ namespace ChangeLogCreator.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config.TagPatterns));
             yield return TestCase(config => Assert.Equal(new[] { "^(?<version>\\d+\\.\\d+\\.\\d+.*)", "^v(?<version>\\d+\\.\\d+\\.\\d+.*)" }, config.TagPatterns));
+
+            yield return TestCase(config => Assert.NotNull(config.OutputPath));
+            yield return TestCase(config => Assert.NotEmpty(config.OutputPath));
+
+            yield return TestCase(config => Assert.Null(config.RepositoryPath));    // repository path must be provided through command line parameters
         }
 
         [Theory]
@@ -135,6 +140,27 @@ namespace ChangeLogCreator.Test.Configuration
 
             // ASSERT
             Assert.Equal(patterns, config.TagPatterns);            
+        }
+
+        private class TestSettingsClass
+        {
+            [ConfigurationValue("changelog:markdown:preset")]
+            public string? MarkdownPreset { get; set; }
+        }
+
+        [Fact]
+        public void Configuration_from_settings_object_overrides_both_default_settings_and_settings_file()
+        {
+            // ARRANGE
+            PrepareConfiguration("markdown:preset", "default");
+            var settingsObject = new TestSettingsClass() { MarkdownPreset = "MkDocs" };
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.Markdown);
+            Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Markdown.Preset);
         }
 
 
