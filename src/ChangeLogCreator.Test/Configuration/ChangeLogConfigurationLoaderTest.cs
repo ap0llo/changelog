@@ -39,6 +39,9 @@ namespace ChangeLogCreator.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config.Markdown));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Markdown.Preset));
+
+            yield return TestCase(config => Assert.NotNull(config.TagPatterns));
+            yield return TestCase(config => Assert.Equal(new[] { "^(?<version>\\d+\\.\\d+\\.\\d+.*)", "^v(?<version>\\d+\\.\\d+\\.\\d+.*)" }, config.TagPatterns));
         }
 
         [Theory]
@@ -117,6 +120,21 @@ namespace ChangeLogCreator.Test.Configuration
             // ASSERT
             Assert.NotNull(config.Markdown);
             Assert.Equal(preset, config.Markdown.Preset);
+        }
+
+        [Fact]
+        public void TagPatterns_can_be_set_in_configuration_file()
+        {
+            // ARRANGE            
+            var patterns = new[] { "pattern1", "pattern2" };
+
+            PrepareConfiguration("tagpatterns", patterns);
+
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.Equal(patterns, config.TagPatterns);            
         }
 
 

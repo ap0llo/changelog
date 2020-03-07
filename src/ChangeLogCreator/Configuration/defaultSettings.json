@@ -11,7 +11,7 @@
       //  { "name":  "myScope", "displayName":  "Scope Display Name" }
     ],
 
-    // Configuration specific to the markdown output
+    // Configuration specific to the Markdown output
     "markdown": {
 
       // Set the "preset" for serialization of Markdown (control settings like escaping and indentation)
@@ -22,6 +22,17 @@
       // https://github.com/ap0llo/markdown-generator/blob/master/docs/apireference/Grynwald/MarkdownGenerator/MdSerializationOptions/Presets/index.md
       //
       "preset": "default"
-    }
+    },
+
+    // Versions for the changelog are read from a repository's tags.
+    // This setting defines regular expressions for reading versions from a tag name.
+    // Every regular expression must define a "version" sub-expression. The value matched
+    // by this sub-expression is attempted to be parsed as semantic version.
+    // By default, tag names which are valid semantic versions as well as tag names that are tag names prefixed with 'v' are matched.
+    "tagPatterns": [
+      "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
+      "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
+    ]
+
   }
 }

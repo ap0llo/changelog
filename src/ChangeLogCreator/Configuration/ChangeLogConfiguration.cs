@@ -26,6 +26,8 @@ namespace ChangeLogCreator.Configuration
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
 
         public MarkdownConfiguration Markdown { get; set; } = new MarkdownConfiguration();
+
+        public string[] TagPatterns { get; set; } = Array.Empty<string>();
     }
 }
 

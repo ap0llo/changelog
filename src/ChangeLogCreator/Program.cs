@@ -54,7 +54,7 @@ namespace ChangeLogCreator
             using (var repo = new GitRepository(parameters.RepositoryPath))
             {
                 var pipeline = new ChangeLogPipeline()
-                    .AddTask(new LoadVersionsTask(repo))
+                    .AddTask(new LoadVersionsTask(configuration, repo))
                     .AddTask(new ParseCommitsTask(repo))
                     .AddTask(new RenderMarkdownTask(parameters.OutputPath, configuration));
 

@@ -128,8 +128,6 @@ namespace ChangeLogCreator.Test.Tasks
             }
         }
 
-        //TODO: gets expected range
-
         [Fact]
         public void Run_ignores_unparsable_commit_messages()
 
