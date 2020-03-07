@@ -13,7 +13,7 @@ namespace ChangeLogCreator.Model
 
         public CommitType Type { get; }
 
-        public string? Scope { get; } //TODO: Use a custom type instead of string?
+        public string? Scope { get; } // TODO: Use a custom type instead of string?
 
         /// <summary>
         /// Gets whether this change contains a breaking change.

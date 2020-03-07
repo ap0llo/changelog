@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Tasks;
 using CommandLine;
@@ -12,11 +13,11 @@ namespace ChangeLogCreator
     {
         private class CommandLineParameters
         {
-            [Option('r', "repository")]
-            public string? RepositoryPath { get; set; }
+            [Option('r', "repository", Required = true)]
+            public string RepositoryPath { get; set; } = "";
 
-            [Option('o', "outputpath")]
-            public string? OutputPath { get; set; }
+            [Option('o', "outputpath", Required = true)]
+            public string OutputPath { get; set; } = "";
         }
 
         private static int Main(string[] args)
@@ -48,12 +49,14 @@ namespace ChangeLogCreator
             if (!ValidateCommandlineParameters(parameters))
                 return 1;
 
-            using (var repo = new GitRepository(parameters.RepositoryPath!))
+            var configuration = ChangeLogConfigurationLoader.GetConfiguation(parameters.RepositoryPath);
+
+            using (var repo = new GitRepository(parameters.RepositoryPath))
             {
                 var pipeline = new ChangeLogPipeline()
                     .AddTask(new LoadVersionsTask(repo))
                     .AddTask(new ParseCommitsTask(repo))
-                    .AddTask(new RenderMarkdownTask(parameters.OutputPath!));
+                    .AddTask(new RenderMarkdownTask(parameters.OutputPath, configuration));
 
                 pipeline.Run();
             }

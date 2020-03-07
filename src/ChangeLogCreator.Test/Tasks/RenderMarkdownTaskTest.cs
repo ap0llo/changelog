@@ -1,5 +1,6 @@
 ﻿using ApprovalTests;
 using ApprovalTests.Reporters;
+using ChangeLogCreator.Configuration;
 using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
@@ -317,9 +318,9 @@ namespace ChangeLogCreator.Test.Tasks
         }
 
 
-        private void Approve(ChangeLog changeLog)
+        private void Approve(ChangeLog changeLog, ChangeLogConfiguration? configuration = null)
         {
-            var sut = new RenderMarkdownTask("DummyPath");
+            var sut = new RenderMarkdownTask("DummyPath", configuration ?? new ChangeLogConfiguration());
 
             var doc = sut.GetChangeLogDocument(changeLog);
 

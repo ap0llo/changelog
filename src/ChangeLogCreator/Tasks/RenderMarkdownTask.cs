@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Model;
 using Grynwald.MarkdownGenerator;
 
@@ -10,6 +11,7 @@ namespace ChangeLogCreator.Tasks
     {
         private const string s_HeadingIdPrefix = "changelog-heading";
         private readonly string m_OutputPath;
+        private readonly ChangeLogConfiguration m_Configuration;
 
 
         /// <summary>
@@ -22,12 +24,13 @@ namespace ChangeLogCreator.Tasks
         /// Initializes a new instance of <see cref="RenderMarkdownTask"/>.
         /// </summary>
         /// <param name="outputPath">The file path to save the changelog to.</param>
-        public RenderMarkdownTask(string outputPath)
+        public RenderMarkdownTask(string outputPath, ChangeLogConfiguration configuration)
         {
             if (String.IsNullOrWhiteSpace(outputPath))
                 throw new ArgumentException("Value must not be null or empty", nameof(outputPath));
 
             m_OutputPath = outputPath;
+            m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             //TODO: Preset needs to be configurable
             SerializationOptions = MdSerializationOptions.Presets.MkDocs.With(opts => { opts.HeadingAnchorStyle = MdHeadingAnchorStyle.Tag; });
