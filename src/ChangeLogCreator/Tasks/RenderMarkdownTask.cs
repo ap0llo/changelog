@@ -197,11 +197,13 @@ namespace ChangeLogCreator.Tasks
 
         private MdSpan GetSummaryText(ChangeLogEntry entry)
         {
-            return entry.Scope switch
+            var scope = entry.GetScopeDisplayName(m_Configuration);
+
+            return scope switch
             {
                 string s when !String.IsNullOrEmpty(s) =>
                     new MdCompositeSpan(
-                        new MdStrongEmphasisSpan($"{entry.Scope}:"),
+                        new MdStrongEmphasisSpan($"{scope}:"),
                         new MdTextSpan($" {entry.Summary}")),
 
                 _ => new MdTextSpan(entry.Summary),

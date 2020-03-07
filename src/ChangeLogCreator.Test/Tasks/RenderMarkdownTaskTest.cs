@@ -317,6 +317,33 @@ namespace ChangeLogCreator.Test.Tasks
             Approve(changeLog);
         }
 
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_13()
+        {
+            // if a display name is configured for a scope,
+            // it must be used in the output instead of the actual scope
+
+            var config = new ChangeLogConfiguration()
+            {
+                Scopes = new[]
+                {
+                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "Scope 1 Display Name" }
+                }
+            };
+
+            var versionChangeLog = GetSingleVersionChangeLog(
+                "1.2.3",
+                null,
+
+                GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change"),                    
+
+                GetChangeLogEntry(scope: "scope2", type: "fix", summary: "A bug was fixed")
+            );
+
+            var changeLog = new ChangeLog() { versionChangeLog };
+
+            Approve(changeLog, config);
+        }
 
         private void Approve(ChangeLog changeLog, ChangeLogConfiguration? configuration = null)
         {

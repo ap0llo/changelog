@@ -22,17 +22,20 @@ namespace ChangeLogCreator.Test.Configuration
         public void Dispose() => m_ConfigurationDirectory.Dispose();
 
 
-
         /// <summary>
         /// Gets the assertions that must be true for the default configuration
         /// </summary>
         public static IEnumerable<object[]> DefaultConfigAssertions()
         {
-            static object[] TestCase(Action<ChangeLogConfiguration> assertion) => new[] { assertion };
+            static object[] TestCase(Action<ChangeLogConfiguration> assertion)
+            {
+                return new[] { assertion };
+            }
 
             yield return TestCase(config => Assert.NotNull(config));
+            yield return TestCase(config => Assert.NotNull(config.Scopes));
+            yield return TestCase(config => Assert.Empty(config.Scopes));
         }
-
 
         [Theory]
         [MemberData(nameof(DefaultConfigAssertions))]
@@ -62,6 +65,65 @@ namespace ChangeLogCreator.Test.Configuration
         {
             var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
             assertion(config);
+        }
+
+        [Fact]
+        public void Scopes_can_be_set_in_configuration_file()
+        {
+            // ARRANGE            
+            var scopes = new[]
+            {
+                new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "DisplayName 1" },
+                new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope2", DisplayName = "DisplayName 2" }
+            };
+
+            PrepareConfiguration("scopes", scopes);
+
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.Equal(scopes.Length, config.Scopes.Length);
+            for (var i = 0; i < scopes.Length; i++)
+            {
+                Assert.Equal(scopes[i].Name, config.Scopes[i].Name);
+                Assert.Equal(scopes[i].DisplayName, config.Scopes[i].DisplayName);
+            }
+        }
+
+
+        private void PrepareConfiguration(string key, object value)
+        {
+            var configRoot = new JObject();
+
+            var currentConfigObject = new JObject();
+            configRoot.Add(new JProperty("changelog", currentConfigObject));
+
+            var keySegments = key.Split(":");
+            for (var i = 0; i < keySegments.Length; i++)
+            {
+                // last fragment => add value
+                if (i == keySegments.Length - 1)
+                {
+                    if (value.GetType().IsArray)
+                    {
+                        value = JArray.FromObject(value);
+                    }
+
+                    currentConfigObject.Add(new JProperty(keySegments[i], value));
+
+                }
+                // create child configuration object
+                else
+                {
+                    var newConfigObject = new JObject();
+                    currentConfigObject.Add(new JProperty(keySegments[i], newConfigObject));
+                    currentConfigObject = newConfigObject;
+                }
+            }
+
+            var json = configRoot.ToString(Formatting.Indented);
+            File.WriteAllText(m_ConfigurationFilePath, json);
         }
     }
 }

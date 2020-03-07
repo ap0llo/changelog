@@ -1,5 +1,14 @@
 {
   "changelog": {
 
+    // Configuration on how Conventional Commit scopes are handled
+    "scopes": [
+      // By default, all scopes are included unchanged from the commit messages in the output
+      // Using this setting, the display name of a scope can be specified.
+      // If set, the changelog will use the display name instead of the scope's name
+      // 
+      // Example:
+      //{ "name":  "myScope", "displayName":  "Scope Display Name" }
+    ]
   }
 }
