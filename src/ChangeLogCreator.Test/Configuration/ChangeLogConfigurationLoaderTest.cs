@@ -33,8 +33,12 @@ namespace ChangeLogCreator.Test.Configuration
             }
 
             yield return TestCase(config => Assert.NotNull(config));
+
             yield return TestCase(config => Assert.NotNull(config.Scopes));
             yield return TestCase(config => Assert.Empty(config.Scopes));
+
+            yield return TestCase(config => Assert.NotNull(config.Markdown));
+            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Markdown.Preset));
         }
 
         [Theory]
@@ -89,6 +93,30 @@ namespace ChangeLogCreator.Test.Configuration
                 Assert.Equal(scopes[i].Name, config.Scopes[i].Name);
                 Assert.Equal(scopes[i].DisplayName, config.Scopes[i].DisplayName);
             }
+        }
+
+        public static IEnumerable<object[]> MarkdownPresets()
+        {
+            foreach(var value in Enum.GetValues(typeof(ChangeLogConfiguration.MarkdownPreset)))
+            {
+                yield return new object[] { value!, value!.ToString()! };
+                yield return new object[] { value!, value!.ToString()!.ToLower() };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(MarkdownPresets))]
+        public void Markdown_preset_can_be_set_in_configuration_file(ChangeLogConfiguration.MarkdownPreset preset, string configurationValue)
+        {
+            // ARRANGE
+            PrepareConfiguration("markdown:preset", configurationValue);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.Markdown);
+            Assert.Equal(preset, config.Markdown.Preset);
         }
 
 

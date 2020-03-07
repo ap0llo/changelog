@@ -11,9 +11,21 @@ namespace ChangeLogCreator.Configuration
             public string? DisplayName { get; set; }
         }
 
+        public enum MarkdownPreset
+        {
+            Default,
+            MkDocs
+        }
+
+        public class MarkdownConfiguration
+        {
+            public MarkdownPreset Preset { get; set; } = MarkdownPreset.Default;
+        }
+
 
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
 
+        public MarkdownConfiguration Markdown { get; set; } = new MarkdownConfiguration();
     }
 }
 

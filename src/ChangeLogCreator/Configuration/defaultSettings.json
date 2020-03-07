@@ -8,7 +8,20 @@
       // If set, the changelog will use the display name instead of the scope's name
       // 
       // Example:
-      //{ "name":  "myScope", "displayName":  "Scope Display Name" }
-    ]
+      //  { "name":  "myScope", "displayName":  "Scope Display Name" }
+    ],
+
+    // Configuration specific to the markdown output
+    "markdown": {
+
+      // Set the "preset" for serialization of Markdown (control settings like escaping and indentation)
+      // Supported values:
+      //  - "default"
+      //  - "MkDocs"
+      // This changes which preset from the Markdown Generator library is used, for details see
+      // https://github.com/ap0llo/markdown-generator/blob/master/docs/apireference/Grynwald/MarkdownGenerator/MdSerializationOptions/Presets/index.md
+      //
+      "preset": "default"
+    }
   }
 }

@@ -32,8 +32,9 @@ namespace ChangeLogCreator.Tasks
             m_OutputPath = outputPath;
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
-            //TODO: Preset needs to be configurable
-            SerializationOptions = MdSerializationOptions.Presets.MkDocs.With(opts => { opts.HeadingAnchorStyle = MdHeadingAnchorStyle.Tag; });
+            SerializationOptions = MdSerializationOptions.Presets
+                .Get(configuration.Markdown.Preset.ToString())
+                .With(opts => { opts.HeadingAnchorStyle = MdHeadingAnchorStyle.Tag; });
         }
 
 
