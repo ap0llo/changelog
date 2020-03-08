@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Model;
 using Grynwald.MarkdownGenerator;
@@ -34,7 +35,7 @@ namespace ChangeLogCreator.Tasks
 
 
         /// <inheritdoc />
-        public void Run(ChangeLog changeLog)
+        public Task RunAsync(ChangeLog changeLog)
         {
             var document = GetChangeLogDocument(changeLog);
 
@@ -44,6 +45,8 @@ namespace ChangeLogCreator.Tasks
             Directory.CreateDirectory(outputDirectory);
 
             document.Save(outputPath, SerializationOptions);
+
+            return Task.CompletedTask;
         }
 
 

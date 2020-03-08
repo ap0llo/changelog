@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
@@ -28,13 +29,15 @@ namespace ChangeLogCreator.Tasks
         }
 
 
-        public void Run(ChangeLog changeLog)
+        public Task RunAsync(ChangeLog changeLog)
         {
             foreach (var version in GetVersions())
             {
                 var versionChangeLog = new SingleVersionChangeLog(version);
                 changeLog.Add(versionChangeLog);
             }
+
+            return Task.CompletedTask;
         }
 
 

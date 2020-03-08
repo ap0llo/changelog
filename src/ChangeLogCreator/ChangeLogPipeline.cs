@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ChangeLogCreator.Model;
 
 namespace ChangeLogCreator.Tasks
@@ -22,12 +23,12 @@ namespace ChangeLogCreator.Tasks
         }
 
 
-        public ChangeLog Run()
+        public async Task<ChangeLog> RunAsync()
         {
             var changeLog = new ChangeLog();
             foreach (var task in m_Tasks)
             {
-                task.Run(changeLog);
+                await task.RunAsync(changeLog);
             }
             return changeLog;
         }

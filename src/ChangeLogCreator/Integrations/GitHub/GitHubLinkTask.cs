@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
@@ -24,10 +25,10 @@ namespace ChangeLogCreator.Integrations.GitHub
         }
 
 
-        public void Run(ChangeLog changeLog)
+        public Task RunAsync(ChangeLog changeLog)
         {
             if (m_ProjectInfo == null)
-                return;
+                return Task.CompletedTask;
 
             foreach (var versionChangeLog in changeLog.ChangeLogs)
             {
@@ -36,6 +37,8 @@ namespace ChangeLogCreator.Integrations.GitHub
                     entry.CommitWebUri = GetCommitWebUri(entry.Commit);
                 }
             }
+
+            return Task.CompletedTask;
         }
 
 

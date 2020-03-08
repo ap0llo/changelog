@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
@@ -12,7 +13,7 @@ namespace ChangeLogCreator.Test.Tasks
     public class ParseCommitsTaskTest : TestBase
     {
         [Fact]
-        public void Run_does_nothing_for_empty_changelog()
+        public async Task Run_does_nothing_for_empty_changelog()
         {
             // ARRANGE
             var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
@@ -21,13 +22,13 @@ namespace ChangeLogCreator.Test.Tasks
 
             // ACT
             var changelog = new ChangeLog();
-            sut.Run(changelog);
+            await sut.RunAsync(changelog);
 
             // ASSERT
         }
 
         [Fact]
-        public void Run_adds_all_parsable_changes_if_no_previous_version_exists()
+        public async Task Run_adds_all_parsable_changes_if_no_previous_version_exists()
         {
             // ARRANGE
             var repo = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -45,7 +46,7 @@ namespace ChangeLogCreator.Test.Tasks
             var changelog = new ChangeLog() { versionChangeLog };
 
             // ACT
-            sut.Run(changelog);
+            await sut.RunAsync(changelog);
 
             // ASSERT
             repo.Verify(x => x.GetCommits(It.IsAny<GitId?>(), It.IsAny<GitId>()), Times.Once);
@@ -72,7 +73,7 @@ namespace ChangeLogCreator.Test.Tasks
         }
 
         [Fact]
-        public void Run_adds_the_expected_entries_if_a_previous_version_exists()
+        public async Task Run_adds_the_expected_entries_if_a_previous_version_exists()
         {
             // ARRANGE
             var repo = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -98,7 +99,7 @@ namespace ChangeLogCreator.Test.Tasks
             };
 
             // ACT
-            sut.Run(changelog);
+            await sut.RunAsync(changelog);
 
             // ASSERT
             repo.Verify(x => x.GetCommits(null, It.IsAny<GitId>()), Times.Once);
@@ -129,7 +130,7 @@ namespace ChangeLogCreator.Test.Tasks
         }
 
         [Fact]
-        public void Run_ignores_unparsable_commit_messages()
+        public async Task Run_ignores_unparsable_commit_messages()
 
         {
             // ARRANGE
@@ -147,7 +148,7 @@ namespace ChangeLogCreator.Test.Tasks
             var changelog = new ChangeLog() { versionChangeLog };
 
             // ACT
-            sut.Run(changelog);
+            await sut.RunAsync(changelog);
 
             // ASSERT
             Assert.NotNull(versionChangeLog.AllEntries);

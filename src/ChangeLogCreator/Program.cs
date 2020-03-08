@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Tasks;
@@ -12,7 +13,7 @@ namespace ChangeLogCreator
     internal class Program
     {
 
-        private static int Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
             using var commandlineParser = new Parser(settings =>
             {
@@ -21,22 +22,22 @@ namespace ChangeLogCreator
                 settings.HelpWriter = Console.Out;
             });
 
-            return commandlineParser.ParseArguments<CommandLineParameters>(args)
+            return await commandlineParser.ParseArguments<CommandLineParameters>(args)
                 .MapResult(
-                    (CommandLineParameters parsed) => Run(parsed),
+                    (CommandLineParameters parsed) => RunAsync(parsed),
                     (IEnumerable<Error> errors) =>
                     {
                         if (errors.All(e => e is HelpRequestedError || e is VersionRequestedError))
-                            return 0;
+                            return Task.FromResult(0);
 
                         Console.Error.WriteLine("Invalid arguments");
-                        return 1;
+                        return Task.FromResult(1);
                     }
                 );
         }
 
 
-        private static int Run(CommandLineParameters commandlineParameters)
+        private static async Task<int> RunAsync(CommandLineParameters commandlineParameters)
         {
             if (!ValidateCommandlineParameters(commandlineParameters))
                 return 1;
@@ -50,7 +51,7 @@ namespace ChangeLogCreator
                     .AddTask(new ParseCommitsTask(repo))
                     .AddTask(new RenderMarkdownTask(configuration));
 
-                pipeline.Run();
+                await pipeline.RunAsync();
             }
 
             return 0;

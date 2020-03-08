@@ -440,6 +440,7 @@ namespace ChangeLogCreator.Test.Tasks
             Approve(changeLog);
         }
 
+
         private void Approve(ChangeLog changeLog, ChangeLogConfiguration? configuration = null)
         {
             var sut = new RenderMarkdownTask(configuration ?? new ChangeLogConfiguration());

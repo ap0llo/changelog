@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Integrations.GitHub;
 using ChangeLogCreator.Model;
@@ -13,7 +14,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
     public class GitHubLinkTaskTest : TestBase
     {
         [Fact]
-        public void Run_does_nothing_if_repository_does_not_have_remotes()
+        public async Task Run_does_nothing_if_repository_does_not_have_remotes()
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -23,7 +24,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             var changeLog = new ChangeLog();
 
             // ACT 
-            sut.Run(changeLog);
+            await sut.RunAsync(changeLog);
 
             // ASSERT
         }
@@ -32,7 +33,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
         [Theory]
         [InlineData("not-a-url")]
         [InlineData("http://not-a-github-url.com")]
-        public void Run_does_nothing_if_remote_url_cannot_be_parsed(string url)
+        public async Task Run_does_nothing_if_remote_url_cannot_be_parsed(string url)
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -42,14 +43,14 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             var changeLog = new ChangeLog();
 
             // ACT 
-            sut.Run(changeLog);
+            await sut.RunAsync(changeLog);
 
             // ASSERT
         }
 
 
         [Fact]
-        public void Run_adds_a_link_to_all_commits_if_url_can_be_parsed()
+        public async Task Run_adds_a_link_to_all_commits_if_url_can_be_parsed()
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -74,7 +75,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             };
 
             // ACT 
-            sut.Run(changeLog);
+            await sut.RunAsync(changeLog);
 
             // ASSERT
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries);

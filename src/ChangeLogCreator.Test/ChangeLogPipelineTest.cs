@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
 using Moq;
@@ -12,14 +13,14 @@ namespace ChangeLogCreator.Test
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(10)]
-        public void Run_executes_all_tasks_in_the_insertion_order(int numberOfTasks)
+        public async Task Run_executes_all_tasks_in_the_insertion_order(int numberOfTasks)
         {
             // ARRANGE
             var tasks = Enumerable.Range(0, numberOfTasks)
                 .Select(_ =>
                 {
                     var mock = new Mock<IChangeLogTask>(MockBehavior.Strict);
-                    mock.Setup(x => x.Run(It.IsAny<ChangeLog>()));
+                    mock.Setup(x => x.RunAsync(It.IsAny<ChangeLog>())).Returns(Task.CompletedTask);
                     return mock;
                 })
                 .ToArray();
@@ -32,11 +33,11 @@ namespace ChangeLogCreator.Test
             }
 
             // ACT 
-            var changeLog = sut.Run();
+            var changeLog = await sut.RunAsync();
 
             // ASSERT
             Assert.NotNull(changeLog);
-            Assert.All(tasks, task => task.Verify(x => x.Run(It.IsAny<ChangeLog>()), Times.Once));
+            Assert.All(tasks, task => task.Verify(x => x.RunAsync(It.IsAny<ChangeLog>()), Times.Once));
         }
     }
 }

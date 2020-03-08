@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
@@ -15,7 +16,7 @@ namespace ChangeLogCreator.Test.Tasks
     public class LoadVersionsTaskTest
     {
         [Fact]
-        public void Run_adds_versions_from_tags()
+        public async Task Run_adds_versions_from_tags()
         {
             // ARRANGE
             var tags = new GitTag[]
@@ -31,7 +32,7 @@ namespace ChangeLogCreator.Test.Tasks
 
             // ACT
             var changeLog = new ChangeLog();
-            sut.Run(changeLog);
+            await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.All(
@@ -44,7 +45,7 @@ namespace ChangeLogCreator.Test.Tasks
         }
 
         [Fact]
-        public void Run_does_not_add_any_versions_if_no_tag_patterns_are_specified()
+        public async Task Run_does_not_add_any_versions_if_no_tag_patterns_are_specified()
         {
             // ARRANGE
             var tags = new GitTag[]
@@ -62,7 +63,7 @@ namespace ChangeLogCreator.Test.Tasks
 
             // ACT
             var changeLog = new ChangeLog();
-            sut.Run(changeLog);
+            await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.NotNull(changeLog.Versions);
@@ -72,7 +73,7 @@ namespace ChangeLogCreator.Test.Tasks
         [Theory]
         [InlineData("not-a-version")]
         [InlineData("1.2.3.4")]
-        public void Run_ignores_tags_that_are_not_a_valid_version(string tagName)
+        public async Task Run_ignores_tags_that_are_not_a_valid_version(string tagName)
         {
             // ARRANGE
             var tags = new GitTag[]
@@ -87,7 +88,7 @@ namespace ChangeLogCreator.Test.Tasks
 
             // ACT
             var changeLog = new ChangeLog();
-            sut.Run(changeLog);
+            await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.Empty(changeLog.Versions);
@@ -101,7 +102,7 @@ namespace ChangeLogCreator.Test.Tasks
         [InlineData("v4.5.6", "4.5.6")]
         [InlineData("V1.2.3-alpha", "1.2.3-alpha")]
         [InlineData("V4.5.6", "4.5.6")]
-        public void Run_correctly_gets_version_from_tag_name_using_default_configuration(string tagName, string version)
+        public async Task Run_correctly_gets_version_from_tag_name_using_default_configuration(string tagName, string version)
         {
             // ARRANGE
             var tags = new GitTag[]
@@ -118,7 +119,7 @@ namespace ChangeLogCreator.Test.Tasks
 
             // ACT
             var changeLog = new ChangeLog();
-            sut.Run(changeLog);
+            await sut.RunAsync(changeLog);
 
             // ASSERT
             var versionInfo = Assert.Single(changeLog.Versions);
