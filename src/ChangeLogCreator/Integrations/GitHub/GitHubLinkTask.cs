@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace ChangeLogCreator.Integrations.GitHub
         private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;
         private static readonly IReadOnlyList<Regex> s_GitHubReferencePatterns = new[]
         {
-            new Regex("^#(?<id>\\d+)$", s_RegexOptions),
+            new Regex("^((?<owner>[A-Z0-9-_.]+)/(?<repo>[A-Z0-9-_.]+))?#(?<id>\\d+)$", s_RegexOptions),
             new Regex("^GH-(?<id>\\d+)$", s_RegexOptions),
         };
 
@@ -63,10 +64,10 @@ namespace ChangeLogCreator.Integrations.GitHub
 
             foreach (var footer in entry.Footers)
             {
-                if(TryGetReferenceId(footer.Value, out var id))
+                if (TryGetReferenceId(footer.Value, out var owner, out var repo, out var id))
                 {
-                    var uri = await TryGetWebUriAsync(id);
-                    if(uri != null)
+                    var uri = await TryGetWebUriAsync(owner, repo, id);
+                    if (uri != null)
                     {
                         footer.WebUri = uri;
                     }
@@ -91,8 +92,12 @@ namespace ChangeLogCreator.Integrations.GitHub
             }
         }
 
-        private bool TryGetReferenceId(string input, out int id)
+        private bool TryGetReferenceId(string input, [NotNullWhen(true)] out string? owner, [NotNullWhen(true)] out string? repo, out int id)
         {
+            if (m_ProjectInfo == null)
+                throw new InvalidOperationException();
+
+
             // using every pattern, try to get a issue/PR id from the input text
             foreach (var pattern in s_GitHubReferencePatterns)
             {
@@ -101,40 +106,51 @@ namespace ChangeLogCreator.Integrations.GitHub
                 if (match.Success)
                 {
                     var idString = match.Groups["id"].ToString();
-                    if (int.TryParse(idString, out id))
+                    if (Int32.TryParse(idString, out id))
                     {
+                        owner = match.Groups["owner"].Value;
+                        repo = match.Groups["repo"].Value;
+
+                        if (String.IsNullOrEmpty(owner))
+                            owner = m_ProjectInfo.Owner;
+
+                        if (String.IsNullOrEmpty(repo))
+                            repo = m_ProjectInfo.Repository;
+
                         return true;
                     }
                 }
             }
 
             id = -1;
+            owner = null;
+            repo = null;
             return false;
         }
 
 
-        private async Task<Uri?> TryGetWebUriAsync(int id)
+        private async Task<Uri?> TryGetWebUriAsync(string owner, string repo, int id)
         {
             // check if the id is an issue
-            var uri = await TryGetIssueWebUriAsync(id);
+            var uri = await TryGetIssueWebUriAsync(owner, repo, id);
 
             // if it is not an issue, check if it is a Pull Request Id
             if (uri == null)
             {
-                uri = await TryGetPullRequestWebUriAsync(id);
+                uri = await TryGetPullRequestWebUriAsync(owner, repo, id);
             }
 
             return uri;
         }
 
-        private async Task<Uri?> TryGetIssueWebUriAsync(int id)
+        private async Task<Uri?> TryGetIssueWebUriAsync(string owner, string repo, int id)
         {
             if (m_ProjectInfo == null)
                 throw new InvalidOperationException();
 
             try
             {
-                var issue = await m_GitHubClient.Issue.Get(m_ProjectInfo.Owner, m_ProjectInfo.Repository, id);
+                var issue = await m_GitHubClient.Issue.Get(owner, repo, id);
                 return new Uri(issue.HtmlUrl);
             }
             catch (NotFoundException)
@@ -143,14 +159,14 @@ namespace ChangeLogCreator.Integrations.GitHub
             }
         }
 
-        private async Task<Uri?> TryGetPullRequestWebUriAsync(int id)
+        private async Task<Uri?> TryGetPullRequestWebUriAsync(string owner, string repo, int id)
         {
             if (m_ProjectInfo == null)
                 throw new InvalidOperationException();
 
             try
             {
-                var pr = await m_GitHubClient.PullRequest.Get(m_ProjectInfo.Owner, m_ProjectInfo.Repository, id);
+                var pr = await m_GitHubClient.PullRequest.Get(owner, repo, id);
                 return new Uri(pr.HtmlUrl);
             }
             catch (NotFoundException)

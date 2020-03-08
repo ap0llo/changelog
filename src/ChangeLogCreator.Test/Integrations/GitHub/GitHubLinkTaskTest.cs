@@ -144,21 +144,25 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
         }
 
         [Theory]
-        [InlineData("#23", 23)]
-        [InlineData("GH-23", 23)]
-        public async Task Run_adds_issue_links_to_footers(string footerText, int issueNumber)
+        [InlineData("#23", 23, "owner", "repo")]
+        [InlineData("GH-23", 23, "owner", "repo")]
+        [InlineData("anotherOwner/anotherRepo#42", 42, "anotherOwner", "anotherRepo")]
+        [InlineData("another-Owner/another-Repo#42", 42, "another-Owner", "another-Repo")]
+        [InlineData("another.Owner/another.Repo#42", 42, "another.Owner", "another.Repo")]
+        [InlineData("another_Owner/another_Repo#42", 42, "another_Owner", "another_Repo")]
+        public async Task Run_adds_issue_links_to_footers(string footerText, int issueNumber, string owner, string repo)
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
 
             m_GitHubCommitsClientMock
-                .Setup(x => x.Get("owner", "repo", It.IsAny<string>()))
+                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
             m_GitHubIssuesClientMock
-                .Setup(x => x.Get("owner", "repo", issueNumber))
+                .Setup(x => x.Get(owner, repo, issueNumber))
                 .Returns(
                     Task.FromResult<Issue>(new TestGitHubIssue($"https://example.com/issue/{issueNumber}"))
                 );
@@ -172,8 +176,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: "01", footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText),
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), "not-a-reference")
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText)
                     })
                 )
             };
@@ -194,29 +197,33 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
 
             });
 
-            m_GitHubIssuesClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);           
+            m_GitHubIssuesClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
         }
- 
+
         [Theory]
-        [InlineData("#23", 23)]
-        [InlineData("GH-23", 23)]
-        public async Task Run_adds_pull_request_links_to_footers(string footerText, int prNumber)
+        [InlineData("#23", 23, "owner", "repo")]
+        [InlineData("GH-23", 23, "owner", "repo")]
+        [InlineData("anotherOwner/anotherRepo#42", 42, "anotherOwner", "anotherRepo")]
+        [InlineData("another-Owner/another-Repo#42", 42, "another-Owner", "another-Repo")]
+        [InlineData("another.Owner/another.Repo#42", 42, "another.Owner", "another.Repo")]
+        [InlineData("another_Owner/another_Repo#42", 42, "another_Owner", "another_Repo")]
+        public async Task Run_adds_pull_request_links_to_footers(string footerText, int prNumber, string owner, string repo)
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
 
             m_GitHubCommitsClientMock
-                .Setup(x => x.Get("owner", "repo", It.IsAny<string>()))
+                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
             m_GitHubIssuesClientMock
-                .Setup(x => x.Get("owner", "repo", prNumber))
+                .Setup(x => x.Get(owner, repo, prNumber))
                 .ThrowsAsync(new NotFoundException("Message", HttpStatusCode.NotFound));
 
             m_GitHubPullRequestsClient
-                .Setup(x => x.Get("owner", "repo", prNumber))
+                .Setup(x => x.Get(owner, repo, prNumber))
                 .Returns(
                     Task.FromResult<PullRequest>(new TestGitHubPullRequest($"https://example.com/pr/{prNumber}"))
                 );
@@ -231,8 +238,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: "01", footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText),
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), "not-a-reference")
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText)
                     })
                 )
             };
@@ -258,16 +264,69 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
         }
 
         [Theory]
-        [InlineData("#23")]
-        [InlineData("GH-23")]
-        public async Task Run_does_not_add_a_links_to_footers_if_no_issue_or_pull_request_cannot_be_found(string footerText)
+        [InlineData("not-a-reference")]
+        [InlineData("Not a/reference#0")]
+        [InlineData("Not a/reference#xyz")]
+        [InlineData("#xyz")]
+        [InlineData("GH-xyz")]
+        [InlineData("#1 2 3")]
+        [InlineData("GH-1 2 3")]
+        public async Task Run_ignores_footers_which_cannot_be_parsed(string footerText)
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
 
             m_GitHubCommitsClientMock
-                .Setup(x => x.Get("owner", "repo", It.IsAny<string>()))
+                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(
+                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
+                );
+
+            var sut = new GitHubLinkTask(repoMock.Object, m_GithubClientMock.Object);
+
+            var changeLog = new ChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    "1.2.3",
+                    null,
+                    GetChangeLogEntry(summary: "Entry1", commit: "01", footers: new []
+                    {
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), footerText),
+                    })
+                )
+            };
+
+            // ACT 
+            await sut.RunAsync(changeLog);
+
+            // ASSERT
+            var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
+            Assert.All(entries, entry =>
+            {
+                Assert.All(entry.Footers, footer =>
+                {
+                    Assert.Null(footer.WebUri);
+                });
+
+            });
+
+            m_GitHubIssuesClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Never);
+            m_GitHubPullRequestsClient.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData("#23", "owner", "repo")]
+        [InlineData("GH-23", "owner", "repo")]
+        [InlineData("anotherOwner/anotherRepo#23", "anotherOwner", "anotherRepo")]
+        public async Task Run_does_not_add_a_links_to_footers_if_no_issue_or_pull_request_cannot_be_found(string footerText, string owner, string repo)
+        {
+            // ARRANGE
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
+
+            m_GitHubCommitsClientMock
+                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
@@ -289,7 +348,6 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
                     GetChangeLogEntry(summary: "Entry1", commit: "01", footers: new []
                     {
                         new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), footerText),
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), "not-a-reference")
                     })
                 )
             };
@@ -308,8 +366,8 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
 
             });
 
-            m_GitHubIssuesClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
-            m_GitHubPullRequestsClient.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            m_GitHubIssuesClientMock.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
+            m_GitHubPullRequestsClient.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
         }
     }
 }
