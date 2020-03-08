@@ -25,6 +25,8 @@ namespace ChangeLogCreator.Model
 
         public GitId Commit { get; }
 
+        public Uri? CommitWebUri { get; set; }
+
         /// <summary>
         /// Gets all footers (excluding "breaking change" footers)
         /// </summary>

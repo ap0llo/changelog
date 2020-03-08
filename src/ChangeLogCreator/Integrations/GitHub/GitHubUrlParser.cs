@@ -8,15 +8,37 @@ namespace ChangeLogCreator.Integrations.GitHub
         private static readonly char[] s_ScpUrlSplitChars = new[] { ':' };
 
 
-        public static GitHubProjectInfo ParseRemoreUrl(string url)
+        public static GitHubProjectInfo ParseRemoteUrl(string url)
         {
+            if(TryParseRemoteUrl(url, out var projectInfo, out var errorMessage))
+            {
+                return projectInfo;
+            }
+            else
+            {
+                throw new ArgumentException(errorMessage, nameof(url));
+            }
+        }
+
+        public static bool TryParseRemoteUrl(string url, [NotNullWhen(true)]out GitHubProjectInfo? projectInfo) => TryParseRemoteUrl(url, out projectInfo, out var _);
+
+
+        private static bool TryParseRemoteUrl(string url, [NotNullWhen(true)]out GitHubProjectInfo? projectInfo, [NotNullWhen(false)]out string? errorMessage)
+        {
+            projectInfo = null;
+            errorMessage = null;
+
             if (String.IsNullOrWhiteSpace(url))
-                throw new ArgumentException("Value must not be null or empty", nameof(url));
+            {
+                errorMessage = "Value must not be null or empty";
+                return false;
+            }
 
 
             if (!TryParseUrl(url, out var uri))
             {
-                throw new ArgumentException($"Value '{url}' is not a valid uri", nameof(url));
+                errorMessage = $"Value '{url}' is not a valid uri";
+                return false;
             }
 
             switch (uri.Scheme.ToLower())
@@ -29,15 +51,19 @@ namespace ChangeLogCreator.Integrations.GitHub
 
                     var ownerAndRepo = path.Split('/');
                     if (ownerAndRepo.Length != 2)
-                        throw new ArgumentException($"Cannot parse '{url}' as GitHub url", nameof(url));
+                    {
+                        errorMessage = $"Cannot parse '{url}' as GitHub url";
+                        return false;
+                    }
 
-                    return new GitHubProjectInfo(uri.Host, ownerAndRepo[0], ownerAndRepo[1]);
+                    projectInfo = new GitHubProjectInfo(uri.Host, ownerAndRepo[0], ownerAndRepo[1]);
+                    return true;
 
                 default:
-                    throw new ArgumentException($"Cannot parse '{url}' as GitHub url: Unsupported scheme '{uri.Scheme}'", nameof(url));
+                    errorMessage = $"Cannot parse '{url}' as GitHub url: Unsupported scheme '{uri.Scheme}'";
+                    return false;
             }
         }
-
 
         private static bool TryParseUrl(string url, [NotNullWhen(true)]out Uri? uri)
         {
