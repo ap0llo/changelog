@@ -345,6 +345,68 @@ namespace ChangeLogCreator.Test.Tasks
             Approve(changeLog, config);
         }
 
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_14()
+        {
+            // Footers must be included in the output
+        
+            var versionChangeLog = GetSingleVersionChangeLog(
+                "1.2.3",
+                null,
+
+                GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
+                {
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), "Issue #5")
+                }),
+
+                GetChangeLogEntry(scope: "scope2", type: "fix", summary: "A bug was fixed", footers: new[]
+                {
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), "someone@example.com")
+                })
+            );
+
+            var changeLog = new ChangeLog() { versionChangeLog };
+
+            Approve(changeLog);
+        }
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_15()
+        {
+            // if a display name is configured for a footer,
+            // the output must use the display name instead of the footer name
+
+            var config = new ChangeLogConfiguration()
+            {
+                Footers = new[]
+                {
+                    new ChangeLogConfiguration.FooterConfiguration() { Name = "see-also", DisplayName = "See Also" },
+                    new ChangeLogConfiguration.FooterConfiguration() { Name = "reviewed-by", DisplayName = "Reviewed by" }
+                }
+            };
+
+            var versionChangeLog = GetSingleVersionChangeLog(
+                "1.2.3",
+                null,
+
+                GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
+                {
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), "Issue #5")
+                }),
+
+                GetChangeLogEntry(scope: "scope2", type: "fix", summary: "A bug was fixed", footers: new[]
+                {
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), "someone@example.com")
+                })
+            );
+
+            var changeLog = new ChangeLog() { versionChangeLog };
+
+            Approve(changeLog, config);
+        }
+
+
         private void Approve(ChangeLog changeLog, ChangeLogConfiguration? configuration = null)
         {
             var sut = new RenderMarkdownTask(configuration ?? new ChangeLogConfiguration());

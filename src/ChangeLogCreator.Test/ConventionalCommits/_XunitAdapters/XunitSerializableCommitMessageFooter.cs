@@ -32,7 +32,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
         public void Serialize(IXunitSerializationInfo info)
         {
-            info.AddValue(nameof(Value.Name), Value.Name.Key);
+            info.AddValue(nameof(Value.Name), Value.Name.Value);
             info.AddValue(nameof(Value.Value), Value.Value);
         }
     }

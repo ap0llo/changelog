@@ -47,6 +47,9 @@ namespace ChangeLogCreator.Test.Configuration
             yield return TestCase(config => Assert.NotEmpty(config.OutputPath));
 
             yield return TestCase(config => Assert.Null(config.RepositoryPath));    // repository path must be provided through command line parameters
+
+            yield return TestCase(config => Assert.NotNull(config.Footers));
+            yield return TestCase(config => Assert.Empty(config.Footers));
         }
 
         [Theory]
@@ -161,6 +164,30 @@ namespace ChangeLogCreator.Test.Configuration
             // ASSERT
             Assert.NotNull(config.Markdown);
             Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Markdown.Preset);
+        }
+
+        [Fact]
+        public void Footers_can_be_set_in_configuration_file()
+        {
+            // ARRANGE            
+            var footers = new[]
+            {
+                new ChangeLogConfiguration.FooterConfiguration() { Name = "footer1", DisplayName = "DisplayName 1" },
+                new ChangeLogConfiguration.FooterConfiguration() { Name = "footer2", DisplayName = "DisplayName 2" }
+            };
+
+            PrepareConfiguration("footers", footers);
+
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.Equal(footers.Length, config.Footers.Length);
+            for (var i = 0; i < footers.Length; i++)
+            {
+                Assert.Equal(footers[i].Name, config.Footers[i].Name);
+                Assert.Equal(footers[i].DisplayName, config.Footers[i].DisplayName);
+            }
         }
 
 

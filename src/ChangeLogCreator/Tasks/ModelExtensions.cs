@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ChangeLogCreator.Configuration;
+using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Model;
 
 namespace ChangeLogCreator.Tasks
@@ -23,6 +24,24 @@ namespace ChangeLogCreator.Tasks
             var displayName = configuration.Scopes.FirstOrDefault(scope => StringComparer.OrdinalIgnoreCase.Equals(scope.Name, entry.Scope))?.DisplayName;
 
             return !String.IsNullOrWhiteSpace(displayName) ? displayName : entry.Scope;
+        }
+
+        /// <summary>
+        /// Gets the display name for the footer's name.
+        /// </summary>
+        /// <returns>
+        /// Returns the display name for the footer's name as configured in <paramref name="configuration"/>.
+        /// If no display name is configured for the scope, returns the footer name.
+        /// </returns>
+        public static string GetFooterDisplayName(this ChangeLogEntryFooter footer, ChangeLogConfiguration configuration)
+        {
+            var displayName = configuration.Footers
+                .FirstOrDefault(c =>
+                    !String.IsNullOrWhiteSpace(c.Name) &&
+                    new CommitMessageFooterName(c.Name).Equals(footer.Name)
+                )?.DisplayName;
+
+            return !String.IsNullOrWhiteSpace(displayName) ? displayName : footer.Name.Value;
         }
     }
 }

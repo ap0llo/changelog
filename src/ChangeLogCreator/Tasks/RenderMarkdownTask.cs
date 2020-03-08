@@ -256,8 +256,17 @@ namespace ChangeLogCreator.Tasks
                 block.Add(new MdParagraph(paragraph));
             }
 
-            // add additional information (
-            block.AddBulletList().Add(
+            // add additional information
+            var footerList = block.AddBulletList();
+
+            foreach(var footer in entry.Footers)
+            {
+                footerList.Add(
+                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", footer.Value)
+                );
+
+            }
+            footerList.Add(
                 new MdListItem("Commit: ", new MdCodeSpan(entry.Commit.Id))
             );
 

@@ -12,10 +12,10 @@ namespace ChangeLogCreator.ConventionalCommits
         public static readonly CommitMessageFooterName BreakingChange = new CommitMessageFooterName(s_BREAKINGCHANGE);
 
 
-        public string Key { get; }
+        public string Value { get; }
 
 
-        public bool IsBreakingChange => Key == s_BREAKINGCHANGE || StringComparer.OrdinalIgnoreCase.Equals(Key, "breaking-change");
+        public bool IsBreakingChange => Value == s_BREAKINGCHANGE || StringComparer.OrdinalIgnoreCase.Equals(Value, "breaking-change");
 
 
         public CommitMessageFooterName(string key)
@@ -23,7 +23,7 @@ namespace ChangeLogCreator.ConventionalCommits
             if (String.IsNullOrWhiteSpace(key))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(key));
 
-            Key = key;
+            Value = key;
         }
 
 
@@ -31,12 +31,12 @@ namespace ChangeLogCreator.ConventionalCommits
 
         public override int GetHashCode()
         {
-            if (Key == s_BREAKINGCHANGE)
+            if (Value == s_BREAKINGCHANGE)
             {
                 return StringComparer.OrdinalIgnoreCase.GetHashCode("breaking-change");
             }
 
-            return StringComparer.OrdinalIgnoreCase.GetHashCode(Key);
+            return StringComparer.OrdinalIgnoreCase.GetHashCode(Value);
         }
 
         public override bool Equals(object? obj) => obj is CommitMessageFooterName other && Equals(other);
@@ -44,10 +44,10 @@ namespace ChangeLogCreator.ConventionalCommits
         public bool Equals(CommitMessageFooterName other)
         {
             return IsBreakingChange && other.IsBreakingChange ||
-                   StringComparer.OrdinalIgnoreCase.Equals(Key, other.Key);
+                   StringComparer.OrdinalIgnoreCase.Equals(Value, other.Value);
         }
 
-        public override string ToString() => Key;
+        public override string ToString() => Value;
 
         public static bool operator ==(CommitMessageFooterName left, CommitMessageFooterName right) => left.Equals(right);
 

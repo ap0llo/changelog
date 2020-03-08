@@ -24,6 +24,14 @@ namespace ChangeLogCreator.Configuration
         }
 
 
+        public class FooterConfiguration
+        {
+            public string? Name { get; set; }
+
+            public string? DisplayName { get; set; }
+        }
+
+
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
 
         public MarkdownConfiguration Markdown { get; set; } = new MarkdownConfiguration();
@@ -33,6 +41,9 @@ namespace ChangeLogCreator.Configuration
         public string OutputPath { get; set; } = "";
 
         public string RepositoryPath { get; set; } = null!;
+
+
+        public FooterConfiguration[] Footers { get; set; } = Array.Empty<FooterConfiguration>();
 
 
         public string GetFullOutputPath()

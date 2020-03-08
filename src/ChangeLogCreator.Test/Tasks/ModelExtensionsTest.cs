@@ -1,4 +1,6 @@
 ﻿using ChangeLogCreator.Configuration;
+using ChangeLogCreator.ConventionalCommits;
+using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
 using Xunit;
 
@@ -90,5 +92,80 @@ namespace ChangeLogCreator.Test.Tasks
             // ASSERT
             Assert.Equal("someScopeOther", displayName);
         }
+
+
+        [Theory]
+        [InlineData("footerName", "footerName")]        
+        [InlineData("FOOTERNAME", "footerName")]    // Scope must be compared case-insensitive        
+        [InlineData("footerName", "FOOTERNAME")]    // Scope must be compared case-insensitive            
+        public void GetFooterDisplayName_returns_expected_display_name(string configuredFooter, string footerName)
+        {
+            // ARRANGE
+            var configuration = new ChangeLogConfiguration()
+            {
+                Footers = new[]
+                {
+                    new ChangeLogConfiguration.FooterConfiguration() { Name = configuredFooter, DisplayName = "Footer Display Name" }
+                }
+            };
+
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), "Irrelevant");
+
+            // ACT
+            var displayName = footer.GetFooterDisplayName(configuration);
+
+            // ASSERT
+            Assert.Equal("Footer Display Name", displayName);
+        }
+
+
+        [Fact]
+        public void GetFooterDisplayName_returns_footer_name_if_no_display_name_is_configured()
+        {
+            // ARRANGE
+            var footerName = "footerName";
+            var configuration = new ChangeLogConfiguration()
+            {
+                Footers = new[]
+                {
+                    new ChangeLogConfiguration.FooterConfiguration() { Name = "someOtherFooter", DisplayName = "Footer Display Name" }
+                }
+            };
+
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), "Irrelevant");
+
+            // ACT
+            var displayName = footer.GetFooterDisplayName(configuration);
+
+            // ASSERT
+            Assert.Equal(footerName, displayName);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        [InlineData(null)]
+        public void GetFooterDisplayName_returns_footer_name_if_display_name_is_empty(string configuredDisplayName)
+        {
+            // ARRANGE
+            var footerName = "footerName";
+            var configuration = new ChangeLogConfiguration()
+            {
+                Footers = new[]
+                {
+                    new ChangeLogConfiguration.FooterConfiguration() { Name = footerName, DisplayName = configuredDisplayName }
+                }
+            };
+
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), "Irrelevant");
+
+            // ACT
+            var displayName = footer.GetFooterDisplayName(configuration);
+
+            // ASSERT
+            Assert.Equal(footerName, displayName);
+        }
+
     }
 }

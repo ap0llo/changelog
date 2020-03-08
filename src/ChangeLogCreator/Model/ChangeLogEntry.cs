@@ -74,12 +74,12 @@ namespace ChangeLogCreator.Model
         public static ChangeLogEntry FromCommitMessage(GitCommit commit, CommitMessage commitMessage)
         {            
             var breakingChangeDescriptions = commitMessage.Footers
-                .Where(x => x.Name == CommitMessageFooterName.BreakingChange)
+                .Where(x => x.Name.IsBreakingChange)
                 .Select(x => x.Value)
                 .ToArray();
 
             var footers = commitMessage.Footers
-                .Where(x => x.Name != CommitMessageFooterName.BreakingChange)
+                .Where(x => !x.Name.IsBreakingChange)
                 .Select(ChangeLogEntryFooter.FromCommitMessageFooter)
                 .ToArray();
 

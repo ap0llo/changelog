@@ -1,0 +1,23 @@
+﻿# <a id="changelog-heading-root"></a> Change Log
+
+## <a id="changelog-heading-123"></a> 1.2.3
+
+### <a id="changelog-heading-123-features"></a> New Features
+
+- [**scope1:** Some change](#changelog-heading-0003E8)
+
+### <a id="changelog-heading-123-bugfixes"></a> Bug Fixes
+
+- [**scope2:** A bug was fixed](#changelog-heading-00044C)
+
+### <a id="changelog-heading-123-details"></a> Details
+
+#### <a id="changelog-heading-0003E8"></a> **scope1:** Some change
+
+- See Also: Issue \#5
+- Commit: `0003E8`
+
+#### <a id="changelog-heading-00044C"></a> **scope2:** A bug was fixed
+
+- Reviewed by: someone@example.com
+- Commit: `00044C`

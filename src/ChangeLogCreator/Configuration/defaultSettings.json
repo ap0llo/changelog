@@ -11,6 +11,16 @@
       //  { "name":  "myScope", "displayName":  "Scope Display Name" }
     ],
 
+    // Configuration for Conventional commit footers.
+    "footers": [
+      // By default, all footers are included unchanged from the commit messages in the output
+      // Using this setting, the display name of a footer can be specified.
+      // If set, the changelog will use the display name instead of the scope's name
+      // 
+      // Example:
+      //  { "name":  "see-also", "displayName":  "See Also" }
+    ],
+
     // Configuration specific to the Markdown output
     "markdown": {
 
