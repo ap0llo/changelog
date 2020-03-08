@@ -36,7 +36,7 @@ namespace ChangeLogCreator.ConventionalCommits
             Reset();
 
             // parse key
-            var key = ParseKey();
+            var key = ParseName();
 
             // remaining tokens are the description
             var descriptionStartToken = Current;
@@ -47,8 +47,7 @@ namespace ChangeLogCreator.ConventionalCommits
             }
             var footerDescription = desciptionBuilder.ToString();
 
-
-            if (String.IsNullOrWhiteSpace(footerDescription))
+            if (String.IsNullOrWhiteSpace(footerDescription) || footerDescription.Trim() == "#")
                 throw new ParserException(descriptionStartToken, "Footer description must not be empty");
 
             // make sure all input was parsed
@@ -64,7 +63,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
             try
             {
-                ParseKey();
+                ParseName();
                 return true;
             }
             catch (ParserException)
@@ -74,7 +73,7 @@ namespace ChangeLogCreator.ConventionalCommits
 
         }
 
-        private CommitMessageFooterName ParseKey()
+        private CommitMessageFooterName ParseName()
         {
             // Footers consist of a Key and a Description separated by either ": " or " #".
             // The footer key must not contain a space with one exception: "BREAKING CHANGE" is a valid key, too.
@@ -121,7 +120,9 @@ namespace ChangeLogCreator.ConventionalCommits
                     else
                     {
                         MatchToken(FooterTokenKind.Space);
-                        MatchToken(FooterTokenKind.Hash);
+
+                        if (!TestToken(FooterTokenKind.Hash))
+                            throw new UnexpectedTokenException<FooterToken, FooterTokenKind>(FooterTokenKind.Hash, Current);
                     }
 
                     return CommitMessageFooterName.BreakingChange;
@@ -134,7 +135,8 @@ namespace ChangeLogCreator.ConventionalCommits
                     //    |       |
                     //    +-------+-------- already matched
                     //
-                    MatchToken(FooterTokenKind.Hash);
+                    if(!TestToken(FooterTokenKind.Hash))
+                        throw new UnexpectedTokenException<FooterToken, FooterTokenKind>(FooterTokenKind.Hash, Current);
 
                     return new CommitMessageFooterName(typeToken.Value!);
                 }

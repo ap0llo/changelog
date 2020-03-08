@@ -23,13 +23,14 @@ namespace ChangeLogCreator.Test.ConventionalCommits
             }
 
             yield return TestCase("key: value", new CommitMessageFooter(new CommitMessageFooterName("key"), "value"));
-            yield return TestCase("key #value", new CommitMessageFooter(new CommitMessageFooterName("key"), "value"));
+            yield return TestCase("key #value", new CommitMessageFooter(new CommitMessageFooterName("key"), "#value"));
             yield return TestCase("key: value: with a colon", new CommitMessageFooter(new CommitMessageFooterName("key"), "value: with a colon"));
             yield return TestCase("key: value# with a hash", new CommitMessageFooter(new CommitMessageFooterName("key"), "value# with a hash"));
+            yield return TestCase("closes #23", new CommitMessageFooter(new CommitMessageFooterName("closes"), "#23"));
             yield return TestCase("breaking-change: change description", new CommitMessageFooter(new CommitMessageFooterName("breaking-change"), "change description"));
-            yield return TestCase("breaking-change #change description", new CommitMessageFooter(new CommitMessageFooterName("breaking-change"), "change description"));
+            yield return TestCase("breaking-change #change description", new CommitMessageFooter(new CommitMessageFooterName("breaking-change"), "#change description"));
             yield return TestCase("BREAKING CHANGE: change description", new CommitMessageFooter(new CommitMessageFooterName("BREAKING CHANGE"), "change description"));
-            yield return TestCase("BREAKING CHANGE #change description", new CommitMessageFooter(new CommitMessageFooterName("BREAKING CHANGE"), "change description"));
+            yield return TestCase("BREAKING CHANGE #change description", new CommitMessageFooter(new CommitMessageFooterName("BREAKING CHANGE"), "#change description"));
         }
 
         [Theory]

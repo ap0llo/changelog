@@ -184,9 +184,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
             i = 26;
             foreach (var footerType in new[] { "footer-type", "BREAKING CHANGE", "BREAKING-CHANGE" })
             {
-                foreach (var separator in new[] { ": ", " #" })
-                {
-                    yield return MultiLineTestCase(
+                yield return MultiLineTestCase(
                         $"T{i++:00}",
                         new CommitMessage(
                             header: new CommitMessageHeader(
@@ -203,9 +201,29 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                         ),
                         "type: Description",
                         "",
-                        $"{footerType}{separator}Footer Description"
+                        $"{footerType}: Footer Description"
                     );
-                }
+
+                    yield return MultiLineTestCase(
+                        $"T{i++:00}",
+                        new CommitMessage(
+                            header: new CommitMessageHeader(
+                                type: new CommitType("type"),
+                                description: "Description",
+                                scope: null,
+                                isBreakingChange: false
+                            ),
+                            body: Array.Empty<string>(),
+                            footers: new[]
+                            {
+                                new CommitMessageFooter(name: new CommitMessageFooterName(footerType), value: "#Footer Description")
+                            }
+                        ),
+                        "type: Description",
+                        "",
+                        $"{footerType} #Footer Description"
+                    );
+
             }
 
 
@@ -222,7 +240,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
                     footers: new[]
                     {
                         new CommitMessageFooter(name: new CommitMessageFooterName("Footer1"), value: "Footer Description1"),
-                        new CommitMessageFooter(name: new CommitMessageFooterName("Footer2"), value: "Footer Description2")
+                        new CommitMessageFooter(name: new CommitMessageFooterName("Footer2"), value: "#Footer Description2")
                     }
                 ),
                 "type: Description",
@@ -330,8 +348,8 @@ namespace ChangeLogCreator.Test.ConventionalCommits
             yield return TestCase($"T13", lineNumber: 3, columnNumber: 18, $"type(scope): Description\r\n\r\nBREAKING CHANGE: ");
             yield return TestCase($"T14", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter: \t");
             yield return TestCase($"T15", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter:  ");
-            yield return TestCase($"T16", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter # ");
-            yield return TestCase($"T17", lineNumber: 3, columnNumber: 18, $"type(scope): Description\r\n\r\nBREAKING CHANGE #\t");
+            yield return TestCase($"T16", lineNumber: 3, columnNumber: 8, $"type(scope): Description\r\n\r\nFooter # ");
+            yield return TestCase($"T17", lineNumber: 3, columnNumber: 17, $"type(scope): Description\r\n\r\nBREAKING CHANGE #\t");
 
             // multiple blank lines between header and body
             yield return MultiLineTestCase(
@@ -367,7 +385,7 @@ namespace ChangeLogCreator.Test.ConventionalCommits
 
             yield return MultiLineTestCase(
                 "T21",
-                lineNumber: 3, columnNumber: 9,
+                lineNumber: 3, columnNumber: 8,
                 "type: Description",
                 "",
                 "Footer #"
