@@ -259,15 +259,22 @@ namespace ChangeLogCreator.Tasks
             // add additional information
             var footerList = block.AddBulletList();
 
-            foreach(var footer in entry.Footers)
+            foreach(var footer in entry.Footers)  
             {
                 footerList.Add(
                     new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", footer.Value)
                 );
 
             }
+            //TODO: Move this to the model class (an "implicit footer)
+            MdSpan commitText = new MdCodeSpan(entry.Commit.Id);
+            if(entry.CommitWebUri != null)
+            {
+                commitText = new MdLinkSpan(commitText, entry.CommitWebUri);
+            }
+
             footerList.Add(
-                new MdListItem("Commit: ", new MdCodeSpan(entry.Commit.Id))
+                new MdListItem("Commit: ", commitText)
             );
 
             return block;

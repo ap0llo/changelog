@@ -1,4 +1,5 @@
-﻿using ApprovalTests;
+﻿using System;
+using ApprovalTests;
 using ApprovalTests.Reporters;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.ConventionalCommits;
@@ -406,6 +407,21 @@ namespace ChangeLogCreator.Test.Tasks
             Approve(changeLog, config);
         }
 
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_16()
+        {
+            // if an entry's CommitWebUri is set, the link must be included in the output
+
+            var entry = GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change");
+            entry.CommitWebUri = new Uri("http://example.com/some-link");
+
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", null, entry);
+
+            var changeLog = new ChangeLog() { versionChangeLog };
+
+            Approve(changeLog);
+        }
 
         private void Approve(ChangeLog changeLog, ChangeLogConfiguration? configuration = null)
         {
