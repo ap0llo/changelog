@@ -423,6 +423,23 @@ namespace ChangeLogCreator.Test.Tasks
             Approve(changeLog);
         }
 
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_17()
+        {
+            // if an footer's WebUri is set, the link must be included in the output
+
+            var entry = GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
+            {
+                new ChangeLogEntryFooter(new CommitMessageFooterName("see-also"), "Link") { WebUri = new Uri("http://example.com") }
+            });
+            
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", null, entry);
+
+            var changeLog = new ChangeLog() { versionChangeLog };
+
+            Approve(changeLog);
+        }
+
         private void Approve(ChangeLog changeLog, ChangeLogConfiguration? configuration = null)
         {
             var sut = new RenderMarkdownTask(configuration ?? new ChangeLogConfiguration());

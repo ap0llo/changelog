@@ -1,0 +1,8 @@
+﻿# <a id="changelog-heading-root"></a> Change Log
+
+## <a id="changelog-heading-123"></a> 1.2.3
+
+#### <a id="changelog-heading-0003E8"></a> **scope1:** Some change
+
+- see\-also: [Link](http://example.com/)
+- Commit: `0003E8`

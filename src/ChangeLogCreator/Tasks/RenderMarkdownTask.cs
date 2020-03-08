@@ -261,8 +261,13 @@ namespace ChangeLogCreator.Tasks
 
             foreach(var footer in entry.Footers)  
             {
+                MdSpan text = footer.Value;
+                if(footer.WebUri != null)
+                {
+                    text = new MdLinkSpan(text, footer.WebUri);
+                }
                 footerList.Add(
-                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", footer.Value)
+                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", text)
                 );
 
             }
