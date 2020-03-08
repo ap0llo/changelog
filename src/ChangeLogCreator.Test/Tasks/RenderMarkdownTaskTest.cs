@@ -208,9 +208,9 @@ namespace ChangeLogCreator.Test.Tasks
                 GetChangeLogEntry(
                     type: "fix",
                     summary: "A breaking bugfix",
-                    footers: new[]
+                    breakingChangeDescriptions: new[]
                     {
-                        new CommitMessageFooter(new CommitMessageFooterName("Breaking-Change"), "Description of breaking change")
+                        "Description of breaking change"
                     })
             );
 
@@ -238,9 +238,9 @@ namespace ChangeLogCreator.Test.Tasks
                         "Changelog entry body Line1\r\nLine2",
                         "Changelog entry body Line3\r\nLine4",
                     },
-                    footers: new[]
+                    breakingChangeDescriptions: new[]
                     {
-                        new CommitMessageFooter(new CommitMessageFooterName("Breaking-Change"), "Description of breaking change")
+                        "Description of breaking change"
                     })
             );
 
@@ -275,10 +275,10 @@ namespace ChangeLogCreator.Test.Tasks
                 GetChangeLogEntry(
                     type: "fix",
                     summary: "A breaking bugfix",
-                    footers: new[]
+                    breakingChangeDescriptions: new[]
                     {
-                        new CommitMessageFooter(new CommitMessageFooterName("Breaking-Change"), "Description of breaking change"),
-                        new CommitMessageFooter(new CommitMessageFooterName("BREAKING CHANGE"), "Another breaking change")
+                        "Description of breaking change",
+                        "Another breaking change"
                     })
             );
 
@@ -306,10 +306,10 @@ namespace ChangeLogCreator.Test.Tasks
                         "Changelog entry body Line1\r\nLine2",
                         "Changelog entry body Line3\r\nLine4",
                     },
-                    footers: new[]
+                    breakingChangeDescriptions: new[]
                     {
-                        new CommitMessageFooter(new CommitMessageFooterName("Breaking-Change"), "Description of breaking change"),
-                        new CommitMessageFooter(new CommitMessageFooterName("BREAKING CHANGE"), "Another breaking change")
+                        "Description of breaking change",
+                        "Another breaking change"
                     }));
 
             var changeLog = new ChangeLog() { versionChangeLog };

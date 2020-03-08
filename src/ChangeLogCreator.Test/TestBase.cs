@@ -21,7 +21,7 @@ namespace ChangeLogCreator.Test
                     commitId == null ? NextGitId() : new GitId(commitId)
                 ));
 
-            foreach(var entry in entries)
+            foreach (var entry in entries)
             {
                 changelog.Add(entry);
             }
@@ -36,7 +36,8 @@ namespace ChangeLogCreator.Test
             bool? isBreakingChange = null,
             string? summary = null,
             IReadOnlyList<string>? body = null,
-            IReadOnlyList<CommitMessageFooter>? footers= null,
+            IReadOnlyList<ChangeLogEntryFooter>? footers = null,
+            IReadOnlyList<string>? breakingChangeDescriptions = null,
             string? commit = null)
         {
 
@@ -47,7 +48,8 @@ namespace ChangeLogCreator.Test
                 isBreakingChange: isBreakingChange ?? false,
                 summary: summary ?? "Example Summary",
                 body: body ?? Array.Empty<string>(),
-                footers: footers ?? Array.Empty<CommitMessageFooter>(),
+                footers: footers ?? Array.Empty<ChangeLogEntryFooter>(),
+                breakingChangeDescriptions: breakingChangeDescriptions ?? Array.Empty<string>(),
                 commit: commit == null ? NextGitId() : new GitId(commit));
         }
 
@@ -55,13 +57,33 @@ namespace ChangeLogCreator.Test
         protected GitCommit GetGitCommit(string? id = null, string? commitMessage = null)
         {
             return new GitCommit(
-                id: id == null ? NextGitId(): new GitId(id),
+                id: id == null ? NextGitId() : new GitId(id),
                 commitMessage: commitMessage ?? "",
                 date: new DateTime(),
                 author: new GitAuthor("Someone", "someone@example.com")
             );
         }
 
+        protected CommitMessage GetCommitMessage(
+            string? type = null,
+            string? scope = null,
+            string? description = null,
+            bool? isBreakingChange = null,
+            IReadOnlyList<string>? body = null,
+            IReadOnlyList<CommitMessageFooter>? footers = null)
+        {
+            var header = new CommitMessageHeader(
+                type == null ? CommitType.Feature : new CommitType(type),
+                description ?? "Example Summary",
+                scope,
+                isBreakingChange ?? false);
+
+            return new CommitMessage(
+                header,
+                body ?? Array.Empty<string>(),
+                footers ?? Array.Empty<CommitMessageFooter>()
+            );
+        }
 
         protected DateTime NextCommitDate()
         {

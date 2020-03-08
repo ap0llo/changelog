@@ -6,7 +6,6 @@ using ChangeLogCreator.Git;
 
 namespace ChangeLogCreator.Model
 {
-
     public class ChangeLogEntry
     {
         public DateTime Date { get; }
@@ -26,7 +25,10 @@ namespace ChangeLogCreator.Model
 
         public GitId Commit { get; }
 
-        public IReadOnlyList<CommitMessageFooter> AllFooters { get; }
+        /// <summary>
+        /// Gets all footers (excluding "breaking change" footers)
+        /// </summary>
+        public IReadOnlyList<ChangeLogEntryFooter> Footers { get; }
 
         /// <summary>
         /// Gets the description of breaking changes of this changelog entry.        
@@ -36,7 +38,7 @@ namespace ChangeLogCreator.Model
         /// If no description were provided but the entry changelog entry was marked as a breaking change,
         /// a empty enumerable is returned.
         /// </remarks>
-        public IEnumerable<string> BreakingChangeDescriptions => AllFooters.Where(x => x.Name == CommitMessageFooterName.BreakingChange).Select(x => x.Value);
+        public IEnumerable<string> BreakingChangeDescriptions { get; }
 
 
         public ChangeLogEntry(
@@ -46,21 +48,55 @@ namespace ChangeLogCreator.Model
             bool isBreakingChange,
             string summary,
             IReadOnlyList<string> body,
-            IReadOnlyList<CommitMessageFooter> footers,
+            IReadOnlyList<ChangeLogEntryFooter> footers,
+            IReadOnlyList<string> breakingChangeDescriptions,
             GitId commit)
         {
             if (footers is null)
                 throw new ArgumentNullException(nameof(footers));
 
+            if(breakingChangeDescriptions is null)
+                throw new ArgumentNullException(nameof(breakingChangeDescriptions));
+
             Date = date;
             Type = type;
             Scope = scope;
-            ContainsBreakingChanges = isBreakingChange || footers.Any(x => x.Name == CommitMessageFooterName.BreakingChange);
+            ContainsBreakingChanges = isBreakingChange || breakingChangeDescriptions.Count > 0;
             Summary = summary ?? throw new ArgumentNullException(nameof(summary));
             Body = body ?? throw new ArgumentNullException(nameof(body));
-            AllFooters = footers;
+            Footers = footers;
+            BreakingChangeDescriptions = breakingChangeDescriptions;
             Commit = commit;
-        }        
+            
+            
+        }
+
+        public static ChangeLogEntry FromCommitMessage(GitCommit commit, CommitMessage commitMessage)
+        {            
+            var breakingChangeDescriptions = commitMessage.Footers
+                .Where(x => x.Name == CommitMessageFooterName.BreakingChange)
+                .Select(x => x.Value)
+                .ToArray();
+
+            var footers = commitMessage.Footers
+                .Where(x => x.Name != CommitMessageFooterName.BreakingChange)
+                .Select(ChangeLogEntryFooter.FromCommitMessageFooter)
+                .ToArray();
+
+            return new ChangeLogEntry(
+                date: commit.Date,
+                type: commitMessage.Header.Type,
+                scope: commitMessage.Header.Scope,
+                isBreakingChange: commitMessage.Header.IsBreakingChange,
+                summary: commitMessage.Header.Description,
+                body: commitMessage.Body,
+                footers: footers,
+                breakingChangeDescriptions: breakingChangeDescriptions,
+                commit: commit.Id
+            );
+        }
+
+
     }
 }
 

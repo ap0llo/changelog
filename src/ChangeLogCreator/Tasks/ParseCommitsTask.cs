@@ -45,7 +45,7 @@ namespace ChangeLogCreator.Tasks
             try
             {
                 var parsed = CommitMessageParser.Parse(commit.CommitMessage);
-                entry = ToChangeLogEntry(commit, parsed);
+                entry = ChangeLogEntry.FromCommitMessage(commit, parsed);
                 return true;
             }
             catch (ParserException)
@@ -55,19 +55,6 @@ namespace ChangeLogCreator.Tasks
                 return false;
             }
         }
-
-        private ChangeLogEntry ToChangeLogEntry(GitCommit commit, CommitMessage commitMessage)
-        {
-            return new ChangeLogEntry(
-                date: commit.Date,
-                type: commitMessage.Header.Type,
-                scope: commitMessage.Header.Scope,
-                isBreakingChange: commitMessage.Header.IsBreakingChange,
-                summary: commitMessage.Header.Description,
-                body: commitMessage.Body,
-                footers: commitMessage.Footers,
-                commit: commit.Id
-            );
-        }
+       
     }
 }

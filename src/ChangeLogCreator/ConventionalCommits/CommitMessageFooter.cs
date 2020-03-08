@@ -23,14 +23,14 @@ namespace ChangeLogCreator.ConventionalCommits
         /// <summary>
         /// Initializes a new instance of <see cref="CommitMessageFooter"/>.
         /// </summary>
-        /// <param name="key">The footer's key (see <see cref="Name"/> property).</param>
+        /// <param name="name">The footer's key (see <see cref="Name"/> property).</param>
         /// <param name="value">The footer's value (see <see cref="Value"/> property).</param>
-        public CommitMessageFooter(CommitMessageFooterName key, string value)
+        public CommitMessageFooter(CommitMessageFooterName name, string value)
         {
             if (String.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(value));
 
-            Name = key;
+            Name = name;
             Value = value;
         }
 
