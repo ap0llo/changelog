@@ -74,14 +74,8 @@ namespace ChangeLogCreator
         {
             if (configuration.Integrations.Provider == ChangeLogConfiguration.IntegrationProvider.GitHub)
             {
-                var githubClient = new GitHubClient(new ProductHeaderValue("changelog-creator")); //TODO: Use a less-generic name.
-
-                if (!String.IsNullOrEmpty(configuration.Integrations.GitHub.AccessToken))
-                {
-                    githubClient.Credentials = new Credentials(configuration.Integrations.GitHub.AccessToken);
-                }
-
-                pipeline = pipeline.AddTask(new GitHubLinkTask(gitRepository, githubClient));
+                var githubClientFactory = new GitHubClientFactory(configuration);
+                pipeline = pipeline.AddTask(new GitHubLinkTask(gitRepository, githubClientFactory));
             }
 
             return pipeline;

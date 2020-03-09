@@ -44,6 +44,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
         private readonly Mock<IIssuesClient> m_GitHubIssuesClientMock;
         private readonly Mock<IPullRequestsClient> m_GitHubPullRequestsClient;
         private readonly Mock<IMiscellaneousClient> m_GitHubMiscellaneousClientMock;
+        private readonly Mock<IGitHubClientFactory> m_GitHubClientFactoryMock;
 
         public GitHubLinkTaskTest()
         {
@@ -66,6 +67,9 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             m_GithubClientMock.Setup(x => x.Issue).Returns(m_GitHubIssuesClientMock.Object);
             m_GithubClientMock.Setup(x => x.PullRequest).Returns(m_GitHubPullRequestsClient.Object);
             m_GithubClientMock.Setup(x => x.Miscellaneous).Returns(m_GitHubMiscellaneousClientMock.Object);
+
+            m_GitHubClientFactoryMock = new Mock<IGitHubClientFactory>(MockBehavior.Strict);
+            m_GitHubClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(m_GithubClientMock.Object);
         }
 
         [Fact]
@@ -75,13 +79,14 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(Enumerable.Empty<GitRemote>());
 
-            var sut = new GitHubLinkTask(repoMock.Object, m_GithubClientMock.Object);
+            var sut = new GitHubLinkTask(repoMock.Object, m_GitHubClientFactoryMock.Object);
             var changeLog = new ChangeLog();
 
             // ACT 
             await sut.RunAsync(changeLog);
 
             // ASSERT
+            m_GitHubClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
 
         [Theory]
@@ -93,13 +98,14 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", url) });
 
-            var sut = new GitHubLinkTask(repoMock.Object, m_GithubClientMock.Object);
+            var sut = new GitHubLinkTask(repoMock.Object, m_GitHubClientFactoryMock.Object);
             var changeLog = new ChangeLog();
 
             // ACT 
             await sut.RunAsync(changeLog);
 
             // ASSERT
+            m_GitHubClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -115,7 +121,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
 
-            var sut = new GitHubLinkTask(repoMock.Object, m_GithubClientMock.Object);
+            var sut = new GitHubLinkTask(repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ChangeLog()
             {
@@ -174,7 +180,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
                     Task.FromResult<Issue>(new TestGitHubIssue($"https://example.com/issue/{issueNumber}"))
                 );
 
-            var sut = new GitHubLinkTask(repoMock.Object, m_GithubClientMock.Object);
+            var sut = new GitHubLinkTask(repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ChangeLog()
             {
@@ -236,7 +242,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
                 );
 
 
-            var sut = new GitHubLinkTask(repoMock.Object, m_GithubClientMock.Object);
+            var sut = new GitHubLinkTask(repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ChangeLog()
             {
@@ -290,7 +296,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
 
-            var sut = new GitHubLinkTask(repoMock.Object, m_GithubClientMock.Object);
+            var sut = new GitHubLinkTask(repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ChangeLog()
             {
@@ -345,7 +351,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
                 .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
                 .ThrowsAsync(new NotFoundException("Not found", HttpStatusCode.NotFound));
 
-            var sut = new GitHubLinkTask(repoMock.Object, m_GithubClientMock.Object);
+            var sut = new GitHubLinkTask(repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ChangeLog()
             {
@@ -376,5 +382,27 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             m_GitHubIssuesClientMock.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
             m_GitHubPullRequestsClient.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
         }
+
+
+        [Theory]
+        [InlineData("github.com")]
+        [InlineData("github.example.com")]
+        [InlineData("some-domain.com")]
+        public async Task Run_creates_client_through_client_factory(string hostName)
+        {
+            // ARRANGE
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", $"http://{hostName}/owner/repo.git") });
+
+            var sut = new GitHubLinkTask(repoMock.Object, m_GitHubClientFactoryMock.Object);
+
+            // ACT 
+            await sut.RunAsync(new ChangeLog());
+
+            // ASSERT
+            m_GitHubClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Once);
+            m_GitHubClientFactoryMock.Verify(x => x.CreateClient(hostName), Times.Once);
+        }
+
     }
 }
