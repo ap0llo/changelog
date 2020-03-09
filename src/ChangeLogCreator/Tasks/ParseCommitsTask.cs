@@ -5,22 +5,27 @@ using System.Threading.Tasks;
 using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
+using Microsoft.Extensions.Logging;
 
 namespace ChangeLogCreator.Tasks
 {
     internal sealed class ParseCommitsTask : IChangeLogTask
     {
+        private readonly ILogger<ParseCommitsTask> m_Logger;
         private readonly IGitRepository m_Repository;
 
 
-        public ParseCommitsTask(IGitRepository repository)
+        public ParseCommitsTask(ILogger<ParseCommitsTask> logger, IGitRepository repository)
         {
+            m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
 
         public Task RunAsync(ChangeLog changeLog)
         {
+            m_Logger.LogInformation("Parsing commit messages");
+
             var sortedVersions = changeLog.Versions
                 .OrderByDescending(x => x.Version)
                 .ToArray();
@@ -35,7 +40,10 @@ namespace ChangeLogCreator.Tasks
                 foreach (var commit in commits)
                 {
                     if (TryGetChangeLogEntry(commit, out var entry))
+                    {
+                        m_Logger.LogDebug($"Adding changelog entry for commit '{commit.Id}' to version '{current.Version}'");
                         changeLog[current].Add(entry);
+                    }
                 }
             }
 
@@ -53,11 +61,10 @@ namespace ChangeLogCreator.Tasks
             }
             catch (ParserException)
             {
-                // TODO: Log error
+                m_Logger.LogDebug($"Ignoring commit '{commit.Id}' because the commit message could not be parsed.");
                 entry = default;
                 return false;
             }
         }
-       
     }
 }

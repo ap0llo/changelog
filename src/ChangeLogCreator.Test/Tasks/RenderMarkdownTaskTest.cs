@@ -5,6 +5,7 @@ using ChangeLogCreator.Configuration;
 using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace ChangeLogCreator.Test.Tasks
@@ -443,7 +444,7 @@ namespace ChangeLogCreator.Test.Tasks
 
         private void Approve(ChangeLog changeLog, ChangeLogConfiguration? configuration = null)
         {
-            var sut = new RenderMarkdownTask(configuration ?? new ChangeLogConfiguration());
+            var sut = new RenderMarkdownTask(NullLogger<RenderMarkdownTask>.Instance, configuration ?? new ChangeLogConfiguration());
 
             var doc = sut.GetChangeLogDocument(changeLog);
 

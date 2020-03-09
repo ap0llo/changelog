@@ -24,8 +24,6 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             Assert.Equal(new Uri(expectedBaseAddress), client.Connection.BaseAddress);
         }
 
-
-
         [Fact]
         public void CreateClient_adds_an_access_token_if_token_is_configured()
         {
@@ -45,8 +43,6 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
             Assert.Null(clientConcrete.Credentials.Login);
             Assert.NotNull(clientConcrete.Credentials.Password);
         }
-
-
 
         [Theory]
         [InlineData("")]

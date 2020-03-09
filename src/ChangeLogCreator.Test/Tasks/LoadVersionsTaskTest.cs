@@ -4,6 +4,8 @@ using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NuGet.Versioning;
 using Xunit;
@@ -15,6 +17,8 @@ namespace ChangeLogCreator.Test.Tasks
     /// </summary>
     public class LoadVersionsTaskTest
     {
+        private readonly ILogger<LoadVersionsTask> m_Logger = NullLogger<LoadVersionsTask>.Instance;
+
         [Fact]
         public async Task Run_adds_versions_from_tags()
         {
@@ -28,7 +32,7 @@ namespace ChangeLogCreator.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ChangeLog();
@@ -59,7 +63,7 @@ namespace ChangeLogCreator.Test.Tasks
 
             var config = new ChangeLogConfiguration() { TagPatterns = Array.Empty<string>() };
 
-            var sut = new LoadVersionsTask(config, repoMock.Object);
+            var sut = new LoadVersionsTask(m_Logger, config, repoMock.Object);
 
             // ACT
             var changeLog = new ChangeLog();
@@ -84,7 +88,7 @@ namespace ChangeLogCreator.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ChangeLog();
@@ -115,7 +119,7 @@ namespace ChangeLogCreator.Test.Tasks
 
             var expectedVersion = SemanticVersion.Parse(version);
 
-            var sut = new LoadVersionsTask(ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ChangeLog();

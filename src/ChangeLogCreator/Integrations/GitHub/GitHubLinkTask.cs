@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
+using Microsoft.Extensions.Logging;
 using Octokit;
 
 namespace ChangeLogCreator.Integrations.GitHub
@@ -20,13 +21,15 @@ namespace ChangeLogCreator.Integrations.GitHub
             new Regex("^GH-(?<id>\\d+)$", s_RegexOptions),
         };
 
+        private readonly ILogger<GitHubLinkTask> m_Logger;
         private readonly IGitRepository m_Repository;
         private readonly IGitHubClientFactory m_GitHubClientFactory;
         private readonly GitHubProjectInfo? m_ProjectInfo;
 
         
-        public GitHubLinkTask(IGitRepository repository, IGitHubClientFactory gitHubClientFactory)
+        public GitHubLinkTask(ILogger<GitHubLinkTask> logger, IGitRepository repository, IGitHubClientFactory gitHubClientFactory)
         {
+            m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             m_GitHubClientFactory = gitHubClientFactory ?? throw new ArgumentNullException(nameof(gitHubClientFactory));
 
@@ -34,6 +37,10 @@ namespace ChangeLogCreator.Integrations.GitHub
             if (remote != null && GitHubUrlParser.TryParseRemoteUrl(remote.Url, out var projectInfo))
             {
                 m_ProjectInfo = projectInfo;
+            }
+            else
+            {
+                m_Logger.LogWarning("Failed to determine GitHub project name. Disabling GitHub integration");
             }
         }
 
@@ -43,10 +50,12 @@ namespace ChangeLogCreator.Integrations.GitHub
             if (m_ProjectInfo == null)
                 return;
 
+            m_Logger.LogInformation("Adding GitHub links to changelog");
+
             var githubClient = m_GitHubClientFactory.CreateClient(m_ProjectInfo.Host);
 
             var rateLimit = await githubClient.Miscellaneous.GetRateLimits();
-            Console.WriteLine($"Current rate limit: {rateLimit.Rate.Remaining} requests of {rateLimit.Rate.Limit} remaining");
+            m_Logger.LogDebug($"GitHub rate limit: {rateLimit.Rate.Remaining} requests of {rateLimit.Rate.Limit} remaining");
 
             foreach (var versionChangeLog in changeLog.ChangeLogs)
             {
@@ -60,14 +69,17 @@ namespace ChangeLogCreator.Integrations.GitHub
 
         private async Task ProcessEntryAsync(IGitHubClient githubClient, ChangeLogEntry entry)
         {
-            //TODO: Use Logger
-            Console.WriteLine($"Adding links to entry {entry.Commit}");
+            m_Logger.LogDebug($"Adding links to entry {entry.Commit}");
 
             var webUri = await TryGetWebUriAsync(githubClient, entry.Commit);
 
             if (webUri != null)
             {
                 entry.CommitWebUri = webUri;
+            }
+            else
+            {
+                m_Logger.LogWarning($"Failed to determine web uri for commit '{entry.Commit}'");
             }
 
             foreach (var footer in entry.Footers)
@@ -79,6 +91,10 @@ namespace ChangeLogCreator.Integrations.GitHub
                     {
                         footer.WebUri = uri;
                     }
+                    else
+                    {
+                        m_Logger.LogWarning($"Failed to determine web uri for reference '{owner}/{repo}#{id}'");
+                    }
                 }
             }
         }
@@ -87,6 +103,8 @@ namespace ChangeLogCreator.Integrations.GitHub
         {
             if (m_ProjectInfo == null)
                 throw new InvalidOperationException();
+
+            m_Logger.LogDebug($"Getting web uri for commit '{commitId}'");
 
             try
             {
@@ -137,6 +155,8 @@ namespace ChangeLogCreator.Integrations.GitHub
 
         private async Task<Uri?> TryGetWebUriAsync(IGitHubClient githubClient, string owner, string repo, int id)
         {
+            m_Logger.LogDebug($"Getting web uri for reference '{owner}/{repo}#{id}'");
+
             // check if the id is an issue
             var uri = await TryGetIssueWebUriAsync(githubClient, owner, repo, id);
 

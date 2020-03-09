@@ -5,6 +5,8 @@ using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
 using ChangeLogCreator.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
@@ -12,13 +14,15 @@ namespace ChangeLogCreator.Test.Tasks
 {
     public class ParseCommitsTaskTest : TestBase
     {
+        private readonly ILogger<ParseCommitsTask> m_Logger = NullLogger<ParseCommitsTask>.Instance;
+
         [Fact]
         public async Task Run_does_nothing_for_empty_changelog()
         {
             // ARRANGE
             var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
 
-            var sut = new ParseCommitsTask(repo);
+            var sut = new ParseCommitsTask(m_Logger, repo);
 
             // ACT
             var changelog = new ChangeLog();
@@ -40,7 +44,7 @@ namespace ChangeLogCreator.Test.Tasks
                     GetGitCommit("02", "fix: Some bugfix")
                 });
 
-            var sut = new ParseCommitsTask(repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, repo.Object);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", "01");
             var changelog = new ChangeLog() { versionChangeLog };
@@ -89,7 +93,7 @@ namespace ChangeLogCreator.Test.Tasks
                     GetGitCommit("cd", "fix: Some bugfix" ),
                 });
 
-            var sut = new ParseCommitsTask(repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, repo.Object);
 
             var versionChangeLog1 = GetSingleVersionChangeLog("1.2.3", "01");
             var versionChangeLog2 = GetSingleVersionChangeLog("2.4.5", "02");
@@ -142,7 +146,7 @@ namespace ChangeLogCreator.Test.Tasks
                     GetGitCommit(commitMessage: "Not a conventional commit"),
                 });
 
-            var sut = new ParseCommitsTask(repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, repo.Object);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", "01");
             var changelog = new ChangeLog() { versionChangeLog };

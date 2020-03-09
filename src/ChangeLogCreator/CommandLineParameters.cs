@@ -29,5 +29,8 @@ namespace ChangeLogCreator
         [Option("gitHubAccessToken", Required = false)]
         [ConfigurationValue("changelog:integrations:github:accesstoken")]
         public string? GitHubAccessToken { get; set; }
+
+        [Option("verbose", Required = false, Default = false)]
+        public bool Verbose { get; set; }
     }
 }

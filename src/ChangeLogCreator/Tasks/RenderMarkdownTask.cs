@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Model;
 using Grynwald.MarkdownGenerator;
+using Microsoft.Extensions.Logging;
 
 namespace ChangeLogCreator.Tasks
 {
     internal sealed class RenderMarkdownTask : IChangeLogTask
     {
         private const string s_HeadingIdPrefix = "changelog-heading";
+        private readonly ILogger<RenderMarkdownTask> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;
 
 
@@ -24,8 +26,9 @@ namespace ChangeLogCreator.Tasks
         /// Initializes a new instance of <see cref="RenderMarkdownTask"/>.
         /// </summary>
         /// <param name="outputPath">The file path to save the changelog to.</param>
-        public RenderMarkdownTask(ChangeLogConfiguration configuration)
+        public RenderMarkdownTask(ILogger<RenderMarkdownTask> logger, ChangeLogConfiguration configuration)
         {
+            m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             SerializationOptions = MdSerializationOptions.Presets
@@ -40,10 +43,10 @@ namespace ChangeLogCreator.Tasks
             var document = GetChangeLogDocument(changeLog);
 
             var outputPath = m_Configuration.GetFullOutputPath();
-
             var outputDirectory = Path.GetDirectoryName(outputPath);
             Directory.CreateDirectory(outputDirectory);
 
+            m_Logger.LogInformation($"Saving changelog to '{outputPath}'");
             document.Save(outputPath, SerializationOptions);
 
             return Task.CompletedTask;
@@ -262,10 +265,10 @@ namespace ChangeLogCreator.Tasks
             // add additional information
             var footerList = block.AddBulletList();
 
-            foreach(var footer in entry.Footers)  
+            foreach (var footer in entry.Footers)
             {
                 MdSpan text = footer.Value;
-                if(footer.WebUri != null)
+                if (footer.WebUri != null)
                 {
                     text = new MdLinkSpan(text, footer.WebUri);
                 }
@@ -276,7 +279,7 @@ namespace ChangeLogCreator.Tasks
             }
             //TODO: Move this to the model class (an "implicit footer)
             MdSpan commitText = new MdCodeSpan(entry.Commit.Id);
-            if(entry.CommitWebUri != null)
+            if (entry.CommitWebUri != null)
             {
                 commitText = new MdLinkSpan(commitText, entry.CommitWebUri);
             }

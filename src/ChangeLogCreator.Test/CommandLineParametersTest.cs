@@ -13,6 +13,10 @@ namespace ChangeLogCreator.Test
         {
             foreach (var property in typeof(CommandLineParameters).GetProperties())
             {
+                // the "--verbose" switch has no corresponding configuration setting
+                if (property.Name == nameof(CommandLineParameters.Verbose))
+                    continue;
+
                 yield return new[] { property.Name };
             }
         }

@@ -7,8 +7,10 @@ using Autofac;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Integrations;
+using ChangeLogCreator.Logging;
 using ChangeLogCreator.Tasks;
 using CommandLine;
+using Microsoft.Extensions.Logging;
 
 namespace ChangeLogCreator
 {
@@ -45,11 +47,13 @@ namespace ChangeLogCreator
 
             var configuration = ChangeLogConfigurationLoader.GetConfiguation(commandlineParameters.RepositoryPath, commandlineParameters);
             using (var gitRepository = new GitRepository(configuration.RepositoryPath))
-            {    
+            {
                 var containerBuilder = new ContainerBuilder();
 
                 containerBuilder.RegisterInstance(configuration).SingleInstance();
                 containerBuilder.RegisterInstance(gitRepository).SingleInstance().As<IGitRepository>();
+
+                containerBuilder.RegisterLogging(minimumLogLevel: commandlineParameters.Verbose ? LogLevel.Debug : LogLevel.Information);
 
                 containerBuilder.RegisterType<LoadVersionsTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
