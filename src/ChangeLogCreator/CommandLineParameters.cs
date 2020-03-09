@@ -25,5 +25,9 @@ namespace ChangeLogCreator
             get => String.IsNullOrEmpty(m_OutputPath) ? null : Path.GetFullPath(m_OutputPath);
             set => m_OutputPath = value;
         }
+
+        [Option("gitHubAccessToken", Required = false)]
+        [ConfigurationValue("changelog:integrations:github:accesstoken")]
+        public string? GitHubAccessToken { get; set; }
     }
 }

@@ -43,6 +43,9 @@ namespace ChangeLogCreator.Integrations.GitHub
             if (m_ProjectInfo == null)
                 return;
 
+            var rateLimit = await m_GitHubClient.Miscellaneous.GetRateLimits();
+            Console.WriteLine($"Current rate limit: {rateLimit.Rate.Remaining} requests of {rateLimit.Rate.Limit} remaining");
+
             foreach (var versionChangeLog in changeLog.ChangeLogs)
             {
                 foreach (var entry in versionChangeLog.AllEntries)
@@ -55,6 +58,9 @@ namespace ChangeLogCreator.Integrations.GitHub
 
         private async Task ProcessEntryAsync(ChangeLogEntry entry)
         {
+            //TODO: Use Logger
+            Console.WriteLine($"Adding links to entry {entry.Commit}");
+
             var webUri = await TryGetWebUriAsync(entry.Commit);
 
             if (webUri != null)
@@ -64,7 +70,7 @@ namespace ChangeLogCreator.Integrations.GitHub
 
             foreach (var footer in entry.Footers)
             {
-                if (TryGetReferenceId(footer.Value, out var owner, out var repo, out var id))
+                if (TryParseReference(footer.Value, out var owner, out var repo, out var id))
                 {
                     var uri = await TryGetWebUriAsync(owner, repo, id);
                     if (uri != null)
@@ -92,7 +98,7 @@ namespace ChangeLogCreator.Integrations.GitHub
             }
         }
 
-        private bool TryGetReferenceId(string input, [NotNullWhen(true)] out string? owner, [NotNullWhen(true)] out string? repo, out int id)
+        private bool TryParseReference(string input, [NotNullWhen(true)] out string? owner, [NotNullWhen(true)] out string? repo, out int id)
         {
             if (m_ProjectInfo == null)
                 throw new InvalidOperationException();
@@ -127,7 +133,6 @@ namespace ChangeLogCreator.Integrations.GitHub
             repo = null;
             return false;
         }
-
 
         private async Task<Uri?> TryGetWebUriAsync(string owner, string repo, int id)
         {

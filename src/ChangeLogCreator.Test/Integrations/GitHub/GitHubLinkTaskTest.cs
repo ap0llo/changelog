@@ -43,6 +43,7 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
         private readonly Mock<IRepositoriesClient> m_GitHubRepositoriesClientMock;
         private readonly Mock<IIssuesClient> m_GitHubIssuesClientMock;
         private readonly Mock<IPullRequestsClient> m_GitHubPullRequestsClient;
+        private readonly Mock<IMiscellaneousClient> m_GitHubMiscellaneousClientMock;
 
         public GitHubLinkTaskTest()
         {
@@ -55,10 +56,16 @@ namespace ChangeLogCreator.Test.Integrations.GitHub
 
             m_GitHubPullRequestsClient = new Mock<IPullRequestsClient>(MockBehavior.Strict);
 
+            m_GitHubMiscellaneousClientMock = new Mock<IMiscellaneousClient>(MockBehavior.Strict);
+            m_GitHubMiscellaneousClientMock
+                .Setup(x => x.GetRateLimits())
+                .Returns(Task.FromResult(new MiscellaneousRateLimit(new ResourceRateLimit(), new RateLimit())));
+
             m_GithubClientMock = new Mock<IGitHubClient>(MockBehavior.Strict);
             m_GithubClientMock.Setup(x => x.Repository).Returns(m_GitHubRepositoriesClientMock.Object);
             m_GithubClientMock.Setup(x => x.Issue).Returns(m_GitHubIssuesClientMock.Object);
             m_GithubClientMock.Setup(x => x.PullRequest).Returns(m_GitHubPullRequestsClient.Object);
+            m_GithubClientMock.Setup(x => x.Miscellaneous).Returns(m_GitHubMiscellaneousClientMock.Object);
         }
 
         [Fact]

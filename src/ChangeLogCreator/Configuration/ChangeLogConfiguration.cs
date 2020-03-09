@@ -32,6 +32,25 @@ namespace ChangeLogCreator.Configuration
         }
 
 
+        public enum IntegrationProvider
+        {
+            None = 0,
+            GitHub = 1
+        }
+
+        public class GitHubIntegrationConfiguration
+        {
+            public string? AccessToken { get; set; } = null;
+        }
+
+        public class IntegrationsConfiguration
+        {
+            public IntegrationProvider Provider { get; set; }
+
+            public GitHubIntegrationConfiguration GitHub { get; set; } = new GitHubIntegrationConfiguration();
+        }
+
+
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
 
         public MarkdownConfiguration Markdown { get; set; } = new MarkdownConfiguration();
@@ -42,8 +61,9 @@ namespace ChangeLogCreator.Configuration
 
         public string RepositoryPath { get; set; } = null!;
 
-
         public FooterConfiguration[] Footers { get; set; } = Array.Empty<FooterConfiguration>();
+
+        public IntegrationsConfiguration Integrations { get; set; } = new IntegrationsConfiguration();
 
 
         public string GetFullOutputPath()

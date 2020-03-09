@@ -46,6 +46,24 @@
 
     // Specifies the output path of the changelog.
     // When path is not rooted, it is interpreted as relative to the repository root path
-    "outputPath": "changelog.md"
+    "outputPath": "changelog.md",
+
+    // "Integrations" provide functionality specific to git hosting providers.
+    // When enabled, the changelog can e.g. include web links for commits, issues and pull requests
+    "integrations": {
+
+      // Set the integration provider to use
+      // Default: none
+      // Supported values: "None", "GitHub"
+      "provider": "none",
+
+      // Settings specific to the GitHub integration
+      "github": {
+
+        // The GitHub access token can be set in the configuration file BUT SHOULDN'T.
+        // Use the "githubAccessToken" command line parameter instead
+        "accessToken": null        
+      }
+    }
   }
 }
