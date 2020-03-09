@@ -1,27 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeLogCreator.Model;
+using ChangeLogCreator.Tasks;
 
-namespace ChangeLogCreator.Tasks
+namespace ChangeLogCreator
 {
     public sealed class ChangeLogPipeline
     {
-        private readonly List<IChangeLogTask> m_Tasks = new List<IChangeLogTask>();
+        private readonly IReadOnlyList<IChangeLogTask> m_Tasks;
 
-        public ChangeLogPipeline()
-        { }
 
-        public ChangeLogPipeline AddTask(IChangeLogTask task)
+        public ChangeLogPipeline(IEnumerable<IChangeLogTask> tasks)
         {
-            if (task is null)
-                throw new ArgumentNullException(nameof(task));
+            if (tasks is null)
+                throw new ArgumentNullException(nameof(tasks));
 
-            m_Tasks.Add(task);
-
-            return this;
+            m_Tasks = tasks.ToList();
         }
-
 
         public async Task<ChangeLog> RunAsync()
         {

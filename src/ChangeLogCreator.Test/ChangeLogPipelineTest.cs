@@ -25,12 +25,7 @@ namespace ChangeLogCreator.Test
                 })
                 .ToArray();
 
-            var sut = new ChangeLogPipeline();
-
-            foreach (var taskMock in tasks)
-            {
-                sut.AddTask(taskMock.Object);
-            }
+            var sut = new ChangeLogPipeline(tasks.Select(x => x.Object));
 
             // ACT 
             var changeLog = await sut.RunAsync();

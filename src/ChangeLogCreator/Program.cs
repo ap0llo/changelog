@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Git;
-using ChangeLogCreator.Integrations.GitHub;
+using ChangeLogCreator.Integrations;
 using ChangeLogCreator.Tasks;
 using CommandLine;
-using Octokit;
 
 namespace ChangeLogCreator
 {
@@ -43,20 +43,31 @@ namespace ChangeLogCreator
             if (!ValidateCommandlineParameters(commandlineParameters))
                 return 1;
 
-            //TODO: Use a DI container
-
             var configuration = ChangeLogConfigurationLoader.GetConfiguation(commandlineParameters.RepositoryPath, commandlineParameters);
+            using (var gitRepository = new GitRepository(configuration.RepositoryPath))
+            {    
+                var containerBuilder = new ContainerBuilder();
 
+                containerBuilder.RegisterInstance(configuration).SingleInstance();
+                containerBuilder.RegisterInstance(gitRepository).SingleInstance().As<IGitRepository>();
 
-            using (var gitRepository = new GitRepository(commandlineParameters.RepositoryPath))
-            {
-                var pipeline = new ChangeLogPipeline()
-                    .AddTask(new LoadVersionsTask(configuration, gitRepository))
-                    .AddTask(new ParseCommitsTask(gitRepository))
-                    .AddIntegrationTasks(configuration, gitRepository)
-                    .AddTask(new RenderMarkdownTask(configuration));
+                containerBuilder.RegisterType<LoadVersionsTask>();
+                containerBuilder.RegisterType<ParseCommitsTask>();
+                containerBuilder.RegisterType<RenderMarkdownTask>();
 
-                await pipeline.RunAsync();
+                containerBuilder.RegisterIntegrations();
+
+                using (var container = containerBuilder.Build())
+                {
+                    var pipeline = new ChangeLogPipelineBuilder(container)
+                        .AddTask<LoadVersionsTask>()
+                        .AddTask<ParseCommitsTask>()
+                        .AddIntegrationTasks()
+                        .AddTask<RenderMarkdownTask>()
+                        .Build();
+
+                    await pipeline.RunAsync();
+                }
             }
 
             return 0;
@@ -68,17 +79,6 @@ namespace ChangeLogCreator
                 return false;
             else
                 return Directory.Exists(parameters.RepositoryPath);
-        }
-
-        private static ChangeLogPipeline AddIntegrationTasks(this ChangeLogPipeline pipeline, ChangeLogConfiguration configuration, IGitRepository gitRepository)
-        {
-            if (configuration.Integrations.Provider == ChangeLogConfiguration.IntegrationProvider.GitHub)
-            {
-                var githubClientFactory = new GitHubClientFactory(configuration);
-                pipeline = pipeline.AddTask(new GitHubLinkTask(gitRepository, githubClientFactory));
-            }
-
-            return pipeline;
         }
     }
 }
