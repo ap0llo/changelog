@@ -14,8 +14,8 @@ namespace ChangeLogCreator.Git
         {
             if (String.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(name));
-            if (String.IsNullOrWhiteSpace(email))
 
+            if (String.IsNullOrWhiteSpace(email))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(email));
 
             Name = name;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using ChangeLogCreator.ConventionalCommits;
 using ChangeLogCreator.Git;
 using ChangeLogCreator.Model;
@@ -18,7 +19,7 @@ namespace ChangeLogCreator.Tasks
         }
 
 
-        public void Run(ChangeLog changeLog)
+        public Task RunAsync(ChangeLog changeLog)
         {
             var sortedVersions = changeLog.Versions
                 .OrderByDescending(x => x.Version)
@@ -37,6 +38,8 @@ namespace ChangeLogCreator.Tasks
                         changeLog[current].Add(entry);
                 }
             }
+
+            return Task.CompletedTask;
         }
 
 

@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Git;
+using ChangeLogCreator.Integrations.GitHub;
 using ChangeLogCreator.Tasks;
 using CommandLine;
+using Octokit;
 
 namespace ChangeLogCreator
 {
-    internal class Program
+    internal static class Program
     {
-
-        private static int Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
             using var commandlineParser = new Parser(settings =>
             {
@@ -21,41 +23,44 @@ namespace ChangeLogCreator
                 settings.HelpWriter = Console.Out;
             });
 
-            return commandlineParser.ParseArguments<CommandLineParameters>(args)
+            return await commandlineParser.ParseArguments<CommandLineParameters>(args)
                 .MapResult(
-                    (CommandLineParameters parsed) => Run(parsed),
+                    (CommandLineParameters parsed) => RunAsync(parsed),
                     (IEnumerable<Error> errors) =>
                     {
                         if (errors.All(e => e is HelpRequestedError || e is VersionRequestedError))
-                            return 0;
+                            return Task.FromResult(0);
 
                         Console.Error.WriteLine("Invalid arguments");
-                        return 1;
+                        return Task.FromResult(1);
                     }
                 );
         }
 
 
-        private static int Run(CommandLineParameters commandlineParameters)
+        private static async Task<int> RunAsync(CommandLineParameters commandlineParameters)
         {
             if (!ValidateCommandlineParameters(commandlineParameters))
                 return 1;
 
+            //TODO: Use a DI container
+
             var configuration = ChangeLogConfigurationLoader.GetConfiguation(commandlineParameters.RepositoryPath, commandlineParameters);
 
-            using (var repo = new GitRepository(commandlineParameters.RepositoryPath))
+
+            using (var gitRepository = new GitRepository(commandlineParameters.RepositoryPath))
             {
                 var pipeline = new ChangeLogPipeline()
-                    .AddTask(new LoadVersionsTask(configuration, repo))
-                    .AddTask(new ParseCommitsTask(repo))
+                    .AddTask(new LoadVersionsTask(configuration, gitRepository))
+                    .AddTask(new ParseCommitsTask(gitRepository))
+                    .AddIntegrationTasks(configuration, gitRepository)
                     .AddTask(new RenderMarkdownTask(configuration));
 
-                pipeline.Run();
+                await pipeline.RunAsync();
             }
 
             return 0;
         }
-
 
         private static bool ValidateCommandlineParameters(CommandLineParameters parameters)
         {
@@ -63,6 +68,17 @@ namespace ChangeLogCreator
                 return false;
             else
                 return Directory.Exists(parameters.RepositoryPath);
+        }
+
+        private static ChangeLogPipeline AddIntegrationTasks(this ChangeLogPipeline pipeline, ChangeLogConfiguration configuration, IGitRepository gitRepository)
+        {
+            if (configuration.Integrations.Provider == ChangeLogConfiguration.IntegrationProvider.GitHub)
+            {
+                var githubClientFactory = new GitHubClientFactory(configuration);
+                pipeline = pipeline.AddTask(new GitHubLinkTask(gitRepository, githubClientFactory));
+            }
+
+            return pipeline;
         }
     }
 }

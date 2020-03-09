@@ -48,7 +48,7 @@ namespace ChangeLogCreator.Test.Configuration
 
             // ACT 
             var settingsDictionary = ConfigurationBuilderExtensions.GetSettingsDictionary(settingsObject);
-            
+
             // ASSERT
             Assert.NotNull(settingsDictionary);
             Assert.Empty(settingsDictionary);
@@ -81,7 +81,7 @@ namespace ChangeLogCreator.Test.Configuration
         {
             // ARRANGE
             var settingsObject = new TestSettingsClass4();
-            
+
             // ACT / ASSERT
             Assert.Throws<InvalidOperationException>(() => ConfigurationBuilderExtensions.GetSettingsDictionary(settingsObject));
         }

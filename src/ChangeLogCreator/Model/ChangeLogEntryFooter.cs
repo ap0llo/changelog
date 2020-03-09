@@ -15,6 +15,8 @@ namespace ChangeLogCreator.Model
         /// </summary>
         public string Value { get; }
 
+        public Uri? WebUri { get; set; }
+
 
         public ChangeLogEntryFooter(CommitMessageFooterName name, string value)
         {

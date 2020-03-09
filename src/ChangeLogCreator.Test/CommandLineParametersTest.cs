@@ -13,16 +13,18 @@ namespace ChangeLogCreator.Test
         {
             foreach (var property in typeof(CommandLineParameters).GetProperties())
             {
-                yield return new[] { property };
+                yield return new[] { property.Name };
             }
         }
 
         [Theory]
         [MemberData(nameof(Properties))]
-        public void Properties_have_a_configuration_value_attribute(PropertyInfo property)
+        public void Properties_have_a_configuration_value_attribute(string propertyName)
         {
             // all properties inCommandLineParameters should have a ConfigurationValueAttribute
             // so the value can be used in the configuration system.
+
+            var property = typeof(CommandLineParameters).GetProperty(propertyName)!;
 
             var attribute = property.GetCustomAttribute<ConfigurationValueAttribute>();
 

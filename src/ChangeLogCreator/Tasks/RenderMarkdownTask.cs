@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using ChangeLogCreator.Configuration;
 using ChangeLogCreator.Model;
 using Grynwald.MarkdownGenerator;
@@ -34,7 +35,7 @@ namespace ChangeLogCreator.Tasks
 
 
         /// <inheritdoc />
-        public void Run(ChangeLog changeLog)
+        public Task RunAsync(ChangeLog changeLog)
         {
             var document = GetChangeLogDocument(changeLog);
 
@@ -44,6 +45,8 @@ namespace ChangeLogCreator.Tasks
             Directory.CreateDirectory(outputDirectory);
 
             document.Save(outputPath, SerializationOptions);
+
+            return Task.CompletedTask;
         }
 
 
@@ -259,15 +262,27 @@ namespace ChangeLogCreator.Tasks
             // add additional information
             var footerList = block.AddBulletList();
 
-            foreach(var footer in entry.Footers)
+            foreach(var footer in entry.Footers)  
             {
+                MdSpan text = footer.Value;
+                if(footer.WebUri != null)
+                {
+                    text = new MdLinkSpan(text, footer.WebUri);
+                }
                 footerList.Add(
-                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", footer.Value)
+                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", text)
                 );
 
             }
+            //TODO: Move this to the model class (an "implicit footer)
+            MdSpan commitText = new MdCodeSpan(entry.Commit.Id);
+            if(entry.CommitWebUri != null)
+            {
+                commitText = new MdLinkSpan(commitText, entry.CommitWebUri);
+            }
+
             footerList.Add(
-                new MdListItem("Commit: ", new MdCodeSpan(entry.Commit.Id))
+                new MdListItem("Commit: ", commitText)
             );
 
             return block;

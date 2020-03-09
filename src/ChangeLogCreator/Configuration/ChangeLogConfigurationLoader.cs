@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
-using ChangeLogCreator.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace ChangeLogCreator.Configuration
@@ -67,7 +65,7 @@ namespace ChangeLogCreator.Configuration
                 .Bind(configuration);
 
             return configuration;
-        }   
+        }
     }
 }
 

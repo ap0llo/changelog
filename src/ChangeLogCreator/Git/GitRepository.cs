@@ -11,6 +11,9 @@ namespace ChangeLogCreator.Git
         private readonly Repository m_Repository;
 
 
+        public IEnumerable<GitRemote> Remotes => m_Repository.Network.Remotes.Select(ToGitRemote);
+
+
         public GitRepository(string repositoyPath)
         {
             if (String.IsNullOrWhiteSpace(repositoyPath))
@@ -60,5 +63,8 @@ namespace ChangeLogCreator.Git
         private GitAuthor ToGitAuthor(Signature signature) => new GitAuthor(name: signature.Name, email: signature.Email);
 
         private GitTag ToGitTag(Tag tag) => new GitTag(tag.FriendlyName, ToGitId(tag.Target));
+
+        private GitRemote ToGitRemote(Remote remote) => new GitRemote(remote.Name, remote.Url);
+
     }
 }

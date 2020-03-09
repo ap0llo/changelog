@@ -50,6 +50,12 @@ namespace ChangeLogCreator.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config.Footers));
             yield return TestCase(config => Assert.Empty(config.Footers));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations));
+            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.IntegrationProvider.None, config.Integrations.Provider));
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub));
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.AccessToken));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.AccessToken));
         }
 
         [Theory]
@@ -108,7 +114,7 @@ namespace ChangeLogCreator.Test.Configuration
 
         public static IEnumerable<object[]> MarkdownPresets()
         {
-            foreach(var value in Enum.GetValues(typeof(ChangeLogConfiguration.MarkdownPreset)))
+            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.MarkdownPreset)))
             {
                 yield return new object[] { value!, value!.ToString()! };
                 yield return new object[] { value!, value!.ToString()!.ToLower() };
@@ -142,21 +148,21 @@ namespace ChangeLogCreator.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
 
             // ASSERT
-            Assert.Equal(patterns, config.TagPatterns);            
+            Assert.Equal(patterns, config.TagPatterns);
         }
 
-        private class TestSettingsClass
+        private class TestSettingsClass1
         {
             [ConfigurationValue("changelog:markdown:preset")]
             public string? MarkdownPreset { get; set; }
         }
 
         [Fact]
-        public void Configuration_from_settings_object_overrides_both_default_settings_and_settings_file()
+        public void Configuration_from_settings_object_can_override_markown_preset()
         {
             // ARRANGE
             PrepareConfiguration("markdown:preset", "default");
-            var settingsObject = new TestSettingsClass() { MarkdownPreset = "MkDocs" };
+            var settingsObject = new TestSettingsClass1() { MarkdownPreset = "MkDocs" };
 
             // ACT 
             var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);
@@ -190,6 +196,67 @@ namespace ChangeLogCreator.Test.Configuration
             }
         }
 
+
+        public static IEnumerable<object?[]> IntegrationProviders()
+        {
+            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.IntegrationProvider)))
+            {
+                yield return new object?[] { value };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(IntegrationProviders))]
+        public void IntegrationProvider_can_be_set_in_configuration_file(ChangeLogConfiguration.IntegrationProvider integrationProvider)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:provider", integrationProvider.ToString());
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations);
+            Assert.Equal(integrationProvider, config.Integrations.Provider);
+        }
+
+        [Theory]
+        [InlineData("some-access-token")]
+        public void GitHub_access_token_can_be_set_in_configuration_file(string accessToken)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:github:accesstoken", accessToken);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(accessToken, config.Integrations.GitHub.AccessToken);
+        }
+
+
+        private class TestSettingsClass2
+        {
+            [ConfigurationValue("changelog:integrations:github:accesstoken")]
+            public string? GitHubAccessToken { get; set; }
+        }
+
+        [Fact]
+        public void Configuration_from_settings_object_can_override_GitHub_access_token()
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:github:accesstoken", "some-access-token");
+            var settingsObject = new TestSettingsClass2() { GitHubAccessToken = "some-other-access-token" };
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations);
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal("some-other-access-token", config.Integrations.GitHub.AccessToken);
+        }
 
         private void PrepareConfiguration(string key, object value)
         {
