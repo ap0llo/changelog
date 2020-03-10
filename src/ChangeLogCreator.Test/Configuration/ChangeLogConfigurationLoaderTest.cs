@@ -56,6 +56,9 @@ namespace ChangeLogCreator.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub));
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.AccessToken));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.AccessToken));
+
+            yield return TestCase(config => Assert.NotNull(config.VersionRange));
+            yield return TestCase(config => Assert.Empty(config.VersionRange));
         }
 
         [Theory]
@@ -256,6 +259,44 @@ namespace ChangeLogCreator.Test.Configuration
             Assert.NotNull(config.Integrations);
             Assert.NotNull(config.Integrations.GitHub);
             Assert.Equal("some-other-access-token", config.Integrations.GitHub.AccessToken);
+        }
+
+
+        [Theory]
+        [InlineData("[1.2.3,)")]
+        public void Version_range_can_be_set_in_configuration_file(string versionRange)
+        {
+            // ARRANGE
+            PrepareConfiguration("versionRange", versionRange);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.VersionRange);
+            Assert.Equal(versionRange, config.VersionRange);
+        }
+
+
+        private class TestSettingsClass3
+        {
+            [ConfigurationValue("changelog:versionrange")]
+            public string? VersionRange { get; set; }
+        }
+
+        [Fact]
+        public void Configuration_from_settings_object_can_override_version_range()
+        {
+            // ARRANGE
+            PrepareConfiguration("versionRange", "[1.2.3]");
+            var settingsObject = new TestSettingsClass3() { VersionRange = "[4.5.6]" };
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.VersionRange);
+            Assert.Equal("[4.5.6]", config.VersionRange);
         }
 
         private void PrepareConfiguration(string key, object value)

@@ -65,6 +65,8 @@ namespace ChangeLogCreator.Configuration
 
         public IntegrationsConfiguration Integrations { get; set; } = new IntegrationsConfiguration();
 
+        public string? VersionRange { get; set; } = "";
+
 
         public string GetFullOutputPath()
         {

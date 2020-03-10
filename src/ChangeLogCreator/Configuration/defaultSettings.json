@@ -62,8 +62,15 @@
 
         // The GitHub access token can be set in the configuration file BUT SHOULDN'T.
         // Use the "githubAccessToken" command line parameter instead
-        "accessToken": null        
+        "accessToken": null
       }
-    }
+    },
+
+    // Specifies the versions to include in the changelog.
+    // By default all versions are included.
+    // To limit the versions, specify a NuGet version range, see
+    // https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-ranges
+    // This value can also be set using "versionRange" command line parameter
+    "versionRange": null
   }
 }

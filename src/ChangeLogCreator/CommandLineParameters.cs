@@ -32,5 +32,9 @@ namespace ChangeLogCreator
 
         [Option("verbose", Required = false, Default = false)]
         public bool Verbose { get; set; }
+
+        [Option("versionRange", Required = false, Default = null)]
+        [ConfigurationValue("changelog:versionrange")]
+        public string? VersionRange { get; set; }
     }
 }

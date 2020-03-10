@@ -7,12 +7,12 @@ namespace ChangeLogCreator.Model
 {
     public sealed class VersionInfo : IEquatable<VersionInfo>
     {
-        public SemanticVersion Version { get; }
+        public NuGetVersion Version { get; }
 
         public GitId Commit { get; }
 
 
-        public VersionInfo(SemanticVersion version, GitId commit)
+        public VersionInfo(NuGetVersion version, GitId commit)
         {
             Version = version ?? throw new ArgumentNullException(nameof(version));
             Commit = commit;

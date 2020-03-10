@@ -58,7 +58,7 @@ namespace ChangeLogCreator.Tasks
             }
         }
 
-        private bool TryParseTagName(string tagName, [NotNullWhen(true)]out SemanticVersion? version)
+        private bool TryParseTagName(string tagName, [NotNullWhen(true)] out NuGetVersion? version)
         {
             version = default;
             foreach (var pattern in m_TagPatterns)
@@ -69,7 +69,7 @@ namespace ChangeLogCreator.Tasks
                     continue;
 
                 var versionString = match.Groups["version"]?.Value;
-                if (!String.IsNullOrEmpty(versionString) && SemanticVersion.TryParse(versionString, out version))
+                if (!String.IsNullOrEmpty(versionString) && NuGetVersion.TryParse(versionString, out version))
                 {
                     return true;
                 }

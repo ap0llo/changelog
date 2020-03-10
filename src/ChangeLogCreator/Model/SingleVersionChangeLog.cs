@@ -13,6 +13,7 @@ namespace ChangeLogCreator.Model
 
         public VersionInfo Version { get; }
 
+        //TODO: Should AllEntries just return the union of FeatureEntries, BUgFixEntrues and BreakingChanges?
         public IEnumerable<ChangeLogEntry> AllEntries => m_Entries.OrderBy(x => x.Date);
 
         public IEnumerable<ChangeLogEntry> FeatureEntries => AllEntries.Where(e => e.Type == CommitType.Feature);

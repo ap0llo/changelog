@@ -17,7 +17,7 @@ namespace ChangeLogCreator.Test
         {
             var changelog = new SingleVersionChangeLog(
                 new VersionInfo(
-                    SemanticVersion.Parse(version),
+                    NuGetVersion.Parse(version),
                     commitId == null ? NextGitId() : new GitId(commitId)
                 ));
 

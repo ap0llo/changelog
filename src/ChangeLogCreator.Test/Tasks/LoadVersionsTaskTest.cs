@@ -43,7 +43,7 @@ namespace ChangeLogCreator.Test.Tasks
                 tags,
                 tag =>
                 {
-                    var version = SemanticVersion.Parse(tag.Name);
+                    var version = NuGetVersion.Parse(tag.Name);
                     Assert.Contains(new VersionInfo(version, tag.Commit), changeLog.Versions);
                 });
         }
@@ -76,7 +76,7 @@ namespace ChangeLogCreator.Test.Tasks
 
         [Theory]
         [InlineData("not-a-version")]
-        [InlineData("1.2.3.4")]
+        [InlineData("1.2.3.4.5")]
         public async Task Run_ignores_tags_that_are_not_a_valid_version(string tagName)
         {
             // ARRANGE

@@ -57,15 +57,19 @@ namespace ChangeLogCreator
 
                 containerBuilder.RegisterType<LoadVersionsTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
+                containerBuilder.RegisterType<FilterVersionsTask>();
                 containerBuilder.RegisterType<RenderMarkdownTask>();
 
                 containerBuilder.RegisterIntegrations();
 
                 using (var container = containerBuilder.Build())
                 {
+                    // Note: The order of the tasks added here is important.
+                    // E.g. In order for commits for versions loaded correctly, ParseCommitsTask needs to run before FilterVersionsTask
                     var pipeline = new ChangeLogPipelineBuilder(container)
                         .AddTask<LoadVersionsTask>()
                         .AddTask<ParseCommitsTask>()
+                        .AddTask<FilterVersionsTask>()
                         .AddIntegrationTasks()
                         .AddTask<RenderMarkdownTask>()
                         .Build();

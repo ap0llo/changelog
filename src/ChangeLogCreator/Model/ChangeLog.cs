@@ -25,5 +25,8 @@ namespace ChangeLogCreator.Model
         public IEnumerator<SingleVersionChangeLog> GetEnumerator() => ChangeLogs.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => ChangeLogs.GetEnumerator();
+
+
+        public void Remove(SingleVersionChangeLog versionChangeLog) => m_ChangeLogs.Remove(versionChangeLog.Version);
     }
 }
