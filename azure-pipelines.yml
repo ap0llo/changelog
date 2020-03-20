@@ -33,15 +33,15 @@ variables:
   dotNetSdk_Version: 3.1.100                  # the version of the .NET SDK to use
   solutionPath : src/ChangeLog.sln     # The path of the solution to be buildt
   artifactsName: drop
-  # # MyGet.org settings   
-  # myget_ServiceConnectionName: 'MyGet - ap0llo-markdown-generator'  # the name of the Azure DevOps service connection to use for MyGet.org
+  # MyGet.org settings   
+  myget_ServiceConnectionName: 'MyGet - ap0llo-changelog'  # the name of the Azure DevOps service connection to use for MyGet.org
   # # NuGet.org settings
   # nuget_org_ServiceConnectionName: 'NuGet.org - markdown-generator'  # the name of the Azure DevOps service connection to use for NuGet.org
-  # nuget_org_PackageName: 'Grynwald.MarkdownGenerator'                # the name of the package being published
+  # nuget_org_PackageName: 'Grynwald.ChangeLog'                # the name of the package being published
   # # GitHub settings
   # github_createRelease: true                          # enable creation of GitHub releases when a package was uploaded to NuGet.org
   # github_ServiceConnectionName: 'GitHub: ap0llo'      # the name of the Azure DevOps service connection to use for creating GitHub releases
-  # github_repositoryName: 'ap0llo/markdown-generator'  # the name of the github repo to create the release in
+  # github_repositoryName: 'ap0llo/changelog'           # the name of the github repo to create the release in
 
 jobs:
 
@@ -100,29 +100,29 @@ jobs:
     inputs:
       artifactName: $(artifactsName)
 
-# # Job to push package to MyGet.org after build
-# - job: Publish_to_MyGet
-#   displayName: Publish to MyGet
-#   pool: Hosted VS2017
-#   # Only run after main build job and only if the current branch is master or a release branch
-#   dependsOn: Build_and_Test
-#   condition: and(succeeded('Build_and_Test'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/') ))
-#   steps:
-#   # Get artifacts
-#   - task: DownloadBuildArtifacts@0
-#     displayName: 'Download Build Artifacts'
-#     inputs: 
-#       buildType: current
-#       downloadType: single
-#       artifactName: $(artifactsName)
-#       downloadPath: $(Build.ArtifactStagingDirectory)
-#   # Upload to MyGet.org
-#   - task: NuGetCommand@2
-#     displayName: "Upload package"
-#     inputs:
-#       command: push
-#       nugetFeedType: external
-#       publishFeedCredentials: $(myget_ServiceConnectionName)
+# Job to push package to MyGet.org after build
+- job: Publish_to_MyGet
+  displayName: Publish to MyGet
+  pool: Hosted VS2017
+  # Only run after main build job and only if the current branch is master or a release branch
+  dependsOn: Build_and_Test
+  condition: and(succeeded('Build_and_Test'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/') ))
+  steps:
+  # Get artifacts
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Build Artifacts'
+    inputs: 
+      buildType: current
+      downloadType: single
+      artifactName: $(artifactsName)
+      downloadPath: $(Build.ArtifactStagingDirectory)
+  # Upload to MyGet.org
+  - task: NuGetCommand@2
+    displayName: "Upload package"
+    inputs:
+      command: push
+      nugetFeedType: external
+      publishFeedCredentials: $(myget_ServiceConnectionName)
 
 # # Job to push package to NuGet.org after build (only for builds of release branches)
 # - job: Publish_to_NuGet_org
