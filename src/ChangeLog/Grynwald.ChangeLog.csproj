@@ -4,7 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Grynwald.ChangeLog</RootNamespace>
-    <AssemblyName>Grynwald.ChangeLog</AssemblyName>
+    <PackageId>Grynwald.ChangeLog</PackageId>
+    <AssemblyName>changelog</AssemblyName>
+    <PackAsTool>true</PackAsTool>
   </PropertyGroup>
 
   <ItemGroup>
