@@ -31,7 +31,7 @@ variables:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE : true    # do not populate NuGet caches on build agents (VM will be deleted afterwards anyways)
   configuration: Release                      # the configuration (Debug/Release) to build
   dotNetSdk_Version: 3.1.100                  # the version of the .NET SDK to use
-  solutionPath : src/ChangeLogCreator.sln     # The path of the solution to be buildt
+  solutionPath : src/ChangeLog.sln     # The path of the solution to be buildt
   artifactsName: drop
   # # MyGet.org settings   
   # myget_ServiceConnectionName: 'MyGet - ap0llo-markdown-generator'  # the name of the Azure DevOps service connection to use for MyGet.org
