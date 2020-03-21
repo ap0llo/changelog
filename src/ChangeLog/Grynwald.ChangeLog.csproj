@@ -31,4 +31,8 @@
     <PackageReference Include="Autofac" Version="5.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\deps\GitLabApiClient\src\GitLabApiClient\GitLabApiClient.csproj" />
+  </ItemGroup>
+
 </Project>

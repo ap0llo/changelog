@@ -159,6 +159,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             m_GitHubCommitsClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(entries.Length));
         }
 
+        //TODO: Run does not add a commit link if commit cannot be found
+
         [Theory]
         [InlineData("#23", 23, "owner", "repo")]
         [InlineData("GH-23", 23, "owner", "repo")]
@@ -385,7 +387,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             m_GitHubIssuesClientMock.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
             m_GitHubPullRequestsClient.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
         }
-
 
         [Theory]
         [InlineData("github.com")]

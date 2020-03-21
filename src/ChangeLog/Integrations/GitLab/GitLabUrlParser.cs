@@ -45,6 +45,13 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                 case "ssh":
                     var projectPath = uri.AbsolutePath.Trim('/');
                     projectPath = projectPath.RemoveSuffix(".git");
+
+                    if(String.IsNullOrWhiteSpace(projectPath))
+                    {
+                        errorMessage = $"Cannot parse '{url}' as GitLab url: Project path is empty";
+                        return false;
+                    }
+
                     projectInfo = new GitLabProjectInfo(uri.Host, projectPath);
                     return true;
 

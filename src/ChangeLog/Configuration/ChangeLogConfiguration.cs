@@ -35,7 +35,8 @@ namespace Grynwald.ChangeLog.Configuration
         public enum IntegrationProvider
         {
             None = 0,
-            GitHub = 1
+            GitHub = 1,
+            GitLab = 2,
         }
 
         public class GitHubIntegrationConfiguration

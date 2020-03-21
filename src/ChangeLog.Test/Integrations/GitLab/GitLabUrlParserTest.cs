@@ -15,7 +15,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("\t")]
         [InlineData("  ")]
         [InlineData("not-a-url")]
-        [InlineData("ftp://github.com/owner/repo.git")] // unsupported scheme
+        [InlineData("ftp://gitlab.com/owner/repo.git")] // unsupported scheme
+        [InlineData("http://gitlab.com")]               // missing project path
         public void ParseRemoteUrl_throws_ArgumentException_for_invalid_input(string url)
         {
             Assert.ThrowsAny<ArgumentException>(() => GitLabUrlParser.ParseRemoteUrl(url));
@@ -46,7 +47,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("")]
         [InlineData("\t")]
         [InlineData("  ")]
-        [InlineData("not-a-url")]        
+        [InlineData("not-a-url")]
+        [InlineData("ftp://gitlab.com/owner/repo.git")] // unsupported scheme
+        [InlineData("http://gitlab.com")]               // missing project path
         public void TryParseRemoteUrl_returns_false_for_invalid_input(string url)
         {
             Assert.False(GitLabUrlParser.TryParseRemoteUrl(url, out var uri));
