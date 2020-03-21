@@ -5,12 +5,9 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 {
     internal static class GitHubUrlParser
     {
-        private static readonly char[] s_ScpUrlSplitChars = new[] { ':' };
-
-
         public static GitHubProjectInfo ParseRemoteUrl(string url)
         {
-            if(TryParseRemoteUrl(url, out var projectInfo, out var errorMessage))
+            if (TryParseRemoteUrl(url, out var projectInfo, out var errorMessage))
             {
                 return projectInfo;
             }
@@ -34,8 +31,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                 return false;
             }
 
-
-            if (!TryParseUrl(url, out var uri))
+            if (!GitUrl.TryGetUri(url, out var uri))
             {
                 errorMessage = $"Value '{url}' is not a valid uri";
                 return false;
@@ -47,7 +43,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                 case "https":
                 case "ssh":
                     var path = uri.AbsolutePath.Trim('/');
-                    path = RemoveSuffix(path, ".git");
+                    path = path.RemoveSuffix(".git");
 
                     var ownerAndRepo = path.Split('/');
                     if (ownerAndRepo.Length != 2)
@@ -64,46 +60,5 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                     return false;
             }
         }
-
-        private static bool TryParseUrl(string url, [NotNullWhen(true)]out Uri? uri)
-        {
-            if (Uri.TryCreate(url, UriKind.Absolute, out uri))
-            {
-                return true;
-            }
-            else
-            {
-                return TryParseScpUrl(url, out uri);
-            }
-        }
-
-        private static bool TryParseScpUrl(string url, [NotNullWhen(true)]out Uri? sshUri)
-        {
-            // Parse a scp-format git url: e.g. git@github.com:ap0llo/changelog-creator.git
-
-            var fragments = url.Split(s_ScpUrlSplitChars, StringSplitOptions.RemoveEmptyEntries);
-            if (fragments.Length != 2)
-            {
-                sshUri = default;
-                return false;
-            }
-
-            var userNameAndHost = fragments[0];
-            var path = fragments[1].TrimStart('/');
-
-            return Uri.TryCreate($"ssh://{userNameAndHost}/{path}", UriKind.Absolute, out sshUri);
-        }
-
-        private static string RemoveSuffix(string value, string suffix)
-        {
-            return value.EndsWith(suffix)
-#if NETCOREAPP2_1
-                ? value.Substring(0, value.Length - suffix.Length)
-#else
-                ? value[..^suffix.Length]
-#endif
-                : value;
-        }
-
     }
 }
