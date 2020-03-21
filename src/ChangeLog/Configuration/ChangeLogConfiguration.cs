@@ -43,11 +43,18 @@ namespace Grynwald.ChangeLog.Configuration
             public string? AccessToken { get; set; } = null;
         }
 
+        public class GitLabIntegrationConfiguration
+        {
+            public string? AccessToken { get; set; } = null;
+        }
+
         public class IntegrationsConfiguration
         {
             public IntegrationProvider Provider { get; set; }
 
             public GitHubIntegrationConfiguration GitHub { get; set; } = new GitHubIntegrationConfiguration();
+
+            public GitLabIntegrationConfiguration GitLab { get; set; } = new GitLabIntegrationConfiguration();
         }
 
 

@@ -17,7 +17,7 @@ namespace Grynwald.ChangeLog
         [ConfigurationValue("changelog:outputPath")]
         public string? OutputPath
         {
-            // is value is set, return an absolute path
+            // if value is set, return an absolute path
             // otherwise, if a relative path is passed through the configuration system
             // it would be interpreted as being relative to the repository path.
             // However, when specifying a relative path on the command line, it makes much more sense
@@ -29,6 +29,10 @@ namespace Grynwald.ChangeLog
         [Option("gitHubAccessToken", Required = false)]
         [ConfigurationValue("changelog:integrations:github:accesstoken")]
         public string? GitHubAccessToken { get; set; }
+
+        [Option("gitLabAccessToken", Required = false)]
+        [ConfigurationValue("changelog:integrations:gitlab:accesstoken")]
+        public string? GitLabAccessToken { get; set; }
 
         [Option("verbose", Required = false, Default = false)]
         public bool Verbose { get; set; }
