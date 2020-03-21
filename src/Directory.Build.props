@@ -21,4 +21,10 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
+	<!-- Disbale nullable support on .Net Core 2.1 -->
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
+		<Nullable>disable</Nullable>
+		<NoWarn>8632</NoWarn>  <!-- Suppress warning about nullable annotation in the source code although nullable is disabled-->
+	</PropertyGroup>
+	
 </Project>

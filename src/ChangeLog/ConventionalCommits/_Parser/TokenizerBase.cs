@@ -58,7 +58,12 @@ namespace Grynwald.ChangeLog.ConventionalCommits
             yield return CreateEolToken(input.LineNumber, startColumn);
         }
 
+
+#if NETCOREAPP2_1
+        protected abstract bool TryMatchSingleCharToken(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out T token);
+#else
         protected abstract bool TryMatchSingleCharToken(char value, int lineNumber, int columnNumber, [NotNullWhen(true)] out T? token);
+#endif
 
         protected abstract T CreateEolToken(int lineNumber, int columnNumber);
 

@@ -58,6 +58,13 @@ jobs:
       packageType: sdk
       version: $(dotNetSdk_Version)
 
+  # Also install .NET Core 2.1 runtime because we test against both .NET Core 3.1 and 2.1
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core SDK $(dotNetSdk_Version)'
+    inputs:
+      packageType: runtime
+      version: 2.1.x
+
   # Restore local .NET Core tools
   - task: DotNetCoreCLI@2
     displayName: Restore local tools

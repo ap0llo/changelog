@@ -97,7 +97,11 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
         private static string RemoveSuffix(string value, string suffix)
         {
             return value.EndsWith(suffix)
+#if NETCOREAPP2_1
+                ? value.Substring(0, value.Length - suffix.Length)
+#else
                 ? value[..^suffix.Length]
+#endif
                 : value;
         }
 
