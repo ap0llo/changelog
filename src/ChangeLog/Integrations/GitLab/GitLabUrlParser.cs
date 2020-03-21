@@ -52,7 +52,29 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                         return false;
                     }
 
-                    projectInfo = new GitLabProjectInfo(uri.Host, projectPath);
+                    if(!projectPath.Contains('/'))
+                    {
+                        errorMessage = $"Cannot parse '{url}' as GitLab url: Invalid project path '{projectPath}'";
+                        return false;
+                    }
+
+                    var splitIndex = projectPath.LastIndexOf('/');
+                    var @namespace = projectPath.Substring(0, splitIndex);
+                    var projectName = projectPath.Substring(splitIndex);
+
+                    if(String.IsNullOrWhiteSpace(@namespace))
+                    {
+                        errorMessage = $"Cannot parse '{url}' as GitLab url: Project namespace is empty";
+                        return false;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(projectName))
+                    {
+                        errorMessage = $"Cannot parse '{url}' as GitLab url: Project name is empty";
+                        return false;
+                    }
+
+                    projectInfo = new GitLabProjectInfo(uri.Host, @namespace, projectName);
                     return true;
 
                 default:

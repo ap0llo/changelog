@@ -11,9 +11,19 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         public string Host { get; }
 
         /// <summary>
+        /// The project namespace (the user or group (incl.subgroups) the project belongs to
+        /// </summary>
+        public string Namespace { get; }
+
+        /// <summary>
+        /// The project name
+        /// </summary>
+        public string Project { get; }
+
+        /// <summary>
         /// The GitLab project path (i.e. namespace + repository name).
         /// </summary>
-        public string ProjectPath { get; }
+        public string ProjectPath => $"{Namespace}/{Project}";
 
 
         /// <summary>
@@ -22,16 +32,20 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         /// <param name="host">The host name of the GitLab server.</param>
         /// <param name="projectPath">The GitLab project path (i.e. namespace + repository name).</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="host"/> or <paramref name="projectPath"/> is null or whitespace</exception>
-        public GitLabProjectInfo(string host, string projectPath)
+        public GitLabProjectInfo(string host, string @namespace, string project)
         {
             if (String.IsNullOrWhiteSpace(host))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(host));
 
-            if (String.IsNullOrWhiteSpace(projectPath))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(projectPath));
+            if (String.IsNullOrWhiteSpace(@namespace))
+                throw new ArgumentException("Value must not be null or whitespace", nameof(@namespace));
+
+            if (String.IsNullOrWhiteSpace(project))
+                throw new ArgumentException("Value must not be null or whitespace", nameof(project));
 
             Host = host;
-            ProjectPath = projectPath;
+            Namespace = @namespace.Trim('/');
+            Project = project.Trim('/');
         }
 
 
@@ -44,7 +58,8 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             unchecked
             {
                 var hash = StringComparer.OrdinalIgnoreCase.GetHashCode(Host) * 397;
-                hash ^= StringComparer.OrdinalIgnoreCase.GetHashCode(ProjectPath);
+                hash ^= StringComparer.OrdinalIgnoreCase.GetHashCode(Namespace);
+                hash ^= StringComparer.OrdinalIgnoreCase.GetHashCode(Project);
                 return hash;
             }
         }
@@ -54,7 +69,8 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         {
             return other != null &&
                 StringComparer.OrdinalIgnoreCase.Equals(Host, other.Host) &&
-                StringComparer.OrdinalIgnoreCase.Equals(ProjectPath, other.ProjectPath);
+                StringComparer.OrdinalIgnoreCase.Equals(Namespace, other.Namespace) &&
+                StringComparer.OrdinalIgnoreCase.Equals(Project, other.Project);
         }
     }
 }
