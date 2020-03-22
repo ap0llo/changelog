@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Threading.Tasks;
 using GitLabApiClient;
@@ -10,6 +9,7 @@ using GitLabApiClient.Models.Commits.Responses;
 using GitLabApiClient.Models.Issues.Responses;
 using GitLabApiClient.Models.MergeRequests.Requests;
 using GitLabApiClient.Models.MergeRequests.Responses;
+using GitLabApiClient.Models.Milestones.Requests;
 using GitLabApiClient.Models.Milestones.Responses;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
@@ -240,7 +240,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             m_IssuesClientMock
                 .Setup(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<int>()))
                 .Throws(new GitLabException(HttpStatusCode.NotFound));
-                
+
             var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
@@ -264,7 +264,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.Null(footer.WebUri);                    
+                    Assert.Null(footer.WebUri);
                 });
 
             });
@@ -409,9 +409,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     (ProjectId projectId, string sha) => Task.FromResult(new Commit() { WebUrl = $"https://example.com/{sha}" })
                 );
             m_ProjectsClientMock
-                .Setup(x => x.GetMilestoneAsync(MatchProjectId(projectPath), id))
+                .Setup(x => x.GetMilestonesAsync(MatchProjectId(projectPath), It.IsAny<Action<MilestonesQueryOptions>>()))
                 .Returns(
-                    Task.FromResult(new Milestone() { WebUrl = $"https://example.com/{projectPath}/milestones/{id}" } )
+                    Task.FromResult<IList<Milestone>>(new List<Milestone>() { new Milestone() { WebUrl = $"https://example.com/{projectPath}/milestones/{id}" } })
                 );
 
             var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
@@ -444,18 +444,18 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
             });
 
-            m_ProjectsClientMock.Verify(x => x.GetMilestoneAsync(It.IsAny<ProjectId>(), It.IsAny<int>()), Times.Once);
-            m_ProjectsClientMock.Verify(x => x.GetMilestoneAsync(MatchProjectId(projectPath), id), Times.Once);
+            m_ProjectsClientMock.Verify(x => x.GetMilestonesAsync(It.IsAny<ProjectId>(), It.IsAny<Action<MilestonesQueryOptions>>()), Times.Once);
+            m_ProjectsClientMock.Verify(x => x.GetMilestonesAsync(MatchProjectId(projectPath), It.IsAny<Action<MilestonesQueryOptions>>()), Times.Once);
         }
 
         [Theory]
         // reference within the same repository
-        [InlineData("%23", 23, "owner/repo")]
+        [InlineData("%23", "owner/repo")]
         // reference to another project in the same namespace
-        [InlineData("anotherRepo%42", 42, "owner/anotherRepo")]
+        [InlineData("anotherRepo%42", "owner/anotherRepo")]
         // reference to another project (including project namespace)
-        [InlineData("anotherOwner/anotherRepo%42", 42, "anotherOwner/anotherRepo")]
-        public async Task Run_does_not_add_link_if_milestone_cannot_be_found(string footerText, int id, string projectPath)
+        [InlineData("anotherOwner/anotherRepo%42", "anotherOwner/anotherRepo")]
+        public async Task Run_does_not_add_link_if_milestone_cannot_be_found(string footerText, string projectPath)
         {
             // ARRANGE            
             m_RepositoryMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://gitlab.com/owner/repo.git") });
@@ -466,7 +466,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     (ProjectId projectId, string sha) => Task.FromResult(new Commit() { WebUrl = $"https://example.com/{sha}" })
                 );
             m_ProjectsClientMock
-                .Setup(x => x.GetMilestoneAsync(It.IsAny<ProjectId>(), It.IsAny<int>()))
+                .Setup(x => x.GetMilestonesAsync(It.IsAny<ProjectId>(), It.IsAny<Action<MilestonesQueryOptions>>()))
                 .Throws(new GitLabException(HttpStatusCode.NotFound));
 
             var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
@@ -497,8 +497,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
             });
 
-            m_ProjectsClientMock.Verify(x => x.GetMilestoneAsync(It.IsAny<ProjectId>(), It.IsAny<int>()), Times.Once);
-            m_ProjectsClientMock.Verify(x => x.GetMilestoneAsync(MatchProjectId(projectPath), id), Times.Once);
+            m_ProjectsClientMock.Verify(x => x.GetMilestonesAsync(It.IsAny<ProjectId>(), It.IsAny<Action<MilestonesQueryOptions>>()), Times.Once);
+            m_ProjectsClientMock.Verify(x => x.GetMilestonesAsync(MatchProjectId(projectPath), It.IsAny<Action<MilestonesQueryOptions>>()), Times.Once);
         }
 
         //TODO: Run does not add a commit link if commit cannot be found

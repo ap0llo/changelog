@@ -98,7 +98,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                     }
                     else
                     {
-                        m_Logger.LogWarning($"Failed to determine web uri for issue '{projectPath}#{id}'");
+                        m_Logger.LogWarning($"Failed to determine web uri for GitLab {type} reference '{footer.Value}'");
                     }
                 }
             }
@@ -246,8 +246,24 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
             try
             {
-                var milestone = await gitlabClient.Projects.GetMilestoneAsync(projectPath, id);
-                return new Uri(milestone.WebUrl); ;
+                // use GetMilestonesAsync() instead of GetMilestoneAsync() because the id
+                // we can pass to GetMilestoneAsync() is not the id of the milestone
+                // within the project, but some other id.
+                // Instead, use GetMilestonesAsync() and query for a single milestone id
+                // for which we can use the id in the reference.
+                var milestones = await gitlabClient.Projects.GetMilestonesAsync(projectPath, options =>
+                {
+                    options.MilestoneIds = new[] { id };
+                });
+
+                if (milestones.Count == 1)
+                {
+                    return new Uri(milestones.Single().WebUrl);
+                }
+                else
+                {
+                    return null;
+                }             
             }
             catch (Exception ex) when (ex is GitLabException gitlabException && gitlabException.HttpStatusCode == HttpStatusCode.NotFound)
             {
