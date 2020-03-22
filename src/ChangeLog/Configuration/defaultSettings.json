@@ -54,7 +54,7 @@
 
       // Set the integration provider to use
       // Default: none
-      // Supported values: "None", "GitHub"
+      // Supported values: "None", "GitHub", "GitLab"
       "provider": "none",
 
       // Settings specific to the GitHub integration
