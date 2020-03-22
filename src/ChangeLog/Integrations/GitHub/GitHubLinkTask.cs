@@ -33,6 +33,8 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             m_GitHubClientFactory = gitHubClientFactory ?? throw new ArgumentNullException(nameof(gitHubClientFactory));
 
+            // TODO: Allow configuration of remote name
+            // TODO: Allow bypassing parsing by setting project info in the config file
             var remote = m_Repository.Remotes.FirstOrDefault(r => StringComparer.OrdinalIgnoreCase.Equals(r.Name, "origin"));
             if (remote != null && GitHubUrlParser.TryParseRemoteUrl(remote.Url, out var projectInfo))
             {

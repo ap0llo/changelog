@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Grynwald.ChangeLog.Integrations.GitHub;
 using Xunit;
 
@@ -49,7 +50,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("not-a-url")]
         [InlineData("http://github.com/owner/another-name/repo.git")] // to many segments in the path
         [InlineData("ftp://github.com/owner/repo.git")] // unsupported scheme
-        public void TryParseRemoteUrl_throws_ArgumentException_for_invalid_input(string url)
+        public void TryParseRemoteUrl_returns_false_for_invalid_input(string url)
         {
             Assert.False(GitHubUrlParser.TryParseRemoteUrl(url, out var uri));
         }

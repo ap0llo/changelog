@@ -54,7 +54,7 @@
 
       // Set the integration provider to use
       // Default: none
-      // Supported values: "None", "GitHub"
+      // Supported values: "None", "GitHub", "GitLab"
       "provider": "none",
 
       // Settings specific to the GitHub integration
@@ -62,6 +62,14 @@
 
         // The GitHub access token can be set in the configuration file BUT SHOULDN'T.
         // Use the "githubAccessToken" command line parameter instead
+        "accessToken": null
+      },
+
+      // Settings specific to the GitLab integration
+      "gitlab": {
+
+        // The GitLab access token can be set in the configuration file BUT SHOULDN'T.
+        // Use the "gitlabAccessToken" command line parameter instead
         "accessToken": null
       }
     },

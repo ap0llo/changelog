@@ -53,9 +53,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config.Integrations));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.IntegrationProvider.None, config.Integrations.Provider));
+
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub));
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.AccessToken));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.AccessToken));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab));
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.AccessToken));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.AccessToken));
 
             yield return TestCase(config => Assert.NotNull(config.VersionRange));
             yield return TestCase(config => Assert.Empty(config.VersionRange));
@@ -238,6 +243,20 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal(accessToken, config.Integrations.GitHub.AccessToken);
         }
 
+        [Theory]
+        [InlineData("some-access-token")]
+        public void GitLab_access_token_can_be_set_in_configuration_file(string accessToken)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:gitlab:accesstoken", accessToken);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(accessToken, config.Integrations.GitLab.AccessToken);
+        }
 
         private class TestSettingsClass2
         {
@@ -261,6 +280,28 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal("some-other-access-token", config.Integrations.GitHub.AccessToken);
         }
 
+        private class TestSettingsClass3
+        {
+            [ConfigurationValue("changelog:integrations:gitlab:accesstoken")]
+            public string? GitLabAccessToken { get; set; }
+        }
+
+        [Fact]
+        public void Configuration_from_settings_object_can_override_GitLab_access_token()
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:gitlab:accesstoken", "some-access-token");
+            var settingsObject = new TestSettingsClass3() { GitLabAccessToken = "some-other-access-token" };
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations);
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal("some-other-access-token", config.Integrations.GitLab.AccessToken);
+        }
+
 
         [Theory]
         [InlineData("[1.2.3,)")]
@@ -278,7 +319,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
 
-        private class TestSettingsClass3
+        private class TestSettingsClass4
         {
             [ConfigurationValue("changelog:versionrange")]
             public string? VersionRange { get; set; }
@@ -289,7 +330,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         {
             // ARRANGE
             PrepareConfiguration("versionRange", "[1.2.3]");
-            var settingsObject = new TestSettingsClass3() { VersionRange = "[4.5.6]" };
+            var settingsObject = new TestSettingsClass4() { VersionRange = "[4.5.6]" };
 
             // ACT 
             var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Integrations.GitHub;
+using Grynwald.ChangeLog.Integrations.GitLab;
 
 namespace Grynwald.ChangeLog.Integrations
 {
@@ -10,6 +11,9 @@ namespace Grynwald.ChangeLog.Integrations
         {
             containerBuilder.RegisterType<GitHubClientFactory>().As<IGitHubClientFactory>();
             containerBuilder.RegisterType<GitHubLinkTask>();
+
+            containerBuilder.RegisterType<GitLabClientFactory>().As<IGitLabClientFactory>();
+            containerBuilder.RegisterType<GitLabLinkTask>();
         }
 
 
@@ -20,6 +24,10 @@ namespace Grynwald.ChangeLog.Integrations
             if (configuration.Integrations.Provider == ChangeLogConfiguration.IntegrationProvider.GitHub)
             {
                 pipelineBuilder = pipelineBuilder.AddTask<GitHubLinkTask>();
+            }
+            else if (configuration.Integrations.Provider == ChangeLogConfiguration.IntegrationProvider.GitLab)
+            {
+                pipelineBuilder = pipelineBuilder.AddTask<GitLabLinkTask>();
             }
 
             return pipelineBuilder;
