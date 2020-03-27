@@ -14,6 +14,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 {
+    /// <summary>
+    /// Unit tests for <see cref="GitHubLinkTask"/>
+    /// </summary>
     public class GitHubLinkTaskTest : TestBase
     {
         private class TestGitHubCommit : GitHubCommit
@@ -225,6 +228,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("another-Owner/another-Repo#42", 42, "another-Owner", "another-Repo")]
         [InlineData("another.Owner/another.Repo#42", 42, "another.Owner", "another.Repo")]
         [InlineData("another_Owner/another_Repo#42", 42, "another_Owner", "another_Repo")]
+        // Linking must ignore trailing and leading whitespace
+        [InlineData(" #23", 23, "owner", "repo")]
+        [InlineData("#23 ", 23, "owner", "repo")]
+        [InlineData(" GH-23", 23, "owner", "repo")]
+        [InlineData("GH-23 ", 23, "owner", "repo")]
+        [InlineData(" anotherOwner/anotherRepo#42", 42, "anotherOwner", "anotherRepo")]
+        [InlineData("anotherOwner/anotherRepo#42  ", 42, "anotherOwner", "anotherRepo")]
         public async Task Run_adds_pull_request_links_to_footers(string footerText, int prNumber, string owner, string repo)
         {
             // ARRANGE

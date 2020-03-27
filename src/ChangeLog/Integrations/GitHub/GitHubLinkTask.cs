@@ -26,7 +26,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
         private readonly IGitHubClientFactory m_GitHubClientFactory;
         private readonly GitHubProjectInfo? m_ProjectInfo;
 
-        
+
         public GitHubLinkTask(ILogger<GitHubLinkTask> logger, IGitRepository repository, IGitHubClientFactory gitHubClientFactory)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -124,6 +124,8 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             if (m_ProjectInfo == null)
                 throw new InvalidOperationException();
 
+
+            input = input.Trim();
 
             // using every pattern, try to get a issue/PR id from the input text
             foreach (var pattern in s_GitHubReferencePatterns)

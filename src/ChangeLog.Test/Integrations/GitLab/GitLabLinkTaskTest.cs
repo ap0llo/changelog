@@ -22,6 +22,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 {
+    /// <summary>
+    /// Unit tests for <see cref="GitLabLinkTask"/>
+    /// </summary>
     public class GitLabLinkTaskTest : TestBase
     {
         private readonly ILogger<GitLabLinkTask> m_Logger = NullLogger<GitLabLinkTask>.Instance;
@@ -169,6 +172,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("another-Owner/another-Repo#42", 42, "another-Owner/another-Repo")]
         [InlineData("another.Owner/another.Repo#42", 42, "another.Owner/another.Repo")]
         [InlineData("another_Owner/another_Repo#42", 42, "another_Owner/another_Repo")]
+        // Linking must ignore trailing and leading whitespace
+        [InlineData(" #23", 23, "owner/repo")]
+        [InlineData("#23 ", 23, "owner/repo")]
+        [InlineData(" anotherRepo#42", 42, "owner/anotherRepo")]
+        [InlineData("anotherRepo#42 ", 42, "owner/anotherRepo")]
+        [InlineData(" anotherOwner/anotherRepo#42", 42, "anotherOwner/anotherRepo")]
+        [InlineData("anotherOwner/anotherRepo#42 ", 42, "anotherOwner/anotherRepo")]
         public async Task Run_adds_issue_links_to_footers(string footerText, int id, string projectPath)
         {
             // ARRANGE            

@@ -127,6 +127,8 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             if (m_ProjectInfo == null)
                 throw new InvalidOperationException();
 
+            input = input.Trim();
+
             var match = s_GitLabReferencePattern.Match(input);
 
             if (match.Success)
@@ -263,7 +265,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                 else
                 {
                     return null;
-                }             
+                }
             }
             catch (Exception ex) when (ex is GitLabException gitlabException && gitlabException.HttpStatusCode == HttpStatusCode.NotFound)
             {
