@@ -49,12 +49,23 @@ namespace Grynwald.ChangeLog.Tasks
 
         private IEnumerable<VersionInfo> GetVersions()
         {
+            var versions = new HashSet<NuGetVersion>();
+
             foreach (var tag in m_Repository.GetTags())
             {
                 m_Logger.LogDebug($"Processing tag '{tag.Name}'");
 
                 if (TryParseTagName(tag.Name, out var version))
-                    yield return new VersionInfo(version, tag.Commit);
+                {
+                    if (versions.Add(version))
+                    {
+                        yield return new VersionInfo(version, tag.Commit);
+                    }
+                    else
+                    {
+                        m_Logger.LogWarning($"Duplicate version '{version.ToNormalizedString()}', ignoring tag '{tag.Name}' ({tag.Commit})");
+                    }
+                }
             }
         }
 

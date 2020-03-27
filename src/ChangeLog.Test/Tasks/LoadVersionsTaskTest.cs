@@ -129,5 +129,31 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var versionInfo = Assert.Single(changeLog.Versions);
             Assert.Equal(expectedVersion, versionInfo.Version);
         }
+
+        [Fact]
+        public async Task Run_ignores_duplicate_versions()
+        {
+            // ARRANGE            
+            var tags = new GitTag[]
+            {
+                new GitTag("v1.2.3", new GitId("0123")),
+                new GitTag("4.5.6", new GitId("4567")),
+                new GitTag("1.2.3", new GitId("8910"))
+            };
+
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.GetTags()).Returns(tags);
+
+            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+
+            // ACT
+            var changeLog = new ApplicationChangeLog();
+            await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Contains(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("0123"));
+            Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("8910"));
+        }
+
     }
 }
