@@ -95,7 +95,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
 
         [Theory]
-        [InlineData("footerName", "footerName")]        
+        [InlineData("footerName", "footerName")]
         [InlineData("FOOTERNAME", "footerName")]    // Scope must be compared case-insensitive        
         [InlineData("footerName", "FOOTERNAME")]    // Scope must be compared case-insensitive            
         public void GetFooterDisplayName_returns_expected_display_name(string configuredFooter, string footerName)

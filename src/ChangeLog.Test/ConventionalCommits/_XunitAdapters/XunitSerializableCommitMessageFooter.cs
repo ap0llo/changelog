@@ -27,7 +27,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             var type = info.GetValue<string>(nameof(CommitMessageFooter.Name));
             var description = info.GetValue<string>(nameof(CommitMessageFooter.Value));
 
-            Value = new CommitMessageFooter(new CommitMessageFooterName(type), description);            
+            Value = new CommitMessageFooter(new CommitMessageFooterName(type), description);
         }
 
         public void Serialize(IXunitSerializationInfo info)

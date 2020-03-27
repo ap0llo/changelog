@@ -15,7 +15,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
 
         internal XunitSerializableCommitMessage(CommitMessage value) => Value = value
                 ;
-        
+
         [Obsolete("For use by Xunit only", true)]
 #pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
         public XunitSerializableCommitMessage()

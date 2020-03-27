@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace Grynwald.ChangeLog.ConventionalCommits
-{    
+{
     /// <summary>
     /// Parser for commit message footers.
     /// </summary>
@@ -135,7 +135,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
                     //    |       |
                     //    +-------+-------- already matched
                     //
-                    if(!TestToken(FooterTokenKind.Hash))
+                    if (!TestToken(FooterTokenKind.Hash))
                         throw new UnexpectedTokenException<FooterToken, FooterTokenKind>(FooterTokenKind.Hash, Current);
 
                     return new CommitMessageFooterName(typeToken.Value!);

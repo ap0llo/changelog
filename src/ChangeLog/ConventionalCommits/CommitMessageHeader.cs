@@ -72,7 +72,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         /// <param name="scope">The (optional) scope of the change (see <see cref="Scope"/> property).</param>
         /// <param name="isBreakingChange">Indicates whether the change is marked as a breaking change (see <see cref="IsBreakingChange"/> property).</param>
         public CommitMessageHeader(CommitType type, string description, string? scope, bool isBreakingChange)
-        {            
+        {
             if (String.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(description));
 

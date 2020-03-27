@@ -337,7 +337,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 "1.2.3",
                 null,
 
-                GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change"),                    
+                GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change"),
 
                 GetChangeLogEntry(scope: "scope2", type: "fix", summary: "A bug was fixed")
             );
@@ -352,7 +352,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public void ChangeLog_is_converted_to_expected_Markdown_14()
         {
             // Footers must be included in the output
-        
+
             var versionChangeLog = GetSingleVersionChangeLog(
                 "1.2.3",
                 null,
@@ -433,7 +433,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             {
                 new ChangeLogEntryFooter(new CommitMessageFooterName("see-also"), "Link") { WebUri = new Uri("http://example.com") }
             });
-            
+
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", null, entry);
 
             var changeLog = new ApplicationChangeLog() { versionChangeLog };

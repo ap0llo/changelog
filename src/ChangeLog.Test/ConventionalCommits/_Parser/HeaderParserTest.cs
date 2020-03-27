@@ -72,7 +72,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             // ACT / ASSERT
             var exception = Assert.ThrowsAny<ParserException>(() => HeaderParser.Parse(inputToken));
             Assert.Equal(lineNumber, exception.LineNumber);
-            Assert.Equal(columnNumber, exception.ColumnNumber);            
+            Assert.Equal(columnNumber, exception.ColumnNumber);
         }
     }
 }

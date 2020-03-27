@@ -27,7 +27,7 @@ namespace Grynwald.ChangeLog.Git
         public IReadOnlyList<GitCommit> GetCommits(GitId? fromCommit, GitId toCommit)
         {
             // Set up commit filter
-            var filter = new CommitFilter() { IncludeReachableFrom = toCommit .Id  };
+            var filter = new CommitFilter() { IncludeReachableFrom = toCommit.Id };
             if (fromCommit.HasValue)
             {
                 filter.ExcludeReachableFrom = fromCommit.Value.Id;

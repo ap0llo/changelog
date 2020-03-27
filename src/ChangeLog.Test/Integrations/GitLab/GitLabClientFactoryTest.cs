@@ -52,7 +52,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             var client = sut.CreateClient("gitlab.com");
 
             // ASSERT
-            Assert.NotNull(client);            
+            Assert.NotNull(client);
         }
     }
 }

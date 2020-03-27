@@ -57,7 +57,7 @@ namespace Grynwald.ChangeLog.Model
             if (footers is null)
                 throw new ArgumentNullException(nameof(footers));
 
-            if(breakingChangeDescriptions is null)
+            if (breakingChangeDescriptions is null)
                 throw new ArgumentNullException(nameof(breakingChangeDescriptions));
 
             Date = date;
@@ -69,12 +69,12 @@ namespace Grynwald.ChangeLog.Model
             Footers = footers;
             BreakingChangeDescriptions = breakingChangeDescriptions;
             Commit = commit;
-            
-            
+
+
         }
 
         public static ChangeLogEntry FromCommitMessage(GitCommit commit, CommitMessage commitMessage)
-        {            
+        {
             var breakingChangeDescriptions = commitMessage.Footers
                 .Where(x => x.Name.IsBreakingChange)
                 .Select(x => x.Value)

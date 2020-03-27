@@ -204,25 +204,25 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                         $"{footerType}: Footer Description"
                     );
 
-                    yield return MultiLineTestCase(
-                        $"T{i++:00}",
-                        new CommitMessage(
-                            header: new CommitMessageHeader(
-                                type: new CommitType("type"),
-                                description: "Description",
-                                scope: null,
-                                isBreakingChange: false
-                            ),
-                            body: Array.Empty<string>(),
-                            footers: new[]
-                            {
-                                new CommitMessageFooter(name: new CommitMessageFooterName(footerType), value: "#Footer Description")
-                            }
+                yield return MultiLineTestCase(
+                    $"T{i++:00}",
+                    new CommitMessage(
+                        header: new CommitMessageHeader(
+                            type: new CommitType("type"),
+                            description: "Description",
+                            scope: null,
+                            isBreakingChange: false
                         ),
-                        "type: Description",
-                        "",
-                        $"{footerType} #Footer Description"
-                    );
+                        body: Array.Empty<string>(),
+                        footers: new[]
+                        {
+                            new CommitMessageFooter(name: new CommitMessageFooterName(footerType), value: "#Footer Description")
+                        }
+                    ),
+                    "type: Description",
+                    "",
+                    $"{footerType} #Footer Description"
+                );
 
             }
 

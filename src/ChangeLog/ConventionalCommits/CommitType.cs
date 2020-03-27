@@ -6,7 +6,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
     /// Represents the type of a commit.
     /// </summary>
     public struct CommitType : IEquatable<CommitType>
-    {        
+    {
         public static readonly CommitType Feature = new CommitType("feat");
         public static readonly CommitType BugFix = new CommitType("fix");
 

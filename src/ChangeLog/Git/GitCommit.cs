@@ -16,7 +16,7 @@ namespace Grynwald.ChangeLog.Git
 
 
         public GitCommit(GitId id, string commitMessage, DateTime date, GitAuthor author)
-        {            
+        {
             Id = id;
             CommitMessage = commitMessage ?? throw new ArgumentNullException(nameof(commitMessage));
             Date = date;

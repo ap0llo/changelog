@@ -90,7 +90,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 .Select(x => x.Value)
                 .Select<FooterToken, Action<FooterToken>>(token => (t => Assert.Equal(token, t)))
                 .ToArray();
-            
+
             // ACT
             var actualTokens = new FooterTokenizer().GetTokens(input.Value).ToArray();
 

@@ -15,7 +15,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("example.com", "example.com", "user", "USER", "repo", "repo")]
         [InlineData("example.com", "example.com", "user", "user", "repo", "REPO")]
         [InlineData("example.com", "example.com", "group/subgroup", "group/SUBGROUP", "repo", "repo")]
-        [InlineData("example.com", "example.com", "GROUP/subgroup", "group/subgroup", "repo", "repo")]        
+        [InlineData("example.com", "example.com", "GROUP/subgroup", "group/subgroup", "repo", "repo")]
         public void Equals_returns_true_is_all_properties_are_equal(string host1, string host2, string namespace1, string namespace2, string project1, string project2)
         {
             var instance1 = new GitLabProjectInfo(host1, namespace1, project1);

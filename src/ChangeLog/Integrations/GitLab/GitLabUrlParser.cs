@@ -46,13 +46,13 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                     var projectPath = uri.AbsolutePath.Trim('/');
                     projectPath = projectPath.RemoveSuffix(".git");
 
-                    if(String.IsNullOrWhiteSpace(projectPath))
+                    if (String.IsNullOrWhiteSpace(projectPath))
                     {
                         errorMessage = $"Cannot parse '{url}' as GitLab url: Project path is empty";
                         return false;
                     }
 
-                    if(!projectPath.Contains('/'))
+                    if (!projectPath.Contains('/'))
                     {
                         errorMessage = $"Cannot parse '{url}' as GitLab url: Invalid project path '{projectPath}'";
                         return false;
@@ -62,7 +62,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                     var @namespace = projectPath.Substring(0, splitIndex);
                     var projectName = projectPath.Substring(splitIndex);
 
-                    if(String.IsNullOrWhiteSpace(@namespace))
+                    if (String.IsNullOrWhiteSpace(@namespace))
                     {
                         errorMessage = $"Cannot parse '{url}' as GitLab url: Project namespace is empty";
                         return false;

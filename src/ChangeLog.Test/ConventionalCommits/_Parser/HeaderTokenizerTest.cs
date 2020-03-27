@@ -73,9 +73,9 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             );
 
 
-            yield return TestCase("feat:",   HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Eol(1, 6) );
-            yield return TestCase("feat: ",  HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Space(1,6), HeaderToken.Eol(1, 7));
-            yield return TestCase("feat:  ", HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Space(1,6), HeaderToken.Space(1, 7), HeaderToken.Eol(1, 8));           
+            yield return TestCase("feat:", HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Eol(1, 6));
+            yield return TestCase("feat: ", HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Space(1, 6), HeaderToken.Eol(1, 7));
+            yield return TestCase("feat:  ", HeaderToken.String("feat", 1, 1), HeaderToken.Colon(1, 5), HeaderToken.Space(1, 6), HeaderToken.Space(1, 7), HeaderToken.Eol(1, 8));
         }
 
         [Theory]
@@ -87,7 +87,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 .Select(x => x.Value)
                 .Select<HeaderToken, Action<HeaderToken>>(token => (t => Assert.Equal(token, t)))
                 .ToArray();
-            
+
             // ACT
             var actualTokens = new HeaderTokenizer().GetTokens(input.Value).ToArray();
 

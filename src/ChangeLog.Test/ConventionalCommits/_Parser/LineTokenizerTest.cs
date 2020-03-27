@@ -29,7 +29,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             foreach (var lineBreak in new[] { "\n", "\r\n" })
             {
                 // just a line break
-                yield return testCase(lineBreak, LineToken.Blank(1), LineToken.Eof(2));                
+                yield return testCase(lineBreak, LineToken.Blank(1), LineToken.Eof(2));
 
                 // 1 line with line break
                 yield return testCase("Line1" + lineBreak, LineToken.Line("Line1", 1), LineToken.Eof(2));
