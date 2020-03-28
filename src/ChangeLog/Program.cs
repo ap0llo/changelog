@@ -55,6 +55,8 @@ namespace Grynwald.ChangeLog
 
                 containerBuilder.RegisterLogging(minimumLogLevel: commandlineParameters.Verbose ? LogLevel.Debug : LogLevel.Information);
 
+                containerBuilder.RegisterType<ChangeLogPipeline>();
+
                 containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
@@ -74,11 +76,10 @@ namespace Grynwald.ChangeLog
                         .AddTask<RenderMarkdownTask>()
                         .Build();
 
-                    await pipeline.RunAsync();
+                    var result = await pipeline.RunAsync();
+                    return result.Success ? 0 : 1;
                 }
             }
-
-            return 0;
         }
 
         private static bool ValidateCommandlineParameters(CommandLineParameters parameters)

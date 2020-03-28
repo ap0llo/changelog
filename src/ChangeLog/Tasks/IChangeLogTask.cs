@@ -5,6 +5,6 @@ namespace Grynwald.ChangeLog.Tasks
 {
     public interface IChangeLogTask
     {
-        Task RunAsync(ApplicationChangeLog changeLog);
+        Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog);
     }
 }

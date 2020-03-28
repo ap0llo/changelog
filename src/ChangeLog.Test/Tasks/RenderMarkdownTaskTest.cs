@@ -10,6 +10,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
+    /// <summary>
+    /// Tests for <see cref="RenderMarkdownTask"/>
+    /// </summary>
     [UseReporter(typeof(DiffReporter))]
     public class RenderMarkdownTaskTest : TestBase
     {

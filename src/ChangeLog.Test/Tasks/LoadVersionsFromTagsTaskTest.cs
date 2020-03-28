@@ -36,7 +36,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.All(
@@ -46,6 +46,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                     var version = NuGetVersion.Parse(tag.Name);
                     Assert.Contains(new VersionInfo(version, tag.Commit), changeLog.Versions);
                 });
+            Assert.Equal(ChangeLogTaskResult.Success, result);
         }
 
         [Fact]
@@ -67,11 +68,12 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.NotNull(changeLog.Versions);
             Assert.Empty(changeLog.Versions);
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
         }
 
         [Theory]
@@ -92,10 +94,11 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.Empty(changeLog.Versions);
+            Assert.Equal(ChangeLogTaskResult.Success, result);
         }
 
         [Theory]
@@ -123,11 +126,12 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             var versionInfo = Assert.Single(changeLog.Versions);
             Assert.Equal(expectedVersion, versionInfo.Version);
+            Assert.Equal(ChangeLogTaskResult.Success, result);
         }
 
         [Fact]
@@ -148,12 +152,12 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.Contains(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("0123"));
             Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("8910"));
+            Assert.Equal(ChangeLogTaskResult.Success, result);
         }
-
     }
 }

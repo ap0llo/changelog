@@ -47,10 +47,10 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
         }
 
 
-        public async Task RunAsync(ApplicationChangeLog changeLog)
+        public async Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog)
         {
             if (m_ProjectInfo == null)
-                return;
+                return ChangeLogTaskResult.Skipped;
 
             m_Logger.LogInformation("Adding GitHub links to changelog");
 
@@ -66,6 +66,8 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                     await ProcessEntryAsync(githubClient, entry);
                 }
             }
+
+            return ChangeLogTaskResult.Success;
         }
 
 

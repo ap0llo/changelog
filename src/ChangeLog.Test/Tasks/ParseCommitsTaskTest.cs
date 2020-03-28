@@ -12,6 +12,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
+    /// <summary>
+    /// Unit tests for <see cref="ParseCommitsTask"/>
+    /// </summary>
     public class ParseCommitsTaskTest : TestBase
     {
         private readonly ILogger<ParseCommitsTask> m_Logger = NullLogger<ParseCommitsTask>.Instance;
@@ -26,9 +29,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ACT
             var changelog = new ApplicationChangeLog();
-            await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(changelog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
         }
 
         [Fact]
@@ -50,9 +54,11 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
-            await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(changelog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             repo.Verify(x => x.GetCommits(It.IsAny<GitId?>(), It.IsAny<GitId>()), Times.Once);
 
             Assert.NotNull(versionChangeLog.AllEntries);
@@ -103,9 +109,11 @@ namespace Grynwald.ChangeLog.Test.Tasks
             };
 
             // ACT
-            await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(changelog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             repo.Verify(x => x.GetCommits(null, It.IsAny<GitId>()), Times.Once);
             repo.Verify(x => x.GetCommits(It.IsAny<GitId>(), It.IsAny<GitId>()), Times.Once);
 
@@ -152,15 +160,15 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
-            await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(changelog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
             Assert.NotNull(versionChangeLog.AllEntries);
             Assert.Empty(versionChangeLog.AllEntries);
         }
 
         //TODO: Scope, footers, body
-
 
     }
 }

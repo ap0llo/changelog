@@ -15,7 +15,7 @@ namespace Grynwald.ChangeLog.Tasks
     /// <summary>
     /// Tasks that loads versions from git tags in a repository
     /// </summary>
-    internal sealed class LoadVersionsFromTagsTask : IChangeLogTask
+    internal sealed class LoadVersionsFromTagsTask : SynchronousChangeLogTask
     {
         private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;
 
@@ -35,8 +35,14 @@ namespace Grynwald.ChangeLog.Tasks
         }
 
 
-        public Task RunAsync(ApplicationChangeLog changeLog)
+        protected override ChangeLogTaskResult Run(ApplicationChangeLog changeLog)
         {
+            if (m_TagPatterns.Count == 0)
+            {
+                m_Logger.LogWarning("No tag patterns configured, skipping loading of versions from tags.");
+                return ChangeLogTaskResult.Skipped;
+            }
+
             m_Logger.LogInformation("Loading versions from git tags");
 
             foreach (var version in GetVersions())
@@ -46,7 +52,7 @@ namespace Grynwald.ChangeLog.Tasks
                 changeLog.Add(versionChangeLog);
             }
 
-            return Task.CompletedTask;
+            return ChangeLogTaskResult.Success;
         }
 
 

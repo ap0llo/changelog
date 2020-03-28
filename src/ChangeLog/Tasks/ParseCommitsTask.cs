@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
 {
-    internal sealed class ParseCommitsTask : IChangeLogTask
+    internal sealed class ParseCommitsTask : SynchronousChangeLogTask
     {
         private readonly ILogger<ParseCommitsTask> m_Logger;
         private readonly IGitRepository m_Repository;
@@ -22,8 +22,14 @@ namespace Grynwald.ChangeLog.Tasks
         }
 
 
-        public Task RunAsync(ApplicationChangeLog changeLog)
+        protected override ChangeLogTaskResult Run(ApplicationChangeLog changeLog)
         {
+            if (!changeLog.Versions.Any())
+            {
+                m_Logger.LogWarning("Changelog is empty, skipping parsing of commit messages");
+                return ChangeLogTaskResult.Skipped;
+            }
+
             m_Logger.LogInformation("Parsing commit messages");
 
             var sortedVersions = changeLog.Versions
@@ -47,7 +53,7 @@ namespace Grynwald.ChangeLog.Tasks
                 }
             }
 
-            return Task.CompletedTask;
+            return ChangeLogTaskResult.Success;
         }
 
 
