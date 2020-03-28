@@ -40,5 +40,9 @@ namespace Grynwald.ChangeLog
         [Option("versionRange", Required = false, Default = null)]
         [ConfigurationValue("changelog:versionrange")]
         public string? VersionRange { get; set; }
+
+        [Option("currentVersion", Required = false, Default = null, HelpText = "Sets the version of the currently checkout out commit. Value must be a valid semantic version")]
+        [ConfigurationValue("changelog:currentVersion")]
+        public string? CurrentVersion { get; set; }
     }
 }

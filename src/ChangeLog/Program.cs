@@ -57,6 +57,7 @@ namespace Grynwald.ChangeLog
 
                 containerBuilder.RegisterType<ChangeLogPipeline>();
 
+                containerBuilder.RegisterType<LoadCurrentVersionTask>();
                 containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
@@ -69,6 +70,7 @@ namespace Grynwald.ChangeLog
                     // Note: The order of the tasks added here is important.
                     // E.g. In order for commits for versions loaded correctly, ParseCommitsTask needs to run before FilterVersionsTask
                     var pipeline = new ChangeLogPipelineBuilder(container)
+                        .AddTask<LoadCurrentVersionTask>()
                         .AddTask<LoadVersionsFromTagsTask>()
                         .AddTask<ParseCommitsTask>()
                         .AddTask<FilterVersionsTask>()

@@ -79,6 +79,11 @@
     // To limit the versions, specify a NuGet version range, see
     // https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-ranges
     // This value can also be set using "versionRange" command line parameter
-    "versionRange": null
+    "versionRange": null,
+
+    // Sets the version of the currently checked out commit to include it in the changelog
+    // By default, only tagged commits are included
+    // Value can either be set in the configuration file or using the "--currentVersion" commandline parameter
+    "currentVersion": null
   }
 }

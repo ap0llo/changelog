@@ -10,7 +10,10 @@ namespace Grynwald.ChangeLog.Git
         private readonly string m_RepositoyPath;
         private readonly Repository m_Repository;
 
+        /// <inheritdoc />
+        public GitCommit Head => ToGitCommit(m_Repository.Head.Tip);
 
+        /// <inheritdoc />
         public IEnumerable<GitRemote> Remotes => m_Repository.Network.Remotes.Select(ToGitRemote);
 
 
@@ -24,6 +27,7 @@ namespace Grynwald.ChangeLog.Git
         }
 
 
+        /// <inheritdoc />
         public IReadOnlyList<GitCommit> GetCommits(GitId? fromCommit, GitId toCommit)
         {
             // Set up commit filter
@@ -39,8 +43,10 @@ namespace Grynwald.ChangeLog.Git
                 .ToList();
         }
 
+        /// <inheritdoc />
         public IReadOnlyList<GitTag> GetTags() => m_Repository.Tags.Select(ToGitTag).ToList();
 
+        /// <inheritdoc />
         public void Dispose() => m_Repository.Dispose();
 
 

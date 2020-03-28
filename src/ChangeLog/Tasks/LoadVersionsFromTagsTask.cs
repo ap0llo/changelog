@@ -45,10 +45,16 @@ namespace Grynwald.ChangeLog.Tasks
 
             m_Logger.LogInformation("Loading versions from git tags");
 
-            foreach (var version in GetVersions())
+            foreach (var versionInfo in GetVersions())
             {
-                m_Logger.LogDebug($"Adding version '{version.Version}' to changelog");
-                var versionChangeLog = new SingleVersionChangeLog(version);
+                if (changeLog.ContainsVersion(versionInfo.Version))
+                {
+                    m_Logger.LogError($"Cannot add version '{versionInfo.Version}' from tags because the changelog already contains this version.");
+                    return ChangeLogTaskResult.Error;
+                }
+
+                m_Logger.LogDebug($"Adding version '{versionInfo.Version}' to changelog");
+                var versionChangeLog = new SingleVersionChangeLog(versionInfo);
                 changeLog.Add(versionChangeLog);
             }
 

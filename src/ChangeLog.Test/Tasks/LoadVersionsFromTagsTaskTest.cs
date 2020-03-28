@@ -135,7 +135,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         }
 
         [Fact]
-        public async Task Run_ignores_duplicate_versions()
+        public async Task Run_ignores_duplicate_versions_from_tags()
         {
             // ARRANGE            
             var tags = new GitTag[]
@@ -159,5 +159,34 @@ namespace Grynwald.ChangeLog.Test.Tasks
             Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("8910"));
             Assert.Equal(ChangeLogTaskResult.Success, result);
         }
+
+
+        [Fact]
+        public async Task Task_fails_if_version_was_already_added_by_a_previous_task()
+        {
+            // ARRANGE            
+            var tags = new GitTag[]
+            {
+                new GitTag("1.2.3", new GitId("0123")),
+            };
+
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.GetTags()).Returns(tags);
+
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                new SingleVersionChangeLog(new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("4567")))
+            };
+
+            // ACT
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT            
+            Assert.Equal(ChangeLogTaskResult.Error, result);
+            Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("0123"));
+        }
+
     }
 }
