@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.Utilities.IO;
 using Newtonsoft.Json;
@@ -17,9 +18,57 @@ namespace Grynwald.ChangeLog.Test.Configuration
         public ChangeLogConfigurationLoaderTest()
         {
             m_ConfigurationFilePath = Path.Combine(m_ConfigurationDirectory, "changelog.settings.json");
+
+            // clear environment variables (might be set by previous test runs)
+            var envVars = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
+            foreach (var key in envVars.Keys.Cast<string>().Where(x => x.StartsWith("CHANGELOG__")))
+            {
+                Environment.SetEnvironmentVariable(key, null, EnvironmentVariableTarget.Process);
+            }
         }
 
         public void Dispose() => m_ConfigurationDirectory.Dispose();
+
+
+        private void SetConfigEnvironmentVariable(string configKey, string value)
+        {
+            var variableName = "CHANGELOG__" + configKey.Replace(":", "__");
+            Environment.SetEnvironmentVariable(variableName, value, EnvironmentVariableTarget.Process);
+        }
+
+        private void PrepareConfiguration(string key, object value)
+        {
+            var configRoot = new JObject();
+
+            var currentConfigObject = new JObject();
+            configRoot.Add(new JProperty("changelog", currentConfigObject));
+
+            var keySegments = key.Split(":");
+            for (var i = 0; i < keySegments.Length; i++)
+            {
+                // last fragment => add value
+                if (i == keySegments.Length - 1)
+                {
+                    if (value.GetType().IsArray)
+                    {
+                        value = JArray.FromObject(value);
+                    }
+
+                    currentConfigObject.Add(new JProperty(keySegments[i], value));
+
+                }
+                // create child configuration object
+                else
+                {
+                    var newConfigObject = new JObject();
+                    currentConfigObject.Add(new JProperty(keySegments[i], newConfigObject));
+                    currentConfigObject = newConfigObject;
+                }
+            }
+
+            var json = configRoot.ToString(Formatting.Indented);
+            File.WriteAllText(m_ConfigurationFilePath, json);
+        }
 
 
         /// <summary>
@@ -184,6 +233,21 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Fact]
+        public void Configuration_from_environment_variables_can_override_markown_preset()
+        {
+            // ARRANGE
+            PrepareConfiguration("markdown:preset", "default");
+            SetConfigEnvironmentVariable("markdown:preset", "mkdocs");
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.Markdown);
+            Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Markdown.Preset);
+        }
+
+        [Fact]
         public void Footers_can_be_set_in_configuration_file()
         {
             // ARRANGE            
@@ -247,17 +311,17 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
         [Theory]
         [InlineData("some-access-token")]
-        public void GitLab_access_token_can_be_set_in_configuration_file(string accessToken)
+        public void GitHub_access_token_can_be_set_through_environment_variables(string accessToken)
         {
             // ARRANGE
-            PrepareConfiguration("integrations:gitlab:accesstoken", accessToken);
+            SetConfigEnvironmentVariable("integrations:github:accesstoken", accessToken);
 
             // ACT 
             var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
 
             // ASSERT
-            Assert.NotNull(config.Integrations.GitLab);
-            Assert.Equal(accessToken, config.Integrations.GitLab.AccessToken);
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(accessToken, config.Integrations.GitHub.AccessToken);
         }
 
         private class TestSettingsClass2
@@ -280,6 +344,36 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotNull(config.Integrations);
             Assert.NotNull(config.Integrations.GitHub);
             Assert.Equal("some-other-access-token", config.Integrations.GitHub.AccessToken);
+        }
+
+        [Theory]
+        [InlineData("some-access-token")]
+        public void GitLab_access_token_can_be_set_in_configuration_file(string accessToken)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:gitlab:accesstoken", accessToken);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(accessToken, config.Integrations.GitLab.AccessToken);
+        }
+
+        [Theory]
+        [InlineData("some-access-token")]
+        public void GitLab_access_token_can_be_set_through_environment_variables(string accessToken)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:gitlab:accesstoken", accessToken);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(accessToken, config.Integrations.GitLab.AccessToken);
         }
 
         private class TestSettingsClass3
@@ -319,6 +413,22 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal(versionRange, config.VersionRange);
         }
 
+        [Theory]
+        [InlineData("[1.2.3,)")]
+        public void Version_range_can_be_set_through_environment_variables(string versionRange)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("versionRange", versionRange);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.VersionRange);
+            Assert.Equal(versionRange, config.VersionRange);
+        }
+
+
         private class TestSettingsClass4
         {
             [ConfigurationValue("changelog:versionrange")]
@@ -355,10 +465,26 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal(currentVersion, config.CurrentVersion);
         }
 
+        [Theory]
+        [InlineData("1.2.3")]
+        public void Current_version_can_be_set_in_through_environment_variables(string currentVersion)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("currentVersion", currentVersion);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.CurrentVersion);
+            Assert.Equal(currentVersion, config.CurrentVersion);
+        }
+
+
         private class TestSettingsClass5
         {
             [ConfigurationValue("changelog:currentVersion")]
-            public string? VersionRange { get; set; }
+            public string? CurrentVersion { get; set; }
         }
 
         [Fact]
@@ -366,49 +492,51 @@ namespace Grynwald.ChangeLog.Test.Configuration
         {
             // ARRANGE
             PrepareConfiguration("currentVersion", "1.2.3");
-            var settingsObject = new TestSettingsClass4() { VersionRange = "4.5.6" };
+            var settingsObject = new TestSettingsClass5() { CurrentVersion = "4.5.6" };
 
             // ACT 
             var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);
 
             // ASSERT
             Assert.NotNull(config.CurrentVersion);
-            Assert.Equal("4.5.6", config.VersionRange);
+            Assert.Equal("4.5.6", config.CurrentVersion);
         }
 
-
-        private void PrepareConfiguration(string key, object value)
+        [Fact]
+        public void Configuration_from_environment_variables_overrides_settings_from_config_file()
         {
-            var configRoot = new JObject();
+            // ARRANGE
+            PrepareConfiguration("currentVersion", "1.2.3");
+            SetConfigEnvironmentVariable("currentVersion", "4.5.6");
 
-            var currentConfigObject = new JObject();
-            configRoot.Add(new JProperty("changelog", currentConfigObject));
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
 
-            var keySegments = key.Split(":");
-            for (var i = 0; i < keySegments.Length; i++)
-            {
-                // last fragment => add value
-                if (i == keySegments.Length - 1)
-                {
-                    if (value.GetType().IsArray)
-                    {
-                        value = JArray.FromObject(value);
-                    }
+            // ASSERT
+            Assert.NotNull(config.CurrentVersion);
+            Assert.Equal("4.5.6", config.CurrentVersion);
+        }
 
-                    currentConfigObject.Add(new JProperty(keySegments[i], value));
+        private class TestSettingsClass6
+        {
+            [ConfigurationValue("changelog:currentVersion")]
+            public string? CurrentVersion { get; set; }
+        }
 
-                }
-                // create child configuration object
-                else
-                {
-                    var newConfigObject = new JObject();
-                    currentConfigObject.Add(new JProperty(keySegments[i], newConfigObject));
-                    currentConfigObject = newConfigObject;
-                }
-            }
+        [Fact]
+        public void Configuration_from_settings_object_overrides_settings_from_config_file_and_environment_variables()
+        {
+            // ARRANGE
+            PrepareConfiguration("currentVersion", "1.2.3");
+            SetConfigEnvironmentVariable("currentVersion", "4.5.6");
+            var settingsObject = new TestSettingsClass6() { CurrentVersion = "7.8.9" };
 
-            var json = configRoot.ToString(Formatting.Indented);
-            File.WriteAllText(m_ConfigurationFilePath, json);
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.CurrentVersion);
+            Assert.Equal("7.8.9", config.CurrentVersion);
         }
     }
 }

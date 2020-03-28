@@ -25,6 +25,8 @@ namespace Grynwald.ChangeLog.Configuration
                 using var configStream = File.Open(configurationFilePath, FileMode.Open, FileAccess.Read);
                 builder.AddJsonStream(configStream);
 
+                builder.AddEnvironmentVariables();
+
                 if (settingsObject is object)
                 {
                     builder.AddObject(settingsObject);
@@ -34,6 +36,8 @@ namespace Grynwald.ChangeLog.Configuration
             }
             else
             {
+                builder.AddEnvironmentVariables();
+
                 if (settingsObject is object)
                 {
                     builder.AddObject(settingsObject);
