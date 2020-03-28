@@ -120,7 +120,7 @@ jobs:
     displayName: Generate changelog
     inputs:
       command: run
-      arguments: |
+      arguments: >-
         --project ./src/ChangeLog/Grynwald.ChangeLog.csproj ^
         --framework netcoreapp3.1 ^
         --repository $(Build.SourcesDirectory) ^
