@@ -12,17 +12,20 @@ using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Tasks
 {
-    internal sealed class LoadVersionsTask : IChangeLogTask
+    /// <summary>
+    /// Tasks that loads versions from git tags in a repository
+    /// </summary>
+    internal sealed class LoadVersionsFromTagsTask : IChangeLogTask
     {
         private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;
 
-        private readonly ILogger<LoadVersionsTask> m_Logger;
+        private readonly ILogger<LoadVersionsFromTagsTask> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;
         private readonly IGitRepository m_Repository;
         private readonly IReadOnlyList<Regex> m_TagPatterns;
 
 
-        public LoadVersionsTask(ILogger<LoadVersionsTask> logger, ChangeLogConfiguration configuration, IGitRepository repository)
+        public LoadVersionsFromTagsTask(ILogger<LoadVersionsFromTagsTask> logger, ChangeLogConfiguration configuration, IGitRepository repository)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));

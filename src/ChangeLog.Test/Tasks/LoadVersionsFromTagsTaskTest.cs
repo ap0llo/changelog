@@ -13,11 +13,11 @@ using Xunit;
 namespace Grynwald.ChangeLog.Test.Tasks
 {
     /// <summary>
-    /// Unit tests for <see cref="LoadVersionsTask"/>.
+    /// Unit tests for <see cref="LoadVersionsFromTagsTask"/>.
     /// </summary>
-    public class LoadVersionsTaskTest
+    public class LoadVersionsFromTagsTaskTest
     {
-        private readonly ILogger<LoadVersionsTask> m_Logger = NullLogger<LoadVersionsTask>.Instance;
+        private readonly ILogger<LoadVersionsFromTagsTask> m_Logger = NullLogger<LoadVersionsFromTagsTask>.Instance;
 
         [Fact]
         public async Task Run_adds_versions_from_tags()
@@ -32,7 +32,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
@@ -63,7 +63,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var config = new ChangeLogConfiguration() { TagPatterns = Array.Empty<string>() };
 
-            var sut = new LoadVersionsTask(m_Logger, config, repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, config, repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
@@ -88,7 +88,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
@@ -119,7 +119,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var expectedVersion = SemanticVersion.Parse(version);
 
-            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
@@ -144,7 +144,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
