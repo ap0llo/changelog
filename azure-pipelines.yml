@@ -115,6 +115,24 @@ jobs:
     inputs:
       artifactName: $(artifactsName)
 
+  # Generate changelog and publish as build artifact
+  - task: DotNetCoreCLI@2
+    displayName: Generate changelog
+    inputs:
+      command: run
+      arguments: |
+        --project ./src/ChangeLog/Grynwald.ChangeLog.csproj ^
+        --framework netcoreapp3.1 ^
+        --repository $(Build.SourcesDirectory) ^
+        --currentversion $(NBGV_CloudBuildNumber) ^
+        --outputpath $(Build.StagingDirectory)/changelog.md ^
+        --verbose
+  - task: PublishBuildArtifacts@1
+    displayName: Publish changelog as artifact
+    inputs:
+      pathToPublish: $(Build.StagingDirectory)/changelog.md
+      artifactName: Change Log
+
 # Job to push package to MyGet.org after build
 - job: Publish_to_MyGet
   displayName: Publish to MyGet
@@ -225,7 +243,7 @@ jobs:
 #       action: 'create'
 #       target: '$(Build.SourceVersion)'
 #       tagSource: manual
-#       tag: v$(Build.BuildNumber)
+#       tag: v$(NBGV_CloudBuildNumber)
 #       releaseNotesSource: input
 #       releaseNotes: 'Automatic release by Azure DevOps. Package available on [NuGet.org](https://www.nuget.org/packages/$(nuget_org_PackageName)/$(Build.BuildNumber))'
 #       assets: $(Build.ArtifactStagingDirectory)/$(artifactsName)/*.nupkg
