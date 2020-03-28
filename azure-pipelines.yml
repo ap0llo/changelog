@@ -23,9 +23,12 @@
 #   - Only runs if the build was published to NuGet.org
 
 trigger:
-- master
-- features/*
-- release/*
+  - master
+  - release/*
+
+pr:
+  - master
+  - releases/*
 
 variables:
   # Build settings
