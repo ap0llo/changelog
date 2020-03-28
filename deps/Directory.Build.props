@@ -1,5 +1,12 @@
 <Project>
     <PropertyGroup>
         <IsPackable>false</IsPackable>
+
+        <!-- 
+            Disable GitVersionTask's Build Server support used by GitLabApiClient because
+            it interfers with the "CloudBuild" support in Nerdbank.GitVersioning used by 
+            the other projects (outside the sub-module)            
+        -->
+        <WriteVersionInfoToBuildLog>false</WriteVersionInfoToBuildLog>
     </PropertyGroup>
 </Project>
