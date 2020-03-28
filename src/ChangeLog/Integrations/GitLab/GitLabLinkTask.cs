@@ -52,10 +52,10 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
 
         /// <inheritdoc />
-        public async Task RunAsync(ApplicationChangeLog changeLog)
+        public async Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog)
         {
             if (m_ProjectInfo == null)
-                return;
+                return ChangeLogTaskResult.Skipped;
 
             m_Logger.LogInformation("Adding GitHub links to changelog");
 
@@ -68,6 +68,8 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                     await ProcessEntryAsync(gitlabClient, entry);
                 }
             }
+
+            return ChangeLogTaskResult.Success;
         }
 
 

@@ -75,6 +75,8 @@ namespace Grynwald.ChangeLog.Configuration
 
         public string? VersionRange { get; set; } = "";
 
+        public string? CurrentVersion { get; set; }
+
 
         public string GetFullOutputPath()
         {

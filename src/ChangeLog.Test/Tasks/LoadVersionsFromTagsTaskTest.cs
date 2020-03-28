@@ -13,11 +13,11 @@ using Xunit;
 namespace Grynwald.ChangeLog.Test.Tasks
 {
     /// <summary>
-    /// Unit tests for <see cref="LoadVersionsTask"/>.
+    /// Unit tests for <see cref="LoadVersionsFromTagsTask"/>.
     /// </summary>
-    public class LoadVersionsTaskTest
+    public class LoadVersionsFromTagsTaskTest
     {
-        private readonly ILogger<LoadVersionsTask> m_Logger = NullLogger<LoadVersionsTask>.Instance;
+        private readonly ILogger<LoadVersionsFromTagsTask> m_Logger = NullLogger<LoadVersionsFromTagsTask>.Instance;
 
         [Fact]
         public async Task Run_adds_versions_from_tags()
@@ -32,11 +32,11 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.All(
@@ -46,6 +46,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                     var version = NuGetVersion.Parse(tag.Name);
                     Assert.Contains(new VersionInfo(version, tag.Commit), changeLog.Versions);
                 });
+            Assert.Equal(ChangeLogTaskResult.Success, result);
         }
 
         [Fact]
@@ -63,15 +64,16 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var config = new ChangeLogConfiguration() { TagPatterns = Array.Empty<string>() };
 
-            var sut = new LoadVersionsTask(m_Logger, config, repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, config, repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.NotNull(changeLog.Versions);
             Assert.Empty(changeLog.Versions);
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
         }
 
         [Theory]
@@ -88,14 +90,15 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.Empty(changeLog.Versions);
+            Assert.Equal(ChangeLogTaskResult.Success, result);
         }
 
         [Theory]
@@ -119,19 +122,20 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var expectedVersion = SemanticVersion.Parse(version);
 
-            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             var versionInfo = Assert.Single(changeLog.Versions);
             Assert.Equal(expectedVersion, versionInfo.Version);
+            Assert.Equal(ChangeLogTaskResult.Success, result);
         }
 
         [Fact]
-        public async Task Run_ignores_duplicate_versions()
+        public async Task Run_ignores_duplicate_versions_from_tags()
         {
             // ARRANGE            
             var tags = new GitTag[]
@@ -144,15 +148,44 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var sut = new LoadVersionsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 
             // ACT
             var changeLog = new ApplicationChangeLog();
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.Contains(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("0123"));
             Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("8910"));
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+        }
+
+
+        [Fact]
+        public async Task Task_fails_if_version_was_already_added_by_a_previous_task()
+        {
+            // ARRANGE            
+            var tags = new GitTag[]
+            {
+                new GitTag("1.2.3", new GitId("0123")),
+            };
+
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.GetTags()).Returns(tags);
+
+            var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                new SingleVersionChangeLog(new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("4567")))
+            };
+
+            // ACT
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT            
+            Assert.Equal(ChangeLogTaskResult.Error, result);
+            Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("0123"));
         }
 
     }

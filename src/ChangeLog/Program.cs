@@ -55,7 +55,10 @@ namespace Grynwald.ChangeLog
 
                 containerBuilder.RegisterLogging(minimumLogLevel: commandlineParameters.Verbose ? LogLevel.Debug : LogLevel.Information);
 
-                containerBuilder.RegisterType<LoadVersionsTask>();
+                containerBuilder.RegisterType<ChangeLogPipeline>();
+
+                containerBuilder.RegisterType<LoadCurrentVersionTask>();
+                containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
                 containerBuilder.RegisterType<RenderMarkdownTask>();
@@ -67,18 +70,18 @@ namespace Grynwald.ChangeLog
                     // Note: The order of the tasks added here is important.
                     // E.g. In order for commits for versions loaded correctly, ParseCommitsTask needs to run before FilterVersionsTask
                     var pipeline = new ChangeLogPipelineBuilder(container)
-                        .AddTask<LoadVersionsTask>()
+                        .AddTask<LoadCurrentVersionTask>()
+                        .AddTask<LoadVersionsFromTagsTask>()
                         .AddTask<ParseCommitsTask>()
                         .AddTask<FilterVersionsTask>()
                         .AddIntegrationTasks()
                         .AddTask<RenderMarkdownTask>()
                         .Build();
 
-                    await pipeline.RunAsync();
+                    var result = await pipeline.RunAsync();
+                    return result.Success ? 0 : 1;
                 }
             }
-
-            return 0;
         }
 
         private static bool ValidateCommandlineParameters(CommandLineParameters parameters)

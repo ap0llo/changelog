@@ -28,6 +28,11 @@ namespace Grynwald.ChangeLog
         }
 
 
-        public ChangeLogPipeline Build() => new ChangeLogPipeline(m_Tasks);
+        public ChangeLogPipeline Build()
+        {
+            return Container.Resolve<ChangeLogPipeline>(
+                TypedParameter.From<IEnumerable<IChangeLogTask>>(m_Tasks)
+            );
+        }
     }
 }

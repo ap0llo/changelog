@@ -6,6 +6,7 @@ using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitHub;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -89,9 +90,10 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
 
@@ -108,9 +110,10 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
 
@@ -146,9 +149,10 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -203,9 +207,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -272,9 +278,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -326,9 +334,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -381,9 +391,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -411,9 +423,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             // ACT 
-            await sut.RunAsync(new ApplicationChangeLog());
+            var result = await sut.RunAsync(new ApplicationChangeLog());
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Once);
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(hostName), Times.Once);
         }

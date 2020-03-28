@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
 using Grynwald.MarkdownGenerator;
@@ -9,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
 {
-    internal sealed class RenderMarkdownTask : IChangeLogTask
+    internal sealed class RenderMarkdownTask : SynchronousChangeLogTask
     {
         private const string s_HeadingIdPrefix = "changelog-heading";
         private readonly ILogger<RenderMarkdownTask> m_Logger;
@@ -37,8 +36,7 @@ namespace Grynwald.ChangeLog.Tasks
         }
 
 
-        /// <inheritdoc />
-        public Task RunAsync(ApplicationChangeLog changeLog)
+        protected override ChangeLogTaskResult Run(ApplicationChangeLog changeLog)
         {
             var document = GetChangeLogDocument(changeLog);
 
@@ -49,7 +47,7 @@ namespace Grynwald.ChangeLog.Tasks
             m_Logger.LogInformation($"Saving changelog to '{outputPath}'");
             document.Save(outputPath, SerializationOptions);
 
-            return Task.CompletedTask;
+            return ChangeLogTaskResult.Success;
         }
 
 

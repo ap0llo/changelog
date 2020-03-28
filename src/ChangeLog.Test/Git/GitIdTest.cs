@@ -16,6 +16,7 @@ namespace Grynwald.ChangeLog.Test.Git
 
             Assert.Equal(id1.GetHashCode(), id2.GetHashCode());
             Assert.Equal(id1, id2);
+            Assert.True(id1 == id2);
         }
 
         [Theory]

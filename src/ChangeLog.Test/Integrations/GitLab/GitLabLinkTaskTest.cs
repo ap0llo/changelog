@@ -15,6 +15,7 @@ using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitLab;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
@@ -73,9 +74,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
+
             m_ClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
 
@@ -91,9 +94,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
+
             m_ClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
 
@@ -128,9 +133,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -155,9 +162,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             // ACT 
-            await sut.RunAsync(new ApplicationChangeLog());
+            var result = await sut.RunAsync(new ApplicationChangeLog());
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             m_ClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Once);
             m_ClientFactoryMock.Verify(x => x.CreateClient(hostName), Times.Once);
         }
@@ -210,9 +219,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -266,9 +277,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -325,9 +338,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -380,9 +395,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -439,9 +456,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
@@ -494,9 +513,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {

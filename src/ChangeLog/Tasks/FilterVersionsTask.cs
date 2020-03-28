@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
 using Microsoft.Extensions.Logging;
@@ -8,7 +7,7 @@ using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Tasks
 {
-    internal sealed class FilterVersionsTask : IChangeLogTask
+    internal sealed class FilterVersionsTask : SynchronousChangeLogTask
     {
         private readonly ILogger<FilterVersionsTask> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;
@@ -21,15 +20,15 @@ namespace Grynwald.ChangeLog.Tasks
         }
 
 
-        public Task RunAsync(ApplicationChangeLog changeLog)
+        protected override ChangeLogTaskResult Run(ApplicationChangeLog changeLog)
         {
             if (String.IsNullOrEmpty(m_Configuration.VersionRange))
-                return Task.CompletedTask;
+                return ChangeLogTaskResult.Skipped;
 
             if (!VersionRange.TryParse(m_Configuration.VersionRange, out var versionRange))
             {
-                m_Logger.LogWarning($"Failed to parse version range '{m_Configuration.VersionRange}'");
-                return Task.CompletedTask;
+                m_Logger.LogError($"Failed to parse version range '{m_Configuration.VersionRange}'");
+                return ChangeLogTaskResult.Error;
             }
 
             m_Logger.LogInformation($"Filtering changelog using version range '{versionRange}'");
@@ -43,7 +42,7 @@ namespace Grynwald.ChangeLog.Tasks
                 }
             }
 
-            return Task.CompletedTask;
+            return ChangeLogTaskResult.Success;
         }
     }
 }

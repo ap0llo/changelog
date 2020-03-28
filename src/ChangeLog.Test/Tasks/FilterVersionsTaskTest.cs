@@ -9,6 +9,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
+    /// <summary>
+    /// Unit tests for <see cref="FilterVersionsTask"/>
+    /// </summary>
     public class FilterVersionsTaskTest : TestBase
     {
         private readonly ILogger<FilterVersionsTask> m_Logger = NullLogger<FilterVersionsTask>.Instance;
@@ -30,10 +33,11 @@ namespace Grynwald.ChangeLog.Test.Tasks
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.Equal(2, changeLog.ChangeLogs.Count());
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
         }
 
 
@@ -54,10 +58,11 @@ namespace Grynwald.ChangeLog.Test.Tasks
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             Assert.Equal(2, changeLog.ChangeLogs.Count());
+            Assert.Equal(ChangeLogTaskResult.Error, result);
         }
 
         [Theory]
@@ -80,11 +85,12 @@ namespace Grynwald.ChangeLog.Test.Tasks
             };
 
             // ACT 
-            await sut.RunAsync(changeLog);
+            var result = await sut.RunAsync(changeLog);
 
             // ASSERT
             var remainingEntry = Assert.Single(changeLog.ChangeLogs);
             Assert.Equal(version2ChangeLog, remainingEntry);
+            Assert.Equal(ChangeLogTaskResult.Success, result);
         }
     }
 }

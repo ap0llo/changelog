@@ -12,17 +12,20 @@ using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Tasks
 {
-    internal sealed class LoadVersionsTask : IChangeLogTask
+    /// <summary>
+    /// Tasks that loads versions from git tags in a repository
+    /// </summary>
+    internal sealed class LoadVersionsFromTagsTask : SynchronousChangeLogTask
     {
         private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;
 
-        private readonly ILogger<LoadVersionsTask> m_Logger;
+        private readonly ILogger<LoadVersionsFromTagsTask> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;
         private readonly IGitRepository m_Repository;
         private readonly IReadOnlyList<Regex> m_TagPatterns;
 
 
-        public LoadVersionsTask(ILogger<LoadVersionsTask> logger, ChangeLogConfiguration configuration, IGitRepository repository)
+        public LoadVersionsFromTagsTask(ILogger<LoadVersionsFromTagsTask> logger, ChangeLogConfiguration configuration, IGitRepository repository)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -32,18 +35,30 @@ namespace Grynwald.ChangeLog.Tasks
         }
 
 
-        public Task RunAsync(ApplicationChangeLog changeLog)
+        protected override ChangeLogTaskResult Run(ApplicationChangeLog changeLog)
         {
+            if (m_TagPatterns.Count == 0)
+            {
+                m_Logger.LogWarning("No tag patterns configured, skipping loading of versions from tags.");
+                return ChangeLogTaskResult.Skipped;
+            }
+
             m_Logger.LogInformation("Loading versions from git tags");
 
-            foreach (var version in GetVersions())
+            foreach (var versionInfo in GetVersions())
             {
-                m_Logger.LogDebug($"Adding version '{version.Version}' to changelog");
-                var versionChangeLog = new SingleVersionChangeLog(version);
+                if (changeLog.ContainsVersion(versionInfo.Version))
+                {
+                    m_Logger.LogError($"Cannot add version '{versionInfo.Version}' from tags because the changelog already contains this version.");
+                    return ChangeLogTaskResult.Error;
+                }
+
+                m_Logger.LogDebug($"Adding version '{versionInfo.Version}' to changelog");
+                var versionChangeLog = new SingleVersionChangeLog(versionInfo);
                 changeLog.Add(versionChangeLog);
             }
 
-            return Task.CompletedTask;
+            return ChangeLogTaskResult.Success;
         }
 
 

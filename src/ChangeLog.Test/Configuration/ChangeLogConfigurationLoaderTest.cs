@@ -64,6 +64,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config.VersionRange));
             yield return TestCase(config => Assert.Empty(config.VersionRange));
+
+            yield return TestCase(config => Assert.NotNull(config.CurrentVersion));
+            yield return TestCase(config => Assert.Empty(config.CurrentVersion));
         }
 
         [Theory]
@@ -204,7 +207,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             }
         }
 
-
         public static IEnumerable<object?[]> IntegrationProviders()
         {
             foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.IntegrationProvider)))
@@ -302,7 +304,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal("some-other-access-token", config.Integrations.GitLab.AccessToken);
         }
 
-
         [Theory]
         [InlineData("[1.2.3,)")]
         public void Version_range_can_be_set_in_configuration_file(string versionRange)
@@ -317,7 +318,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotNull(config.VersionRange);
             Assert.Equal(versionRange, config.VersionRange);
         }
-
 
         private class TestSettingsClass4
         {
@@ -339,6 +339,43 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotNull(config.VersionRange);
             Assert.Equal("[4.5.6]", config.VersionRange);
         }
+
+        [Theory]
+        [InlineData("1.2.3")]
+        public void Current_version_can_be_set_in_the_configuration_file(string currentVersion)
+        {
+            // ARRANGE
+            PrepareConfiguration("currentVersion", currentVersion);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory);
+
+            // ASSERT
+            Assert.NotNull(config.CurrentVersion);
+            Assert.Equal(currentVersion, config.CurrentVersion);
+        }
+
+        private class TestSettingsClass5
+        {
+            [ConfigurationValue("changelog:currentVersion")]
+            public string? VersionRange { get; set; }
+        }
+
+        [Fact]
+        public void Configuration_from_settings_object_can_override_current_version()
+        {
+            // ARRANGE
+            PrepareConfiguration("currentVersion", "1.2.3");
+            var settingsObject = new TestSettingsClass4() { VersionRange = "4.5.6" };
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationDirectory, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.CurrentVersion);
+            Assert.Equal("4.5.6", config.VersionRange);
+        }
+
 
         private void PrepareConfiguration(string key, object value)
         {
