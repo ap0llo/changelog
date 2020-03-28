@@ -130,6 +130,9 @@ jobs:
         --currentversion $(NBGV_NuGetPackageVersion) 
         --outputpath $(Build.StagingDirectory)/changelog.md
         --verbose
+    env:
+      CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN: $(GitHub.AccessToken)
+
   - task: PublishBuildArtifacts@1
     displayName: Publish changelog as artifact
     inputs:
