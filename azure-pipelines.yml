@@ -36,9 +36,12 @@ variables:
   configuration: Release                      # the configuration (Debug/Release) to build
   dotNetSdk_Version: 3.1.100                  # the version of the .NET SDK to use
   solutionPath : src/ChangeLog.sln     # The path of the solution to be buildt
-  artifactsName: drop
+  artifactsName_Binaries: Binaries
+  artifactsName_ChangeLog: ChangeLog
+
   # MyGet.org settings   
   myget_ServiceConnectionName: 'MyGet - ap0llo-changelog'  # the name of the Azure DevOps service connection to use for MyGet.org
+  
   # # NuGet.org settings
   # nuget_org_ServiceConnectionName: 'NuGet.org - markdown-generator'  # the name of the Azure DevOps service connection to use for NuGet.org
   # nuget_org_PackageName: 'Grynwald.ChangeLog'                # the name of the package being published
@@ -113,7 +116,7 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifacts'
     inputs:
-      artifactName: $(artifactsName)
+      artifactName: $(artifactsName_Binaries)
 
   # Generate changelog and publish as build artifact
   - task: DotNetCoreCLI@2
@@ -131,7 +134,7 @@ jobs:
     displayName: Publish changelog as artifact
     inputs:
       pathToPublish: $(Build.StagingDirectory)/changelog.md
-      artifactName: Change Log
+      artifactName: $(artifactsName_ChangeLog)
 
 # Job to push package to MyGet.org after build
 - job: Publish_to_MyGet
@@ -147,7 +150,7 @@ jobs:
     inputs: 
       buildType: current
       downloadType: single
-      artifactName: $(artifactsName)
+      artifactName: $(artifactsName_Binaries)
       downloadPath: $(Build.ArtifactStagingDirectory)
   # Upload to MyGet.org
   - task: NuGetCommand@2
@@ -188,7 +191,7 @@ jobs:
 #     inputs: 
 #       buildType: current
 #       downloadType: single
-#       artifactName: $(artifactsName)
+#       artifactName: $(artifactsName_Binaries)
 #       downloadPath: $(Build.ArtifactStagingDirectory)
 #   # Upload to NuGet.org
 #   - task: NuGetCommand@2
@@ -234,7 +237,7 @@ jobs:
 #     inputs: 
 #       buildType: current
 #       downloadType: single
-#       artifactName: $(artifactsName)
+#       artifactName: $(artifactsName_Binaries)
 #       downloadPath: $(Build.ArtifactStagingDirectory)
 #   - task: GithubRelease@0
 #     inputs:
@@ -246,7 +249,7 @@ jobs:
 #       tag: v$(NBGV_NuGetPackageVersion)
 #       releaseNotesSource: input
 #       releaseNotes: 'Automatic release by Azure DevOps. Package available on [NuGet.org](https://www.nuget.org/packages/$(nuget_org_PackageName)/$(Build.BuildNumber))'
-#       assets: $(Build.ArtifactStagingDirectory)/$(artifactsName)/*.nupkg
+#       assets: $(Build.ArtifactStagingDirectory)/$(artifactsName_Binaries)/*.nupkg
 #       addChangeLog: true
 
       
