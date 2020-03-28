@@ -78,7 +78,7 @@ jobs:
       arguments: restore
 
   # Set the build number using Nerdbank.GitVersioning
-  - script: dotnet tool run nbgv cloud
+  - script: dotnet tool run nbgv cloud --all-vars
     displayName: Set Version
 
   # Check the formatting using dotnet-format
@@ -121,11 +121,11 @@ jobs:
     inputs:
       command: run
       arguments: >-
-        --project ./src/ChangeLog/Grynwald.ChangeLog.csproj ^
-        --framework netcoreapp3.1 ^
-        --repository $(Build.SourcesDirectory) ^
-        --currentversion $(NBGV_CloudBuildNumber) ^
-        --outputpath $(Build.StagingDirectory)/changelog.md ^
+        --project ./src/ChangeLog/Grynwald.ChangeLog.csproj
+        --framework netcoreapp3.1
+        --repository $(Build.SourcesDirectory)
+        --currentversion $(NBGV_NuGetPackageVersion) 
+        --outputpath $(Build.StagingDirectory)/changelog.md
         --verbose
   - task: PublishBuildArtifacts@1
     displayName: Publish changelog as artifact
@@ -225,7 +225,7 @@ jobs:
 #       arguments: restore
 
 #   # Set the build number using Nerdbank.GitVersioning
-#   - script: dotnet tool run nbgv cloud
+#   - script: dotnet tool run nbgv cloud --all-vars
 #     displayName: Set Version
 
 #   # Get build artifacts and create a GitHub release
@@ -243,7 +243,7 @@ jobs:
 #       action: 'create'
 #       target: '$(Build.SourceVersion)'
 #       tagSource: manual
-#       tag: v$(NBGV_CloudBuildNumber)
+#       tag: v$(NBGV_NuGetPackageVersion)
 #       releaseNotesSource: input
 #       releaseNotes: 'Automatic release by Azure DevOps. Package available on [NuGet.org](https://www.nuget.org/packages/$(nuget_org_PackageName)/$(Build.BuildNumber))'
 #       assets: $(Build.ArtifactStagingDirectory)/$(artifactsName)/*.nupkg
