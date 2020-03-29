@@ -36,4 +36,15 @@
     <ProjectReference Include="..\..\deps\GitLabApiClient\src\GitLabApiClient\GitLabApiClient.csproj" />
   </ItemGroup>
 
+  <!-- Auto-Generated command line help -->
+  <ItemGroup>
+    <PackageReference Include="Grynwald.MdDocs.MSBuild" Version="0.3.84" PrivateAssets="all" />
+  </ItemGroup>
+  <PropertyGroup>
+    <CommandLineDocumentationOutputPath>$(MSBuildThisFileDirectory)..\..\docs\commandline-reference\</CommandLineDocumentationOutputPath>
+    <!-- Generate dodccs only for netcoreapp3.1, otherwise there would be race-conditions between the buidls for the different target frameworks-->
+    <GenerateCommandLineDocumentationOnBuild Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">true</GenerateCommandLineDocumentationOnBuild>
+  </PropertyGroup>
+  
+
 </Project>

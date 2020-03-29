@@ -61,7 +61,7 @@
       "github": {
 
         // The GitHub access token can be set in the configuration file BUT SHOULDN'T.
-        // Use the "githubAccessToken" command line parameter instead
+        // Use the "githubAccessToken" command line parameter or the CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN environment variable instead
         "accessToken": null
       },
 
@@ -69,7 +69,7 @@
       "gitlab": {
 
         // The GitLab access token can be set in the configuration file BUT SHOULDN'T.
-        // Use the "gitlabAccessToken" command line parameter instead
+        // Use the "gitlabAccessToken" command line parameter or the CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN environment variable instead
         "accessToken": null
       }
     },

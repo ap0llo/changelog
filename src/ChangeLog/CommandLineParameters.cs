@@ -9,11 +9,11 @@ namespace Grynwald.ChangeLog
     {
         private string? m_OutputPath;
 
-        [Option('r', "repository", Required = true)]
+        [Option('r', "repository", Required = true, HelpText = "The local path of the git repository to generate a change log for.")]
         [ConfigurationValue("changelog:repositoryPath")]
         public string RepositoryPath { get; set; } = "";
 
-        [Option('o', "outputpath", Required = false)]
+        [Option('o', "outputpath", Required = false, HelpText = "The path to save the changelog to.")]
         [ConfigurationValue("changelog:outputPath")]
         public string? OutputPath
         {
@@ -26,22 +26,22 @@ namespace Grynwald.ChangeLog
             set => m_OutputPath = value;
         }
 
-        [Option("gitHubAccessToken", Required = false)]
+        [Option("githubAccessToken", Required = false, HelpText = "The access token to use if the GitHub integration is enabled.")]
         [ConfigurationValue("changelog:integrations:github:accesstoken")]
         public string? GitHubAccessToken { get; set; }
 
-        [Option("gitLabAccessToken", Required = false)]
+        [Option("gitlabAccessToken", Required = false, HelpText = "The access token to use if the GitLab integration is enabled.")]
         [ConfigurationValue("changelog:integrations:gitlab:accesstoken")]
         public string? GitLabAccessToken { get; set; }
 
-        [Option("verbose", Required = false, Default = false)]
+        [Option('v', "verbose", Required = false, Default = false, HelpText = "Increase the level of detail for messages logged to the console.")]
         public bool Verbose { get; set; }
 
-        [Option("versionRange", Required = false, Default = null)]
+        [Option("versionRange", Required = false, Default = null, HelpText = "The range of versions to include in the change log. Value must be a valid NuGet version range.")]
         [ConfigurationValue("changelog:versionrange")]
         public string? VersionRange { get; set; }
 
-        [Option("currentVersion", Required = false, Default = null, HelpText = "Sets the version of the currently checkout out commit. Value must be a valid semantic version")]
+        [Option("currentVersion", Required = false, Default = null, HelpText = "Sets the version of the currently checked-out commit. Value must be a valid semantic version")]
         [ConfigurationValue("changelog:currentVersion")]
         public string? CurrentVersion { get; set; }
     }
