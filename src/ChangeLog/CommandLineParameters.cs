@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using Grynwald.ChangeLog.Configuration;
 using CommandLine;
+using Grynwald.ChangeLog.Configuration;
 
 namespace Grynwald.ChangeLog
 {
@@ -9,9 +9,16 @@ namespace Grynwald.ChangeLog
     {
         private string? m_OutputPath;
 
+
         [Option('r', "repository", Required = true, HelpText = "The local path of the git repository to generate a change log for.")]
         [ConfigurationValue("changelog:repositoryPath")]
         public string RepositoryPath { get; set; } = "";
+
+        [Option('c', "configurationPath", Required = false, HelpText =
+            "The path of the configuration file to use. " +
+            "When no configuration file path is specified, changelog looks for a file named 'changelog.settings.json' in the repository directory. " +
+            "If no configuration file is found, default settings are used.")]
+        public string? ConfigurationFilePath { get; set; }
 
         [Option('o', "outputpath", Required = false, HelpText = "The path to save the changelog to.")]
         [ConfigurationValue("changelog:outputPath")]

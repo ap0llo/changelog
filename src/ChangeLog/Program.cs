@@ -16,6 +16,9 @@ namespace Grynwald.ChangeLog
 {
     internal static class Program
     {
+        private const string s_DefaultConfigurationFileName = "changelog.settings.json";
+
+
         private static async Task<int> Main(string[] args)
         {
             using var commandlineParser = new Parser(settings =>
@@ -48,7 +51,11 @@ namespace Grynwald.ChangeLog
             if (!ValidateCommandlineParameters(commandlineParameters, new ConsoleLogger(LogLevel.Information, "")))
                 return 1;
 
-            var configuration = ChangeLogConfigurationLoader.GetConfiguation(commandlineParameters.RepositoryPath, commandlineParameters);
+            var configurationFilePath = !String.IsNullOrEmpty(commandlineParameters.ConfigurationFilePath)
+                ? commandlineParameters.ConfigurationFilePath
+                : Path.Combine(commandlineParameters.RepositoryPath, s_DefaultConfigurationFileName);
+
+            var configuration = ChangeLogConfigurationLoader.GetConfiguation(configurationFilePath, commandlineParameters);
             using (var gitRepository = new GitRepository(configuration.RepositoryPath))
             {
                 var containerBuilder = new ContainerBuilder();

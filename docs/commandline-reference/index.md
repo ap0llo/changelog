@@ -1,11 +1,12 @@
 ﻿# changelog Command Line Reference
 
-**Version:** 0.1.60\-pre+191e3ba215
+**Version:** 0.1.62\-pre+b4ba9e6286
 
 ## Usage
 
 ```
-changelog [--currentVersion <VALUE>]
+changelog [--configurationPath|-c <VALUE>]
+          [--currentVersion <VALUE>]
           [--githubAccessToken <VALUE>]
           [--gitlabAccessToken <VALUE>]
           [--outputpath|-o <VALUE>]
@@ -16,15 +17,30 @@ changelog [--currentVersion <VALUE>]
 
 ## Parameters
 
-| Name                                              | Short Name                 | Required | Description                                                                                    |
-| ------------------------------------------------- | -------------------------- | -------- | ---------------------------------------------------------------------------------------------- |
-| [currentVersion](#currentversion-parameter)       |                            | No       | Sets the version of the currently checked\-out commit. Value must be a valid semantic version  |
-| [githubAccessToken](#githubaccesstoken-parameter) |                            | No       | The access token to use if the GitHub integration is enabled.                                  |
-| [gitlabAccessToken](#gitlabaccesstoken-parameter) |                            | No       | The access token to use if the GitLab integration is enabled.                                  |
-| [outputpath](#outputpath-parameter)               | [o](#outputpath-parameter) | No       | The path to save the changelog to.                                                             |
-| [repository](#repository-parameter)               | [r](#repository-parameter) | Yes      | The local path of the git repository to generate a change log for.                             |
-| [verbose](#verbose-parameter)                     | [v](#verbose-parameter)    | No       | Increase the level of detail for messages logged to the console.                               |
-| [versionRange](#versionrange-parameter)           |                            | No       | The range of versions to include in the change log. Value must be a valid NuGet version range. |
+| Name                                              | Short Name                        | Required | Description                                                                                                                                                                                                                                    |
+| ------------------------------------------------- | --------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [configurationPath](#configurationpath-parameter) | [c](#configurationpath-parameter) | No       | The path of the configuration file to use. When no configuration file path is specified, changelog looks for a file named 'changelog.settings.json' in the repository directory. If no configuration file is found, default settings are used. |
+| [currentVersion](#currentversion-parameter)       |                                   | No       | Sets the version of the currently checked\-out commit. Value must be a valid semantic version                                                                                                                                                  |
+| [githubAccessToken](#githubaccesstoken-parameter) |                                   | No       | The access token to use if the GitHub integration is enabled.                                                                                                                                                                                  |
+| [gitlabAccessToken](#gitlabaccesstoken-parameter) |                                   | No       | The access token to use if the GitLab integration is enabled.                                                                                                                                                                                  |
+| [outputpath](#outputpath-parameter)               | [o](#outputpath-parameter)        | No       | The path to save the changelog to.                                                                                                                                                                                                             |
+| [repository](#repository-parameter)               | [r](#repository-parameter)        | Yes      | The local path of the git repository to generate a change log for.                                                                                                                                                                             |
+| [verbose](#verbose-parameter)                     | [v](#verbose-parameter)           | No       | Increase the level of detail for messages logged to the console.                                                                                                                                                                               |
+| [versionRange](#versionrange-parameter)           |                                   | No       | The range of versions to include in the change log. Value must be a valid NuGet version range.                                                                                                                                                 |
+
+### `configurationPath` Parameter
+
+The path of the configuration file to use. When no configuration file path is specified, changelog looks for a file named 'changelog.settings.json' in the repository directory. If no configuration file is found, default settings are used.
+
+|                |                   |
+| -------------- | ----------------- |
+| Name:          | configurationPath |
+| Short name:    | c                 |
+| Position:      | *Named parameter* |
+| Required:      | No                |
+| Default value: | *None*            |
+
+___
 
 ### `currentVersion` Parameter
 

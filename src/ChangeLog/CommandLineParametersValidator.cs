@@ -21,11 +21,16 @@ namespace Grynwald.ChangeLog
                     : null;
             };
 
-            RuleFor(x => x.RepositoryPath).NotEmpty().WithSeverity(Severity.Info);
+            RuleFor(x => x.RepositoryPath).NotEmpty();
             RuleFor(x => x.RepositoryPath)
                 .Must(Directory.Exists)
                 .When(x => !String.IsNullOrWhiteSpace(x.RepositoryPath))
                 .WithMessage("Directory '{PropertyValue}' does not exists (parameter {PropertyName})");
+
+            RuleFor(x => x.ConfigurationFilePath)
+                .Must(File.Exists)
+                .When(x => !String.IsNullOrEmpty(x.ConfigurationFilePath))
+                .WithMessage("File '{PropertyValue}' does not exists (parameter {PropertyName})");
 
             RuleFor(x => x.CurrentVersion)
                 .Must(val => NuGetVersion.TryParse(val, out _))

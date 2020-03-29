@@ -7,8 +7,11 @@ namespace Grynwald.ChangeLog.Configuration
 {
     internal static class ConfigurationBuilderExtensions
     {
-        public static IConfigurationBuilder AddObject(this IConfigurationBuilder builder, object settingsObject)
+        public static IConfigurationBuilder AddObject(this IConfigurationBuilder builder, object? settingsObject)
         {
+            if (settingsObject is null)
+                return builder;
+
             var settings = GetSettingsDictionary(settingsObject);
             return builder.AddInMemoryCollection(settings);
         }

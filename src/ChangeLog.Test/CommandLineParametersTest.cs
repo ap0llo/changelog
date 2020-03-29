@@ -7,6 +7,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test
 {
+    /// <summary>
+    /// Tests for <see cref="CommandLineParameters"/>
+    /// </summary>
     public class CommandLineParametersTest
     {
         public static IEnumerable<object[]> Properties()
@@ -15,6 +18,10 @@ namespace Grynwald.ChangeLog.Test
             {
                 // the "--verbose" switch has no corresponding configuration setting
                 if (property.Name == nameof(CommandLineParameters.Verbose))
+                    continue;
+
+                // the "--configurationPath" parameter has no corresponding configuration setting
+                if (property.Name == nameof(CommandLineParameters.ConfigurationFilePath))
                     continue;
 
                 yield return new[] { property.Name };

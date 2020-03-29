@@ -196,5 +196,52 @@ namespace Grynwald.ChangeLog.Test
             Assert.True(result.IsValid);
             Assert.Empty(result.Errors);
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void ConfigurationFilePath_may_be_empty(string path)
+        {
+            // ARRANGE
+            using var repositoryDirectory = new TemporaryDirectory();
+            var parameters = new CommandLineParameters()
+            {
+                RepositoryPath = repositoryDirectory,
+                ConfigurationFilePath = path
+            };
+
+            var validator = new CommandLineParametersValidator();
+
+            // ACT 
+            var result = validator.Validate(parameters);
+
+            // ASSERT
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
+        }
+
+        [Fact]
+        public void ConfigurationFilePath_must_exists_if_parameter_is_set()
+        {
+            // ARRANGE
+            using var repositoryDirectory = new TemporaryDirectory();
+            var configurationFilePath = Path.Combine(repositoryDirectory, "config.json");
+
+            var parameters = new CommandLineParameters()
+            {
+                RepositoryPath = repositoryDirectory,
+                ConfigurationFilePath = configurationFilePath
+            };
+
+            var validator = new CommandLineParametersValidator();
+
+            // ACT 
+            var result = validator.Validate(parameters);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Equal(nameof(CommandLineParameters.ConfigurationFilePath), error.PropertyName);
+        }
     }
 }
