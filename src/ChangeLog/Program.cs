@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
+using CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations;
 using Grynwald.ChangeLog.Logging;
 using Grynwald.ChangeLog.Tasks;
-using CommandLine;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog
@@ -42,7 +42,10 @@ namespace Grynwald.ChangeLog
 
         private static async Task<int> RunAsync(CommandLineParameters commandlineParameters)
         {
-            if (!ValidateCommandlineParameters(commandlineParameters))
+            // for validation of command line parameters, directly create a console logger
+            // bypassing the DI container because we need to validate the parameters
+            // before setting up DI
+            if (!ValidateCommandlineParameters(commandlineParameters, new ConsoleLogger(LogLevel.Information, "")))
                 return 1;
 
             var configuration = ChangeLogConfigurationLoader.GetConfiguation(commandlineParameters.RepositoryPath, commandlineParameters);
@@ -84,12 +87,17 @@ namespace Grynwald.ChangeLog
             }
         }
 
-        private static bool ValidateCommandlineParameters(CommandLineParameters parameters)
+        private static bool ValidateCommandlineParameters(CommandLineParameters parameters, ILogger logger)
         {
-            if (String.IsNullOrEmpty(parameters.RepositoryPath))
-                return false;
-            else
-                return Directory.Exists(parameters.RepositoryPath);
+            var validator = new CommandLineParametersValidator();
+            var result = validator.Validate(parameters);
+
+            foreach (var error in result.Errors)
+            {
+                logger.LogError(error.ToString());
+            }
+
+            return result.IsValid;
         }
     }
 }
