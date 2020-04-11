@@ -2,6 +2,7 @@
 
 [![Build Status](https://dev.azure.com/ap0llo/OSS/_apis/build/status/changelog?branchName=master)](https://dev.azure.com/ap0llo/OSS/_build/latest?definitionId=17&branchName=master)
 [![MyGet](https://img.shields.io/myget/ap0llo-changelog/vpre/Grynwald.ChangeLog.svg?label=myget)](https://www.myget.org/feed/ap0llo-changelog/package/nuget/Grynwald.ChangeLog)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
 ## Overview
 
