@@ -32,7 +32,7 @@
 		<Authors>Andreas Gruenwald</Authors>
 		<PackageProjectUrl>https://github.com/ap0llo/changelog</PackageProjectUrl>		
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<Description>A tool to generate a change log from a project's git commit history using Conventional Commits.</Description>
+		<Description>A tool to generate a change log from a project's git history using Conventional Commits.</Description>
 	</PropertyGroup>
 
 </Project>

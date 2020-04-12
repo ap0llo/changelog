@@ -11,14 +11,14 @@ for your project.
 ChangeLog is distributed as .NET (global) tool and requires either
 the .NET Core SDK 2.1 or 3.1 to be installed.
 
-ChangeLog is not (yet) available on NuGet.org, but can find prerelease
-build on
+ChangeLog is available on NuGet.org.
+Furthermore,you can find prerelease builds on
 [MyGet](https://www.myget.org/feed/ap0llo-changelog/package/nuget/Grynwald.ChangeLog).
 
-To install (e.g. version `0.1.64-pre`), run:
+To install ChangeLog, run:
 
 ```sh
-dotnet tool install -g Grynwald.ChangeLog --version 0.1.64-pre --add-source https://www.myget.org/F/ap0llo-changelog/api/v3/index.json
+dotnet tool install -g Grynwald.ChangeLog
 ```
 
 ## Generating a changelog
