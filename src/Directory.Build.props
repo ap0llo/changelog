@@ -21,10 +21,18 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
-	<!-- Disbale nullable support on .Net Core 2.1 -->
+	<!-- Disable nullable support on .Net Core 2.1 -->
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
 		<Nullable>disable</Nullable>
 		<NoWarn>8632</NoWarn>  <!-- Suppress warning about nullable annotation in the source code although nullable is disabled-->
 	</PropertyGroup>
 	
+	<!--NuGet package properties -->
+	<PropertyGroup>
+		<Authors>Andreas Gruenwald</Authors>
+		<PackageProjectUrl>https://github.com/ap0llo/changelog</PackageProjectUrl>		
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Description>A tool to generate a change log from a project's git commit history using Conventional Commits.</Description>
+	</PropertyGroup>
+
 </Project>
