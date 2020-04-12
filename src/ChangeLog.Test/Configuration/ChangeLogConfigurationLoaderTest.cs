@@ -196,6 +196,22 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal(preset, config.Markdown.Preset);
         }
 
+        [Theory]
+        [MemberData(nameof(MarkdownPresets))]
+        public void Markdown_preset_can_be_set_through_environment_variables(ChangeLogConfiguration.MarkdownPreset preset, string configurationValue)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("markdown:preset", configurationValue);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Markdown);
+            Assert.Equal(preset, config.Markdown.Preset);
+        }
+
+
         [Fact]
         public void TagPatterns_can_be_set_in_configuration_file()
         {
@@ -293,6 +309,22 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotNull(config.Integrations);
             Assert.Equal(integrationProvider, config.Integrations.Provider);
         }
+
+        [Theory]
+        [MemberData(nameof(IntegrationProviders))]
+        public void IntegrationProvider_can_be_set_through_environment_variables(ChangeLogConfiguration.IntegrationProvider integrationProvider)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:provider", integrationProvider.ToString());
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations);
+            Assert.Equal(integrationProvider, config.Integrations.Provider);
+        }
+
 
         [Theory]
         [InlineData("some-access-token")]
@@ -538,5 +570,57 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotNull(config.CurrentVersion);
             Assert.Equal("7.8.9", config.CurrentVersion);
         }
+
+        [Fact]
+        public void OutputPath_can_be_set_in__the_configuration_file()
+        {
+            // ARRANGE
+            PrepareConfiguration("outputPath", "outputPath1");
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.Equal("outputPath1", config.OutputPath);
+        }
+
+        [Fact]
+        public void OutputPath_can_be_set_through_environment_variables()
+        {
+            // ARRANGE
+            PrepareConfiguration("outputPath", "outputPath1");
+            SetConfigEnvironmentVariable("outputPath", "outputPath2");
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+
+            // ASSERT
+            // environment variables override configuration file
+            Assert.Equal("outputPath2", config.OutputPath);
+        }
+
+        private class TestSettingsClass7
+        {
+            [ConfigurationValue("changelog:outputPath")]
+            public string? OutputPath { get; set; }
+        }
+
+        [Fact]
+        public void OutputPath_from_settings_object_overrides_output_path()
+        {
+            // ARRANGE
+            PrepareConfiguration("outputPath", "outputPath1");
+            SetConfigEnvironmentVariable("outputPath", "outputPath2");
+
+            var settingsObject = new TestSettingsClass7() { OutputPath = "outputPath3" };
+
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath, settingsObject);
+
+            // ASSERT
+            // settings objects overrides both configuration file and environment variables
+            Assert.Equal("outputPath3", config.OutputPath);
+        }
+
     }
 }
