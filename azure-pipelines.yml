@@ -262,6 +262,5 @@ jobs:
       tag: v$(NBGV_NuGetPackageVersion)
       releaseNotesSource: file
       releaseNotesFile: $(Build.ArtifactStagingDirectory)/$(artifactsName_ChangeLog)/changelog.md
-      assets: $(Build.ArtifactStagingDirectory)/$(artifactsName_Binaries)/*.nupkg      
-
-      
+      assets: $(Build.ArtifactStagingDirectory)/$(artifactsName_Binaries)/*.nupkg
+      addChangeLog: false
