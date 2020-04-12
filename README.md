@@ -6,12 +6,15 @@
 
 ## Overview
 
-ChangeLog is a tool to generate a changelog based on git commit history using
+ChangeLog is a tool to generate a change log based on git commit history using
 [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
-## Getting Started
+## Documentation
 
-See [Getting started](./docs/getting-started.md)
+- [Getting started](./docs/getting-started.md)
+- [Configuration](./docs/configuration.md)
+- [Integrations](./docs/integrations.md)
+- [Commandline Reference](./docs/commandline-reference/index.md)
 
 ## Building from source
 

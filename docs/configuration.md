@@ -31,7 +31,7 @@ The configuration file is a JSON file and uses the same schema as
 
 The use of a configuration file is **optional**.
 By default, ChangeLog will attempt to load settings from a file called
-`changelog.settings.json` in the root of the git repository a changelog
+`changelog.settings.json` in the root of the git repository a change log
 is being generated for.
 Alternatively, you can specify the path of the configuration file using the
 `configurationFilePath` commandline parameter
@@ -328,7 +328,7 @@ For details on see [Integrations](./integrations.md).
 Enable the GitHub integration provider:
 
 ```json
-{ 
+{
     "changelog" : {
         "integrations" :{
             "provider" : "github"
@@ -414,7 +414,7 @@ accessing the GitLab  API when the GitLab integration is enabled.
     </tr>
 </table>
 
-By default, **all versions** are included in the changelog.
+By default, **all versions** are included in the change log.
 To limit the versions to include, you can specify a version range using
 this setting.
 
@@ -422,13 +422,13 @@ The value must be a valid [NuGet Version Range](https://docs.microsoft.com/en-us
 
 #### Example
 
-To only include versions newer than version `2.1` in the changelog, use the
+To only include versions newer than version `2.1` in the change log, use the
 following version range:
 
 ```json
 {
     "changelog" : {
-        "versionRange" : "[2.1, )" 
+        "versionRange" : "[2.1, )"
     }
 }
 ```
@@ -455,9 +455,9 @@ following version range:
 </table>
 
 By default, versions are only read from a git repository's tags and only
-tagged versions are included in the changelog. To include the currently checked
+tagged versions are included in the change log. To include the currently checked
 out commit (the repository HEAD), you can specify the current version.
-When specified, the current version is included in the changelog as well.
+When specified, the current version is included in the change log as well.
 
 The value must be a valid semantic version.
 
