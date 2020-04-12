@@ -20,7 +20,7 @@ namespace Grynwald.ChangeLog
             "If no configuration file is found, default settings are used.")]
         public string? ConfigurationFilePath { get; set; }
 
-        [Option('o', "outputpath", Required = false, HelpText = "The path to save the changelog to.")]
+        [Option('o', "outputPath", Required = false, HelpText = "The path to save the changelog to.")]
         [ConfigurationValue("changelog:outputPath")]
         public string? OutputPath
         {

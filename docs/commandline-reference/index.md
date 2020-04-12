@@ -1,6 +1,6 @@
 ﻿# changelog Command Line Reference
 
-**Version:** 0.1.66\-pre+c973c4604d
+**Version:** 0.1.69\-pre+e53a0da15b
 
 ## Usage
 
@@ -9,7 +9,7 @@ changelog [--configurationFilePath|-c <VALUE>]
           [--currentVersion <VALUE>]
           [--githubAccessToken <VALUE>]
           [--gitlabAccessToken <VALUE>]
-          [--outputpath|-o <VALUE>]
+          [--outputPath|-o <VALUE>]
           --repository|-r <VALUE>
           [--verbose|-v]
           [--versionRange <VALUE>]
@@ -23,7 +23,7 @@ changelog [--configurationFilePath|-c <VALUE>]
 | [currentVersion](#currentversion-parameter)               |                                       | No       | Sets the version of the currently checked\-out commit. Value must be a valid semantic version                                                                                                                                                  |
 | [githubAccessToken](#githubaccesstoken-parameter)         |                                       | No       | The access token to use if the GitHub integration is enabled.                                                                                                                                                                                  |
 | [gitlabAccessToken](#gitlabaccesstoken-parameter)         |                                       | No       | The access token to use if the GitLab integration is enabled.                                                                                                                                                                                  |
-| [outputpath](#outputpath-parameter)                       | [o](#outputpath-parameter)            | No       | The path to save the changelog to.                                                                                                                                                                                                             |
+| [outputPath](#outputpath-parameter)                       | [o](#outputpath-parameter)            | No       | The path to save the changelog to.                                                                                                                                                                                                             |
 | [repository](#repository-parameter)                       | [r](#repository-parameter)            | Yes      | The local path of the git repository to generate a change log for.                                                                                                                                                                             |
 | [verbose](#verbose-parameter)                             | [v](#verbose-parameter)               | No       | Increase the level of detail for messages logged to the console.                                                                                                                                                                               |
 | [versionRange](#versionrange-parameter)                   |                                       | No       | The range of versions to include in the change log. Value must be a valid NuGet version range.                                                                                                                                                 |
@@ -81,13 +81,13 @@ The access token to use if the GitLab integration is enabled.
 
 ___
 
-### `outputpath` Parameter
+### `outputPath` Parameter
 
 The path to save the changelog to.
 
 |                |                   |
 | -------------- | ----------------- |
-| Name:          | outputpath        |
+| Name:          | outputPath        |
 | Short name:    | o                 |
 | Position:      | *Named parameter* |
 | Required:      | No                |
