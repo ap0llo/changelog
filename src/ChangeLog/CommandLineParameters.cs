@@ -14,7 +14,7 @@ namespace Grynwald.ChangeLog
         [ConfigurationValue("changelog:repositoryPath")]
         public string RepositoryPath { get; set; } = "";
 
-        [Option('c', "configurationPath", Required = false, HelpText =
+        [Option('c', "configurationFilePath", Required = false, HelpText =
             "The path of the configuration file to use. " +
             "When no configuration file path is specified, changelog looks for a file named 'changelog.settings.json' in the repository directory. " +
             "If no configuration file is found, default settings are used.")]
