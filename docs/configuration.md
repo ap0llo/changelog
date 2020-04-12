@@ -43,18 +43,16 @@ Settings will also be loaded from environment variables.
 This is especially useful for passing secrets (like GitHub access tokens)
 when running in CI environments.
 
-The environment variables that will be loaded are listed in the
-table below.
+The environment variables that will be loaded are listed below.
 
 ### Commandline parameters
 
-Some settings can alos be overridden using commandline parameter.
+Some settings can also be overridden using commandline parameter.
 Commandline parameters are considered to be the "most specific" setting
 for an execution of ChangeLog and can override settings from all other
 sources.
 
-Which commandline parameters override which setting is listed
-in the table below.
+Which commandline parameters override which setting is listed below.
 
 ## Settings
 
@@ -86,25 +84,388 @@ like this:
 
 ### Scopes
 
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:scopes</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><em>Empty</em></td>
+    </tr>
+</table>
+
+The *Scopes* setting configures how
+[Conventional Commit](https://www.conventionalcommits.org/) scopes are display.
+By default, the scopes are included unchanged in the output.
+Using this setting, you can configure a scope's display name.
+When a display name is configured, it will be used in the output instead
+of the scope's name.
+
+#### Example
+
+```json
+{
+    "changelog" : {
+        "scopes" : [
+            { "name":  "myScope", "displayName":  "Scope Display Name" }
+        ]
+    }
+}
+```
+
 ### Footers
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:footers</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><em>Empty</em></td>
+    </tr>
+</table>
+
+The *Footers* setting configures how
+[Conventional Commit](https://www.conventionalcommits.org/) footers are displayed.
+By default, footers are included unchanged in the output.
+Using this setting, you can configure a footer's display name.
+When a display name is configured, it will be used in the output instead 
+of the footer's name.
+
+#### Example
+
+```json
+{
+    "changelog" : {
+        "footers" : [
+            { "name":  "see-also", "displayName":  "See Also" }
+        ]
+    }
+}
+```
 
 ### Markdown Preset
 
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:markdown:preset</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__MARKDOWN__PRESET</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><code>default</code></td>
+    </tr>
+    <tr>
+        <td><b>Allowed values</b></td>
+        <td>
+            <ul>
+                <li><code>default</code></li>
+                <li><code>MkDocs</code></li>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+The *Markdown Preset* setting can be used to customize the serialization
+of Markdown.
+
+Supported values are:
+
+- `default`: Produces Markdown that should work in most environments, including
+  GitHub and GitLab
+- `MkDocs`: Produces Markdown optimized for being rendered by Python-Markdown
+  and [MkDocs](https://www.mkdocs.org/)
+
+For details on the differences between the presets, see also
+[Markdown Generator docs](https://github.com/ap0llo/markdown-generator/blob/master/docs/apireference/Grynwald/MarkdownGenerator/MdSerializationOptions/Presets/index.md)
+
+#### Example
+
+```json
+{
+    "changelog" : {
+        "markdown" : {
+            "preset" : "MkDocs"
+        }
+    }
+}
+```
+
 ### Tag Patterns
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:tagpatterns</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><code>[ "^(?&lt;version&gt;\d+\.\d+\.\d+.*)", "^v(?&lt;version&gt;\d+\.\d+\.\d+.*)" ]</code></td>
+    </tr>
+</table>
+
+The *Tag Patterns* setting controls how versions are read from a git
+repository's tags. The setting defines a list of regular expressions that
+are used go extract the version from the tag name.
+All regular expressions must define a `version` sub-expression which matches
+the version. The matched value must be a valid
+[semantic version](https://semver.org/).
+
+The default setting matches tag names that are semantic versions or
+tags names that are semantic versions prefixed with `v`.
 
 ### Output Path
 
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:outputPath</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__OUTPUTPATH</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td><code>outputPath</code></td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><code>changelog.md</code></td>
+    </tr>
+</table>
+
+Specifies the output path for the generated change log.
+
+When the value of the setting is a relative path, the path is interpreted
+to be relative to
+
+- The repository root directory when setting the output path in the
+  configuration file or through environment variables
+- The current working directory when specifying the output path using
+  the `outputPath` commandline parameter
+
+#### Example
+
+```json
+{
+    "changelog" : {
+        "outputPath" : "my-custom-output-path.md"
+    }
+}
+```
+
 ### Integration Provider
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:integrations:provider</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__INTEGRATIONS__PROVIDER</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><code>none</code></td>
+    </tr>
+    <tr>
+        <td><b>Allowed values</b></td>
+        <td>
+            <ul>
+                <li><code>none</code></li>
+                <li><code>GitHub</code></li>
+                <li><code>GitLab</code></li>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+Sets the *Integration Provider* to use.
+For details on see [Integrations](./integrations.md).
+
+#### Example
+
+Enable the GitHub integration provider:
+
+```json
+{ 
+    "changelog" : {
+        "integrations" :{
+            "provider" : "github"
+        }
+    }
+}
+```
 
 ### GitHub Access Token
 
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:integrations:github:accessToken</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td><code>githubAccessToken</code></td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>-</td>
+    </tr>
+</table>
+
+The *GitHub Access Token* setting configures the access token to use for
+accessing the GitHub API when the GitHub integration is enabled.
+
+**❌ While it is possible to set the access token in the configuration file**
+**you should use the command line parameter or environment variable options**
+**instead.**
+
 ### GitLab Access Token
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:integrations:gitlab:accessToken</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td><code>gitlabAccessToken</code></td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>-</td>
+    </tr>
+</table>
+
+The *GitLab Access Token* setting configures the access token to use for
+accessing the GitLab  API when the GitLab integration is enabled.
+
+**❌ While it is possible to set the access token in the configuration file**
+**you should use the command line parameter or environment variable options**
+**instead.**
 
 ### Version Range
 
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:versionRange</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__VERSIONRANGE</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td><code>versionRange</code></td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>-</td>
+    </tr>
+</table>
+
+By default, **all versions** are included in the changelog.
+To limit the versions to include, you can specify a version range using
+this setting.
+
+The value must be a valid [NuGet Version Range](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-ranges)
+
+#### Example
+
+To only include versions newer than version `2.1` in the changelog, use the
+following version range:
+
+```json
+{
+    "changelog" : {
+        "versionRange" : "[2.1, )" 
+    }
+}
+```
+
 ### Current Version
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:currentVersion</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__CURRENTVERSION</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td><code>currentVersion</code></td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>-</td>
+    </tr>
+</table>
+
+By default, versions are only read from a git repository's tags and only
+tagged versions are included in the changelog. To include the currently checked
+out commit (the repository HEAD), you can specify the current version.
+When specified, the current version is included in the changelog as well.
+
+The value must be a valid semantic version.
 
 ## See Also
 
 - [Commandline reference](./commandline-reference/index.md)
 - [`defaultSettings.json`](../src/ChangeLog/Configuration/defaultSettings.json)
+- [Conventional Commits](https://www.conventionalcommits.org/)
+- [Semantic Versioning](https://semver.org/)
+- [Integrations](./integrations.md)
+- [NuGet Version Ranges](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-ranges)

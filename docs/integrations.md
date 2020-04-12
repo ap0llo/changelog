@@ -12,7 +12,7 @@ Currently supported providers are:
 ## Configuring integrations
 
 By default, no integrations are enabled. To specify the integration provider,
-use the using the `changelog:integrations:provider` setting in `changelog.settings.json`:
+use the using the `changelog:integrations:provider` setting:
 
 ```json
 {
@@ -24,7 +24,11 @@ use the using the `changelog:integrations:provider` setting in `changelog.settin
 }
 ```
 
-Allowed values are `none` (default), `GitHub` and `GitLab`
+Allowed values are:
+
+- `none` (default)
+- `GitHub` 
+- `GitLab`
 
 ## GitHub
 
@@ -87,3 +91,7 @@ of the *origin* remote in the local git repository.
 
 To access private repositories, an access token must be specified using the
 `--gitLabAccessToken` commandline parameter.
+
+## See Also
+
+- [Configuration](./configuration.md)

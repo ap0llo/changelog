@@ -1,89 +1,36 @@
 {
   "changelog": {
 
-    // Configuration on how Conventional Commit scopes are handled
-    "scopes": [
-      // By default, all scopes are included unchanged from the commit messages in the output
-      // Using this setting, the display name of a scope can be specified.
-      // If set, the changelog will use the display name instead of the scope's name
-      // 
-      // Example:
-      //  { "name":  "myScope", "displayName":  "Scope Display Name" }
-    ],
+    "scopes": [ ],
 
-    // Configuration for Conventional commit footers.
-    "footers": [
-      // By default, all footers are included unchanged from the commit messages in the output
-      // Using this setting, the display name of a footer can be specified.
-      // If set, the changelog will use the display name instead of the scope's name
-      // 
-      // Example:
-      //  { "name":  "see-also", "displayName":  "See Also" }
-    ],
+    "footers": [ ],
 
-    // Configuration specific to the Markdown output
     "markdown": {
-
-      // Set the "preset" for serialization of Markdown (control settings like escaping and indentation)
-      // Supported values:
-      //  - "default"
-      //  - "MkDocs"
-      // This changes which preset from the Markdown Generator library is used, for details see
-      // https://github.com/ap0llo/markdown-generator/blob/master/docs/apireference/Grynwald/MarkdownGenerator/MdSerializationOptions/Presets/index.md
-      //
       "preset": "default"
     },
 
-    // Versions for the changelog are read from a repository's tags.
-    // This setting defines regular expressions for reading versions from a tag name.
-    // Every regular expression must define a "version" sub-expression. The value matched
-    // by this sub-expression is attempted to be parsed as semantic version.
-    // By default, tag names which are valid semantic versions as well as tag names that are tag names prefixed with 'v' are matched.
     "tagPatterns": [
       "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
       "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
     ],
 
-    // Specifies the output path of the changelog.
-    // When path is not rooted, it is interpreted as relative to the repository root path
     "outputPath": "changelog.md",
 
-    // "Integrations" provide functionality specific to git hosting providers.
-    // When enabled, the changelog can e.g. include web links for commits, issues and pull requests
     "integrations": {
 
-      // Set the integration provider to use
-      // Default: none
-      // Supported values: "None", "GitHub", "GitLab"
       "provider": "none",
 
-      // Settings specific to the GitHub integration
       "github": {
-
-        // The GitHub access token can be set in the configuration file BUT SHOULDN'T.
-        // Use the "githubAccessToken" command line parameter or the CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN environment variable instead
         "accessToken": null
       },
 
-      // Settings specific to the GitLab integration
       "gitlab": {
-
-        // The GitLab access token can be set in the configuration file BUT SHOULDN'T.
-        // Use the "gitlabAccessToken" command line parameter or the CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN environment variable instead
         "accessToken": null
       }
     },
 
-    // Specifies the versions to include in the changelog.
-    // By default all versions are included.
-    // To limit the versions, specify a NuGet version range, see
-    // https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-ranges
-    // This value can also be set using "versionRange" command line parameter
     "versionRange": null,
 
-    // Sets the version of the currently checked out commit to include it in the changelog
-    // By default, only tagged commits are included
-    // Value can either be set in the configuration file or using the "--currentVersion" commandline parameter
     "currentVersion": null
   }
 }

@@ -1,6 +1,6 @@
 # Getting Started
 
-This guide assumes you are familiar with 
+This guide assumes you are familiar with
 [Conventional Commits](https://www.conventionalcommits.org/)
 and your git commit messages follow the convention described there.
 Furthermore it assumes you're using [Semantic Versioning](https://semver.org/)
