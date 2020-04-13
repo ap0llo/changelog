@@ -5,11 +5,11 @@
 #   - Runs all the tests
 #   - Creates a NuGet package
 # - Publish_to_MyGet: 
-#   - Pushes the NuGet package to MyGet (currently disabled)
+#   - Pushes the NuGet package to MyGet
 #   - Assumes a Service Connection for MyGet was set up in the Team project running the pipeline
 #   - The name of the service connection is stored in the variable myget_ServiceConnectionName (defined below)
 #   - Only runs when building a release branch or the master branch
-# - Publish_to_NuGet_org (currently disabled)
+# - Publish_to_NuGet_org
 #   - Pushes the NuGet package to NuGet.org 
 #   - Assumes a Service Connection for NuGet was set up in the Team project running the pipeline
 #   - The name of the service connection is stored in the variable nuget_org_ServiceConnectionName (defined below)
@@ -18,7 +18,7 @@
 #     - 'auto' or empty: Run when building a release branch
 #     - 'false': Do not run
 #     - 'true': Run regardless of the current branch
-# - Create_GitHub_Release (currently disabled)
+# - Create_GitHub_Release
 #   - Creates a GitHub release for the build
 #   - Only runs if the build was published to NuGet.org
 
@@ -45,6 +45,7 @@ variables:
   # NuGet.org settings
   nuget_org_ServiceConnectionName: 'NuGet.org - changelog' # the name of the Azure DevOps service connection to use for NuGet.org
   nuget_org_PackageName: 'Grynwald.ChangeLog'              # the name of the package being published
+
   # GitHub settings
   github_createRelease: true                          # enable creation of GitHub releases when a package was uploaded to NuGet.org
   github_ServiceConnectionName: 'GitHub: ap0llo'      # the name of the Azure DevOps service connection to use for creating GitHub releases
