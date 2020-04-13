@@ -69,18 +69,20 @@ like this:
 }
 ```
 
-### Available settings
+### Overview
 
-- [Scopes](#scopes)
-- [Footer](#footers)
-- [Markdown Preset](#markdown-preset)
-- [Tag Patterns](#tag-patterns)
-- [Output Path](#output-path)
-- [Integration Provider](#integration-provider)
-- [GitHub Access Token](#github-access-token)
-- [GitLab Access Token](#gitlab-access-token)
-- [Version Range](#version-range)
-- [Current Version](#current-version)
+|                                               | Setting name                                | Environment Variable                           | Commandline parameter |
+|-----------------------------------------------|---------------------------------------------|------------------------------------------------|-----------------------|
+| [Scopes](#scopes)                             | `changelog:scopes`                          | -                                              | -                     |
+| [Footer](#footers)                            | `changelog:footers`                         | -                                              | -                     |
+| [Markdown Preset](#markdown-preset)           | `changelog:markdown:preset`                 | `CHANGELOG__MARKDOWN__PRESET`                  | -                     |
+| [Tag Patterns](#tag-patterns)                 | `changelog:tagpatterns`                     | -                                              | -                     |
+| [Output Path](#output-path)                   | `changelog:outputPath`                      | `CHANGELOG__OUTPUTPATH`                        | `outputPath`          |
+| [Integration Provider](#integration-provider) | `changelog:integrations:provider`           | `CHANGELOG__INTEGRATIONS__PROVIDER`            | -                     |
+| [GitHub Access Token](#github-access-token)   | `changelog:integrations:github:accessToken` | `CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN` | `githubAccessToken`   |
+| [GitLab Access Token](#gitlab-access-token)   | `changelog:integrations:gitlab:accessToken` | `CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN` | `gitlabAccessToken`   |
+| [Version Range](#version-range)               | `changelog:versionRange`                    | `CHANGELOG__VERSIONRANGE`                      | `versionRange`        |
+| [Current Version](#current-version)           | `changelog:currentVersion`                  | `CHANGELOG__CURRENTVERSION`                    | `currentVersion`      |
 
 ### Scopes
 
