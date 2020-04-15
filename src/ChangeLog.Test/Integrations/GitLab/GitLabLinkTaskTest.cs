@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using GitLabApiClient;
 using GitLabApiClient.Internal.Paths;
@@ -63,6 +64,43 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         {
             return It.Is<ProjectId>((ProjectId actual) => actual.ToString() == ((ProjectId)expected).ToString());
         }
+
+        /// <summary>
+        /// Helper method to test if an Action performs the expected changes to an object
+        /// </summary>
+        /// <typeparam name="T">The type of object the changes are applied to.</typeparam>
+        /// <param name="actionToVerify">The action to apply to the object.</param>
+        /// <param name="assertions">The assertions to apply to the object after applying <paramref name="actionToVerify"/></param>
+        private bool AssertAction<T>(Action<T> actionToVerify, params Action<T>[] assertions)
+        {
+            // I'm not sure this is a good idea
+            // but the only way we can make any assertions about an action
+            // is calling it an afterwards checking if it made the expected
+            // changes to the instance.
+            // The instance in turn needs to be created through reflection because
+            // GitLabApiClient's query types are sealed with an internal constructor
+
+            var type = typeof(T);
+            var instance = (T)type.Assembly.CreateInstance(
+                type.FullName!, false,
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null, null, null, null)!;
+
+            if (instance == null)
+                throw new InvalidOperationException($"Failed to create instance of '{type.FullName}'");
+
+            // Apply the action we want to verify
+            actionToVerify.Invoke(instance);
+
+            // Apply the assertions to the instance
+            foreach (var assertion in assertions)
+            {
+                assertion.Invoke(instance);
+            }
+
+            return true;
+        }
+
 
         [Fact]
         public async Task Run_does_nothing_if_repository_does_not_have_remotes()
@@ -355,8 +393,21 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
             });
 
-            m_MergeRequestsClientMock.Verify(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<Action<ProjectMergeRequestsQueryOptions>>()), Times.Once);
-            m_MergeRequestsClientMock.Verify(x => x.GetAsync(MatchProjectId(projectPath), It.IsAny<Action<ProjectMergeRequestsQueryOptions>>()), Times.Once);
+            m_MergeRequestsClientMock.Verify(
+                x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<Action<ProjectMergeRequestsQueryOptions>>()),
+                Times.Once);
+
+            m_MergeRequestsClientMock.Verify(
+                x => x.GetAsync(
+                    MatchProjectId(projectPath),
+                    It.Is<Action<ProjectMergeRequestsQueryOptions>>(
+                        action =>
+                            AssertAction(
+                                action,
+                                opts => Assert.Equal(id, Assert.Single(opts.MergeRequestsIds)),
+                                opts => Assert.Equal(QueryMergeRequestState.All, opts.State)
+                            ))),
+                Times.Once);
         }
 
         [Theory]
@@ -473,8 +524,20 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
             });
 
-            m_ProjectsClientMock.Verify(x => x.GetMilestonesAsync(It.IsAny<ProjectId>(), It.IsAny<Action<MilestonesQueryOptions>>()), Times.Once);
-            m_ProjectsClientMock.Verify(x => x.GetMilestonesAsync(MatchProjectId(projectPath), It.IsAny<Action<MilestonesQueryOptions>>()), Times.Once);
+            m_ProjectsClientMock.Verify(
+                x => x.GetMilestonesAsync(It.IsAny<ProjectId>(), It.IsAny<Action<MilestonesQueryOptions>>()),
+                Times.Once);
+
+            m_ProjectsClientMock.Verify(
+                x => x.GetMilestonesAsync(
+                    MatchProjectId(projectPath),
+                    It.Is<Action<MilestonesQueryOptions>>(action =>
+                        AssertAction(
+                            action,
+                            opts => Assert.Equal(id, Assert.Single(opts.MilestoneIds)),
+                            opts => Assert.Equal(MilestoneState.All, opts.State)
+                        ))),
+                Times.Once);
         }
 
         [Theory]
