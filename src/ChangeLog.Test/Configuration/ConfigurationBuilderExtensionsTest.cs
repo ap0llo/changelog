@@ -5,7 +5,7 @@ using Xunit;
 namespace Grynwald.ChangeLog.Test.Configuration
 {
     /// <summary>
-    /// Unit tests for <see cref="ObjectConfigurationProvider"/>
+    /// Unit tests for <see cref="ConfigurationBuilderExtensions"/>
     /// </summary>
     public class ConfigurationBuilderExtensionsTest
     {
@@ -98,6 +98,34 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ASSERT
             Assert.NotNull(settingsDictionary);
             Assert.Empty(settingsDictionary);
+        }
+
+        private class TestSettingsClass5
+        {
+            [ConfigurationValue("root:Setting1")]
+            public string? Setting1 { get; }
+
+
+            public TestSettingsClass5(string setting1)
+            {
+                Setting1 = setting1;
+            }
+        }
+
+        [Fact]
+        public void GetSettingsDictionary_loads_values_from_readonly_properties()
+        {
+            // ARRANGE
+            var settingsObject = new TestSettingsClass5("value1");
+
+            // ACT 
+            var settingsDictionary = ConfigurationBuilderExtensions.GetSettingsDictionary(settingsObject);
+
+            // ASSERT
+            Assert.NotNull(settingsDictionary);
+            var kvp = Assert.Single(settingsDictionary); 
+            Assert.Equal("root:Setting1", kvp.Key);
+            Assert.Equal("value1", kvp.Value);
         }
     }
 }
