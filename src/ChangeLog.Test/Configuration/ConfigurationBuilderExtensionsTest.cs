@@ -123,7 +123,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             // ASSERT
             Assert.NotNull(settingsDictionary);
-            var kvp = Assert.Single(settingsDictionary); 
+            var kvp = Assert.Single(settingsDictionary);
             Assert.Equal("root:Setting1", kvp.Key);
             Assert.Equal("value1", kvp.Value);
         }

@@ -5,6 +5,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitLabApiClient;
+using GitLabApiClient.Models.MergeRequests.Requests;
+using GitLabApiClient.Models.Milestones.Responses;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Tasks;
@@ -227,7 +229,12 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
             try
             {
-                var mergeRequests = await gitlabClient.MergeRequests.GetAsync(projectPath, query => { query.MergeRequestsIds.Add(id); });
+                var mergeRequests = await gitlabClient.MergeRequests.GetAsync(projectPath, queryOptions =>
+                    {
+                        queryOptions.MergeRequestsIds = new[] { id };
+                        queryOptions.State = QueryMergeRequestState.All;
+                    });
+
                 if (mergeRequests.Count == 1)
                 {
                     return new Uri(mergeRequests.Single().WebUrl); ;
@@ -255,9 +262,10 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                 // within the project, but some other id.
                 // Instead, use GetMilestonesAsync() and query for a single milestone id
                 // for which we can use the id in the reference.
-                var milestones = await gitlabClient.Projects.GetMilestonesAsync(projectPath, options =>
+                var milestones = await gitlabClient.Projects.GetMilestonesAsync(projectPath, queryOptions =>
                 {
-                    options.MilestoneIds = new[] { id };
+                    queryOptions.MilestoneIds = new[] { id };
+                    queryOptions.State = MilestoneState.All;
                 });
 
                 if (milestones.Count == 1)
