@@ -55,7 +55,7 @@ namespace Grynwald.ChangeLog
                 ? commandlineParameters.ConfigurationFilePath
                 : Path.Combine(commandlineParameters.RepositoryPath, s_DefaultConfigurationFileName);
 
-            var configuration = ChangeLogConfigurationLoader.GetConfiguation(configurationFilePath, commandlineParameters);
+            var configuration = ChangeLogConfigurationLoader.GetConfiguration(configurationFilePath, commandlineParameters);
             using (var gitRepository = new GitRepository(configuration.RepositoryPath))
             {
                 var containerBuilder = new ContainerBuilder();

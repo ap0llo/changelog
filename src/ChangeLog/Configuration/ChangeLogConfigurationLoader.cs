@@ -7,7 +7,7 @@ namespace Grynwald.ChangeLog.Configuration
 {
     internal static class ChangeLogConfigurationLoader
     {
-        public static ChangeLogConfiguration GetConfiguation(string configurationFilePath, object? settingsObject = null)
+        public static ChangeLogConfiguration GetConfiguration(string configurationFilePath, object? settingsObject = null)
         {
             using var defaultSettingsStream = GetDefaultSettingsStream();
             using var configurationFileStream = GetFileStreamOrEmpty(configurationFilePath);
