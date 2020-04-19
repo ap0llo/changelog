@@ -134,7 +134,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             File.WriteAllText(m_ConfigurationFilePath, "{ }");
 
             // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             assertion(config);
@@ -144,7 +144,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [MemberData(nameof(DefaultConfigAssertions))]
         public void GetConfiguration_returns_default_configuration_if_config_file_does_not_exist(Action<ChangeLogConfiguration> assertion)
         {
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
             assertion(config);
         }
 
@@ -161,7 +161,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("scopes", scopes);
 
             // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.Equal(scopes.Length, config.Scopes.Length);
@@ -189,7 +189,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("markdown:preset", configurationValue);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Markdown);
@@ -204,7 +204,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("markdown:preset", configurationValue);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Markdown);
@@ -221,7 +221,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("tagpatterns", patterns);
 
             // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.Equal(patterns, config.TagPatterns);
@@ -241,7 +241,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var settingsObject = new TestSettingsClass1() { MarkdownPreset = "MkDocs" };
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath, settingsObject);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
 
             // ASSERT
             Assert.NotNull(config.Markdown);
@@ -256,7 +256,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("markdown:preset", "mkdocs");
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Markdown);
@@ -276,7 +276,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("footers", footers);
 
             // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.Equal(footers.Length, config.Footers.Length);
@@ -303,7 +303,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("integrations:provider", integrationProvider.ToString());
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Integrations);
@@ -318,7 +318,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("integrations:provider", integrationProvider.ToString());
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Integrations);
@@ -334,7 +334,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("integrations:github:accesstoken", accessToken);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Integrations.GitHub);
@@ -349,7 +349,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("integrations:github:accesstoken", accessToken);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Integrations.GitHub);
@@ -370,7 +370,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var settingsObject = new TestSettingsClass2() { GitHubAccessToken = "some-other-access-token" };
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath, settingsObject);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
 
             // ASSERT
             Assert.NotNull(config.Integrations);
@@ -386,7 +386,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("integrations:gitlab:accesstoken", accessToken);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Integrations.GitLab);
@@ -401,7 +401,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("integrations:gitlab:accesstoken", accessToken);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.Integrations.GitLab);
@@ -422,7 +422,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var settingsObject = new TestSettingsClass3() { GitLabAccessToken = "some-other-access-token" };
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath, settingsObject);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
 
             // ASSERT
             Assert.NotNull(config.Integrations);
@@ -438,7 +438,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("versionRange", versionRange);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.VersionRange);
@@ -453,7 +453,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("versionRange", versionRange);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.VersionRange);
@@ -475,7 +475,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var settingsObject = new TestSettingsClass4() { VersionRange = "[4.5.6]" };
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath, settingsObject);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
 
             // ASSERT
             Assert.NotNull(config.VersionRange);
@@ -490,7 +490,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("currentVersion", currentVersion);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.CurrentVersion);
@@ -505,7 +505,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("currentVersion", currentVersion);
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.CurrentVersion);
@@ -527,7 +527,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var settingsObject = new TestSettingsClass5() { CurrentVersion = "4.5.6" };
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath, settingsObject);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
 
             // ASSERT
             Assert.NotNull(config.CurrentVersion);
@@ -542,7 +542,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("currentVersion", "4.5.6");
 
             // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.NotNull(config.CurrentVersion);
@@ -564,7 +564,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var settingsObject = new TestSettingsClass6() { CurrentVersion = "7.8.9" };
 
             // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath, settingsObject);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
 
             // ASSERT
             Assert.NotNull(config.CurrentVersion);
@@ -578,7 +578,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             PrepareConfiguration("outputPath", "outputPath1");
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             Assert.Equal("outputPath1", config.OutputPath);
@@ -592,7 +592,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             SetConfigEnvironmentVariable("outputPath", "outputPath2");
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
             // environment variables override configuration file
@@ -615,7 +615,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var settingsObject = new TestSettingsClass7() { OutputPath = "outputPath3" };
 
             // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguation(m_ConfigurationFilePath, settingsObject);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
 
             // ASSERT
             // settings objects overrides both configuration file and environment variables
