@@ -71,18 +71,20 @@ like this:
 
 ### Overview
 
-|                                               | Setting name                                | Environment Variable                           | Commandline parameter |
-|-----------------------------------------------|---------------------------------------------|------------------------------------------------|-----------------------|
-| [Scopes](#scopes)                             | `changelog:scopes`                          | -                                              | -                     |
-| [Footer](#footers)                            | `changelog:footers`                         | -                                              | -                     |
-| [Markdown Preset](#markdown-preset)           | `changelog:markdown:preset`                 | `CHANGELOG__MARKDOWN__PRESET`                  | -                     |
-| [Tag Patterns](#tag-patterns)                 | `changelog:tagpatterns`                     | -                                              | -                     |
-| [Output Path](#output-path)                   | `changelog:outputPath`                      | `CHANGELOG__OUTPUTPATH`                        | `outputPath`          |
-| [Integration Provider](#integration-provider) | `changelog:integrations:provider`           | `CHANGELOG__INTEGRATIONS__PROVIDER`            | -                     |
-| [GitHub Access Token](#github-access-token)   | `changelog:integrations:github:accessToken` | `CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN` | `githubAccessToken`   |
-| [GitLab Access Token](#gitlab-access-token)   | `changelog:integrations:gitlab:accessToken` | `CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN` | `gitlabAccessToken`   |
-| [Version Range](#version-range)               | `changelog:versionRange`                    | `CHANGELOG__VERSIONRANGE`                      | `versionRange`        |
-| [Current Version](#current-version)           | `changelog:currentVersion`                  | `CHANGELOG__CURRENTVERSION`                    | `currentVersion`      |
+|                                                                         | Setting name                                | Environment Variable                           | Commandline parameter | Version support        |
+|--------------------------------------------------------------------------|---------------------------------------------|------------------------------------------------|-----------------------|------------------------|
+| [Scopes](#scopes)                                                       | `changelog:scopes`                          | -                                              | -                     | 0.1+               |
+| [Footer](#footers)                                                      | `changelog:footers`                         | -                                              | -                     | 0.1+               |
+| [Markdown Preset](#markdown-preset)                                     | `changelog:markdown:preset`                 | `CHANGELOG__MARKDOWN__PRESET`                  | -                     | ⚠️ 0.1, Removed in version 0.2 |
+| [Tag Patterns](#tag-patterns)                                           | `changelog:tagpatterns`                     | -                                              | -                     | 0.1+               |
+| [Output Path](#output-path)                                             | `changelog:outputPath`                      | `CHANGELOG__OUTPUTPATH`                        | `outputPath`          | 0.1+               |
+| [Integration Provider](#integration-provider)                           | `changelog:integrations:provider`           | `CHANGELOG__INTEGRATIONS__PROVIDER`            | -                     | 0.1+               |
+| [GitHub Access Token](#github-access-token)                             | `changelog:integrations:github:accessToken` | `CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN` | `githubAccessToken`   | 0.1+               |
+| [GitLab Access Token](#gitlab-access-token)                             | `changelog:integrations:gitlab:accessToken` | `CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN` | `gitlabAccessToken`   | 0.1+               |
+| [Version Range](#version-range)                                         | `changelog:versionRange`                    | `CHANGELOG__VERSIONRANGE`                      | `versionRange`        | 0.1+               |
+| [Current Version](#current-version)                                     | `changelog:currentVersion`                  | `CHANGELOG__CURRENTVERSION`                    | `currentVersion`      | 0.1+               |
+| [Template Name](#template-name)                                         | `changelog:template:name`                   | `CHANGELOG__TEMPLATE__NAME`                    | `template`            | 0.2+                |
+| [Markdown Preset (Default Template)](#markdown-preset-default-template) | `changelog:template:default:markdownPreset` | `CHANGELOG__TEMPLATE__DEFAULT_MARKDOWNPRESET`  | -                     | 0.2+                |
 
 ### Scopes
 
@@ -102,6 +104,10 @@ like this:
     <tr>
         <td><b>Default value</b></td>
         <td><em>Empty</em></td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
     </tr>
 </table>
 
@@ -143,6 +149,10 @@ of the scope's name.
         <td><b>Default value</b></td>
         <td><em>Empty</em></td>
     </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
+    </tr>
 </table>
 
 The *Footers* setting configures how
@@ -165,6 +175,11 @@ of the footer's name.
 ```
 
 ### Markdown Preset
+
+⚠️ **The Markdown Preset setting was removed in version 0.2.16:** With the
+introduction of templates, output settings have become template-specific.
+To set the preset for the default template use the
+[Markdown Preset (Default Template)](#markdown-preset-default-template) setting.
 
 <table>
     <tr>
@@ -191,6 +206,10 @@ of the footer's name.
                 <li><code>MkDocs</code></li>
             </ul>
         </td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>⚠️ 0.1, Removed in version 0.2</td>
     </tr>
 </table>
 
@@ -238,6 +257,10 @@ For details on the differences between the presets, see also
         <td><b>Default value</b></td>
         <td><code>[ "^(?&lt;version&gt;\d+\.\d+\.\d+.*)", "^v(?&lt;version&gt;\d+\.\d+\.\d+.*)" ]</code></td>
     </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
+    </tr>
 </table>
 
 The *Tag Patterns* setting controls how versions are read from a git
@@ -268,6 +291,10 @@ tags names that are semantic versions prefixed with `v`.
     <tr>
         <td><b>Default value</b></td>
         <td><code>changelog.md</code></td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
     </tr>
 </table>
 
@@ -320,6 +347,10 @@ to be relative to
             </ul>
         </td>
     </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
+    </tr>
 </table>
 
 Sets the *Integration Provider* to use.
@@ -358,6 +389,10 @@ Enable the GitHub integration provider:
         <td><b>Default value</b></td>
         <td>-</td>
     </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
+    </tr>
 </table>
 
 The *GitHub Access Token* setting configures the access token to use for
@@ -386,6 +421,10 @@ accessing the GitHub API when the GitHub integration is enabled.
         <td><b>Default value</b></td>
         <td>-</td>
     </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
+    </tr>
 </table>
 
 The *GitLab Access Token* setting configures the access token to use for
@@ -413,6 +452,10 @@ accessing the GitLab  API when the GitLab integration is enabled.
     <tr>
         <td><b>Default value</b></td>
         <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
     </tr>
 </table>
 
@@ -454,6 +497,10 @@ following version range:
         <td><b>Default value</b></td>
         <td>-</td>
     </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.1+</td>
+    </tr>
 </table>
 
 By default, versions are only read from a git repository's tags and only
@@ -463,6 +510,117 @@ When specified, the current version is included in the change log as well.
 
 The value must be a valid semantic version.
 
+### Template Name
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:template:name</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__TEMPLATE__NAME</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td><code>template</code></td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><code>default</code></td>
+    </tr>
+    <tr>
+        <td><b>Allowed values</b></td>
+        <td>
+            <ul>
+                <li><code>default</code></li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.2+</td>
+    </tr>
+</table>
+
+Sets the template to use for generating the changelog.
+For details see [Templates](./templates.md).
+
+#### Example
+
+```json
+{
+    "changelog" : {
+        "template" : {
+            "name": "default"
+        }
+    }
+}
+```
+
+### Markdown Preset (Default template)
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:template:default:markdownPreset</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__TEMPLATE__DEFAULT__MARKDOWNPRESET</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><code>default</code></td>
+    </tr>
+    <tr>
+        <td><b>Allowed values</b></td>
+        <td>
+            <ul>
+                <li><code>default</code></li>
+                <li><code>MkDocs</code></li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.2+</td>
+    </tr>
+</table>
+
+The *Markdown Preset (Default Template)* customizes serialization
+of Markdown for the default template (see [Template Name setting](#template-name)).
+
+**Note:** This setting has no effect when a template other than `default` is used.
+
+Supported values are:
+
+- `default`: Produces Markdown that should work in most environments, including
+  GitHub and GitLab
+- `MkDocs`: Produces Markdown optimized for being rendered by Python-Markdown
+  and [MkDocs](https://www.mkdocs.org/)
+
+For details on the differences between the presets, see also
+[Markdown Generator docs](https://github.com/ap0llo/markdown-generator/blob/master/docs/apireference/Grynwald/MarkdownGenerator/MdSerializationOptions/Presets/index.md).
+
+#### Example
+
+```json
+{
+    "changelog" : {
+        "template" : {
+            "default": {
+                "markdownPreset" : "MkDocs"
+            }
+        }
+    }
+}
+```
+
 ## See Also
 
 - [Commandline reference](./commandline-reference/index.md)
@@ -471,3 +629,4 @@ The value must be a valid semantic version.
 - [Semantic Versioning](https://semver.org/)
 - [Integrations](./integrations.md)
 - [NuGet Version Ranges](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-ranges)
+- [Templates](./templates.md)

@@ -10,6 +10,7 @@ using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations;
 using Grynwald.ChangeLog.Logging;
 using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Templates;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog
@@ -48,7 +49,9 @@ namespace Grynwald.ChangeLog
             // for validation of command line parameters, directly create a console logger
             // bypassing the DI container because we need to validate the parameters
             // before setting up DI
-            if (!ValidateCommandlineParameters(commandlineParameters, new ConsoleLogger(LogLevel.Information, "")))
+            var logger = new ConsoleLogger(LogLevel.Information, "");
+
+            if (!ValidateCommandlineParameters(commandlineParameters, logger))
                 return 1;
 
             var configurationFilePath = !String.IsNullOrEmpty(commandlineParameters.ConfigurationFilePath)
@@ -71,9 +74,19 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
-                containerBuilder.RegisterType<RenderMarkdownTask>();
+                containerBuilder.RegisterType<RenderTemplateTask>();
 
                 containerBuilder.RegisterIntegrations();
+
+                try
+                {
+                    containerBuilder.RegisterTemplate(configuration.Template);
+                }
+                catch (InvalidTemplateConfigurationException ex)
+                {
+                    logger.LogCritical($"Failed to load template: {ex.Message}");
+                    return 1;
+                }
 
                 using (var container = containerBuilder.Build())
                 {
@@ -85,7 +98,7 @@ namespace Grynwald.ChangeLog
                         .AddTask<ParseCommitsTask>()
                         .AddTask<FilterVersionsTask>()
                         .AddIntegrationTasks()
-                        .AddTask<RenderMarkdownTask>()
+                        .AddTask<RenderTemplateTask>()
                         .Build();
 
                     var result = await pipeline.RunAsync();

@@ -12,18 +12,6 @@ namespace Grynwald.ChangeLog.Configuration
             public string? DisplayName { get; set; }
         }
 
-        public enum MarkdownPreset
-        {
-            Default,
-            MkDocs
-        }
-
-        public class MarkdownConfiguration
-        {
-            public MarkdownPreset Preset { get; set; } = MarkdownPreset.Default;
-        }
-
-
         public class FooterConfiguration
         {
             public string? Name { get; set; }
@@ -58,10 +46,31 @@ namespace Grynwald.ChangeLog.Configuration
             public GitLabIntegrationConfiguration GitLab { get; set; } = new GitLabIntegrationConfiguration();
         }
 
+        public enum TemplateName
+        {
+            Default
+        }
+
+        public class TemplateConfiguration
+        {
+            public TemplateName Name { get; set; }
+
+            public DefaultTemplateConfiguration Default { get; set; } = new DefaultTemplateConfiguration();
+        }
+
+        public enum MarkdownPreset
+        {
+            Default,
+            MkDocs
+        }
+
+        public class DefaultTemplateConfiguration
+        {
+            public MarkdownPreset MarkdownPreset { get; set; } = MarkdownPreset.Default;
+        }
+
 
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
-
-        public MarkdownConfiguration Markdown { get; set; } = new MarkdownConfiguration();
 
         public string[] TagPatterns { get; set; } = Array.Empty<string>();
 
@@ -76,6 +85,8 @@ namespace Grynwald.ChangeLog.Configuration
         public string? VersionRange { get; set; } = "";
 
         public string? CurrentVersion { get; set; }
+
+        public TemplateConfiguration Template { get; set; } = new TemplateConfiguration();
 
 
         public string GetFullOutputPath()

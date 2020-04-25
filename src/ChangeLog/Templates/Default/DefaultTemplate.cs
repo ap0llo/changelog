@@ -1,17 +1,19 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
 using Grynwald.MarkdownGenerator;
 using Microsoft.Extensions.Logging;
 
-namespace Grynwald.ChangeLog.Tasks
+namespace Grynwald.ChangeLog.Templates.Default
 {
-    internal sealed class RenderMarkdownTask : SynchronousChangeLogTask
+    /// <summary>
+    /// Implementation of the default template to convert a changelog to Markdown
+    /// </summary>
+    internal class DefaultTemplate : ITemplate
     {
         private const string s_HeadingIdPrefix = "changelog-heading";
-        private readonly ILogger<RenderMarkdownTask> m_Logger;
+        private readonly ILogger<DefaultTemplate> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;
 
 
@@ -21,34 +23,23 @@ namespace Grynwald.ChangeLog.Tasks
         internal MdSerializationOptions SerializationOptions { get; }
 
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="RenderMarkdownTask"/>.
-        /// </summary>
-        /// <param name="outputPath">The file path to save the changelog to.</param>
-        public RenderMarkdownTask(ILogger<RenderMarkdownTask> logger, ChangeLogConfiguration configuration)
+        public DefaultTemplate(ILogger<DefaultTemplate> logger, ChangeLogConfiguration configuration)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             SerializationOptions = MdSerializationOptions.Presets
-                .Get(configuration.Markdown.Preset.ToString())
+                .Get(configuration.Template.Default.MarkdownPreset.ToString())
                 .With(opts => { opts.HeadingAnchorStyle = MdHeadingAnchorStyle.Tag; });
         }
 
-
-        protected override ChangeLogTaskResult Run(ApplicationChangeLog changeLog)
+        /// <inheritdoc />
+        public void SaveChangeLog(ApplicationChangeLog changeLog, string outputPath)
         {
             var document = GetChangeLogDocument(changeLog);
-
-            var outputPath = m_Configuration.GetFullOutputPath();
-            var outputDirectory = Path.GetDirectoryName(outputPath);
-            Directory.CreateDirectory(outputDirectory);
-
-            m_Logger.LogInformation($"Saving changelog to '{outputPath}'");
             document.Save(outputPath, SerializationOptions);
-
-            return ChangeLogTaskResult.Success;
         }
+
 
 
         /// <summary>
@@ -303,5 +294,6 @@ namespace Grynwald.ChangeLog.Tasks
 
             return id;
         }
+
     }
 }

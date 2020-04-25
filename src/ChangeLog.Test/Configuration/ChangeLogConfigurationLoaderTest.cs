@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.Utilities.Configuration;
 using Grynwald.Utilities.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -86,9 +87,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.Scopes));
             yield return TestCase(config => Assert.Empty(config.Scopes));
 
-            yield return TestCase(config => Assert.NotNull(config.Markdown));
-            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Markdown.Preset));
-
             yield return TestCase(config => Assert.NotNull(config.TagPatterns));
             yield return TestCase(config => Assert.Equal(new[] { "^(?<version>\\d+\\.\\d+\\.\\d+.*)", "^v(?<version>\\d+\\.\\d+\\.\\d+.*)" }, config.TagPatterns));
 
@@ -116,6 +114,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config.CurrentVersion));
             yield return TestCase(config => Assert.Empty(config.CurrentVersion));
+
+            yield return TestCase(config => Assert.NotNull(config.Template));
+            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.TemplateName.Default, config.Template.Name));
+
+            yield return TestCase(config => Assert.NotNull(config.Template.Default));
+            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Template.Default.MarkdownPreset));
+
         }
 
         [Theory]
@@ -172,46 +177,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             }
         }
 
-        public static IEnumerable<object[]> MarkdownPresets()
-        {
-            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.MarkdownPreset)))
-            {
-                yield return new object[] { value!, value!.ToString()! };
-                yield return new object[] { value!, value!.ToString()!.ToLower() };
-            }
-        }
-
-        [Theory]
-        [MemberData(nameof(MarkdownPresets))]
-        public void Markdown_preset_can_be_set_in_configuration_file(ChangeLogConfiguration.MarkdownPreset preset, string configurationValue)
-        {
-            // ARRANGE
-            PrepareConfiguration("markdown:preset", configurationValue);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Markdown);
-            Assert.Equal(preset, config.Markdown.Preset);
-        }
-
-        [Theory]
-        [MemberData(nameof(MarkdownPresets))]
-        public void Markdown_preset_can_be_set_through_environment_variables(ChangeLogConfiguration.MarkdownPreset preset, string configurationValue)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("markdown:preset", configurationValue);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Markdown);
-            Assert.Equal(preset, config.Markdown.Preset);
-        }
-
-
         [Fact]
         public void TagPatterns_can_be_set_in_configuration_file()
         {
@@ -225,42 +190,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             // ASSERT
             Assert.Equal(patterns, config.TagPatterns);
-        }
-
-        private class TestSettingsClass1
-        {
-            [ConfigurationValue("changelog:markdown:preset")]
-            public string? MarkdownPreset { get; set; }
-        }
-
-        [Fact]
-        public void Configuration_from_settings_object_can_override_markown_preset()
-        {
-            // ARRANGE
-            PrepareConfiguration("markdown:preset", "default");
-            var settingsObject = new TestSettingsClass1() { MarkdownPreset = "MkDocs" };
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
-
-            // ASSERT
-            Assert.NotNull(config.Markdown);
-            Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Markdown.Preset);
-        }
-
-        [Fact]
-        public void Configuration_from_environment_variables_can_override_markown_preset()
-        {
-            // ARRANGE
-            PrepareConfiguration("markdown:preset", "default");
-            SetConfigEnvironmentVariable("markdown:preset", "mkdocs");
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Markdown);
-            Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Markdown.Preset);
         }
 
         [Fact]
@@ -572,7 +501,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Fact]
-        public void OutputPath_can_be_set_in__the_configuration_file()
+        public void OutputPath_can_be_set_in_the_configuration_file()
         {
             // ARRANGE
             PrepareConfiguration("outputPath", "outputPath1");
@@ -622,5 +551,141 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal("outputPath3", config.OutputPath);
         }
 
+
+        public static IEnumerable<object[]> TemplateNames()
+        {
+            return Enum.GetValues(typeof(ChangeLogConfiguration.TemplateName))
+                       .Cast<ChangeLogConfiguration.TemplateName>()
+                       .Select(x => new object[] { x });
+        }
+
+        [Theory]
+        [MemberData(nameof(TemplateNames))]
+        public void Template_can_be_set_in_the_configuration_file(ChangeLogConfiguration.TemplateName templateName)
+        {
+            // ARRANGE
+            PrepareConfiguration("template:name", templateName.ToString());
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Template);
+            Assert.Equal(templateName, config.Template.Name);
+        }
+
+        [Theory]
+        [MemberData(nameof(TemplateNames))]
+        public void Template_can_be_set_through_environment_variables(ChangeLogConfiguration.TemplateName templateName)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("template:name", templateName.ToString());
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Template);
+            Assert.Equal(templateName, config.Template.Name);
+        }
+
+        private class TestSettingsClass8
+        {
+            [ConfigurationValue("changelog:template:name")]
+            public ChangeLogConfiguration.TemplateName TemplateName { get; set; }
+        }
+
+        [Theory]
+        [MemberData(nameof(TemplateNames))]
+        public void Template_can_be_set_through_settings_object(ChangeLogConfiguration.TemplateName templateName)
+        {
+            // ARRANGE
+            var settingsObject = new TestSettingsClass8() { TemplateName = templateName };
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.Template);
+            Assert.Equal(templateName, config.Template.Name);
+        }
+
+
+
+        public static IEnumerable<object[]> MarkdownPresets()
+        {
+            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.MarkdownPreset)))
+            {
+                yield return new object[] { value!, value!.ToString()! };
+                yield return new object[] { value!, value!.ToString()!.ToLower() };
+            }
+        }
+
+        [Theory]
+        [MemberData(nameof(MarkdownPresets))]
+        public void Markdown_preset_for_default_template_can_be_set_in_configuration_file(ChangeLogConfiguration.MarkdownPreset preset, string configurationValue)
+        {
+            // ARRANGE
+            PrepareConfiguration("template:default:markdownpreset", configurationValue);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Template.Default);
+            Assert.Equal(preset, config.Template.Default.MarkdownPreset);
+        }
+
+        [Theory]
+        [MemberData(nameof(MarkdownPresets))]
+        public void Markdown_preset_for_default_template_can_be_set_through_environment_variables(ChangeLogConfiguration.MarkdownPreset preset, string configurationValue)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("template:default:markdownpreset", configurationValue);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Template.Default);
+            Assert.Equal(preset, config.Template.Default.MarkdownPreset);
+        }
+
+
+        [Fact]
+        public void Configuration_from_environment_variables_can_override_markown_preset_for_default_template()
+        {
+            // ARRANGE
+            PrepareConfiguration("template:default:markdownpreset", "default");
+            SetConfigEnvironmentVariable("template:default:markdownpreset", "mkdocs");
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Template.Default);
+            Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Template.Default.MarkdownPreset);
+        }
+
+        private class TestSettingsClass9
+        {
+            [ConfigurationValue("changelog:template:default:markdownpreset")]
+            public string? MarkdownPreset { get; set; }
+        }
+
+        [Fact]
+        public void Configuration_from_settings_object_can_override_markown_preset_for_default_template()
+        {
+            // ARRANGE
+            PrepareConfiguration("template:default:markdownpreset", "default");
+            var settingsObject = new TestSettingsClass9() { MarkdownPreset = "MkDocs" };
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.Template.Default);
+            Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Template.Default.MarkdownPreset);
+        }
     }
 }
