@@ -10,6 +10,7 @@ using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations;
 using Grynwald.ChangeLog.Logging;
 using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Templates;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog
@@ -71,9 +72,10 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
-                containerBuilder.RegisterType<RenderMarkdownTask>();
+                containerBuilder.RegisterType<RenderTemplateTask>();
 
                 containerBuilder.RegisterIntegrations();
+                containerBuilder.RegisterTemplate(configuration.Template);
 
                 using (var container = containerBuilder.Build())
                 {
@@ -85,7 +87,7 @@ namespace Grynwald.ChangeLog
                         .AddTask<ParseCommitsTask>()
                         .AddTask<FilterVersionsTask>()
                         .AddIntegrationTasks()
-                        .AddTask<RenderMarkdownTask>()
+                        .AddTask<RenderTemplateTask>()
                         .Build();
 
                     var result = await pipeline.RunAsync();
