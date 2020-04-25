@@ -71,20 +71,18 @@ like this:
 
 ### Overview
 
-|                                                                         | Setting name                                | Environment Variable                           | Commandline parameter | Version support        |
-|--------------------------------------------------------------------------|---------------------------------------------|------------------------------------------------|-----------------------|------------------------|
-| [Scopes](#scopes)                                                       | `changelog:scopes`                          | -                                              | -                     | 0.1+               |
-| [Footer](#footers)                                                      | `changelog:footers`                         | -                                              | -                     | 0.1+               |
-| [Markdown Preset](#markdown-preset)                                     | `changelog:markdown:preset`                 | `CHANGELOG__MARKDOWN__PRESET`                  | -                     | ⚠️ 0.1, Removed in version 0.2 |
-| [Tag Patterns](#tag-patterns)                                           | `changelog:tagpatterns`                     | -                                              | -                     | 0.1+               |
-| [Output Path](#output-path)                                             | `changelog:outputPath`                      | `CHANGELOG__OUTPUTPATH`                        | `outputPath`          | 0.1+               |
-| [Integration Provider](#integration-provider)                           | `changelog:integrations:provider`           | `CHANGELOG__INTEGRATIONS__PROVIDER`            | -                     | 0.1+               |
-| [GitHub Access Token](#github-access-token)                             | `changelog:integrations:github:accessToken` | `CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN` | `githubAccessToken`   | 0.1+               |
-| [GitLab Access Token](#gitlab-access-token)                             | `changelog:integrations:gitlab:accessToken` | `CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN` | `gitlabAccessToken`   | 0.1+               |
-| [Version Range](#version-range)                                         | `changelog:versionRange`                    | `CHANGELOG__VERSIONRANGE`                      | `versionRange`        | 0.1+               |
-| [Current Version](#current-version)                                     | `changelog:currentVersion`                  | `CHANGELOG__CURRENTVERSION`                    | `currentVersion`      | 0.1+               |
-| [Template Name](#template-name)                                         | `changelog:template:name`                   | `CHANGELOG__TEMPLATE__NAME`                    | `template`            | 0.2+                |
-| [Markdown Preset (Default Template)](#markdown-preset-default-template) | `changelog:template:default:markdownPreset` | `CHANGELOG__TEMPLATE__DEFAULT_MARKDOWNPRESET`  | -                     | 0.2+                |
+- [Scopes](#scopes)
+- [Footer](#footers)
+- [Markdown Preset](#markdown-preset)
+- [Tag Patterns](#tag-patterns)
+- [Output Path](#output-path)
+- [Integration Provider](#integration-provider)
+- [GitHub Access Token](#github-access-token)
+- [GitLab Access Token](#gitlab-access-token)
+- [Version Range](#version-range)
+- [Current Version](#current-version)
+- [Template Name](#template-name)
+- [Markdown Preset (Default Template)](#markdown-preset-default-template)
 
 ### Scopes
 
@@ -159,7 +157,7 @@ The *Footers* setting configures how
 [Conventional Commit](https://www.conventionalcommits.org/) footers are displayed.
 By default, footers are included unchanged in the output.
 Using this setting, you can configure a footer's display name.
-When a display name is configured, it will be used in the output instead 
+When a display name is configured, it will be used in the output instead
 of the footer's name.
 
 #### Example
