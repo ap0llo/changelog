@@ -552,15 +552,8 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
 
-        public static IEnumerable<object[]> TemplateNames()
-        {
-            return Enum.GetValues(typeof(ChangeLogConfiguration.TemplateName))
-                       .Cast<ChangeLogConfiguration.TemplateName>()
-                       .Select(x => new object[] { x });
-        }
-
         [Theory]
-        [MemberData(nameof(TemplateNames))]
+        [EnumData]
         public void Template_can_be_set_in_the_configuration_file(ChangeLogConfiguration.TemplateName templateName)
         {
             // ARRANGE
@@ -575,7 +568,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Theory]
-        [MemberData(nameof(TemplateNames))]
+        [EnumData]
         public void Template_can_be_set_through_environment_variables(ChangeLogConfiguration.TemplateName templateName)
         {
             // ARRANGE
@@ -596,7 +589,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Theory]
-        [MemberData(nameof(TemplateNames))]
+        [EnumData]
         public void Template_can_be_set_through_settings_object(ChangeLogConfiguration.TemplateName templateName)
         {
             // ARRANGE
