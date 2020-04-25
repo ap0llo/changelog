@@ -29,7 +29,7 @@ namespace Grynwald.ChangeLog.Templates.Default
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
             SerializationOptions = MdSerializationOptions.Presets
-                .Get(configuration.Markdown.Preset.ToString())
+                .Get(configuration.Template.Default.MarkdownPreset.ToString())
                 .With(opts => { opts.HeadingAnchorStyle = MdHeadingAnchorStyle.Tag; });
         }
 

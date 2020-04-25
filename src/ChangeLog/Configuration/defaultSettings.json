@@ -5,10 +5,6 @@
 
     "footers": [ ],
 
-    "markdown": {
-      "preset": "default"
-    },
-
     "tagPatterns": [
       "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
       "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
@@ -34,7 +30,11 @@
     "currentVersion": null,
 
     "template": {
-      "name" :  "default"
+      "name": "default",
+
+      "default": {
+        "markdownPreset" :  "default"
+      }
     }
   }
 }
