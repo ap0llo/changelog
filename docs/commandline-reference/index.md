@@ -1,6 +1,6 @@
 ﻿# changelog Command Line Reference
 
-**Version:** 0.2.12\-pre+84ee5b214d
+**Version:** 0.2.13\-pre+cbe1294b69
 
 ## Usage
 
@@ -11,6 +11,7 @@ changelog [--configurationFilePath|-c <VALUE>]
           [--gitlabAccessToken <VALUE>]
           [--outputPath|-o <VALUE>]
           --repository|-r <VALUE>
+          [--template <VALUE>]
           [--verbose|-v]
           [--versionRange <VALUE>]
 ```
@@ -25,6 +26,7 @@ changelog [--configurationFilePath|-c <VALUE>]
 | [gitlabAccessToken](#gitlabaccesstoken-parameter)         |                                       | No       | The access token to use if the GitLab integration is enabled.                                                                                                                                                                                  |
 | [outputPath](#outputpath-parameter)                       | [o](#outputpath-parameter)            | No       | The path to save the changelog to.                                                                                                                                                                                                             |
 | [repository](#repository-parameter)                       | [r](#repository-parameter)            | Yes      | The local path of the git repository to generate a change log for.                                                                                                                                                                             |
+| [template](#template-parameter)                           |                                       | No       | Sets the template to use for generating the changelog.                                                                                                                                                                                         |
 | [verbose](#verbose-parameter)                             | [v](#verbose-parameter)               | No       | Increase the level of detail for messages logged to the console.                                                                                                                                                                               |
 | [versionRange](#versionrange-parameter)                   |                                       | No       | The range of versions to include in the change log. Value must be a valid NuGet version range.                                                                                                                                                 |
 
@@ -105,6 +107,19 @@ The local path of the git repository to generate a change log for.
 | Short name:    | r                 |
 | Position:      | *Named parameter* |
 | Required:      | Yes               |
+| Default value: | *None*            |
+
+___
+
+### `template` Parameter
+
+Sets the template to use for generating the changelog.
+
+|                |                   |
+| -------------- | ----------------- |
+| Name:          | template          |
+| Position:      | *Named parameter* |
+| Required:      | No                |
 | Default value: | *None*            |
 
 ___
