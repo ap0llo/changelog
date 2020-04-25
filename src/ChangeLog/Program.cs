@@ -49,7 +49,9 @@ namespace Grynwald.ChangeLog
             // for validation of command line parameters, directly create a console logger
             // bypassing the DI container because we need to validate the parameters
             // before setting up DI
-            if (!ValidateCommandlineParameters(commandlineParameters, new ConsoleLogger(LogLevel.Information, "")))
+            var logger = new ConsoleLogger(LogLevel.Information, "");
+
+            if (!ValidateCommandlineParameters(commandlineParameters, logger))
                 return 1;
 
             var configurationFilePath = !String.IsNullOrEmpty(commandlineParameters.ConfigurationFilePath)
@@ -75,7 +77,16 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<RenderTemplateTask>();
 
                 containerBuilder.RegisterIntegrations();
-                containerBuilder.RegisterTemplate(configuration.Template);
+
+                try
+                {
+                    containerBuilder.RegisterTemplate(configuration.Template);
+                }
+                catch (InvalidTemplateConfigurationException ex)
+                {
+                    logger.LogCritical($"Failed to load template: {ex.Message}");
+                    return 1;
+                }
 
                 using (var container = containerBuilder.Build())
                 {

@@ -8,7 +8,15 @@ namespace Grynwald.ChangeLog.Templates
     {
         public static void RegisterTemplate(this ContainerBuilder containerBuilder, ChangeLogConfiguration.TemplateConfiguration configuration)
         {
-            containerBuilder.RegisterType<DefaultTemplate>().As<ITemplate>();
+            switch (configuration.Name)
+            {
+                case ChangeLogConfiguration.TemplateName.Default:
+                    containerBuilder.RegisterType<DefaultTemplate>().As<ITemplate>();
+                    break;
+
+                default:
+                    throw new InvalidTemplateConfigurationException($"Unknown template '{configuration.Name}'");
+            }
         }
     }
 }
