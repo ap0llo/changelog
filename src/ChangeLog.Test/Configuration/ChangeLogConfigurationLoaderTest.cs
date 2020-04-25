@@ -667,7 +667,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         private class TestSettingsClass8
         {
             [ConfigurationValue("changelog:template:name")]
-            public ChangeLogConfiguration.TemplateName TemplateName{ get; set; }
+            public ChangeLogConfiguration.TemplateName TemplateName { get; set; }
         }
 
         [Theory]

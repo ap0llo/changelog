@@ -52,5 +52,10 @@ namespace Grynwald.ChangeLog
         [Option("currentVersion", Required = false, Default = null, HelpText = "Sets the version of the currently checked-out commit. Value must be a valid semantic version")]
         [ConfigurationValue("changelog:currentVersion")]
         public string? CurrentVersion { get; set; }
+
+        [Option("template", Required = false, Default = null, HelpText = "Sets the template to use for generating the changelog.")]
+        [ConfigurationValue("changelog:template:name")]
+        public ChangeLogConfiguration.TemplateName? Template { get; }
+
     }
 }
