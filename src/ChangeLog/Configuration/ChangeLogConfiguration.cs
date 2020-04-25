@@ -48,7 +48,8 @@ namespace Grynwald.ChangeLog.Configuration
 
         public enum TemplateName
         {
-            Default
+            Default,
+            GitLabRelease
         }
 
         public class TemplateConfiguration

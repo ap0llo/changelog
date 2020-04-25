@@ -5,7 +5,7 @@ namespace Grynwald.ChangeLog.Templates
     /// <summary>
     /// Interface for templates that generate a output file from the changelog model.
     /// </summary>
-    internal interface ITemplate
+    public interface ITemplate
     {
         /// <summary>
         /// Saves the changelog to the specified path
