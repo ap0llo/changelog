@@ -1,11 +1,10 @@
 {
     "changelog": {
-        "markdown": {
-            "preset": "Default"
-        },
+    
         "integrations": {
             "provider": "GitHub"
         },
+
         "scopes": [
             {
                 "name": "github",
@@ -14,7 +13,12 @@
             {
                 "name": "gitlab",
                 "displayName": "GitLab Integration"
+            },
+            {
+                "name": "templates",
+                "displayName": "Templates"
             }
         ]
+
     }
 }
