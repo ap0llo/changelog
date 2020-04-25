@@ -1,10 +1,10 @@
 ﻿using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
-using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Templates;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test.Tasks
+namespace Grynwald.ChangeLog.Test.Templates
 {
     /// <summary>
     /// Unit tests for <see cref="ModelExtensions"/>

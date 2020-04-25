@@ -4,8 +4,9 @@ using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
 
-namespace Grynwald.ChangeLog.Tasks
+namespace Grynwald.ChangeLog.Templates
 {
+
     internal static class ModelExtensions
     {
         /// <summary>
