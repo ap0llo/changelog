@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.Utilities.Configuration;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test

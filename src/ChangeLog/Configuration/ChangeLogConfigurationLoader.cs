@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Text;
+using Grynwald.Utilities.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace Grynwald.ChangeLog.Configuration

@@ -2,6 +2,7 @@
 using System.IO;
 using CommandLine;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.Utilities.Configuration;
 
 namespace Grynwald.ChangeLog
 {
