@@ -58,6 +58,16 @@ namespace Grynwald.ChangeLog.Configuration
             public GitLabIntegrationConfiguration GitLab { get; set; } = new GitLabIntegrationConfiguration();
         }
 
+        public enum TemplateName
+        {
+            Default
+        }
+
+        public class TemplateConfiguration
+        {
+            public TemplateName Name { get; set; }
+        }
+
 
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
 
@@ -76,6 +86,8 @@ namespace Grynwald.ChangeLog.Configuration
         public string? VersionRange { get; set; } = "";
 
         public string? CurrentVersion { get; set; }
+
+        public TemplateConfiguration Template { get; set; } = new TemplateConfiguration();
 
 
         public string GetFullOutputPath()

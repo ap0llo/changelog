@@ -117,6 +117,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config.CurrentVersion));
             yield return TestCase(config => Assert.Empty(config.CurrentVersion));
+
+            yield return TestCase(config => Assert.NotNull(config.Template));
+            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.TemplateName.Default, config.Template.Name));
         }
 
         [Theory]
@@ -573,7 +576,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Fact]
-        public void OutputPath_can_be_set_in__the_configuration_file()
+        public void OutputPath_can_be_set_in_the_configuration_file()
         {
             // ARRANGE
             PrepareConfiguration("outputPath", "outputPath1");
@@ -623,5 +626,63 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal("outputPath3", config.OutputPath);
         }
 
+
+        public static IEnumerable<object[]> TemplateNames()
+        {
+            return Enum.GetValues(typeof(ChangeLogConfiguration.TemplateName))
+                       .Cast<ChangeLogConfiguration.TemplateName>()
+                       .Select(x => new object[] { x });
+        }
+
+        [Theory]
+        [MemberData(nameof(TemplateNames))]
+        public void Template_can_be_set_in_the_configuration_file(ChangeLogConfiguration.TemplateName templateName)
+        {
+            // ARRANGE
+            PrepareConfiguration("template:name", templateName.ToString());
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Template);
+            Assert.Equal(templateName, config.Template.Name);
+        }
+
+        [Theory]
+        [MemberData(nameof(TemplateNames))]
+        public void Template_can_be_set_through_environment_variables(ChangeLogConfiguration.TemplateName templateName)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("template:name", templateName.ToString());
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Template);
+            Assert.Equal(templateName, config.Template.Name);
+        }
+
+        private class TestSettingsClass8
+        {
+            [ConfigurationValue("changelog:template:name")]
+            public ChangeLogConfiguration.TemplateName TemplateName{ get; set; }
+        }
+
+        [Theory]
+        [MemberData(nameof(TemplateNames))]
+        public void Template_can_be_set_through_settings_object(ChangeLogConfiguration.TemplateName templateName)
+        {
+            // ARRANGE
+            var settingsObject = new TestSettingsClass8() { TemplateName = templateName };
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.Template);
+            Assert.Equal(templateName, config.Template.Name);
+        }
     }
 }

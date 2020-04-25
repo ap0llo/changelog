@@ -1,6 +1,6 @@
 ﻿# changelog Command Line Reference
 
-**Version:** 0.2.11\-pre+0763e0117c
+**Version:** 0.2.12\-pre+84ee5b214d
 
 ## Usage
 
