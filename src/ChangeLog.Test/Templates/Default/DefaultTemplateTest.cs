@@ -1,13 +1,9 @@
 ﻿using System;
-using System.IO;
-using ApprovalTests;
-using ApprovalTests.Reporters;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Default;
-using Grynwald.ChangeLog.Test.Tasks;
-using Grynwald.Utilities.IO;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -16,9 +12,10 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
     /// <summary>
     /// Tests for <see cref="DefaultTemplate"/>
     /// </summary>
-    [UseReporter(typeof(DiffReporter))]
-    public class DefaultTemplateTaskTest : TestBase
+    public class DefaultTemplateTaskTest : TemplateTest
     {
+        protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new DefaultTemplate(NullLogger<DefaultTemplate>.Instance, configuration);
+
         [Fact]
         public void ChangeLog_is_converted_to_expected_Markdown_01()
         {
@@ -448,22 +445,6 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
         }
 
 
-        private void Approve(ApplicationChangeLog changeLog, ChangeLogConfiguration? configuration = null)
-        {
-            var sut = new DefaultTemplate(NullLogger<DefaultTemplate>.Instance, configuration ?? ChangeLogConfigurationLoader.GetDefaultConfiguration());
 
-            using (var temporaryDirectory = new TemporaryDirectory())
-            {
-                var outputPath = Path.Combine(temporaryDirectory, "changelog.md");
-                sut.SaveChangeLog(changeLog, outputPath);
-
-                Assert.True(File.Exists(outputPath));
-
-                var output = File.ReadAllText(outputPath);
-
-                var writer = new ApprovalTextWriter(output);
-                Approvals.Verify(writer, new ApprovalNamer(), Approvals.GetReporter());
-            }
-        }
     }
 }
