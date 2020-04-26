@@ -531,7 +531,8 @@ The value must be a valid semantic version.
         <td><b>Allowed values</b></td>
         <td>
             <ul>
-                <li><code>default</code></li>
+                <li><code>Default</code></li>
+                <li><code>GitLabRelease</code></li>
             </ul>
         </td>
     </tr>
