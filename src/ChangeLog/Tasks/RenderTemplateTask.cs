@@ -34,7 +34,15 @@ namespace Grynwald.ChangeLog.Tasks
             Directory.CreateDirectory(outputDirectory);
 
             m_Logger.LogInformation($"Saving changelog to '{outputPath}'");
-            m_Template.SaveChangeLog(changeLog, outputPath);
+            try
+            {
+                m_Template.SaveChangeLog(changeLog, outputPath);
+            }
+            catch (TemplateExecutionException ex)
+            {
+                m_Logger.LogError($"Rendering changelog using template '{m_Template.GetType().Name}' failed: {ex.Message}");
+                return ChangeLogTaskResult.Error;
+            }
 
             return ChangeLogTaskResult.Success;
         }

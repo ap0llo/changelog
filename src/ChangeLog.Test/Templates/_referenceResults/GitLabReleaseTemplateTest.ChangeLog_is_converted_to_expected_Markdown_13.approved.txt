@@ -1,0 +1,17 @@
+﻿#### New Features
+
+- [**Scope 1 Display Name:** Some change](#scope-1-display-name-some-change)
+
+#### Bug Fixes
+
+- [**scope2:** A bug was fixed](#scope2-a-bug-was-fixed)
+
+#### Details
+
+##### **Scope 1 Display Name:** Some change
+
+- Commit: `0003E8`
+
+##### **scope2:** A bug was fixed
+
+- Commit: `00044C`

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Templates.Default;
+using Grynwald.ChangeLog.Templates.GitLabRelease;
 
 namespace Grynwald.ChangeLog.Templates
 {
@@ -12,6 +13,10 @@ namespace Grynwald.ChangeLog.Templates
             {
                 case ChangeLogConfiguration.TemplateName.Default:
                     containerBuilder.RegisterType<DefaultTemplate>().As<ITemplate>();
+                    break;
+
+                case ChangeLogConfiguration.TemplateName.GitLabRelease:
+                    containerBuilder.RegisterType<GitLabReleaseTemplate>().As<ITemplate>();
                     break;
 
                 default:

@@ -1,24 +1,31 @@
 # Templates
 
-Template allow customizing the generated changelog and generate
-a changelog in different formats of for different environments.
+Template allow customizing the generated changelog and generate a changelog in different formats of for different environments.
 
-The template to use can be configured using the `changelog:template:name`
-setting (see [Configuration](./configuration.md#template-name) for details).
+The template to use can be configured using the `changelog:template:name` setting (see [Configuration](./configuration.md#template-name) for details).
 
 The following templates are supported:
 
 - [Default](#default-template)
+- [GitLabRelease](#gitlabrelease-template)
 
 ## Default Template
 
-The default template renders the changelog to a Markdown file.
+The default template renders the change log to a Markdown file.
 It is the most generic template and should work in most Markdown implementations.
 
-The default template supports customizing serialization settings for
-the generated markdown.
-For details, see
-[Markdown Preset (Default Template)](./configuration.md#markdown-preset-default-template).
+The default template supports customizing serialization settings for the generated markdown.
+For details, see [Markdown Preset (Default Template)](./configuration.md#markdown-preset-default-template).
+
+## GitLab Release Template
+
+The GitLab Release Template renders a change log suited to be used as the description of a [GitLab Release](https://docs.gitlab.com/ee/user/project/releases/).
+
+This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](./configuration.md#version-range).
+Compared to the default template, the GitLab Release template omits the "Change Log" and version headings and adjusts the heading levels so the changelog can is porperly rendered in the Releases view of the GitLab web interface.
+
+**Note:** The GitLab Release template is independent of the [GitLab integration](./integrations.md#gitlab) for links.
+Both features can be used independently of each other.
 
 ## Version support
 
@@ -27,3 +34,4 @@ Support for templates were introduced in version 0.2.
 ## See Also
 
 - [Configuration](./configuration.md)
+- [GitLab Releases](https://docs.gitlab.com/ee/user/project/releases/)
