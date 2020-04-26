@@ -1,0 +1,15 @@
+﻿# Change Log
+
+## 1.2.3
+
+#### <a id="changelog-heading-0003E8"></a> **api:** Some change
+
+**Breaking Change**
+
+Changelog entry body Line1  
+Line2
+
+Changelog entry body Line3  
+Line4
+
+- Commit: `0003E8`

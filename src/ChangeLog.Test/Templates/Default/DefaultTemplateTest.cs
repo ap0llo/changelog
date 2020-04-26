@@ -4,7 +4,6 @@ using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Default;
-using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Templates.Default
@@ -12,9 +11,9 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
     /// <summary>
     /// Tests for <see cref="DefaultTemplate"/>
     /// </summary>
-    public class DefaultTemplateTaskTest : TemplateTest
+    public class DefaultTemplateTest : TemplateTest
     {
-        protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new DefaultTemplate(NullLogger<DefaultTemplate>.Instance, configuration);
+        protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new DefaultTemplate(configuration);
 
         [Fact]
         public void ChangeLog_is_converted_to_expected_Markdown_01()
@@ -350,7 +349,6 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
             Approve(changeLog, config);
         }
 
-
         [Fact]
         public void ChangeLog_is_converted_to_expected_Markdown_14()
         {
@@ -411,7 +409,6 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
             Approve(changeLog, config);
         }
 
-
         [Fact]
         public void ChangeLog_is_converted_to_expected_Markdown_16()
         {
@@ -443,8 +440,5 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
 
             Approve(changeLog);
         }
-
-
-
     }
 }

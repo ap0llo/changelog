@@ -46,5 +46,31 @@ namespace Grynwald.ChangeLog.Test.Tasks
             templateMock.Verify(x => x.SaveChangeLog(It.IsAny<ApplicationChangeLog>(), It.IsAny<string>()), Times.Once);
             templateMock.Verify(x => x.SaveChangeLog(It.IsAny<ApplicationChangeLog>(), configuration.OutputPath), Times.Once);
         }
+
+
+
+        [Fact]
+        public async Task Run_returns_error_if_template_throws_TemplateExecutionException()
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();            
+            var configuration = new ChangeLogConfiguration()
+            {
+                OutputPath = Path.Combine(temporaryDirectory, "changelog.md")
+            };
+
+            var templateMock = new Mock<ITemplate>(MockBehavior.Strict);
+            templateMock
+                .Setup(x => x.SaveChangeLog(It.IsAny<ApplicationChangeLog>(), It.IsAny<string>()))
+                .Throws(new TemplateExecutionException("Irrelevant"));
+
+            var sut = new RenderTemplateTask(m_Logger, configuration, templateMock.Object);
+
+            // ACT
+            var result = await sut.RunAsync(new ApplicationChangeLog());
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Error, result);            
+        }
     }
 }
