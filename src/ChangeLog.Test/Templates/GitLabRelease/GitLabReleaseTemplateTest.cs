@@ -30,6 +30,6 @@ namespace Grynwald.ChangeLog.Test.Templates.GitLabRelease
         }
 
 
-        
+
     }
 }

@@ -276,7 +276,7 @@ namespace Grynwald.ChangeLog.Templates
             return new MdContainerBlock(
                 GetEntryDetailHeaderBlock(entry),
                 GetEntryDetailContentBlock(entry)
-            );           
+            );
         }
 
         /// <summary>

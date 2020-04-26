@@ -53,7 +53,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Run_returns_error_if_template_throws_TemplateExecutionException()
         {
             // ARRANGE
-            using var temporaryDirectory = new TemporaryDirectory();            
+            using var temporaryDirectory = new TemporaryDirectory();
             var configuration = new ChangeLogConfiguration()
             {
                 OutputPath = Path.Combine(temporaryDirectory, "changelog.md")
@@ -70,7 +70,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var result = await sut.RunAsync(new ApplicationChangeLog());
 
             // ASSERT
-            Assert.Equal(ChangeLogTaskResult.Error, result);            
+            Assert.Equal(ChangeLogTaskResult.Error, result);
         }
     }
 }

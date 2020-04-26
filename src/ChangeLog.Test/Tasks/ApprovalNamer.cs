@@ -32,6 +32,6 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 throw new ArgumentException("Value must not be null or whitespace", nameof(typeName));
 
             m_TypeName = typeName;
-        }    
+        }
     }
 }
