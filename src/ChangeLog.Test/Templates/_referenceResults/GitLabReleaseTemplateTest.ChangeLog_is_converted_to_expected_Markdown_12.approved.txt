@@ -1,0 +1,12 @@
+﻿##### **api:** Some change
+
+- **Breaking Change:** Description of breaking change
+- **Breaking Change:** Another breaking change
+
+Changelog entry body Line1  
+Line2
+
+Changelog entry body Line3  
+Line4
+
+- Commit: `0003E8`

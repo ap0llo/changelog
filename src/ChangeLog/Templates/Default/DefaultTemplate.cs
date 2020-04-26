@@ -21,8 +21,7 @@ namespace Grynwald.ChangeLog.Templates.Default
         }
 
 
-
-
+        /// <inheritdoc />
         protected override string GetHtmlHeadingId(ChangeLogEntry entry) => $"changelog-heading-{entry.Commit}";
     }
 }
