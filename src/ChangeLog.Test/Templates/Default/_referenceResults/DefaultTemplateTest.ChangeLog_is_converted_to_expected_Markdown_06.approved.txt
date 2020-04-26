@@ -1,10 +1,8 @@
-﻿# <a id="changelog-heading-root"></a> Change Log
+﻿# Change Log
 
-## <a id="changelog-heading-123"></a> 1.2.3
+## 1.2.3
 
 #### <a id="changelog-heading-0003E8"></a> **api:** Some change
-
-**Breaking Change**
 
 Changelog entry body Line1  
 Line2

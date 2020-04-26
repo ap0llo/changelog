@@ -1,17 +1,17 @@
-﻿# <a id="changelog-heading-root"></a> Change Log
+﻿# Change Log
 
-## <a id="changelog-heading-123"></a> 1.2.3
+## 1.2.3
 
-### <a id="changelog-heading-123-features"></a> New Features
+### New Features
 
 - [**api:** Some change](#changelog-heading-0003E8)
 - [Some other change](#changelog-heading-0004B0)
 
-### <a id="changelog-heading-123-bugfixes"></a> Bug Fixes
+### Bug Fixes
 
 - [**cli:** A bug was fixed](#changelog-heading-00044C)
 
-### <a id="changelog-heading-123-details"></a> Details
+### Details
 
 #### <a id="changelog-heading-0003E8"></a> **api:** Some change
 
