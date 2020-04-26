@@ -36,6 +36,9 @@ namespace Grynwald.ChangeLog.Templates
             document.Save(outputPath, SerializationOptions);
         }
 
+        /// <summary>
+        /// Gets the HTML id for the details section of the specified entry
+        /// </summary>
         protected abstract string GetHtmlHeadingId(ChangeLogEntry entry);
 
 
@@ -148,15 +151,15 @@ namespace Grynwald.ChangeLog.Templates
         protected virtual MdBlock GetDetailSectionBlock(VersionInfo versionInfo, IEnumerable<ChangeLogEntry> entries)
         {
             return new MdContainerBlock(
-                GetDetailSectionBlockHeader(versionInfo.Version),
-                GetDetailSectionBlockContent(entries)
+                GetDetailSectionHeaderBlock(versionInfo.Version),
+                GetDetailSectionContentBlock(entries)
             );
         }
 
         /// <summary>
         /// Gets the header block of the version change log's details section
         /// </summary>
-        protected virtual MdBlock GetDetailSectionBlockHeader(NuGetVersion version)
+        protected virtual MdBlock GetDetailSectionHeaderBlock(NuGetVersion version)
         {
             return new MdHeading(3, "Details");
         }
@@ -164,7 +167,7 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the content block of the version change log's details section
         /// </summary>
-        protected virtual MdBlock GetDetailSectionBlockContent(IEnumerable<ChangeLogEntry> entries)
+        protected virtual MdBlock GetDetailSectionContentBlock(IEnumerable<ChangeLogEntry> entries)
         {
             return new MdContainerBlock(
                     entries.Select(GetEntryDetailBlock)
@@ -270,10 +273,26 @@ namespace Grynwald.ChangeLog.Templates
         /// </summary>
         protected virtual MdBlock GetEntryDetailBlock(ChangeLogEntry entry)
         {
-            var block = new MdContainerBlock
-            {
-                new MdHeading(4, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) }
-            };
+            return new MdContainerBlock(
+                GetEntryDetailHeaderBlock(entry),
+                GetEntryDetailContentBlock(entry)
+            );           
+        }
+
+        /// <summary>
+        /// Gets the header block of the details block for the specified entry
+        /// </summary>
+        protected virtual MdBlock GetEntryDetailHeaderBlock(ChangeLogEntry entry)
+        {
+            return new MdHeading(4, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) };
+        }
+
+        /// <summary>
+        /// Gets the content block of the details block for the specified entry
+        /// </summary>
+        protected virtual MdBlock GetEntryDetailContentBlock(ChangeLogEntry entry)
+        {
+            var block = new MdContainerBlock();
 
             // highlight breaking changes
             if (entry.ContainsBreakingChanges)
@@ -345,7 +364,6 @@ namespace Grynwald.ChangeLog.Templates
             return block;
         }
 
-
         /// <summary>
         /// Gets a list item for the specified changelog entry
         /// </summary>
@@ -360,7 +378,7 @@ namespace Grynwald.ChangeLog.Templates
             );
         }
 
-        private MdSpan GetSummaryText(ChangeLogEntry entry)
+        protected MdSpan GetSummaryText(ChangeLogEntry entry)
         {
             var scope = entry.GetScopeDisplayName(m_Configuration);
 
@@ -374,8 +392,6 @@ namespace Grynwald.ChangeLog.Templates
                 _ => new MdTextSpan(entry.Summary),
             };
         }
-
-
 
     }
 }

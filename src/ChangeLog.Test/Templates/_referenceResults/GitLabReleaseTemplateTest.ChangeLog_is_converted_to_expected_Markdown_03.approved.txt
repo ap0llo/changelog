@@ -1,0 +1,22 @@
+﻿#### New Features
+
+- [Some change](#some-change)
+- [Some other change](#some-other-change)
+
+#### Bug Fixes
+
+- [A bug was fixed](#a-bug-was-fixed)
+
+#### Details
+
+##### Some change
+
+- Commit: `0003E8`
+
+##### Some other change
+
+- Commit: `0004B0`
+
+##### A bug was fixed
+
+- Commit: `00044C`
