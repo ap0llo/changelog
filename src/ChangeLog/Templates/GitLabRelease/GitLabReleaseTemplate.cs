@@ -12,7 +12,7 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
     /// Template optimized to produce a Markdown file for use as description text of a GitLab Release
     /// </summary>
     internal class GitLabReleaseTemplate : MarkdownBaseTemplate
-    {        
+    {
 
         /// <inheritdoc />
         protected override MdSerializationOptions SerializationOptions => MdSerializationOptions.Default;
