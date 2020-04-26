@@ -29,7 +29,5 @@ namespace Grynwald.ChangeLog.Test.Templates.GitLabRelease
             Assert.Throws<TemplateExecutionException>(() => sut.SaveChangeLog(changelog, "Irrelevant"));
         }
 
-
-
     }
 }
