@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.Utilities.Configuration;
 using Xunit;
@@ -75,6 +77,83 @@ namespace Grynwald.ChangeLog.Test
 
             // ACT / ASSEERT
             Assert.Null(sut.OutputPath);
+        }
+
+
+        [Theory]
+        [MemberData(nameof(Properties))]
+        public void Properties_have_a_Option_attribute(string propertyName)
+        {
+            // all properties inCommandLineParameters should have a OptionAttribute
+            // so the value can be set by the commandline parser
+
+            var property = typeof(CommandLineParameters).GetProperty(propertyName)!;
+
+            var attribute = property.GetCustomAttribute<OptionAttribute>();
+
+            Assert.NotNull(attribute);
+        }
+
+        [Theory]
+        [MemberData(nameof(Properties))]
+        public void Properties_with_a_Option_or_Value_attribute_have_a_getter_and_a_setter(string propertyName)
+        {
+            var property = typeof(CommandLineParameters).GetProperty(propertyName)!;
+
+            if (property.GetCustomAttribute<OptionAttribute>() != null || property.GetCustomAttribute<ValueAttribute>() != null)
+            {
+                Assert.NotNull(property.GetGetMethod());
+                Assert.NotNull(property.GetSetMethod());
+            }
+        }
+
+        [Fact]
+        public void Template_parameter_is_optional()
+        {
+            // ARRANGE
+            var args = new[] { "--repository", "some-path" };
+
+            // ACT
+            var result = CommandLineParameters.Parse(args);
+
+            // ASSERT
+            Assert.Equal(ParserResultType.Parsed, result.Tag);
+            Assert.Equal(typeof(CommandLineParameters), result.TypeInfo.Current);
+            result.WithParsed(parsed =>
+            {
+                Assert.Null(parsed.Template);
+            });
+        }
+
+        public static IEnumerable<object[]> TemplateNames()
+        {
+            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.TemplateName)).Cast<ChangeLogConfiguration.TemplateName>())
+            {
+                yield return new object[] { value.ToString(), value };
+                yield return new object[] { value.ToString().ToLower(), value };
+                yield return new object[] { value.ToString().ToUpper(), value };
+            }
+        }
+
+
+        [Theory]
+        [MemberData(nameof(TemplateNames))]
+        public void Template_parameter_is_parsed_correctly(string template, ChangeLogConfiguration.TemplateName expected)
+        {
+            // ARRANGE
+            var args = new[] { "--repository", "some-path", "--template", template };
+
+            // ACT
+            var result = CommandLineParameters.Parse(args);
+
+            // ASSERT
+            Assert.Equal(ParserResultType.Parsed, result.Tag);
+            Assert.Equal(typeof(CommandLineParameters), result.TypeInfo.Current);
+            result.WithParsed(parsed =>
+            {
+                Assert.NotNull(parsed.Template);
+                Assert.Equal(expected, parsed.Template);
+            });
         }
     }
 }

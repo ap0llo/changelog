@@ -55,7 +55,20 @@ namespace Grynwald.ChangeLog
 
         [Option("template", Required = false, Default = null, HelpText = "Sets the template to use for generating the changelog.")]
         [ConfigurationValue("changelog:template:name")]
-        public ChangeLogConfiguration.TemplateName? Template { get; }
+        public ChangeLogConfiguration.TemplateName? Template { get; set; }
 
+
+
+        public static ParserResult<CommandLineParameters> Parse(string[] args)
+        {
+            using var commandlineParser = new Parser(settings =>
+            {
+                settings.CaseInsensitiveEnumValues = true;
+                settings.CaseSensitive = false;
+                settings.HelpWriter = Console.Out;
+            });
+
+            return commandlineParser.ParseArguments<CommandLineParameters>(args);
+        }
     }
 }

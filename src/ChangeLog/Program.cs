@@ -22,14 +22,7 @@ namespace Grynwald.ChangeLog
 
         private static async Task<int> Main(string[] args)
         {
-            using var commandlineParser = new Parser(settings =>
-            {
-                settings.CaseInsensitiveEnumValues = true;
-                settings.CaseSensitive = false;
-                settings.HelpWriter = Console.Out;
-            });
-
-            return await commandlineParser.ParseArguments<CommandLineParameters>(args)
+            return await CommandLineParameters.Parse(args)
                 .MapResult(
                     (CommandLineParameters parsed) => RunAsync(parsed),
                     (IEnumerable<Error> errors) =>

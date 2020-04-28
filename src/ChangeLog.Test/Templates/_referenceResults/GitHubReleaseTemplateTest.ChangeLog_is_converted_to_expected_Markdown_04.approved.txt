@@ -1,0 +1,22 @@
+﻿## New Features
+
+- [**api:** Some change](#api-some-change)
+- [Some other change](#some-other-change)
+
+## Bug Fixes
+
+- [**cli:** A bug was fixed](#cli-a-bug-was-fixed)
+
+## Details
+
+### **api:** Some change
+
+- Commit: `0003E8`
+
+### Some other change
+
+- Commit: `0004B0`
+
+### **cli:** A bug was fixed
+
+- Commit: `00044C`
