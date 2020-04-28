@@ -7,6 +7,7 @@ The template to use can be configured using the `changelog:template:name` settin
 The following templates are supported:
 
 - [Default](#default-template)
+- [GitHubRelease](#githubrelease-template)
 - [GitLabRelease](#gitlabrelease-template)
 
 ## Default Template
@@ -16,6 +17,16 @@ It is the most generic template and should work in most Markdown implementations
 
 The default template supports customizing serialization settings for the generated markdown.
 For details, see [Markdown Preset (Default Template)](./configuration.md#markdown-preset-default-template).
+
+## GitHub Release Template
+
+The GitHub Release Template renders a change log suited to be used as the description of a [GitHub Release](https://help.github.com/en/github/administering-a-repository/about-releases).
+
+This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](./configuration.md#version-range).
+Compared to the default template, the GitHub Release template omits the "Change Log" and version headings and adjusts the heading levels so the changelog can is properly rendered in the Releases view of the GitHub web interface.
+
+**Note:** The GitHub Release template is independent of the [GitHub integration](./integrations.md#github) for links.
+Both features can be used independently of each other.
 
 ## GitLab Release Template
 
