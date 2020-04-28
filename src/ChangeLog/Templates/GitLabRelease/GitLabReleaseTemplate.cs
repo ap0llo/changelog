@@ -33,7 +33,7 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
             // Return changes for only a single change, omit surrounding headers
             return new MdDocument(
                 GetVersionContentBlock(changeLog.Single())
-            );            
+            );
         }
 
         /// <inheritdoc />
