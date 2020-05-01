@@ -156,5 +156,66 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
                 });
         }
 
+        [Fact]
+        public void BreakingChanges_is_empty_is_there_are_no_breaking_changes()
+        {
+            // ARRANGE
+            var model = GetChangeLogEntry();
+
+            // ACT
+            var sut = new ChangeLogEntryViewModel(m_DefaultConfiguration, model);
+
+            // ASSERT
+            Assert.NotNull(sut.BreakingChanges);
+            Assert.Empty(sut.BreakingChanges);
+        }
+
+        [Fact]
+        public void BreakingChanges_returns_breaking_change_footers()
+        {
+            // ARRANGE
+            var model = GetChangeLogEntry(breakingChangeDescriptions: new[]
+            {
+                "description 1",
+                "description 3"
+            });
+
+            // ACT
+            var sut = new ChangeLogEntryViewModel(m_DefaultConfiguration, model);
+
+            // ASSERT
+            Assert.NotNull(sut.BreakingChanges);
+            Assert.Equal(2, sut.BreakingChanges.Count);
+            Assert.Collection(sut.BreakingChanges,
+                x =>
+                {
+                    Assert.Equal("description 1", x.Description);
+                    Assert.Same(sut, x.Entry);
+                    Assert.False(x.IsBreakingChangeFromHeader);
+                },
+                x =>
+                {
+                    Assert.Equal("description 3", x.Description);
+                    Assert.Same(sut, x.Entry);
+                    Assert.False(x.IsBreakingChangeFromHeader);
+                });
+        }
+
+        [Fact]
+        public void BreakingChanges_returns_a_single_item_if_the_entry_is_marked_as_breaking_change()
+        {
+            // ARRANGE
+            var model = GetChangeLogEntry(summary: "summary 1", isBreakingChange: true);
+
+            // ACT
+            var sut = new ChangeLogEntryViewModel(m_DefaultConfiguration, model);
+
+            // ASSERT
+            Assert.NotNull(sut.BreakingChanges);
+            var breakingChange = Assert.Single(sut.BreakingChanges);
+            Assert.Equal("summary 1", breakingChange.Description);
+            Assert.Same(sut, breakingChange.Entry);
+            Assert.True(breakingChange.IsBreakingChangeFromHeader);
+        }
     }
 }

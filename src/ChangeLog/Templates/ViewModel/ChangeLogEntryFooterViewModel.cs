@@ -6,18 +6,33 @@ using Grynwald.ChangeLog.Model;
 
 namespace Grynwald.ChangeLog.Templates.ViewModel
 {
+    /// <summary>
+    /// Represents the view of a commit message footer
+    /// </summary>
     internal class ChangeLogEntryFooterViewModel
     {
         private readonly ChangeLogConfiguration m_Configuration;
 
 
+        /// <summary>
+        /// The name of the footer as it should be displayed in the change log
+        /// </summary>
         public string DisplayName { get; }
 
+        /// <summary>
+        /// Gets the value/text of the footer
+        /// </summary>
         public string Value { get; }
 
+        /// <summary>
+        /// Gets the optional web uri the footer links to
+        /// </summary>
         public Uri? WebUri { get; }
 
 
+        /// <summary>
+        /// Initializes a new instance if <see cref="ChangeLogEntryFooterViewModel"/>
+        /// </summary>
         public ChangeLogEntryFooterViewModel(ChangeLogConfiguration configuration, string name, string value, Uri? webUri)
         {
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -33,6 +48,9 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
             WebUri = webUri;
         }
 
+        /// <summary>
+        /// Initializes a new instance if <see cref="ChangeLogEntryFooterViewModel"/>
+        /// </summary>
         public ChangeLogEntryFooterViewModel(ChangeLogConfiguration configuration, ChangeLogEntryFooter model)
         {
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -45,6 +63,7 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
             WebUri = model.WebUri;
 
         }
+
 
         private string GetFooterDisplayName(string name)
         {

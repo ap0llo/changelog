@@ -172,5 +172,64 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
                 }
             );
         }
+
+        [Fact]
+        public void AllEntries_returns_the_expected_items()
+        {
+            // ARRANGE
+            var model = GetSingleVersionChangeLog("1.2.3", entries: new[]
+            {
+                // features and bug fixes are always included
+                GetChangeLogEntry(type: "feat", summary: "description1"),
+                GetChangeLogEntry(type: "fix", summary: "description2"),
+                // other types are only included if they contain a breaking change
+                GetChangeLogEntry(type: "refactor", summary: "description3"),
+                GetChangeLogEntry(type: "build", isBreakingChange: true, summary: "description4"),
+                GetChangeLogEntry(type: "chore", summary: "description5", breakingChangeDescriptions: new[]{ "description" }),
+
+            });
+
+            // ACT
+            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, model);
+
+            // ASSERT
+            Assert.Contains(sut.AllEntries, entry => entry.Title == "description1");
+            Assert.Contains(sut.AllEntries, entry => entry.Title == "description2");
+            Assert.DoesNotContain(sut.AllEntries, entry => entry.Title == "description3");
+            Assert.Contains(sut.AllEntries, entry => entry.Title == "description4");
+            Assert.Contains(sut.AllEntries, entry => entry.Title == "description5");
+        }
+
+
+        [Fact]
+        public void AllEntries_is_sorted_by_date()
+        {
+            // ARRANGE
+            var model = GetSingleVersionChangeLog("1.2.3", entries: new[]
+            {
+                GetChangeLogEntry(summary: "description1", date: DateTime.Now.Date.AddDays(-1)),
+                GetChangeLogEntry(summary: "description2", date: DateTime.Now.Date.AddDays(2)),
+                GetChangeLogEntry(summary: "description3", date: DateTime.Now.Date.AddDays(-3)),
+            });
+
+            // ACT
+            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, model);
+
+            // ASSERT
+            Assert.Collection(sut.AllEntries,
+                entry =>
+                {
+                    Assert.Equal("description3", entry.Title);
+                },
+                entry =>
+                {
+                    Assert.Equal("description1", entry.Title);
+                },
+                entry =>
+                {
+                    Assert.Equal("description2", entry.Title);
+                }
+            );
+        }
     }
 }

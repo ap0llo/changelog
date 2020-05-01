@@ -6,13 +6,17 @@ using Grynwald.ChangeLog.Model;
 
 namespace Grynwald.ChangeLog.Templates.ViewModel
 {
-    //TODO: Use DI container?
+    /// <summary>
+    /// Represents the view of an application's change log
+    /// </summary>
     internal class ApplicationChangeLogViewModel
     {
         private readonly ChangeLogConfiguration m_Configuration;
         private readonly ApplicationChangeLog m_Model;
 
-
+        /// <summary>
+        /// Gets all the change log for the individual versions of the application
+        /// </summary>
         public IReadOnlyList<SingleVersionChangeLogViewModel> Versions { get; }
 
 

@@ -14,11 +14,25 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         private readonly ChangeLogConfiguration m_Configuration;
         private readonly SingleVersionChangeLog m_Model;
 
-
+        /// <summary>
+        /// Gets the display name of the version this change log describes 
+        /// </summary>
         public string VersionDisplayName { get; }
 
+        /// <summary>
+        /// Gets all entries for the change log
+        /// </summary>
+        public IReadOnlyList<ChangeLogEntryViewModel> AllEntries { get; }
+
+        /// <summary>
+        /// Gets the entry groups for the current change log.
+        /// A entry group, groups changes of the same type (e.g. New Features or Bug Fixes)
+        /// </summary>
         public IReadOnlyList<ChangeLogEntryGroupViewModel> EntryGroups { get; }
 
+        /// <summary>
+        /// Gets all breaking changes introduced in this version
+        /// </summary>
         public IReadOnlyList<BreakingChangeViewModel> BreakingChanges { get; }
 
 
@@ -32,21 +46,27 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
             m_Model = model ?? throw new ArgumentNullException(nameof(model));
 
             VersionDisplayName = model.Version.Version.ToNormalizedString();
-            EntryGroups = LoadEntryGroups();
-            BreakingChanges = LoadBreakingChanges();
+
+            AllEntries = model.AllEntries
+                .Where(IsIncludedEntry)
+                .OrderBy(x => x.Date)
+                .Select(GetViewModel).ToArray();
+
+            EntryGroups = LoadEntryGroups(AllEntries);
+            BreakingChanges = AllEntries.SelectMany(x => x.BreakingChanges).OrderBy(x => x.Entry.Date).ToArray();
         }
 
 
-        private IReadOnlyList<ChangeLogEntryGroupViewModel> LoadEntryGroups()
+        private IReadOnlyList<ChangeLogEntryGroupViewModel> LoadEntryGroups(IEnumerable<ChangeLogEntryViewModel> entries)
         {
             var entryGroups = new List<ChangeLogEntryGroupViewModel>();
 
-            var features = m_Model.AllEntries.Where(x => x.Type == CommitType.Feature).Select(GetViewModel);
+            var features = entries.Where(x => x.Type == CommitType.Feature);
             if (features.Any())
             {
                 entryGroups.Add(new ChangeLogEntryGroupViewModel(m_Configuration, "New Features", features));
             }
-            var bugfixes = m_Model.AllEntries.Where(x => x.Type == CommitType.BugFix).Select(GetViewModel);
+            var bugfixes = entries.Where(x => x.Type == CommitType.BugFix);
             if (bugfixes.Any())
             {
                 entryGroups.Add(new ChangeLogEntryGroupViewModel(m_Configuration, "Bug Fixes", bugfixes));
@@ -55,31 +75,12 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
             return entryGroups;
         }
 
-        private IReadOnlyList<BreakingChangeViewModel> LoadBreakingChanges()
-        {
-            var breakingChanges = new List<BreakingChangeViewModel>();
-
-            foreach (var entry in m_Model.AllEntries)
-            {
-                var entryViewModel = GetViewModel(entry);
-                if (entry.BreakingChangeDescriptions.Any())
-                {
-                    foreach (var description in entry.BreakingChangeDescriptions)
-                    {
-                        breakingChanges.Add(new BreakingChangeViewModel(m_Configuration, description, entryViewModel));
-                    }
-
-                }
-                else if (entry.ContainsBreakingChanges)
-                {
-                    breakingChanges.Add(new BreakingChangeViewModel(m_Configuration, entryViewModel.Title, entryViewModel));
-                }
-            }
-
-            return breakingChanges;
-        }
-
         private ChangeLogEntryViewModel GetViewModel(ChangeLogEntry model) =>
             m_ViewModels.GetOrAdd(model, () => new ChangeLogEntryViewModel(m_Configuration, model));
+
+        private bool IsIncludedEntry(ChangeLogEntry entry) =>
+            entry.Type == CommitType.BugFix ||
+            entry.Type == CommitType.Feature ||
+            entry.ContainsBreakingChanges;
     }
 }

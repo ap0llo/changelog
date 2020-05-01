@@ -88,6 +88,5 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             // ASSERT
             Assert.Equal("Some Display Name", sut.DisplayName);
         }
-
     }
 }
