@@ -1,4 +1,5 @@
 ﻿using System;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Templates.ViewModel;
 using Xunit;
@@ -10,10 +11,18 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
     /// </summary>
     public class ApplicationChangeLogViewModelTest : TestBase
     {
+        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+        [Fact]
+        public void Configuration_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ApplicationChangeLogViewModel(null!, new ApplicationChangeLog()));
+        }
+
         [Fact]
         public void Model_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ApplicationChangeLogViewModel(null!));
+            Assert.Throws<ArgumentNullException>(() => new ApplicationChangeLogViewModel(m_DefaultConfiguration, null!));
         }
 
         [Fact]
@@ -29,7 +38,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
 
 
             // ACT 
-            var viewModel = new ApplicationChangeLogViewModel(model);
+            var viewModel = new ApplicationChangeLogViewModel(m_DefaultConfiguration, model);
 
             // ASSERT
             Assert.NotNull(viewModel.Versions);
@@ -47,7 +56,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             };
 
             // ACT 
-            var viewModel = new ApplicationChangeLogViewModel(model);
+            var viewModel = new ApplicationChangeLogViewModel(m_DefaultConfiguration, model);
 
             // ASSERT
             // ordered descending => newest version first

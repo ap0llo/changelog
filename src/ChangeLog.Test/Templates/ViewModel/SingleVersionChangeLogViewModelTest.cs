@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Templates.ViewModel;
 using Xunit;
 
@@ -10,10 +11,18 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
     /// </summary>
     public class SingleVersionChangeLogViewModelTest : TestBase
     {
+        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+        [Fact]
+        public void Configuration_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new SingleVersionChangeLogViewModel(null!, GetSingleVersionChangeLog("1.2.3")));
+        }
+
         [Fact]
         public void Model_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new SingleVersionChangeLogViewModel(null!));
+            Assert.Throws<ArgumentNullException>(() => new SingleVersionChangeLogViewModel(m_DefaultConfiguration, null!));
         }
 
         [Theory]
@@ -23,7 +32,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
         public void VersionDisplayName_is_the_normalized_version(string version, string expectedDisplayName)
         {
             // ARRANGE
-            var sut = new SingleVersionChangeLogViewModel(GetSingleVersionChangeLog(version));
+            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, GetSingleVersionChangeLog(version));
 
             // ACT / ASSERT
             Assert.Equal(expectedDisplayName, sut.VersionDisplayName);
@@ -40,7 +49,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             });
 
             // ACT
-            var sut = new SingleVersionChangeLogViewModel(model);
+            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, model);
 
             // ASSERT
             Assert.NotNull(sut.EntryGroups);
@@ -69,7 +78,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             });
 
             // ACT
-            var sut = new SingleVersionChangeLogViewModel(model);
+            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, model);
 
             // ASSERT
             Assert.NotNull(sut.EntryGroups);
@@ -89,7 +98,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             var model = GetSingleVersionChangeLog("1.2.3");
 
             // ACT
-            var sut = new SingleVersionChangeLogViewModel(model);
+            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, model);
 
             // ASSERT
             Assert.NotNull(sut.EntryGroups);
@@ -107,7 +116,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             });
 
             // ACT
-            var sut = new SingleVersionChangeLogViewModel(model);
+            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, model);
 
             // ASSERT
             Assert.NotNull(sut.BreakingChanges);
@@ -136,7 +145,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             });
 
             // ACT
-            var sut = new SingleVersionChangeLogViewModel(model);
+            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, model);
 
             // ASSERT
             Assert.NotNull(sut.BreakingChanges);

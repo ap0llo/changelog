@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Templates.ViewModel;
 using Xunit;
 
@@ -10,6 +11,14 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
     /// </summary>
     public class ChangeLogEntryGroupViewModelTest : TestBase
     {
+        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+        [Fact]
+        public void Configuration_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ChangeLogEntryGroupViewModel(null!, "Some Title", Array.Empty<ChangeLogEntryViewModel>()));
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -17,13 +26,13 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
         [InlineData("\t")]
         public void Title_must_not_be_null_or_whitespace(string title)
         {
-            Assert.Throws<ArgumentException>(() => new ChangeLogEntryGroupViewModel(title, Array.Empty<ChangeLogEntryViewModel>()));
+            Assert.Throws<ArgumentException>(() => new ChangeLogEntryGroupViewModel(m_DefaultConfiguration, title, Array.Empty<ChangeLogEntryViewModel>()));
         }
 
         [Fact]
         public void Entires_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ChangeLogEntryGroupViewModel("Some title", null!));
+            Assert.Throws<ArgumentNullException>(() => new ChangeLogEntryGroupViewModel(m_DefaultConfiguration, "Some title", null!));
         }
 
         [Fact]
@@ -39,7 +48,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             };
 
             // ACT 
-            var sut = new ChangeLogEntryGroupViewModel("Title", entries.Select(x => new ChangeLogEntryViewModel(x)));
+            var sut = new ChangeLogEntryGroupViewModel(m_DefaultConfiguration, "Title", entries.Select(x => new ChangeLogEntryViewModel(m_DefaultConfiguration, x)));
 
             // ASSERT
             Assert.Collection(sut.Entries,
