@@ -1,5 +1,6 @@
 ﻿using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Templates.ViewModel;
 using Grynwald.MarkdownGenerator;
 
 namespace Grynwald.ChangeLog.Templates.Default
@@ -22,6 +23,6 @@ namespace Grynwald.ChangeLog.Templates.Default
 
 
         /// <inheritdoc />
-        protected override string GetHtmlHeadingId(ChangeLogEntry entry) => $"changelog-heading-{entry.Commit}";
+        protected override string GetHtmlHeadingId(ChangeLogEntryViewModel viewModel) => $"changelog-heading-{viewModel.Commit}";
     }
 }

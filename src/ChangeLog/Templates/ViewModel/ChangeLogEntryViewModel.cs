@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
+using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 
 namespace Grynwald.ChangeLog.Templates.ViewModel
@@ -35,6 +36,11 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         /// Gets the change log entry's type specified in the commit message header(e.g. <c>feat</c> of <c>fix</c>)
         /// </summary>
         public CommitType Type => m_Model.Type;
+
+        /// <summary>
+        /// Gets the commit the change
+        /// </summary>
+        public GitId Commit => m_Model.Commit;
 
         /// <summary>
         /// Gets all the footers for the change log entry **excluding** "BREAKING CHANGES" footers.
