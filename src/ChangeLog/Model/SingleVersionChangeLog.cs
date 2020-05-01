@@ -16,10 +16,13 @@ namespace Grynwald.ChangeLog.Model
         //TODO: Should AllEntries just return the union of FeatureEntries, BUgFixEntrues and BreakingChanges?
         public IEnumerable<ChangeLogEntry> AllEntries => m_Entries.OrderBy(x => x.Date);
 
+        //TODO: Remove
         public IEnumerable<ChangeLogEntry> FeatureEntries => AllEntries.Where(e => e.Type == CommitType.Feature);
 
+        //TODO: Remove
         public IEnumerable<ChangeLogEntry> BugFixEntries => AllEntries.Where(e => e.Type == CommitType.BugFix);
 
+        //TODO: Replace with "AllBreakingChanges" and "AdditionalBreakingChanges" ???
         public IEnumerable<ChangeLogEntry> BreakingChanges => AllEntries.Where(e => e.ContainsBreakingChanges);
 
 
@@ -36,6 +39,15 @@ namespace Grynwald.ChangeLog.Model
 
             m_Entries.Add(entry);
         }
+
+        public void Remove(ChangeLogEntry entry)
+        {
+            if (entry is null)
+                throw new ArgumentNullException(nameof(entry));
+
+            m_Entries.Remove(entry);
+        }
+
 
         public IEnumerator<ChangeLogEntry> GetEnumerator() => AllEntries.GetEnumerator();
 
