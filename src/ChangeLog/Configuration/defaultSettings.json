@@ -1,9 +1,20 @@
 {
   "changelog": {
 
-    "scopes": [ ],
+    "entryTypes": [
+      {
+        "type": "feat",
+        "DisplayName": "New Features"
+      },
+      {
+        "type": "fix",
+        "DisplayName": "Bug Fixes"
+      }
+    ],
 
-    "footers": [ ],
+    "scopes": [],
+
+    "footers": [],
 
     "tagPatterns": [
       "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
@@ -33,7 +44,7 @@
       "name": "default",
 
       "default": {
-        "markdownPreset" :  "default"
+        "markdownPreset": "default"
       }
     }
   }

@@ -71,6 +71,13 @@ namespace Grynwald.ChangeLog.Configuration
             public MarkdownPreset MarkdownPreset { get; set; } = MarkdownPreset.Default;
         }
 
+        public class EntryTypeConfiguration
+        {
+            public string Type { get; set; } = "";
+
+            public string? DisplayName { get; set; }
+        }
+
 
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
 
@@ -89,6 +96,8 @@ namespace Grynwald.ChangeLog.Configuration
         public string? CurrentVersion { get; set; }
 
         public TemplateConfiguration Template { get; set; } = new TemplateConfiguration();
+
+        public EntryTypeConfiguration[] EntryTypes { get; set; } = Array.Empty<EntryTypeConfiguration>();
 
 
         public string GetFullOutputPath()

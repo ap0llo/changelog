@@ -67,6 +67,7 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
+                containerBuilder.RegisterType<FilterEntriesTask>();
                 containerBuilder.RegisterType<RenderTemplateTask>();
 
                 containerBuilder.RegisterIntegrations();
@@ -90,6 +91,7 @@ namespace Grynwald.ChangeLog
                         .AddTask<LoadVersionsFromTagsTask>()
                         .AddTask<ParseCommitsTask>()
                         .AddTask<FilterVersionsTask>()
+                        .AddTask<FilterEntriesTask>()
                         .AddIntegrationTasks()
                         .AddTask<RenderTemplateTask>()
                         .Build();

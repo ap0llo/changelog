@@ -345,13 +345,12 @@ namespace Grynwald.ChangeLog.Test.Templates
             // if a display name is configured for a scope,
             // it must be used in the output instead of the actual scope
 
-            var config = new ChangeLogConfiguration()
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Scopes = new[]
             {
-                Scopes = new[]
-                {
-                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "Scope 1 Display Name" }
-                }
+                new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "Scope 1 Display Name" }
             };
+
 
             var versionChangeLog = GetSingleVersionChangeLog(
                 "1.2.3",
@@ -398,13 +397,11 @@ namespace Grynwald.ChangeLog.Test.Templates
             // if a display name is configured for a footer,
             // the output must use the display name instead of the footer name
 
-            var config = new ChangeLogConfiguration()
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Footers = new[]
             {
-                Footers = new[]
-                {
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = "see-also", DisplayName = "See Also" },
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = "reviewed-by", DisplayName = "Reviewed by" }
-                }
+                new ChangeLogConfiguration.FooterConfiguration() { Name = "see-also", DisplayName = "See Also" },
+                new ChangeLogConfiguration.FooterConfiguration() { Name = "reviewed-by", DisplayName = "Reviewed by" }
             };
 
             var versionChangeLog = GetSingleVersionChangeLog(
@@ -457,6 +454,29 @@ namespace Grynwald.ChangeLog.Test.Templates
             var changeLog = new ApplicationChangeLog() { versionChangeLog };
 
             Approve(changeLog);
+        }
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_18()
+        {
+            // all configured types are included in the output, in the configured order
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.EntryTypes = new[]
+            {
+                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "feat", DisplayName = "New Features"},
+                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = "Documentation Updates"},
+                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "fix", DisplayName = "Fixed bugs"}
+            };
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", entries: new[]
+            {
+                GetChangeLogEntry(type: "docs", summary: "A documentation change"),
+                GetChangeLogEntry(type: "fix", summary: "Some bug fix"),
+                GetChangeLogEntry(type: "feat", summary: "Some feature"),
+            });
+
+            var changeLog = new ApplicationChangeLog() { versionChangeLog };
+
+            Approve(changeLog, config);
         }
     }
 }

@@ -13,14 +13,28 @@ namespace Grynwald.ChangeLog.Model
 
         public VersionInfo Version { get; }
 
-        //TODO: Should AllEntries just return the union of FeatureEntries, BUgFixEntrues and BreakingChanges?
         public IEnumerable<ChangeLogEntry> AllEntries => m_Entries.OrderBy(x => x.Date);
 
-        public IEnumerable<ChangeLogEntry> FeatureEntries => AllEntries.Where(e => e.Type == CommitType.Feature);
-
-        public IEnumerable<ChangeLogEntry> BugFixEntries => AllEntries.Where(e => e.Type == CommitType.BugFix);
-
+        /// <summary>
+        /// Gets all change log entries that contain a breaking change.
+        /// </summary>
         public IEnumerable<ChangeLogEntry> BreakingChanges => AllEntries.Where(e => e.ContainsBreakingChanges);
+
+        /// <summary>
+        /// Gets all change log entries of the specified type
+        /// </summary>
+        /// <param name="commitType"></param>
+        /// <returns></returns>
+        public ChangeLogEntryGroup this[CommitType commitType]
+        {
+            get
+            {
+                var entries = AllEntries.Where(x => x.Type == commitType);
+                return new ChangeLogEntryGroup(commitType, entries);
+            }
+        }
+
+
 
 
         public SingleVersionChangeLog(VersionInfo version)
@@ -35,6 +49,14 @@ namespace Grynwald.ChangeLog.Model
                 throw new ArgumentNullException(nameof(entry));
 
             m_Entries.Add(entry);
+        }
+
+        public void Remove(ChangeLogEntry entry)
+        {
+            if (entry is null)
+                throw new ArgumentNullException(nameof(entry));
+
+            m_Entries.Remove(entry);
         }
 
         public IEnumerator<ChangeLogEntry> GetEnumerator() => AllEntries.GetEnumerator();

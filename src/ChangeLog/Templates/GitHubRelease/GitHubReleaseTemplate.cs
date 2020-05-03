@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Templates.ViewModel;
 using Grynwald.MarkdownGenerator;
-using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Templates.GitHubRelease
 {
@@ -26,27 +26,28 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
                 return new MdDocument(GetEmptyBlock());
 
             // Return changes for only a single change, omit surrounding headers
+            var viewModel = new SingleVersionChangeLogViewModel(m_Configuration, changeLog.Single());
             return new MdDocument(
-                GetVersionContentBlock(changeLog.Single())
+                GetVersionContentBlock(viewModel)
             );
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetSummaryListHeaderBlock(string listTitle)
+        protected override MdBlock GetSummaryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
         {
             // in GitHub releases, the top heading is <h2> because higher,            
-            return new MdHeading(2, listTitle);
+            return new MdHeading(2, viewModel.DisplayName);
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetBreakingChangesListHeaderBlock(VersionInfo versionInfo)
+        protected override MdBlock GetBreakingChangesListHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             // in GitHub releases, the top heading is <h2> because higher,
             return new MdHeading(2, "Breaking Changes");
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetDetailSectionHeaderBlock(NuGetVersion version)
+        protected override MdBlock GetDetailSectionHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             // in GitHub releases, the top heading is <h2> because higher,
             return new MdHeading(2, "Details");
