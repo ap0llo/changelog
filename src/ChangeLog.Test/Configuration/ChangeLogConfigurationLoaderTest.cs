@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.Utilities.Configuration;
 using Grynwald.Utilities.IO;
 using Newtonsoft.Json;
@@ -121,6 +122,23 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.Template.Default));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Template.Default.MarkdownPreset));
 
+            yield return TestCase(config => Assert.NotNull(config.EntryTypes));
+            yield return TestCase(config => Assert.Equal(2, config.EntryTypes.Length));
+            yield return TestCase(config => Assert.Collection(config.EntryTypes,
+                x =>
+                {
+                    Assert.NotNull(x.Type);
+                    Assert.NotEmpty(x.Type);
+                    Assert.Equal(CommitType.Feature, new CommitType(x.Type!));
+                    Assert.Equal("New Features", x.DisplayName);
+                },
+                x =>
+                {
+                    Assert.NotNull(x.Type);
+                    Assert.NotEmpty(x.Type);
+                    Assert.Equal(CommitType.BugFix, new CommitType(x.Type!));
+                    Assert.Equal("Bug Fixes", x.DisplayName);
+                }));
         }
 
         [Theory]
@@ -679,6 +697,35 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ASSERT
             Assert.NotNull(config.Template.Default);
             Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Template.Default.MarkdownPreset);
+        }
+
+        [Fact]
+        public void EntryTypes_can_be_set_in_the_configuration_file()
+        {
+            // ARRANGE            
+            var entryTypes = new[]
+            {
+                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = "Documentation Updates" },
+                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "bugfix", DisplayName = "Bug Fixes" }
+            };
+
+            PrepareConfiguration("entryTypes", entryTypes);
+
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            var assertions = entryTypes
+                .Select<ChangeLogConfiguration.EntryTypeConfiguration, Action<ChangeLogConfiguration.EntryTypeConfiguration>>(
+                    expected => actual =>
+                    {
+                        Assert.Equal(expected.Type, actual.Type);
+                        Assert.Equal(expected.DisplayName, actual.DisplayName);
+                    })
+                .ToArray();
+
+            Assert.Equal(entryTypes.Length, config.EntryTypes.Length);
+            Assert.Collection(config.EntryTypes, assertions);
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Templates.ViewModel;
 using Grynwald.MarkdownGenerator;
-using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Templates.GitLabRelease
 {
@@ -31,7 +29,7 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
                 return new MdDocument(GetEmptyBlock());
 
             // Return changes for only a single change, omit surrounding headers
-            var viewModel = new SingleVersionChangeLogViewModel(changeLog.Single());
+            var viewModel = new SingleVersionChangeLogViewModel(m_Configuration, changeLog.Single());
             return new MdDocument(
                 GetVersionContentBlock(viewModel)
             );

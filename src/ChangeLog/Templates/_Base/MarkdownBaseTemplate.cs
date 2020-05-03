@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Templates.ViewModel;
 using Grynwald.MarkdownGenerator;
 
 namespace Grynwald.ChangeLog.Templates
@@ -14,7 +15,7 @@ namespace Grynwald.ChangeLog.Templates
     /// <seealso cref="GitLabRelease.GitLabReleaseTemplate"/>
     internal abstract class MarkdownBaseTemplate : ITemplate
     {
-        private readonly ChangeLogConfiguration m_Configuration;
+        protected readonly ChangeLogConfiguration m_Configuration;
 
         /// <summary>
         /// Gets the serialization options used for generating Markdown.
@@ -87,7 +88,7 @@ namespace Grynwald.ChangeLog.Templates
         /// </summary>
         protected virtual MdBlock GetVersionBlock(SingleVersionChangeLog model)
         {
-            var viewModel = new SingleVersionChangeLogViewModel(model);
+            var viewModel = new SingleVersionChangeLogViewModel(m_Configuration, model);
 
             return new MdContainerBlock(
                 GetVersionHeaderBlock(viewModel),
