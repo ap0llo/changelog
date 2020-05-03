@@ -4,7 +4,6 @@ using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
 using Grynwald.MarkdownGenerator;
-using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Templates
 {
@@ -88,42 +87,36 @@ namespace Grynwald.ChangeLog.Templates
         /// </summary>
         protected virtual MdBlock GetVersionBlock(SingleVersionChangeLog model)
         {
+            var viewModel = new SingleVersionChangeLogViewModel(model);
+
             return new MdContainerBlock(
-                GetVersionHeaderBlock(model),
-                GetVersionContentBlock(model)
+                GetVersionHeaderBlock(viewModel),
+                GetVersionContentBlock(viewModel)
             );
         }
 
         /// <summary>
         /// Gets the header block for the specified version change log
         /// </summary>
-        protected virtual MdBlock GetVersionHeaderBlock(SingleVersionChangeLog model)
+        protected virtual MdBlock GetVersionHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
-            var version = model.Version.Version;
-            return new MdHeading(2, version.ToNormalizedString());
+            return new MdHeading(2, viewModel.VersionDisplayName);
         }
 
         /// <summary>
         /// Gets the content block for the specified version change log
         /// </summary>
-        protected virtual MdBlock GetVersionContentBlock(SingleVersionChangeLog model)
+        protected virtual MdBlock GetVersionContentBlock(SingleVersionChangeLogViewModel viewModel)
         {
-            var features = model.FeatureEntries.ToArray();
-            var bugFixes = model.BugFixEntries.ToArray();
-            var allBreakingChanges = model.BreakingChanges.ToArray();
-            var additionalBreakingChanges = allBreakingChanges.Except(features).Except(bugFixes).ToArray();  // breaking changes not in 'features' or 'bugFixes'
-
-            var entryCount = features.Length + bugFixes.Length + additionalBreakingChanges.Length;
-
-            var allEntries = features.Concat(bugFixes).Concat(additionalBreakingChanges);
+            var entryCount = viewModel.AllEntries.Count();
 
             return entryCount switch
             {
                 0 => GetEmptyBlock(),
-                1 => GetEntryDetailBlock(allEntries.Single()),
+                1 => GetEntryDetailBlock(viewModel.AllEntries.Single()),
                 _ => new MdContainerBlock(
-                    GetSummarySectionBlock(model.Version, features, bugFixes, allBreakingChanges),
-                    GetDetailSectionBlock(model.Version, allEntries)
+                    GetSummarySectionBlock(viewModel),
+                    GetDetailSectionBlock(viewModel)
                 )
             };
         }
@@ -136,30 +129,36 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the summary section for a version change log
         /// </summary>
-        protected virtual MdBlock GetSummarySectionBlock(VersionInfo versionInfo, IEnumerable<ChangeLogEntry> features, IEnumerable<ChangeLogEntry> bugfixes, IEnumerable<ChangeLogEntry> breakingChanges)
+        protected virtual MdBlock GetSummarySectionBlock(SingleVersionChangeLogViewModel viewModel)
         {
-            return new MdContainerBlock(
-                GetSummaryListBlock("New Features", features),
-                GetSummaryListBlock("Bug Fixes", bugfixes),
-                GetBreakingChangesListBlock(versionInfo, breakingChanges)
-            );
+            IEnumerable<MdBlock> EnumerateBlocks()
+            {
+                foreach (var group in viewModel.EntryGroups)
+                {
+                    yield return GetSummaryListBlock(group);
+
+                }
+                yield return GetBreakingChangesListBlock(viewModel);
+            }
+
+            return new MdContainerBlock(EnumerateBlocks());
         }
 
         /// <summary>
         /// Gets the details section for a version changelog
         /// </summary>
-        protected virtual MdBlock GetDetailSectionBlock(VersionInfo versionInfo, IEnumerable<ChangeLogEntry> entries)
+        protected virtual MdBlock GetDetailSectionBlock(SingleVersionChangeLogViewModel viewModel)
         {
             return new MdContainerBlock(
-                GetDetailSectionHeaderBlock(versionInfo.Version),
-                GetDetailSectionContentBlock(entries)
+                GetDetailSectionHeaderBlock(viewModel),
+                GetDetailSectionContentBlock(viewModel)
             );
         }
 
         /// <summary>
         /// Gets the header block of the version change log's details section
         /// </summary>
-        protected virtual MdBlock GetDetailSectionHeaderBlock(NuGetVersion version)
+        protected virtual MdBlock GetDetailSectionHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             return new MdHeading(3, "Details");
         }
@@ -167,55 +166,51 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the content block of the version change log's details section
         /// </summary>
-        protected virtual MdBlock GetDetailSectionContentBlock(IEnumerable<ChangeLogEntry> entries)
+        protected virtual MdBlock GetDetailSectionContentBlock(SingleVersionChangeLogViewModel viewModel)
         {
             return new MdContainerBlock(
-                    entries.Select(GetEntryDetailBlock)
-                );
+                viewModel.AllEntries.Select(GetEntryDetailBlock)
+            );
         }
 
         /// <summary>
         /// Gets a summary list block for the specified changelog entries
         /// </summary>
-        protected virtual MdBlock GetSummaryListBlock(string listTitle, IEnumerable<ChangeLogEntry> entries)
+        protected virtual MdBlock GetSummaryListBlock(ChangeLogEntryGroupViewModel viewModel)
         {
-            if (entries.Any())
-            {
-                return new MdContainerBlock(
-                    GetSummaryListHeaderBlock(listTitle),
-                    GetSummaryListContentBlock(entries)
-                );
-            }
+            return new MdContainerBlock(
+                GetSummaryListHeaderBlock(viewModel),
+                GetSummaryListContentBlock(viewModel)
+            );
 
-            return MdEmptyBlock.Instance;
         }
 
         /// <summary>
         /// Gets the header for a summary list block
         /// </summary>
-        protected virtual MdBlock GetSummaryListHeaderBlock(string listTitle)
+        protected virtual MdBlock GetSummaryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
         {
-            return new MdHeading(3, listTitle);
+            return new MdHeading(3, viewModel.DisplayName);
         }
 
         /// <summary>
         /// Gets the content for a summary list block
         /// </summary>
-        protected virtual MdBlock GetSummaryListContentBlock(IEnumerable<ChangeLogEntry> entries)
+        protected virtual MdBlock GetSummaryListContentBlock(ChangeLogEntryGroupViewModel viewModel)
         {
-            return new MdBulletList(entries.Select(GetSummaryListItem));
+            return new MdBulletList(viewModel.Entries.Select(GetSummaryListItem));
         }
 
         /// <summary>
         /// Gets a breaking changes list for the specified changes
         /// </summary>
-        protected virtual MdBlock GetBreakingChangesListBlock(VersionInfo versionInfo, IEnumerable<ChangeLogEntry> entries)
+        protected virtual MdBlock GetBreakingChangesListBlock(SingleVersionChangeLogViewModel viewModel)
         {
-            if (entries.Any())
+            if (viewModel.AllBreakingChanges.Any())
             {
                 return new MdContainerBlock(
-                    GetBreakingChangesListHeaderBlock(versionInfo),
-                    GetBreakingChangesListContentBlock(versionInfo, entries)
+                    GetBreakingChangesListHeaderBlock(viewModel),
+                    GetBreakingChangesListContentBlock(viewModel)
                 );
             }
 
@@ -225,7 +220,7 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the header block for a breaking changes list
         /// </summary>
-        protected virtual MdBlock GetBreakingChangesListHeaderBlock(VersionInfo versionInfo)
+        protected virtual MdBlock GetBreakingChangesListHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             return new MdHeading(3, "Breaking Changes");
         }
@@ -235,11 +230,11 @@ namespace Grynwald.ChangeLog.Templates
         /// </summary>
         /// <param name="entries"></param>
         /// <returns></returns>
-        protected virtual MdBlock GetBreakingChangesListContentBlock(VersionInfo versionInfo, IEnumerable<ChangeLogEntry> entries)
+        protected virtual MdBlock GetBreakingChangesListContentBlock(SingleVersionChangeLogViewModel viewModel)
         {
             var breakingChangesList = new MdBulletList();
 
-            foreach (var entry in entries)
+            foreach (var entry in viewModel.AllBreakingChanges)
             {
                 // If descriptions for breaking changes were provided,
                 // add the descriptions to the list of breaking changes instead of
@@ -392,6 +387,7 @@ namespace Grynwald.ChangeLog.Templates
                 _ => new MdTextSpan(entry.Summary),
             };
         }
+
 
     }
 }

@@ -31,21 +31,22 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
                 return new MdDocument(GetEmptyBlock());
 
             // Return changes for only a single change, omit surrounding headers
+            var viewModel = new SingleVersionChangeLogViewModel(changeLog.Single());
             return new MdDocument(
-                GetVersionContentBlock(changeLog.Single())
+                GetVersionContentBlock(viewModel)
             );
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetSummaryListHeaderBlock(string listTitle)
+        protected override MdBlock GetSummaryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
         {
             // in GitLab releases, the top heading is <h4> because higher
             // levels are used by the surrounding GitLab Web UI
-            return new MdHeading(4, listTitle);
+            return new MdHeading(4, viewModel.DisplayName);
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetBreakingChangesListHeaderBlock(VersionInfo versionInfo)
+        protected override MdBlock GetBreakingChangesListHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             // in GitLab releases, the top heading is <h4> because higher
             // levels are used by the surrounding GitLab Web UI
@@ -53,7 +54,7 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetDetailSectionHeaderBlock(NuGetVersion version)
+        protected override MdBlock GetDetailSectionHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             // in GitLab releases, the top heading is <h4> because higher
             // levels are used by the surrounding GitLab Web UI
