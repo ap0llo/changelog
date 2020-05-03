@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
-    <PackageReference Include="Grynwald.Utilities" Version="1.5.50-pre" />
+    <PackageReference Include="Grynwald.Utilities" Version="1.5.53" />
     <PackageReference Include="Grynwald.Utilities.Configuration" Version="1.5.50-pre" />
     <PackageReference Include="Grynwald.MarkdownGenerator" Version="2.5.31-pre" />
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0034" />
