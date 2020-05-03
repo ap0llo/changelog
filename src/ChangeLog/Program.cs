@@ -56,6 +56,7 @@ namespace Grynwald.ChangeLog
             {
                 var containerBuilder = new ContainerBuilder();
 
+                containerBuilder.RegisterType<ConfigurationValidator>();
                 containerBuilder.RegisterInstance(configuration).SingleInstance();
                 containerBuilder.RegisterInstance(gitRepository).SingleInstance().As<IGitRepository>();
 
@@ -84,6 +85,14 @@ namespace Grynwald.ChangeLog
 
                 using (var container = containerBuilder.Build())
                 {
+                    var configurationValidator = container.Resolve<ConfigurationValidator>();
+
+                    if (!configurationValidator.Validate(configuration))
+                    {
+                        logger.LogCritical($"Validation of configuration failed");
+                        return 1;
+                    }
+
                     // Note: The order of the tasks added here is important.
                     // E.g. In order for commits for versions loaded correctly, ParseCommitsTask needs to run before FilterVersionsTask
                     var pipeline = new ChangeLogPipelineBuilder(container)
