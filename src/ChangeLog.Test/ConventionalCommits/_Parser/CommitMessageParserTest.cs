@@ -88,8 +88,6 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 );
             }
 
-            // TODO: Ignore trailing blank lines
-
             // single line body
             yield return MultiLineTestCase(
                 "T22",
@@ -309,6 +307,47 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 "Reviewed-by: Z",
                 "Footer2: description"
             );
+
+            //
+            // Trailing blank lines are ignored (whitespace-only lines are treated as blank lines as well)
+            //
+
+            yield return MultiLineTestCase(
+                "T35",
+                new CommitMessage(new CommitMessageHeader(CommitType.Feature, "Some Description")),
+                "feat: Some Description",
+                "  ",
+                ""
+            );
+
+            yield return MultiLineTestCase(
+                 "T36",
+                 new CommitMessage(
+                     header: new CommitMessageHeader(CommitType.Feature, "Some Description"),
+                     body: new[] { "Message Body\r\n" }
+                 ),
+                 "feat: Some Description",
+                 "  ",
+                 "Message Body",
+                 "",
+                 "  "
+             );
+
+            yield return MultiLineTestCase(
+                 "T37",
+                 new CommitMessage(
+                     header: new CommitMessageHeader(CommitType.Feature, "Some Description"),
+                     body: new[] { "Message Body\r\n" },
+                     footers: new[] { new CommitMessageFooter(new CommitMessageFooterName("name"), "value") }
+                 ),
+                 "feat: Some Description",
+                 "  ",
+                 "Message Body",
+                 "",
+                 "name: value",
+                 "",
+                 "  "
+             );
         }
 
         public static IEnumerable<object[]> InvalidParserTestCases()
@@ -354,7 +393,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             // multiple blank lines between header and body
             yield return MultiLineTestCase(
                 "T18",
-                lineNumber: 3, columnNumber: 1,
+                lineNumber: 4, columnNumber: 1,
                 "type: Description",
                 "",
                 "",
@@ -364,7 +403,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             // multiple blank lines between body and footer
             yield return MultiLineTestCase(
                 "T19",
-                lineNumber: 6, columnNumber: 1,
+                lineNumber: 7, columnNumber: 1,
                 "type: Description",
                 "",
                 "Body 1",
@@ -411,6 +450,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             m_OutputHelper.WriteLine($"Test case {id}");
 
             var ex = Assert.ThrowsAny<ParserException>(() => CommitMessageParser.Parse(input));
+            m_OutputHelper.WriteLine($"Exception Message: {ex.Message}");
             Assert.Equal(lineNumber, ex.LineNumber);
             Assert.Equal(columnNumber, ex.ColumnNumber);
         }

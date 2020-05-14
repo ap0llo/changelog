@@ -60,6 +60,10 @@ namespace Grynwald.ChangeLog.ConventionalCommits
                 footers = ParseFooters();
             }
 
+            // Consume all trailing blank lines (ignored)
+            while (TestAndMatchToken(LineTokenKind.Blank, out _))
+            { }
+
             // Ensure all tokens were parsed
             MatchToken(LineTokenKind.Eof);
 
