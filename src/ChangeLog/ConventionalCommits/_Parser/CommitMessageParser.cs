@@ -77,8 +77,9 @@ namespace Grynwald.ChangeLog.ConventionalCommits
             // parse paragraphs until we reach the first footer
             while (TestForParagraph())
             {
-                // paragraphs are separated from earlier paragraphs and the subject line by a blank line
-                MatchToken(LineTokenKind.Blank);
+                // Paragraphs are separated from earlier paragraphs and the subject line by a blank line
+                // There must be at least one blank line, multiple consecutive blank lines are treated the same as a single blank line.
+                MatchTokens(LineTokenKind.Blank, 1);
                 body.Add(ParseParagraph());
             }
 
@@ -99,22 +100,23 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
         private bool TestForParagraph()
         {
-            // both paragraphs and footer are separated by previous paragraphs
-            // and the header using a blank line.
-            // If there is a blank line followed by a non-blank line,
+            // both paragraphs and footer are separated from previous paragraphs and the header using a blank line.
+            // If there is at least 1 blank line followed by a non-blank line,
             // the line could be either the first line of the next paragraph of the first footer.
             // To determine if we reached the end of the body, test if the next line is
             // a valid start of a footer
 
             return
-                TestToken(LineTokenKind.Blank) &&
-                TestToken(LineTokenKind.Line, 1) &&
-                !FooterParser.IsFooter(Peek(1));
+                TestTokens(LineTokenKind.Blank, out var blanklineCount) &&  // check for at least one blank line                                                                                
+                TestToken(LineTokenKind.Line, blanklineCount) &&            // check if blank lines are followed by a non-blank line(look ahead the number of blank lines matched)                                                                    
+                !FooterParser.IsFooter(Peek(blanklineCount));               // check if the line is the start of a footer
         }
 
         private IReadOnlyList<CommitMessageFooter> ParseFooters()
         {
-            MatchToken(LineTokenKind.Blank);
+            // Footers are separated by the message body using a blank line.
+            // There must be at least one blank line, multiple consecutive blank lines are treated the same as a single blank line.
+            MatchTokens(LineTokenKind.Blank, 1);
 
             var footers = new List<CommitMessageFooter>();
             while (TestAndMatchToken(LineTokenKind.Line, out var currentLine))

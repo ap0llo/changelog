@@ -36,8 +36,10 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
         /// <summary>
         /// Checks if the current token has the specified token kind and returns the token.
-        /// Throws <see cref="UnexpectedTokenException"/> if current token doesn't match.
         /// </summary>
+        /// <exception cref="UnexpectedTokenException{TToken, TTokenKind}">
+        /// Thrown when the current token does not match the specified token kind.
+        /// </exception>
         protected TToken MatchToken(TTokenKind kind)
         {
             if (!Current.Kind.Equals(kind))
@@ -49,11 +51,56 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         }
 
         /// <summary>
+        /// Returns all consecutive tokens of the specified kind
+        /// </summary>
+        /// <exception cref="UnexpectedTokenException{TToken, TTokenKind}">
+        /// Thrown when not at least <paramref name="minCount"/> tokens of the specified kind could be matched.
+        /// </exception>
+        protected IReadOnlyList<TToken> MatchTokens(TTokenKind kind, int minCount)
+        {
+            IEnumerable<TToken> DoMatchTokens()
+            {
+                // match minCount tokens
+                for (var i = 0; i < minCount; i++)
+                {
+                    yield return MatchToken(kind);
+                }
+
+                // match additional (optional) tokens
+                while (TestAndMatchToken(kind, out var token))
+                {
+                    yield return token;
+                }
+            }
+
+            // Force enumeration to ensure tokens are actually matched
+            return DoMatchTokens().ToArray();
+        }
+
+        /// <summary>
         /// Checks whether the current token is of the specified kind.
         /// </summary>
         /// <param name="kind">The kind to test the token for.</param>
         /// <returns></returns>
         protected bool TestToken(TTokenKind kind) => TestToken(kind, 0);
+
+        /// <summary>
+        /// Checks if the next tokens are of the specified token kind.
+        /// </summary>
+        /// <param name="kind">The kind to test the token for.</param>
+        /// <param name="count">When the method returns, contains the number of tokens of the specified kind where found.</param>
+        /// <returns>Returns <c>true</c> if at least 1 token of the specified kind was found.</returns>
+        protected bool TestTokens(TTokenKind kind, out int count)
+        {
+            var lookahead = 0;
+            while (TestToken(kind, lookahead))
+            {
+                lookahead += 1;
+            }
+
+            count = lookahead;
+            return lookahead > 0;
+        }
 
         /// <summary>
         /// Checks whether a token is of the specified kind.

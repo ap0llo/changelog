@@ -348,6 +348,58 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                  "",
                  "  "
              );
+
+
+            //
+            // Multiple blank lines between sections
+            //
+
+            // multiple blank lines between header and body
+            yield return MultiLineTestCase(
+                 "T38",
+                 new CommitMessage(
+                     header: new CommitMessageHeader(CommitType.Feature, "Some Description"),
+                     body: new[] { "Message Body\r\n" }
+                 ),
+                 "feat: Some Description",
+                 "  ",
+                 "",
+                 "\t",
+                 "Message Body"
+             );
+
+            // multiple blank lines between paragraphs
+            yield return MultiLineTestCase(
+                 "T39",
+                 new CommitMessage(
+                     header: new CommitMessageHeader(CommitType.Feature, "Some Description"),
+                     body: new[] { "Line1\r\n", "Line2\r\n" }
+                 ),
+                 "feat: Some Description",
+                 "",
+                 "Line1",
+                 "  ",
+                 "",
+                 "\t",
+                 "Line2"
+             );
+
+            // multiple blank lines between body and footers
+            yield return MultiLineTestCase(
+                 "T40",
+                 new CommitMessage(
+                     header: new CommitMessageHeader(CommitType.Feature, "Some Description"),
+                     body: new[] { "Message Body\r\n" },
+                     footers: new[] { new CommitMessageFooter(new CommitMessageFooterName("name"), "value") }
+                 ),
+                 "feat: Some Description",
+                 "",
+                 "Message Body",
+                 "  ",
+                 "",
+                 "\t",
+                 "name: value"
+             );
         }
 
         public static IEnumerable<object[]> InvalidParserTestCases()
@@ -383,35 +435,12 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             yield return TestCase($"T11", lineNumber: 1, columnNumber: 14, $"feat(scope):  ");
 
             // missing description in footer            
-            yield return TestCase($"T12", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter: ");
-            yield return TestCase($"T13", lineNumber: 3, columnNumber: 18, $"type(scope): Description\r\n\r\nBREAKING CHANGE: ");
-            yield return TestCase($"T14", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter: \t");
-            yield return TestCase($"T15", lineNumber: 3, columnNumber: 9, $"type(scope): Description\r\n\r\nFooter:  ");
-            yield return TestCase($"T16", lineNumber: 3, columnNumber: 8, $"type(scope): Description\r\n\r\nFooter # ");
-            yield return TestCase($"T17", lineNumber: 3, columnNumber: 17, $"type(scope): Description\r\n\r\nBREAKING CHANGE #\t");
-
-            // multiple blank lines between header and body
-            yield return MultiLineTestCase(
-                "T18",
-                lineNumber: 4, columnNumber: 1,
-                "type: Description",
-                "",
-                "",
-                "Body"
-            );
-
-            // multiple blank lines between body and footer
-            yield return MultiLineTestCase(
-                "T19",
-                lineNumber: 7, columnNumber: 1,
-                "type: Description",
-                "",
-                "Body 1",
-                "Body 2",
-                "",
-                "",
-                "Footer: Value"
-            );
+            yield return TestCase($"T12", lineNumber: 3, columnNumber: 9, "type(scope): Description\r\n\r\nFooter: ");
+            yield return TestCase($"T13", lineNumber: 3, columnNumber: 18, "type(scope): Description\r\n\r\nBREAKING CHANGE: ");
+            yield return TestCase($"T14", lineNumber: 3, columnNumber: 9, "type(scope): Description\r\n\r\nFooter: \t");
+            yield return TestCase($"T15", lineNumber: 3, columnNumber: 9, "type(scope): Description\r\n\r\nFooter:  ");
+            yield return TestCase($"T16", lineNumber: 3, columnNumber: 8, "type(scope): Description\r\n\r\nFooter # ");
+            yield return TestCase($"T17", lineNumber: 3, columnNumber: 17, "type(scope): Description\r\n\r\nBREAKING CHANGE #\t");
 
             // footer with empty description
             yield return MultiLineTestCase(
