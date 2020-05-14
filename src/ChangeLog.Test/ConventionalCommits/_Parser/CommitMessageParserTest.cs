@@ -400,6 +400,39 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                  "\t",
                  "name: value"
              );
+
+            // Blank lines between footers
+            yield return MultiLineTestCase(
+                "T41",
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type: new CommitType("type"),
+                        description: "Description",
+                        scope: null,
+                        isBreakingChange: false
+                    ),
+                    body: new[] { "Message Body\r\n" },
+                    footers: new[]
+                    {
+                        new CommitMessageFooter(name: new CommitMessageFooterName("Footer1"), value: "Footer Description1"),
+                        new CommitMessageFooter(name: new CommitMessageFooterName("Footer2"), value: "Footer Description2"),
+                        new CommitMessageFooter(name: new CommitMessageFooterName("Footer3"), value: "Footer Description3"),
+                        new CommitMessageFooter(name: new CommitMessageFooterName("Footer4"), value: "Footer Description4")
+                    }
+                ),
+                "type: Description",
+                "",
+                "Message Body",
+                "",
+                "Footer1: Footer Description1",
+                "",
+                "Footer2: Footer Description2",
+                "Footer3: Footer Description3",
+                "",
+                "\t",
+                " ",
+                "Footer4: Footer Description4"
+            );
         }
 
         public static IEnumerable<object[]> InvalidParserTestCases()

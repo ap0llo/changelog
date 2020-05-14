@@ -122,6 +122,9 @@ namespace Grynwald.ChangeLog.ConventionalCommits
             while (TestAndMatchToken(LineTokenKind.Line, out var currentLine))
             {
                 footers.Add(FooterParser.Parse(currentLine));
+
+                // ignore blank lines between footers
+                MatchTokens(LineTokenKind.Blank, 0);
             }
             return footers;
         }
