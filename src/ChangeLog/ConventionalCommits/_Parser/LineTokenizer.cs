@@ -39,7 +39,26 @@ namespace Grynwald.ChangeLog.ConventionalCommits
                 throw new ArgumentNullException(nameof(input));
 
             var currentLine = new StringBuilder();
+            var currentLineIsWhitespace = true;
             var lineNumber = 1;
+
+            LineToken GetCurrentToken()
+            {
+                // Lines that consist only of whitespace characters are considered blank lines
+                if (currentLine.Length == 0 || currentLineIsWhitespace)
+                {
+                    // clear current value of line
+                    currentLine.Clear();
+                    return LineToken.Blank(lineNumber++);
+                }
+                else
+                {
+                    // get current value and reset state
+                    var value = currentLine.GetValueAndClear();
+                    currentLineIsWhitespace = true;
+                    return LineToken.Line(value, lineNumber++);
+                }
+            }
 
             for (var i = 0; i < input.Length; i++)
             {
@@ -49,29 +68,16 @@ namespace Grynwald.ChangeLog.ConventionalCommits
                 switch ((currentChar, nextChar))
                 {
                     case ('\r', '\n'):
-                        if (currentLine.Length == 0)
-                        {
-                            yield return LineToken.Blank(lineNumber++);
-                        }
-                        else
-                        {
-                            yield return LineToken.Line(currentLine.GetValueAndClear(), lineNumber++);
-                        }
+                        yield return GetCurrentToken();
                         i += 1;
                         break;
 
                     case ('\n', _):
-                        if (currentLine.Length == 0)
-                        {
-                            yield return LineToken.Blank(lineNumber++);
-                        }
-                        else
-                        {
-                            yield return LineToken.Line(currentLine.GetValueAndClear(), lineNumber++);
-                        }
+                        yield return GetCurrentToken();
                         break;
 
                     default:
+                        currentLineIsWhitespace &= char.IsWhiteSpace(currentChar);
                         currentLine.Append(currentChar);
                         break;
                 }
@@ -79,7 +85,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
             if (currentLine.Length > 0)
             {
-                yield return LineToken.Line(currentLine.GetValueAndClear(), lineNumber++);
+                yield return GetCurrentToken();
             }
 
             yield return LineToken.Eof(lineNumber);

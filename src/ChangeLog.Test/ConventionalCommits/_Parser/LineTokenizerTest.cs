@@ -13,12 +13,14 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
     {
         public static IEnumerable<object[]> TokenizerTestCases()
         {
-            static object[] testCase(string input, params LineToken[] tokens) =>
-                new object[]
+            static object[] testCase(string input, params LineToken[] tokens)
+            {
+                return new object[]
                 {
                     input,
                     tokens.Select(t => new XunitSerializableLineToken(t)).ToArray()
                 };
+            }
 
             // empty string
             yield return testCase("", LineToken.Eof(1));
@@ -52,6 +54,33 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 yield return testCase(
                     "Line1" + lineBreak + lineBreak + "Line2" + lineBreak,
                     LineToken.Line("Line1", 1), LineToken.Blank(2), LineToken.Line("Line2", 3), LineToken.Eof(4)
+                );
+            }
+
+            // whitespace lines are treated as empty lines
+            foreach (var whitespaceLine in new[] { " ", "\t", "  " })
+            {
+                yield return testCase(
+                    "Line1\r\n" +
+                    whitespaceLine + "\r\n" +
+                    "Line3",
+                    LineToken.Line("Line1", 1), LineToken.Blank(2), LineToken.Line("Line3", 3), LineToken.Eof(4)
+                );
+
+                yield return testCase(
+                    "Line1\r\n" +
+                    whitespaceLine + "\r\n" +
+                    whitespaceLine + "\r\n" +
+                    "Line4",
+                    LineToken.Line("Line1", 1), LineToken.Blank(2), LineToken.Blank(3), LineToken.Line("Line4", 4), LineToken.Eof(5)
+                );
+
+                yield return testCase(
+                    "Line1\r\n" +
+                    whitespaceLine + "\r\n" +
+                    "Line3\r\n" +
+                    whitespaceLine,
+                    LineToken.Line("Line1", 1), LineToken.Blank(2), LineToken.Line("Line3", 3), LineToken.Blank(4), LineToken.Eof(5)
                 );
             }
         }
