@@ -17,6 +17,10 @@
             {
                 "name": "templates",
                 "displayName": "Templates"
+            },
+            {
+                "name": "parser",
+                "displayName" : "Commit Message Parser"
             }
         ]
 
