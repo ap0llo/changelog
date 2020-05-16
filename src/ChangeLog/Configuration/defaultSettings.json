@@ -46,6 +46,10 @@
       "default": {
         "markdownPreset": "default"
       }
+    },
+
+    "parser": {
+      "mode" :  "loose"
     }
   }
 }

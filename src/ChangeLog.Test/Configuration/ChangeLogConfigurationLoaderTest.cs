@@ -139,6 +139,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
                     Assert.Equal(CommitType.BugFix, new CommitType(x.Type!));
                     Assert.Equal("Bug Fixes", x.DisplayName);
                 }));
+
+            yield return TestCase(config => Assert.NotNull(config.Parser));
+            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.ParserMode.Loose, config.Parser.Mode));
         }
 
         [Theory]
@@ -726,6 +729,21 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             Assert.Equal(entryTypes.Length, config.EntryTypes.Length);
             Assert.Collection(config.EntryTypes, assertions);
+        }
+
+        [Theory]
+        [EnumData]
+        public void ParserMode_can_be_set_in_configuration_file(ChangeLogConfiguration.ParserMode value)
+        {
+            // ARRANGE
+            PrepareConfiguration("parser:mode", value);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Parser);
+            Assert.Equal(value, config.Parser.Mode);
         }
     }
 }

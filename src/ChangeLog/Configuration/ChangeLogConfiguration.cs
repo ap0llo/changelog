@@ -19,7 +19,6 @@ namespace Grynwald.ChangeLog.Configuration
             public string? DisplayName { get; set; }
         }
 
-
         public enum IntegrationProvider
         {
             None = 0,
@@ -78,6 +77,17 @@ namespace Grynwald.ChangeLog.Configuration
             public string? DisplayName { get; set; }
         }
 
+        public enum ParserMode
+        {
+            Strict,
+            Loose
+        }
+
+        public class ParserConfiguration
+        {
+            public ParserMode Mode { get; set; }
+        }
+
 
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
 
@@ -98,6 +108,8 @@ namespace Grynwald.ChangeLog.Configuration
         public TemplateConfiguration Template { get; set; } = new TemplateConfiguration();
 
         public EntryTypeConfiguration[] EntryTypes { get; set; } = Array.Empty<EntryTypeConfiguration>();
+
+        public ParserConfiguration Parser { get; set; } = new ParserConfiguration();
 
 
         public string GetFullOutputPath()
