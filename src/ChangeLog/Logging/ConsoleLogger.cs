@@ -7,7 +7,7 @@ namespace Grynwald.ChangeLog.Logging
     {
         private static readonly object s_ConsoleLock = new object();
 
-        private readonly LogLevel m_MinimumLogLevel;
+        private readonly LoggerOptions m_LoggerOptions;
         private readonly string? m_CategoryName;
 
         private class LoggerScope : IDisposable
@@ -17,16 +17,16 @@ namespace Grynwald.ChangeLog.Logging
         }
 
 
-        public ConsoleLogger(LogLevel minimumLogLevel, string categoryName)
+        public ConsoleLogger(LoggerOptions loggerOptions, string categoryName)
         {
-            m_MinimumLogLevel = minimumLogLevel;
             m_CategoryName = String.IsNullOrEmpty(categoryName) ? null : categoryName;
+            m_LoggerOptions = loggerOptions ?? throw new ArgumentNullException(nameof(loggerOptions));
         }
 
 
         public IDisposable BeginScope<TState>(TState state) => new LoggerScope();
 
-        public bool IsEnabled(LogLevel logLevel) => logLevel >= m_MinimumLogLevel;
+        public bool IsEnabled(LogLevel logLevel) => logLevel >= m_LoggerOptions.MinimumLogLevel;
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
@@ -35,7 +35,7 @@ namespace Grynwald.ChangeLog.Logging
 
             var color = GetConsoleColor(logLevel);
 
-            var message = m_CategoryName == null
+            var message = (!m_LoggerOptions.ShowCategoryName || m_CategoryName == null)
                 ? $"{logLevel.ToString().ToUpper()} - {formatter(state, exception)}"
                 : $"{logLevel.ToString().ToUpper()} - {m_CategoryName} - {formatter(state, exception)}";
 

@@ -7,14 +7,14 @@ namespace Grynwald.ChangeLog.Logging
     internal sealed class ConsoleLoggerProvider : ILoggerProvider
     {
         private readonly IDictionary<string, ILogger> m_Loggers = new Dictionary<string, ILogger>();
-        private readonly LogLevel m_MinimumLogLevel;
+        private readonly LoggerOptions m_LoggerOptions;
 
-        public ConsoleLoggerProvider(LogLevel minimumLogLevel)
+        public ConsoleLoggerProvider(LoggerOptions loggerOptions)
         {
-            m_MinimumLogLevel = minimumLogLevel;
+            m_LoggerOptions = loggerOptions;
         }
 
-        public ILogger CreateLogger(string categoryName) => m_Loggers.GetOrAdd(categoryName, () => new ConsoleLogger(m_MinimumLogLevel, categoryName));
+        public ILogger CreateLogger(string categoryName) => m_Loggers.GetOrAdd(categoryName, () => new ConsoleLogger(m_LoggerOptions, categoryName));
 
         public void Dispose() => m_Loggers.Clear();
     }

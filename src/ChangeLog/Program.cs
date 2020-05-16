@@ -39,10 +39,14 @@ namespace Grynwald.ChangeLog
 
         private static async Task<int> RunAsync(CommandLineParameters commandlineParameters)
         {
+            var loggerOptions = commandlineParameters.Verbose
+                ? new LoggerOptions(LogLevel.Debug, true)
+                : new LoggerOptions(LogLevel.Information, false);
+
             // for validation of command line parameters, directly create a console logger
             // bypassing the DI container because we need to validate the parameters
             // before setting up DI
-            var logger = new ConsoleLogger(LogLevel.Information, "");
+            var logger = new ConsoleLogger(loggerOptions, "");
 
             if (!ValidateCommandlineParameters(commandlineParameters, logger))
                 return 1;
@@ -60,7 +64,7 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterInstance(configuration).SingleInstance();
                 containerBuilder.RegisterInstance(gitRepository).SingleInstance().As<IGitRepository>();
 
-                containerBuilder.RegisterLogging(minimumLogLevel: commandlineParameters.Verbose ? LogLevel.Debug : LogLevel.Information);
+                containerBuilder.RegisterLogging(loggerOptions);
 
                 containerBuilder.RegisterType<ChangeLogPipeline>();
 
