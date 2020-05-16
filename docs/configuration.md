@@ -84,6 +84,7 @@ like this:
 - [Template Name](#template-name)
 - [Markdown Preset (Default Template)](#markdown-preset-default-template)
 - [Entry types](#entry-types)
+- [Parser Mode](#parser-mode)
 
 ### Scopes
 
@@ -666,7 +667,7 @@ For example, to include all changes of type `feat`, `fix` and `docs`, you must i
 
 #### Example
 
-The follwoing example shows ho to include changes of type `feat`, `fix` and `docs` in the change log:
+The following example shows how to include changes of type `feat`, `fix` and `docs` in the change log:
 
 ```json
 {
@@ -680,6 +681,65 @@ The follwoing example shows ho to include changes of type `feat`, `fix` and `doc
 }
 ```
 
+### Parser Mode
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:parser:mode</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>
+            <code>Loose</code>
+        </td>
+    </tr>
+    <tr>
+        <td><b>Allowed values</b></td>
+        <td>
+            <ul>
+                <li><code>Loose</code></li>
+                <li><code>Strict</code></li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.2+</td>
+    </tr>
+</table>
+
+The "Parser Mode" setting controls how lenient the commit message parser treats commit messages.
+
+Available options are
+
+- `Loose` (default)
+- `Struct`
+
+For details, see [Commit Message Parser](./commit-message-parser.md)
+
+#### Example
+
+The following example sets the parser mode to `strict`:
+
+```json
+{
+    "changelog" : {
+        "parser" : {
+            "mode": "strict"
+        }
+    }
+}
+```
+
 ## See Also
 
 - [Commandline reference](./commandline-reference/index.md)
@@ -689,3 +749,4 @@ The follwoing example shows ho to include changes of type `feat`, `fix` and `doc
 - [Integrations](./integrations.md)
 - [NuGet Version Ranges](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-ranges)
 - [Templates](./templates.md)
+- [Commit Message Parser](./commit-message-parser.md)

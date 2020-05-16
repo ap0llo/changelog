@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading.Tasks;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
@@ -12,12 +12,14 @@ namespace Grynwald.ChangeLog.Tasks
     internal sealed class ParseCommitsTask : SynchronousChangeLogTask
     {
         private readonly ILogger<ParseCommitsTask> m_Logger;
+        private readonly ChangeLogConfiguration m_Configuration;
         private readonly IGitRepository m_Repository;
 
 
-        public ParseCommitsTask(ILogger<ParseCommitsTask> logger, IGitRepository repository)
+        public ParseCommitsTask(ILogger<ParseCommitsTask> logger, ChangeLogConfiguration configuration, IGitRepository repository)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
@@ -59,9 +61,10 @@ namespace Grynwald.ChangeLog.Tasks
 
         private bool TryGetChangeLogEntry(GitCommit commit, [NotNullWhen(true)]out ChangeLogEntry? entry)
         {
+            var strictMode = m_Configuration.Parser.Mode == ChangeLogConfiguration.ParserMode.Strict;
             try
             {
-                var parsed = CommitMessageParser.Parse(commit.CommitMessage, strictMode: false);
+                var parsed = CommitMessageParser.Parse(commit.CommitMessage, strictMode);
                 entry = ChangeLogEntry.FromCommitMessage(commit, parsed);
                 return true;
             }
