@@ -61,7 +61,7 @@ namespace Grynwald.ChangeLog.Tasks
         {
             try
             {
-                var parsed = CommitMessageParser.Parse(commit.CommitMessage);
+                var parsed = CommitMessageParser.Parse(commit.CommitMessage, strictMode: false);
                 entry = ChangeLogEntry.FromCommitMessage(commit, parsed);
                 return true;
             }

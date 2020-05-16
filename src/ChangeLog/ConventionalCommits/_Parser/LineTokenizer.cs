@@ -33,7 +33,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
     /// </summary>
     internal static class LineTokenizer
     {
-        public static IEnumerable<LineToken> GetTokens(string input)
+        public static IEnumerable<LineToken> GetTokens(string input, bool treatWhitespaceOnlyLinesAsBlankLines)
         {
             if (input is null)
                 throw new ArgumentNullException(nameof(input));
@@ -44,8 +44,8 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
             LineToken GetCurrentToken()
             {
-                // Lines that consist only of whitespace characters are considered blank lines
-                if (currentLine.Length == 0 || currentLineIsWhitespace)
+                // In "Loose Mode", lines that consist only of whitespace characters are considered blank lines                
+                if (currentLine.Length == 0 || (treatWhitespaceOnlyLinesAsBlankLines && currentLineIsWhitespace))
                 {
                     // clear current value of line
                     currentLine.Clear();
@@ -90,6 +90,5 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
             yield return LineToken.Eof(lineNumber);
         }
-
     }
 }
