@@ -34,7 +34,7 @@ try {
 
     log "Creating release branch"
     $nbgvOutput = exec "dotnet tool run nbgv -- prepare-release"
-    log $nbgvOutput
+    Write-Host $nbgvOutput
 
     # Find the name of the release branch
     $outputLines = $nbgvOutput.Split([System.Environment]::NewLine)
