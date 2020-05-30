@@ -32,10 +32,7 @@
     <PackageReference Include="NuGet.Versioning" Version="5.5.1" />
     <PackageReference Include="Octokit" Version="0.47.0" />
     <PackageReference Include="Autofac" Version="5.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\deps\GitLabApiClient\src\GitLabApiClient\GitLabApiClient.csproj" />
+    <PackageReference Include="GitLabApiClient" Version="1.5.1-beta.10" />
   </ItemGroup>
 
   <!-- Auto-Generated command line help -->

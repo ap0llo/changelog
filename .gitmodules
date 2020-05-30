@@ -1,3 +1,0 @@
-[submodule "deps/GitLabApiClient"]
-	path = deps/GitLabApiClient
-	url = https://github.com/ap0llo/GitLabApiClient.git
