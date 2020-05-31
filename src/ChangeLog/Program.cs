@@ -11,6 +11,7 @@ using Grynwald.ChangeLog.Integrations;
 using Grynwald.ChangeLog.Logging;
 using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Templates;
+using Grynwald.Utilities.Logging;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog
@@ -40,13 +41,13 @@ namespace Grynwald.ChangeLog
         private static async Task<int> RunAsync(CommandLineParameters commandlineParameters)
         {
             var loggerOptions = commandlineParameters.Verbose
-                ? new LoggerOptions(LogLevel.Debug, true)
-                : new LoggerOptions(LogLevel.Information, false);
+                ? new SimpleConsoleLoggerConfiguration(LogLevel.Debug, true, true)
+                : new SimpleConsoleLoggerConfiguration(LogLevel.Information, false, true);
 
             // for validation of command line parameters, directly create a console logger
             // bypassing the DI container because we need to validate the parameters
             // before setting up DI
-            var logger = new ConsoleLogger(loggerOptions, "");
+            var logger = new SimpleConsoleLogger(loggerOptions, "");
 
             if (!ValidateCommandlineParameters(commandlineParameters, logger))
                 return 1;
