@@ -27,7 +27,7 @@ The default settings are defined in [`defaultSettings.json`](../src/ChangeLog/Co
 
 You can customize settings by placing them in a configuration file.
 The configuration file is a JSON file and uses the same schema as
-[`defaultSettings.json`](../src/ChangeLog/Configuration/defaultSettings.json),
+[`defaultSettings.json`](../src/ChangeLog/Configuration/defaultSettings.json).
 
 The use of a configuration file is **optional**.
 By default, ChangeLog will attempt to load settings from a file called
@@ -56,10 +56,8 @@ Which commandline parameters override which setting is listed below.
 
 ## Settings
 
-Setting names in the following table are separated by `:` which denote keys
-and sub-keys the JSON configuration file. E.g. a setting the value of
-`key:subkey` to `value` would need to be specified in the configuration file
-like this:
+Setting names in the following table are separated by `:` which denote keys and sub-keys the JSON configuration file.
+For example setting `key:subkey` to `value` would need to be specified in the configuration file like this:
 
 ```json
 {
@@ -69,7 +67,7 @@ like this:
 }
 ```
 
-### Overview
+## Available Settings
 
 - [Scopes](#scopes)
 - [Footer](#footers)
