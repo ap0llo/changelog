@@ -1,6 +1,6 @@
 ﻿using Autofac;
-using Microsoft.Extensions.Logging;
 using Grynwald.Utilities.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Logging
 {

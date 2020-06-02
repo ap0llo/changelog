@@ -17,11 +17,11 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             }
         }
 
-        public static bool TryParseRemoteUrl(string url, [NotNullWhen(true)]out GitLabProjectInfo? projectInfo) =>
+        public static bool TryParseRemoteUrl(string url, [NotNullWhen(true)] out GitLabProjectInfo? projectInfo) =>
             TryParseRemoteUrl(url, out projectInfo, out var _);
 
 
-        private static bool TryParseRemoteUrl(string url, [NotNullWhen(true)]out GitLabProjectInfo? projectInfo, [NotNullWhen(false)]out string? errorMessage)
+        private static bool TryParseRemoteUrl(string url, [NotNullWhen(true)] out GitLabProjectInfo? projectInfo, [NotNullWhen(false)] out string? errorMessage)
         {
             projectInfo = null;
             errorMessage = null;

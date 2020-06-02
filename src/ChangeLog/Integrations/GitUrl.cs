@@ -8,7 +8,7 @@ namespace Grynwald.ChangeLog.Integrations
         private static readonly char[] s_ScpUrlSplitChars = new[] { ':' };
 
 
-        public static bool TryGetUri(string url, [NotNullWhen(true)]out Uri? uri)
+        public static bool TryGetUri(string url, [NotNullWhen(true)] out Uri? uri)
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
@@ -21,7 +21,7 @@ namespace Grynwald.ChangeLog.Integrations
         }
 
 
-        private static bool TryParseScpUrl(string url, [NotNullWhen(true)]out Uri? sshUri)
+        private static bool TryParseScpUrl(string url, [NotNullWhen(true)] out Uri? sshUri)
         {
             // Parse a scp-format git url: e.g. git@github.com:ap0llo/changelog-creator.git
 
