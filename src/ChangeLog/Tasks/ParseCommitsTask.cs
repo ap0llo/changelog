@@ -59,7 +59,7 @@ namespace Grynwald.ChangeLog.Tasks
         }
 
 
-        private bool TryGetChangeLogEntry(GitCommit commit, [NotNullWhen(true)]out ChangeLogEntry? entry)
+        private bool TryGetChangeLogEntry(GitCommit commit, [NotNullWhen(true)] out ChangeLogEntry? entry)
         {
             var strictMode = m_Configuration.Parser.Mode == ChangeLogConfiguration.ParserMode.Strict;
             try

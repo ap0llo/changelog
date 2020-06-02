@@ -1,8 +1,8 @@
 ﻿using Autofac;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Templates.Default;
-using Grynwald.ChangeLog.Templates.GitLabRelease;
 using Grynwald.ChangeLog.Templates.GitHubRelease;
+using Grynwald.ChangeLog.Templates.GitLabRelease;
 
 namespace Grynwald.ChangeLog.Templates
 {

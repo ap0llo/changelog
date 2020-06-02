@@ -17,10 +17,10 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             }
         }
 
-        public static bool TryParseRemoteUrl(string url, [NotNullWhen(true)]out GitHubProjectInfo? projectInfo) => TryParseRemoteUrl(url, out projectInfo, out var _);
+        public static bool TryParseRemoteUrl(string url, [NotNullWhen(true)] out GitHubProjectInfo? projectInfo) => TryParseRemoteUrl(url, out projectInfo, out var _);
 
 
-        private static bool TryParseRemoteUrl(string url, [NotNullWhen(true)]out GitHubProjectInfo? projectInfo, [NotNullWhen(false)]out string? errorMessage)
+        private static bool TryParseRemoteUrl(string url, [NotNullWhen(true)] out GitHubProjectInfo? projectInfo, [NotNullWhen(false)] out string? errorMessage)
         {
             projectInfo = null;
             errorMessage = null;
