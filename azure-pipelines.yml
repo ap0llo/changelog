@@ -34,8 +34,7 @@ variables:
   # Build settings
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE : true    # do not populate NuGet caches on build agents (VM will be deleted afterwards anyways)
   configuration: Release                      # the configuration (Debug/Release) to build
-  dotNetSdk_Version: 3.1.100                  # the version of the .NET SDK to use
-  solutionPath : src/ChangeLog.sln     # The path of the solution to be buildt
+  solutionPath : src/ChangeLog.sln            # The path of the solution to be built
   artifactsName_Binaries: Binaries
   artifactsName_ChangeLog: ChangeLog
 
@@ -61,10 +60,10 @@ jobs:
 
   # Install .NET Core SDK and runtime (version specified in the variables section)
   - task: UseDotNet@2
-    displayName: 'Use .NET Core SDK $(dotNetSdk_Version)'
+    displayName: 'Install .NET Core SDK'
     inputs:
       packageType: sdk
-      version: $(dotNetSdk_Version)
+      useGlobalJson: true
 
   # Also install .NET Core 2.1 runtime because we test against both .NET Core 3.1 and 2.1
   - task: UseDotNet@2
@@ -220,10 +219,10 @@ jobs:
 
   # Install .NET Core SDK and runtime (version specified in the variables section)
   - task: UseDotNet@2
-    displayName: 'Use .NET Core SDK $(dotNetSdk_Version)'
+    displayName: 'Install .NET Core SDK'
     inputs:
       packageType: sdk
-      version: $(dotNetSdk_Version)
+      useGlobalJson: true
 
   # Restore local .NET Core tools
   - task: DotNetCoreCLI@2
