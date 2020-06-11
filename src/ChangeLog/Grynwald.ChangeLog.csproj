@@ -39,7 +39,7 @@
   </ItemGroup>
   <PropertyGroup>
     <CommandLineDocumentationOutputPath>$(MSBuildThisFileDirectory)..\..\docs\commandline-reference\</CommandLineDocumentationOutputPath>
-    <!-- Generate dodccs only for netcoreapp3.1, otherwise there would be race-conditions between the buidls for the different target frameworks-->
+    <!-- Generate docs only for netcoreapp3.1, otherwise there would be race-conditions between the buidls for the different target frameworks-->
     <GenerateCommandLineDocumentationOnBuild Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">true</GenerateCommandLineDocumentationOnBuild>
   </PropertyGroup>
   
