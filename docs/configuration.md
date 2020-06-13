@@ -8,10 +8,10 @@ for all of them.
 
 Settings are loaded from a number of *setting sources*:
 
-1. Default settings
-2. Configuration file
-3. Environment variables
-4. Commandline parameters
+1. [Default settings](#default-settings)
+2. [Configuration file](#configuration-file)
+3. [Environment variables](#environment-variables)
+4. [Commandline parameters](#commandline-parameters)
 
 Settings are loaded in the above order and sources loaded later can override
 values for sources loaded before.
