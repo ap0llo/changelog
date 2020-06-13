@@ -1,0 +1,250 @@
+{
+    "title": "ChangeLog Configuration file schema",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/rootObject",
+    "definitions": {
+        "rootObject": {
+            "type": "object",
+            "properties": {
+                "changelog": {
+                    "$ref": "#/definitions/changelogConfiguration",
+                    "description": "The 'changelog' property encapsualtes all settings for the ChangeLog tool."
+                }
+            },
+            "additionalProperties": true
+        },
+        "changelogConfiguration": {
+            "type": "object",
+            "properties": {
+                "scopes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/scopeConfiguration"
+                    },
+                    "title": "Scopes",
+                    "description": "Sets preferences on how  Conventional Commit scopes are processed."
+                },
+                "tagPatterns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
+                        "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
+                    ],
+                    "uniqueItems": true,
+                    "title": "Tag Patterns",
+                    "description": "Controls how versions are read from a git repository's tags. Defines a list of regular expressions that are used to extract the version from a tag name."
+                },
+                "outputPath": {
+                    "type": "string",
+                    "title": "Output Path",
+                    "description": "Specifies the output path for the generated change log."
+                },
+                "footers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/footerConfiguration"
+                    },
+                    "title": "Footers",
+                    "description": "Sets preferences on how  Conventional Commit footers are processed."
+                },
+                "integrations": {
+                    "$ref": "#/definitions/integrationsConfiguration",
+                    "description": "Specifies settings for integration providers."
+                },
+                "versionRange": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "title": "Version Range",
+                    "description": "Limits the range of versions to include in the change log. By default, all versions are included."
+                },
+                "currentVersion": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": null,
+                    "title": "Current Version",
+                    "description": "Specifies the version for the current commit. When specified, the current commit is included in the change log as the specified verison in addition to the versions read from the git repository's tags."
+                },
+                "template": {
+                    "$ref": "#/definitions/templateConfiguration",
+                    "description": "Specifies settings for templates."
+                },
+                "entryTypes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entryTypeConfiguration"
+                    },
+                    "default": [
+                        {
+                            "type": "feat",
+                            "DisplayName": "New Features"
+                        },
+                        {
+                            "type": "fix",
+                            "DisplayName": "Bug Fixes"
+                        }
+                    ],
+                    "title": "Entry types",
+                    "description": "Specifies the types of Conventional Commit messages to include in the change log."
+                },
+                "parser": {
+                    "$ref": "#/definitions/parserConfiguration",
+                    "description": "Specifies settings on how Conventional Commit messages are parsed."
+                }
+            },
+            "additionalProperties": false
+        },
+        "scopeConfiguration": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Specifies the name of the scope the settings apply to."
+                },
+                "displayName": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "Specifies the display name of the scope. When no display name is configured, the scope's name is used as display name."
+                }
+            },
+            "additionalProperties": false
+        },
+        "footerConfiguration": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Specifies the name of the footer the settings apply to."
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "Specifies the display name of the footer. When no display name is configured, the footer's name is used as display name."
+                }
+            },
+            "additionalProperties": false
+        },
+        "integrationsConfiguration": {
+            "type": "object",
+            "properties": {
+                "provider": {
+                    "type": "string",
+                    "enum": [
+                        "None",
+                        "GitHub",
+                        "GitLab"
+                    ],
+                    "default": "None",
+                    "title": "Integration Provider",
+                    "description": "Specifies the integration provider to use."
+                },
+                "github": {
+                    "$ref": "#/definitions/githubIntegrationConfiguration",
+                    "description": "Specifies settings that apply to the GitHub integration provider."
+                },
+                "gitlab": {
+                    "$ref": "#/definitions/gitlabIntegrationConfiguration",
+                    "description": "Specifies settings that apply to the GitLab integration provider."
+                }
+            },
+            "additionalProperties": false
+        },
+        "githubIntegrationConfiguration": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "null",
+                    "default": null,
+                    "title": "GitHub Access Token",
+                    "description": "Specifies the access token to use for accessing the GitHub API.\r\n❌ While it is possible to set the access token in the configuration file, the command line parameter or environment variable options should be used instead."
+                }
+            },
+            "additionalProperties": false
+        },
+        "gitlabIntegrationConfiguration": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "null",
+                    "default": null,
+                    "title": "GitLab Access Token",
+                    "description": "Specifies the access token to use for accessing the GitLab API.\r\n❌ While it is possible to set the access token in the configuration file, the command line parameter or environment variable options should be used instead."
+                }
+            },
+            "additionalProperties": false
+        },
+        "templateConfiguration": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "enum": [
+                        "Default",
+                        "GitHubRelease",
+                        "GitLabRelease"
+                    ],
+                    "default": "Default",
+                    "title": "Template Name",
+                    "description": "Sets the template to use for rendering the change log."
+                },
+                "default": {
+                    "$ref": "#/definitions/defaultTemplateConfiguration",
+                    "description": "Sets settings specific to the default template."
+                }
+            },
+            "additionalProperties": false
+        },
+        "defaultTemplateConfiguration": {
+            "type": "object",
+            "properties": {
+                "markdownPreset": {
+                    "type": "string",
+                    "enum": [
+                        "Default",
+                        "MkDocs"
+                    ],
+                    "title": "Markdown Preset (Default Template)",
+                    "description": "Controls serialization of Markdown when using the default template."
+                }
+            },
+            "additionalProperties": false
+        },
+        "entryTypeConfiguration": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "The name of the entry type the settings apply to, e.g. 'feat' or 'fix'."
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name for the change type, e.g. 'New Features' for 'feat'."
+                }
+            },
+            "additionalProperties": false
+        },
+        "parserConfiguration": {
+            "type": "object",
+            "properties": {
+                "mode": {
+                    "type": "string",
+                    "enum": [
+                        "Strict",
+                        "Loose"
+                    ],
+                    "title": "Parser Mode",
+                    "description": "Controls how lenient the commit message parser treats commit messages."
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

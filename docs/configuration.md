@@ -26,16 +26,13 @@ The default settings are defined in [`defaultSettings.json`](../src/ChangeLog/Co
 ### Configuration file
 
 You can customize settings by placing them in a configuration file.
-The configuration file is a JSON file and uses the same schema as
-[`defaultSettings.json`](../src/ChangeLog/Configuration/defaultSettings.json).
+The configuration file is a JSON file and uses the same schema as [`defaultSettings.json`](../src/ChangeLog/Configuration/defaultSettings.json).
+A JSON Schema for the configuration file can be found at <https://raw.githubusercontent.com/ap0llo/changelog/master/docs/configuration.md>.
+The schema provides auto-completion support when editing the configuration file in editors that support JSON Schema (e.g. Visual Studio Code).
 
 The use of a configuration file is **optional**.
-By default, ChangeLog will attempt to load settings from a file called
-`changelog.settings.json` in the root of the git repository a change log
-is being generated for.
-Alternatively, you can specify the path of the configuration file using the
-`configurationFilePath` commandline parameter
-(see [Commandline reference](./commandline-reference/index.md)).
+By default, ChangeLog will attempt to load settings from a file called `changelog.settings.json` in the root of the git repository a change log is being generated for.
+Alternatively, you can specify the path of the configuration file using the `configurationFilePath` commandline parameter (see [Commandline reference](./commandline-reference/index.md)).
 
 ### Environment variables
 
@@ -70,7 +67,7 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 ## Available Settings
 
 - [Scopes](#scopes)
-- [Footer](#footers)
+- [Footers](#footers)
 - [Markdown Preset](#markdown-preset)
 - [Tag Patterns](#tag-patterns)
 - [Output Path](#output-path)
@@ -81,7 +78,7 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 - [Current Version](#current-version)
 - [Template Name](#template-name)
 - [Markdown Preset (Default Template)](#markdown-preset-default-template)
-- [Entry types](#entry-types)
+- [Entry Types](#entry-types)
 - [Parser Mode](#parser-mode)
 
 ### Scopes
@@ -263,7 +260,7 @@ For details on the differences between the presets, see also
 
 The *Tag Patterns* setting controls how versions are read from a git
 repository's tags. The setting defines a list of regular expressions that
-are used go extract the version from the tag name.
+are used to extract the version from the tag name.
 All regular expressions must define a `version` sub-expression which matches
 the version. The matched value must be a valid
 [semantic version](https://semver.org/).
@@ -543,7 +540,7 @@ The value must be a valid semantic version.
     </tr>
 </table>
 
-Sets the template to use for generating the changelog.
+Sets the template to use for generating the change log.
 For details see [Templates](./templates.md).
 
 #### Example

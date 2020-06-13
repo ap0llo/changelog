@@ -1,14 +1,15 @@
 {
+  "$schema": "../../../schemas/configuration/schema.json",
   "changelog": {
 
     "entryTypes": [
       {
         "type": "feat",
-        "DisplayName": "New Features"
+        "displayName": "New Features"
       },
       {
         "type": "fix",
-        "DisplayName": "Bug Fixes"
+        "displayName": "Bug Fixes"
       }
     ],
 
@@ -25,7 +26,7 @@
 
     "integrations": {
 
-      "provider": "none",
+      "provider": "None",
 
       "github": {
         "accessToken": null
@@ -41,15 +42,15 @@
     "currentVersion": null,
 
     "template": {
-      "name": "default",
+      "name": "Default",
 
       "default": {
-        "markdownPreset": "default"
+        "markdownPreset": "Default"
       }
     },
 
     "parser": {
-      "mode" :  "loose"
+      "mode" :  "Loose"
     }
   }
 }
