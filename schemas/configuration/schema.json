@@ -8,7 +8,7 @@
             "properties": {
                 "changelog": {
                     "$ref": "#/definitions/changelogConfiguration",
-                    "description": "The 'changelog' property encapsualtes all settings for the ChangeLog tool."
+                    "description": "The 'changelog' property encapsulates all settings for the ChangeLog tool."
                 }
             },
             "additionalProperties": true
