@@ -54,4 +54,9 @@
 	</PropertyGroup>
 
 
+	<!-- Use NuGet lock file -->
+	<PropertyGroup>
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+	</PropertyGroup>
+
 </Project>
