@@ -1,7 +1,7 @@
 name: Update NuGet lock files 
 
 on:
-  pull_request:
+  push:
     branches:
     - renovate/*
     
