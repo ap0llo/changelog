@@ -1,4 +1,4 @@
-name: Update NuGet lock foles 
+name: Update NuGet lock files 
 
 on:
   pull_request:
