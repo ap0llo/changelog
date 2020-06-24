@@ -32,7 +32,7 @@ jobs:
     - name: Commit and push if lock file was changed
       run: |-
         git diff
-        git config --global user.email "githubactions@example.com"
+        git config --global user.email "github-actions@github.com"
         git config --global user.name "GitHub Actions"
         git diff --quiet || (git add *packages.lock.json && git commit -m "Update NuGet lock file")
         git push
