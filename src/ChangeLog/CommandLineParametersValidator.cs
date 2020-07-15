@@ -14,7 +14,7 @@ namespace Grynwald.ChangeLog
     {
         public CommandLineParametersValidator()
         {
-            ValidatorOptions.DisplayNameResolver = (type, member, expression) =>
+            ValidatorOptions.Global.DisplayNameResolver = (type, member, expression) =>
             {
                 return (member is PropertyInfo property)
                     ? property?.GetCustomAttribute<OptionAttribute>()?.LongName

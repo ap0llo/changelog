@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using Grynwald.Utilities.IO;
 using Xunit;
 
@@ -31,6 +28,9 @@ namespace Grynwald.ChangeLog.Test
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
             Assert.Equal(nameof(CommandLineParameters.RepositoryPath), error.PropertyName);
+
+            // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
+            Assert.Contains("repository", error.ErrorMessage);
         }
 
         [Fact]
@@ -54,6 +54,9 @@ namespace Grynwald.ChangeLog.Test
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
             Assert.Equal(nameof(CommandLineParameters.RepositoryPath), error.PropertyName);
+
+            // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
+            Assert.Contains("repository", error.ErrorMessage);
         }
 
 
@@ -102,6 +105,9 @@ namespace Grynwald.ChangeLog.Test
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
             Assert.Equal(nameof(CommandLineParameters.CurrentVersion), error.PropertyName);
+
+            // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
+            Assert.Contains("currentVersion", error.ErrorMessage);
         }
 
         [Theory]
@@ -149,6 +155,9 @@ namespace Grynwald.ChangeLog.Test
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
             Assert.Equal(nameof(CommandLineParameters.VersionRange), error.PropertyName);
+
+            // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
+            Assert.Contains("versionRange", error.ErrorMessage);
         }
 
         [Theory]
@@ -242,6 +251,9 @@ namespace Grynwald.ChangeLog.Test
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
             Assert.Equal(nameof(CommandLineParameters.ConfigurationFilePath), error.PropertyName);
+
+            // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
+            Assert.Contains("configurationFilePath", error.ErrorMessage);
         }
     }
 }
