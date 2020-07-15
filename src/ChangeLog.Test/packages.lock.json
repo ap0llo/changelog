@@ -141,11 +141,8 @@
       },
       "FluentValidation": {
         "type": "Transitive",
-        "resolved": "8.6.2",
-        "contentHash": "N2vz+f6pAX9AI19hu83U2LJjjc/ETzWGlICVanu3DIG76QhzEu3PR/CQSFBX69PRuBTivrW4jhBzeV7dXIfqyw==",
-        "dependencies": {
-          "System.ComponentModel.Annotations": "4.4.1"
-        }
+        "resolved": "9.0.1",
+        "contentHash": "GeF+cPknUFFJ5FkCybmQShaXWwJowBuJozgns6In37wiP2zOWx+kdNPBAN9BlDyhcORdxtXeGnkLZ+OFT85onQ=="
       },
       "GitLabApiClient": {
         "type": "Transitive",
@@ -1386,7 +1383,7 @@
         "dependencies": {
           "Autofac": "5.2.0",
           "CommandLineParser": "2.8.0",
-          "FluentValidation": "8.6.2",
+          "FluentValidation": "9.0.1",
           "GitLabApiClient": "1.6.0",
           "Grynwald.MarkdownGenerator": "2.5.34",
           "Grynwald.Utilities": "1.6.11-pre",
@@ -1528,11 +1525,8 @@
       },
       "FluentValidation": {
         "type": "Transitive",
-        "resolved": "8.6.2",
-        "contentHash": "N2vz+f6pAX9AI19hu83U2LJjjc/ETzWGlICVanu3DIG76QhzEu3PR/CQSFBX69PRuBTivrW4jhBzeV7dXIfqyw==",
-        "dependencies": {
-          "System.ComponentModel.Annotations": "4.4.1"
-        }
+        "resolved": "9.0.1",
+        "contentHash": "GeF+cPknUFFJ5FkCybmQShaXWwJowBuJozgns6In37wiP2zOWx+kdNPBAN9BlDyhcORdxtXeGnkLZ+OFT85onQ=="
       },
       "GitLabApiClient": {
         "type": "Transitive",
@@ -2139,11 +2133,6 @@
         "dependencies": {
           "System.Runtime": "4.3.0"
         }
-      },
-      "System.ComponentModel.Annotations": {
-        "type": "Transitive",
-        "resolved": "4.4.1",
-        "contentHash": "ToiYqSCioqhtspq2O/jYKtyTC/T0uwWHBTYlzCi6PRbSSHArN1IaRWeHffDamvms5sye5FDUWCfNZgubQpNRsA=="
       },
       "System.ComponentModel.Composition": {
         "type": "Transitive",
@@ -3246,7 +3235,7 @@
         "dependencies": {
           "Autofac": "5.2.0",
           "CommandLineParser": "2.8.0",
-          "FluentValidation": "8.6.2",
+          "FluentValidation": "9.0.1",
           "GitLabApiClient": "1.6.0",
           "Grynwald.MarkdownGenerator": "2.5.34",
           "Grynwald.Utilities": "1.6.11-pre",
