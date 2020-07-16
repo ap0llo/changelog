@@ -5,7 +5,7 @@ using Grynwald.ChangeLog.Tasks;
 
 namespace Grynwald.ChangeLog
 {
-    internal class ChangeLogPipelineBuilder
+    internal class ChangeLogPipelineBuilder : IChangeLogPipelineBuilder
     {
         private readonly List<IChangeLogTask> m_Tasks;
 
@@ -20,7 +20,7 @@ namespace Grynwald.ChangeLog
         }
 
 
-        public ChangeLogPipelineBuilder AddTask<T>() where T : IChangeLogTask
+        public IChangeLogPipelineBuilder AddTask<T>() where T : IChangeLogTask
         {
             var task = Container.Resolve<T>();
             m_Tasks.Add(task);

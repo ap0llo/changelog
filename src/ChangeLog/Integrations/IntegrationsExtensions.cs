@@ -17,7 +17,7 @@ namespace Grynwald.ChangeLog.Integrations
         }
 
 
-        public static ChangeLogPipelineBuilder AddIntegrationTasks(this ChangeLogPipelineBuilder pipelineBuilder)
+        public static IChangeLogPipelineBuilder AddIntegrationTasks(this IChangeLogPipelineBuilder pipelineBuilder)
         {
             var configuration = pipelineBuilder.Container.Resolve<ChangeLogConfiguration>();
 
