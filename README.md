@@ -43,8 +43,8 @@ created by me without anyone else being involved in the discussion.
 
 ## Acknowledgments
 
-This project was made possible through a number of libraries (aside from
-.NET Core). Thanks to all the people contribution to these projects:
+This project was made possible through a number of libraries and tools (aside from .NET Core).
+Thanks to all the people contributing to these projects:
 
 - [Nerdbank.GitVersioning](https://github.com/AArnott/Nerdbank.GitVersioning/)
 - [FluentValidation](https://fluentvalidation.net/)
@@ -61,6 +61,8 @@ This project was made possible through a number of libraries (aside from
 - [Newtonsoft.Json](https://www.newtonsoft.com/json)
 - [Mono.Cecil](https://github.com/jbevain/cecil/)
 - [xUnit](http://xunit.github.io/)
+- [Coverlet](https://github.com/coverlet-coverage/coverlet)
+- [ReportGenerator](https://github.com/danielpalme/ReportGenerator)
 
 ## Versioning and Branching
 
