@@ -100,16 +100,18 @@ jobs:
       projects: $(solutionPath)
       arguments: '--configuration $(configuration) --no-restore /warnaserror'  
   - task: DotNetCoreCLI@2
-    displayName: Test
+    displayName: Test    
     inputs:
       command: test
+      publishTestResults: true
       projects: $(solutionPath)
-      arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage"'
+      arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage"'      
   - task: PublishCodeCoverageResults@1
     displayName: Publish Code Coverage results
     inputs:
       codeCoverageTool: cobertura
-      summaryFileLocation: $(Build.BinariesDirectory)/TestResults/**/coverage.cobertura.xml
+      # The dotnet test task redirects test results to $(Agent.TempDirectory) so coverage reports will be written there, too
+      summaryFileLocation: $(Agent.TempDirectory)/**/coverage.cobertura.xml
       failIfCoverageEmpty: true
 
 
