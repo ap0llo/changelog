@@ -107,15 +107,19 @@ jobs:
       projects: $(solutionPath)
       arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage"'
   # The PublishCodeCoverageResults task only supports publishing a single coverage result file,
-  # so the results are merged into a single cobertura file using "ReportGenerator" 
-  - script: dotnet tool run reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Agent.TempDirectory)/TestResults/coverage_merged -reporttypes:cobertura
-    displayName: Merge Code Coverage Results    
+  # so the results are merged into a single cobertura file using "ReportGenerator"
+  # The dotnet test task redirects test results to $(Agent.TempDirectory) so coverage reports will be written there, too
+  - script: >-
+      dotnet tool run reportgenerator
+      -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml
+      -targetdir:$(Agent.TempDirectory)/TestResults/Coverage
+      -reporttypes:cobertura
+    displayName: Merge Code Coverage Results
   - task: PublishCodeCoverageResults@1
     displayName: Publish Code Coverage results
     inputs:
       codeCoverageTool: cobertura
-      # The dotnet test task redirects test results to $(Agent.TempDirectory) so coverage reports will be written there, too
-      summaryFileLocation: $(Agent.TempDirectory)/TestResults/coverage_merged/Cobertura.xml
+      summaryFileLocation: $(Agent.TempDirectory)/TestResults/Coverage/Cobertura.xml
       failIfCoverageEmpty: true
 
 
