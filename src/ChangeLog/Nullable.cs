@@ -5,10 +5,12 @@
 
 namespace System.Diagnostics.CodeAnalysis
 {
+    [ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, Inherited = false)]
     internal sealed class AllowNullAttribute : Attribute
     { }
 
+    [ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
     public sealed class NotNullWhenAttribute : Attribute
     {
