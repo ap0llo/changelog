@@ -115,7 +115,7 @@ jobs:
     inputs:
       codeCoverageTool: cobertura
       # The dotnet test task redirects test results to $(Agent.TempDirectory) so coverage reports will be written there, too
-      summaryFileLocation: $$(Agent.TempDirectory)/TestResults/coverage_merged/Cobertura.xml
+      summaryFileLocation: $(Agent.TempDirectory)/TestResults/coverage_merged/Cobertura.xml
       failIfCoverageEmpty: true
 
 
