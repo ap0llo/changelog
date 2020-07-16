@@ -104,8 +104,15 @@ jobs:
     inputs:
       command: test
       projects: $(solutionPath)
-      arguments: '--configuration $(configuration) --no-build'
-  
+      arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage"'
+  - task: PublishCodeCoverageResults@1
+    displayName: Publish Code Coverage results
+    inputs:
+      codeCoverageTool: cobertura
+      summaryFileLocation: $(Build.BinariesDirectory)/TestResults/**/coverage.cobertura.xml
+      failIfCoverageEmpty: true
+
+
   # Create NuGet Package and  publish as build artifact
   - task: DotNetCoreCLI@2
     displayName: Pack NuGet package
