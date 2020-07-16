@@ -17,7 +17,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
         private FooterParser(LineToken input)
         {
-            if (input == null)
+            if (input is null)
                 throw new ArgumentNullException(nameof(input));
 
             if (input.Kind != LineTokenKind.Line)
@@ -167,6 +167,9 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         /// </summary>
         public static bool IsFooter(LineToken input)
         {
+            if (input is null)
+                throw new ArgumentNullException(nameof(input));
+
             if (input.Kind != LineTokenKind.Line)
                 return false;
 

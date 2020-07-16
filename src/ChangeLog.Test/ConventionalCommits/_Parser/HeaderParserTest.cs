@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Xunit;
 using Xunit.Abstractions;
@@ -41,6 +42,19 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
 
             // ASSERT
             Assert.Equal(expected.Value, parsed);
+        }
+
+        [Fact]
+        public void Parse_checks_input_for_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => HeaderParser.Parse(null!));
+        }
+
+        [Fact]
+        public void Parse_checks_if_input_is_a_line()
+        {
+            Assert.Throws<ArgumentException>(() => HeaderParser.Parse(LineToken.Blank(1)));
+            Assert.Throws<ArgumentException>(() => HeaderParser.Parse(LineToken.Eof(1)));
         }
 
         [Theory]

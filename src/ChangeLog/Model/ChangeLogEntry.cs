@@ -69,8 +69,6 @@ namespace Grynwald.ChangeLog.Model
             Footers = footers;
             BreakingChangeDescriptions = breakingChangeDescriptions;
             Commit = commit;
-
-
         }
 
         public static ChangeLogEntry FromCommitMessage(GitCommit commit, CommitMessage commitMessage)

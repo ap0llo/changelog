@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Xunit;
 using Xunit.Abstractions;
@@ -47,10 +48,24 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             Assert.Equal(expected.Value, parsed);
         }
 
+        [Fact]
+        public void Parse_checks_input_for_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => FooterParser.Parse(null!));
+        }
+
+        [Fact]
+        public void Parse_checks_if_input_is_a_line()
+        {
+            Assert.Throws<ArgumentException>(() => FooterParser.Parse(LineToken.Blank(1)));
+            Assert.Throws<ArgumentException>(() => FooterParser.Parse(LineToken.Eof(1)));
+        }
+
         [Theory]
         [InlineData("T01", "", 1)]
         [InlineData("T02", "value", 6)]
         [InlineData("T03", "BREAKING Change: Description", 10)] // "BREAKING CHANGE" must be upper-case
+        [InlineData("T03", "BREAKING CHANGE Description", 17)] // "BREAKING CHANGE" must be followed by ": " or " #"
         [InlineData("T04", "key:value", 5)]
         [InlineData("T05", "key : value", 5)]
         [InlineData("T06", "key#value", 4)]
@@ -66,6 +81,20 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             var ex = Assert.ThrowsAny<ParserException>(() => FooterParser.Parse(inputToken));
             Assert.Equal(lineNumber, ex.LineNumber);
             Assert.Equal(columnNumber, ex.ColumnNumber);
+        }
+
+
+        [Fact]
+        public void IsFooter_checks_input_for_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => FooterParser.IsFooter(null!));
+        }
+
+        [Fact]
+        public void IsFooter_retuns_false_if_input_is_not_a_line_token()
+        {
+            Assert.False(FooterParser.IsFooter(LineToken.Blank(1)));
+            Assert.False(FooterParser.IsFooter(LineToken.Eof(1)));
         }
     }
 }

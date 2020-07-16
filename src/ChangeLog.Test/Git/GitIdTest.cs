@@ -16,7 +16,20 @@ namespace Grynwald.ChangeLog.Test.Git
 
             Assert.Equal(id1.GetHashCode(), id2.GetHashCode());
             Assert.Equal(id1, id2);
+            Assert.True(id1.Equals(id2));
+            Assert.True(id1.Equals((object)id2));
+            Assert.True(id2.Equals(id1));
+            Assert.True(id2.Equals((object)id1));
             Assert.True(id1 == id2);
+            Assert.False(id1 != id2);
+        }
+
+
+        [Fact]
+        public void Equals_returns_false_if_the_argument_is_not_a_GitId()
+        {
+            var id = new GitId("8BADF00D");
+            Assert.False(id.Equals(new object()));
         }
 
         [Theory]

@@ -166,5 +166,11 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             // ASSERT
             Assert.Collection(actualTokens, inspectors);
         }
+
+        [Fact]
+        public void GetTokens_checks_input_for_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => LineTokenizer.GetTokens(null!, false).ToArray());
+        }
     }
 }

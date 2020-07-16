@@ -1,4 +1,5 @@
-﻿using Grynwald.ChangeLog.Configuration;
+﻿using System;
+using Grynwald.ChangeLog.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
@@ -8,6 +9,21 @@ namespace Grynwald.ChangeLog.Test.Configuration
     public class ConfigurationValidatorTest
     {
         private readonly ILogger<ConfigurationValidator> m_Logger = NullLogger<ConfigurationValidator>.Instance;
+
+
+        [Fact]
+        public void Constructor_checks_arguments_for_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ConfigurationValidator(null!));
+        }
+
+        [Fact]
+        public void Validate_checks_arguments_for_null()
+        {
+            var sut = new ConfigurationValidator(m_Logger);
+            Assert.Throws<ArgumentNullException>(() => sut.Validate(null!));
+        }
+
 
         [Fact]
         public void No_errors_are_found_in_default_configuration()

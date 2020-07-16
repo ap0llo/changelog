@@ -627,6 +627,13 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
         }
 
 
+        [Fact]
+        public void Parse_checks_arguments_for_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => CommitMessageParser.Parse(null!, true));
+            Assert.Throws<ArgumentNullException>(() => CommitMessageParser.Parse(null!, false));
+        }
+
         [Theory]
         [MemberData(nameof(ValidParserTestCases))]
         public void Parse_returns_expected_commit_message(string id, string commitMessage, bool strictMode, XunitSerializableCommitMessage expected)

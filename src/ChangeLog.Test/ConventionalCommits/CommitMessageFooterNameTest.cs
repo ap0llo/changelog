@@ -1,4 +1,5 @@
-﻿using Grynwald.ChangeLog.ConventionalCommits;
+﻿using System;
+using Grynwald.ChangeLog.ConventionalCommits;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.ConventionalCommits
@@ -8,6 +9,16 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
     /// </summary>
     public class CommitMessageFooterNameTest
     {
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        public void Key_must_not_be_null_or_whitespace(string key)
+        {
+            Assert.Throws<ArgumentException>(() => new CommitMessageFooterName(key));
+        }
+
         [Theory]
         // Comparisons of footer types must be case-insensitive
         [InlineData("fixes", "fixes")]
@@ -26,8 +37,12 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             var right = new CommitMessageFooterName(rightValue);
 
             // ACT / ASSERT
-            Assert.Equal(left, right);
             Assert.Equal(left.GetHashCode(), right.GetHashCode());
+            Assert.Equal(left, right);
+            Assert.True(left.Equals(right));
+            Assert.True(left.Equals((object)right));
+            Assert.True(right.Equals(left));
+            Assert.True(right.Equals((object)left));
             Assert.True(left == right);
             Assert.False(left != right);
         }
@@ -45,10 +60,20 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
             var right = new CommitMessageFooterName(rightValue);
 
             // ACT / ASSERT
-            Assert.NotEqual(left, right);
             Assert.NotEqual(left.GetHashCode(), right.GetHashCode());
+            Assert.NotEqual(left, right);
+            Assert.False(left.Equals((object)right));
+            Assert.False(right.Equals(left));
+            Assert.False(right.Equals((object)left));
             Assert.False(left == right);
             Assert.True(left != right);
+        }
+
+        [Fact]
+        public void Equals_returns_false_if_the_argument_is_not_a_CommitMessageFooterName()
+        {
+            var sut = new CommitMessageFooterName("name");
+            Assert.False(sut.Equals(new object()));
         }
     }
 }

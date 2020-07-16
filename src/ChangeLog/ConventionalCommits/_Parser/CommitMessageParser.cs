@@ -191,8 +191,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
             var footers = new List<CommitMessageFooter>();
 
 
-
-            // 'IgnoreTrailingBlankLines' is set, there might not be a parsable footer present in the message
+            // 'IgnoreTrailingBlankLines' is set, there might not be a parse-able footer present in the message
             // an we will only encounter blank lines, so it is not an error, if no non-blank line is found.
             // However if 'IgnoreTrailingBlankLines' is *not* set, there must be a at lease one footer after the blank line
 

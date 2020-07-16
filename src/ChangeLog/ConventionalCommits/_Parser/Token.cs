@@ -2,7 +2,7 @@
 
 namespace Grynwald.ChangeLog.ConventionalCommits
 {
-    public abstract class Token : IEquatable<Token>
+    public abstract class Token
     {
         /// <summary>
         /// Gets the value of the token.
@@ -35,19 +35,13 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
 
         /// <inheritdoc />
-        public override int GetHashCode() => Value == null ? 0 : StringComparer.Ordinal.GetHashCode(Value);
+        public abstract override int GetHashCode();
 
         /// <inheritdoc />
-        public override bool Equals(object? obj) => Equals(obj as Token);
+        public abstract override bool Equals(object? obj);
 
         /// <inheritdoc />
-        public bool Equals(Token? other) =>
-            other != null &&
-            StringComparer.Ordinal.Equals(Value, other.Value) &&
-            LineNumber == other.LineNumber;
-
-        /// <inheritdoc />
-        public override string ToString() => $"({LineNumber}:{ColumnNumber}, '{Value}')";
+        public abstract override string ToString();
 
     }
 
@@ -64,7 +58,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
 
         /// <inheritdoc />
-        public override int GetHashCode() => base.GetHashCode();
+        public override int GetHashCode() => Value == null ? 0 : StringComparer.Ordinal.GetHashCode(Value);
 
         /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as Token<TTokenKind>);
@@ -72,7 +66,9 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         /// <inheritdoc />
         public bool Equals(Token<TTokenKind>? other) =>
             other != null &&
-            Equals(other as Token) &&
+            StringComparer.Ordinal.Equals(Value, other.Value) &&
+            LineNumber == other.LineNumber &&
+            ColumnNumber == other.ColumnNumber &&
             Kind.Equals(other.Kind);
 
         /// <inheritdoc />

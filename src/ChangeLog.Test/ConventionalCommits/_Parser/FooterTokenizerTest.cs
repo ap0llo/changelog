@@ -27,7 +27,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 FooterToken.String("Some", 1, 1),
                 FooterToken.Space(1, 5),
                 FooterToken.String("string", 1, 6),
-                FooterToken.Eol(1, 7)
+                FooterToken.Eol(1, 12)
             );
 
             yield return TestCase(
@@ -36,7 +36,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 FooterToken.Colon(1, 5),
                 FooterToken.Space(1, 6),
                 FooterToken.String("description", 1, 7),
-                FooterToken.Eol(1, 8)
+                FooterToken.Eol(1, 18)
             );
 
             yield return TestCase(
@@ -45,7 +45,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 FooterToken.Space(1, 5),
                 FooterToken.Hash(1, 6),
                 FooterToken.String("description", 1, 7),
-                FooterToken.Eol(1, 8)
+                FooterToken.Eol(1, 18)
             );
 
             yield return TestCase(
@@ -55,8 +55,8 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 FooterToken.String("CHANGE", 1, 10),
                 FooterToken.Colon(1, 16),
                 FooterToken.Space(1, 17),
-                FooterToken.String("description", 1, 8),
-                FooterToken.Eol(1, 8)
+                FooterToken.String("description", 1, 18),
+                FooterToken.Eol(1, 29)
             );
 
             yield return TestCase(
@@ -66,8 +66,8 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 FooterToken.String("CHANGE", 1, 10),
                 FooterToken.Space(1, 16),
                 FooterToken.Hash(1, 17),
-                FooterToken.String("description", 1, 8),
-                FooterToken.Eol(1, 8)
+                FooterToken.String("description", 1, 18),
+                FooterToken.Eol(1, 29)
             );
 
             yield return TestCase(
@@ -75,8 +75,8 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                FooterToken.String("breaking-change", 1, 1),
                FooterToken.Colon(1, 16),
                FooterToken.Space(1, 17),
-               FooterToken.String("description", 1, 8),
-               FooterToken.Eol(1, 8)
+               FooterToken.String("description", 1, 18),
+               FooterToken.Eol(1, 29)
            );
 
         }

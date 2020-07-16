@@ -1,12 +1,24 @@
 ﻿using System;
 using System.Linq;
 using Grynwald.ChangeLog.ConventionalCommits;
+using Grynwald.ChangeLog.Model;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Model
 {
+    /// <summary>
+    /// Tests for <see cref="SingleVersionChangeLog"/>
+    /// </summary>
     public class SingleVersionChangeLogTest : TestBase
     {
+
+        [Fact]
+        public void Constructor_checks_arguments_for_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new SingleVersionChangeLog(null!));
+        }
+
+
         [Fact]
         public void Entries_are_returned_sorted_by_date()
         {
@@ -121,6 +133,20 @@ namespace Grynwald.ChangeLog.Test.Model
                 breakingChanges,
                 e => Assert.Equal(CommitType.Feature, e.Type),
                 e => Assert.Equal(new CommitType("build"), e.Type));
+        }
+
+        [Fact]
+        public void Add_checks_argument_for_null()
+        {
+            var sut = GetSingleVersionChangeLog("1.2.3");
+            Assert.Throws<ArgumentNullException>(() => sut.Add(null!));
+        }
+
+        [Fact]
+        public void Remove_checks_argument_for_null()
+        {
+            var sut = GetSingleVersionChangeLog("1.2.3");
+            Assert.Throws<ArgumentNullException>(() => sut.Remove(null!));
         }
     }
 }

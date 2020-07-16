@@ -30,7 +30,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 HeaderToken.String("Description", 1, 7),
                 HeaderToken.Space(1, 18),
                 HeaderToken.String("text", 1, 19),
-                HeaderToken.Eol(1, 20)
+                HeaderToken.Eol(1, 23)
             );
 
 
@@ -43,7 +43,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                HeaderToken.Colon(1, 12),
                HeaderToken.Space(1, 13),
                HeaderToken.String("Description", 1, 14),
-               HeaderToken.Eol(1, 26)
+               HeaderToken.Eol(1, 25)
            );
 
             yield return TestCase(
@@ -56,7 +56,7 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                HeaderToken.Colon(1, 13),
                HeaderToken.Space(1, 14),
                HeaderToken.String("Description", 1, 15),
-               HeaderToken.Eol(1, 27)
+               HeaderToken.Eol(1, 26)
            );
 
             yield return TestCase(
@@ -68,8 +68,8 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                HeaderToken.Colon(1, 12),
                HeaderToken.Space(1, 13),
                HeaderToken.String("Description", 1, 14),
-               HeaderToken.ExclamationMark(1, 26),
-               HeaderToken.Eol(1, 27)
+               HeaderToken.ExclamationMark(1, 25),
+               HeaderToken.Eol(1, 26)
             );
 
 
