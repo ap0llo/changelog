@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Collections.Generic;
+using Autofac;
 using Grynwald.ChangeLog.Tasks;
 
 namespace Grynwald.ChangeLog
@@ -6,6 +7,8 @@ namespace Grynwald.ChangeLog
     internal interface IChangeLogPipelineBuilder
     {
         IContainer Container { get; }
+
+        IEnumerable<IChangeLogTask> Tasks { get; }
 
         IChangeLogPipelineBuilder AddTask<T>() where T : IChangeLogTask;
 

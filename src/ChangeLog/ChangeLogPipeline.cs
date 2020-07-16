@@ -13,6 +13,10 @@ namespace Grynwald.ChangeLog
         private readonly IReadOnlyList<IChangeLogTask> m_Tasks;
         private readonly ILogger<ChangeLogPipeline> m_Logger;
 
+
+        public IEnumerable<IChangeLogTask> Tasks => m_Tasks;
+
+
         public ChangeLogPipeline(ILogger<ChangeLogPipeline> logger, IEnumerable<IChangeLogTask> tasks)
         {
             m_Tasks = (tasks ?? throw new ArgumentNullException(nameof(tasks))).ToList();

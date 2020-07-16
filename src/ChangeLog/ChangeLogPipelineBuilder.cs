@@ -12,6 +12,8 @@ namespace Grynwald.ChangeLog
 
         public IContainer Container { get; }
 
+        public IEnumerable<IChangeLogTask> Tasks => m_Tasks;
+
 
         public ChangeLogPipelineBuilder(IContainer container)
         {
