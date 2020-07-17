@@ -9,6 +9,9 @@ using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Git
 {
+    /// <summary>
+    /// Tests for <see cref="GitRepository"/>
+    /// </summary>
     public class GitRepositoryTest : IDisposable
     {
         private readonly TemporaryDirectory m_WorkingDirectory = new TemporaryDirectory();
