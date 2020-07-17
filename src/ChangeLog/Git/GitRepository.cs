@@ -35,7 +35,6 @@ namespace Grynwald.ChangeLog.Git
             if (fromCommit.HasValue)
             {
                 filter.ExcludeReachableFrom = fromCommit.Value.Id;
-
             }
 
             return m_Repository.Commits.QueryBy(filter)
