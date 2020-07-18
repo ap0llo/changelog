@@ -237,7 +237,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
                 if (mergeRequests.Count == 1)
                 {
-                    return new Uri(mergeRequests.Single().WebUrl); ;
+                    return new Uri(mergeRequests.Single().WebUrl);
                 }
                 else
                 {
