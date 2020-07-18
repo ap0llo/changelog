@@ -1,36 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using Grynwald.ChangeLog.Git;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Git
 {
-    public class GitIdTest
+    public class GitIdTest : EqualityTest<GitId, GitIdTest>, IEqualityTestDataProvider<GitId>
     {
-        [Theory]
-        [InlineData("8BADF00D", "8BADF00D")]
-        [InlineData("8badF00d", "8BADF00D")]
-        public void Two_GitId_instances_are_equal_when_the_id_shas_are_equal(string sha1, string sha2)
+        public IEnumerable<(GitId left, GitId right)> GetEqualTestCases()
         {
-            var id1 = new GitId(sha1);
-            var id2 = new GitId(sha2);
+            yield return (new GitId("8BADF00D"), new GitId("8BADF00D"));
+            yield return (new GitId("8badF00d"), new GitId("8BADF00D"));
 
-            Assert.Equal(id1.GetHashCode(), id2.GetHashCode());
-            Assert.Equal(id1, id2);
-            Assert.True(id1.Equals(id2));
-            Assert.True(id1.Equals((object)id2));
-            Assert.True(id2.Equals(id1));
-            Assert.True(id2.Equals((object)id1));
-            Assert.True(id1 == id2);
-            Assert.False(id1 != id2);
         }
 
-
-        [Fact]
-        public void Equals_returns_false_if_the_argument_is_not_a_GitId()
+        public IEnumerable<(GitId left, GitId right)> GetUnequalTestCases()
         {
-            var id = new GitId("8BADF00D");
-            Assert.False(id.Equals(new object()));
+            yield return (new GitId("abc123"), new GitId("def456"));
         }
+
 
         [Theory]
         [InlineData(null)]

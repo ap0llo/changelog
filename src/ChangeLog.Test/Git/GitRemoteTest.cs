@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Grynwald.ChangeLog.Git;
 using Xunit;
 
@@ -7,8 +8,20 @@ namespace Grynwald.ChangeLog.Test.Git
     /// <summary>
     /// Tests for <see cref="GitRemote"/>
     /// </summary>
-    public class GitRemoteTest
+    public class GitRemoteTest : EqualityTest<GitRemote, GitRemoteTest>, IEqualityTestDataProvider<GitRemote>
     {
+        public IEnumerable<(GitRemote left, GitRemote right)> GetEqualTestCases()
+        {
+            yield return (new GitRemote("origin", "http://example.com"), new GitRemote("origin", "http://example.com"));
+            yield return (new GitRemote("upstream", "http://example.com/upstream"), new GitRemote("upstream", "http://example.com/upstream"));
+        }
+
+        public IEnumerable<(GitRemote left, GitRemote right)> GetUnequalTestCases()
+        {
+            yield return (new GitRemote("origin", "http://example.com"), new GitRemote("upstream", "http://example.com"));
+            yield return (new GitRemote("origin", "http://example.com"), new GitRemote("origin", "http://example.net"));
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -27,34 +40,6 @@ namespace Grynwald.ChangeLog.Test.Git
         public void Url_must_not_be_null_or_whitespace(string url)
         {
             Assert.Throws<ArgumentException>(() => new GitRemote("origin", url));
-        }
-
-
-        [Fact]
-        public void Two_GitRemote_instances_are_equal_if_both_Name_and_Url_are_equal()
-        {
-            var name = "origin";
-            var url = "http://example.com";
-
-            var instance1 = new GitRemote(name, url);
-            var instance2 = new GitRemote(name, url);
-
-            Assert.Equal(instance1.GetHashCode(), instance2.GetHashCode());
-            Assert.Equal(instance1, instance2);
-            Assert.True(instance1.Equals(instance2));
-            Assert.True(instance1.Equals((object)instance2));
-            Assert.True(instance2.Equals(instance1));
-            Assert.True(instance2.Equals((object)instance1));
-        }
-
-        [Fact]
-        public void Equals_retuns_false_if_argument_is_not_a_GitRemote()
-        {
-            var name = "origin";
-            var url = "http://example.com";
-
-            var sut = new GitRemote(name, url);
-            Assert.False(sut.Equals(new object()));
         }
     }
 }

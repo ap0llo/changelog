@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using NuGet.Versioning;
@@ -9,7 +10,7 @@ namespace Grynwald.ChangeLog.Test.Model
     /// <summary>
     /// Tests for <see cref="VersionInfo"/>
     /// </summary>
-    public class VersionInfoTest
+    public class VersionInfoTest : EqualityTest<VersionInfo, VersionInfoTest>, IEqualityTestDataProvider<VersionInfo>
     {
         [Fact]
         public void Constructor_checks_arguments_for_null()
@@ -32,32 +33,30 @@ namespace Grynwald.ChangeLog.Test.Model
             Assert.Equal(commit, sut.Commit);
         }
 
-        [Fact]
-        public void Two_VersionInfo_instances_are_equal_when_the_version_and_commit_are_equal()
+        public IEnumerable<(VersionInfo left, VersionInfo right)> GetEqualTestCases()
         {
-            var commit1 = new GitId("abc123");
-            var commit2 = new GitId("ABC123");
-            var version = NuGetVersion.Parse("1.2.3-alpha");
+            yield return (
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123")),
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123"))
+            );
 
-            var versionInfo1 = new VersionInfo(version, commit1);
-            var versionInfo2 = new VersionInfo(version, commit2);
-
-            Assert.Equal(versionInfo1.GetHashCode(), versionInfo2.GetHashCode());
-            Assert.Equal(versionInfo1, versionInfo2);
-            Assert.True(versionInfo1.Equals(versionInfo2));
-            Assert.True(versionInfo1.Equals((object)versionInfo2));
-            Assert.True(versionInfo2.Equals(versionInfo1));
-            Assert.True(versionInfo2.Equals((object)versionInfo1));
+            yield return (
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123")),
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("ABC123"))
+            );
         }
 
-        [Fact]
-        public void Equals_returns_false_if_argument_is_not_a_VersionInfo()
+        public IEnumerable<(VersionInfo left, VersionInfo right)> GetUnequalTestCases()
         {
-            var version = NuGetVersion.Parse("1.2.3-alpha");
-            var commit = new GitId("123abc");
-            var sut = new VersionInfo(version, commit);
+            yield return (
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123")),
+                new VersionInfo(NuGetVersion.Parse("4.5.6"), new GitId("abc123"))
+            );
 
-            Assert.False(sut.Equals(new object()));
+            yield return (
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123")),
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("def456"))
+            );
         }
     }
 }

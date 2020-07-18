@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using GitLabApiClient.Models.Notes.Requests;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test
@@ -18,6 +20,7 @@ namespace Grynwald.ChangeLog.Test
         where TTestee : IEquatable<TTestee>
         where TDataProvider : IEqualityTestDataProvider<TTestee>, new()
     {
+
         public static IEnumerable<object[]> EqualityTestCases()
         {
             var dataProvider = (IEqualityTestDataProvider<TTestee>)Activator.CreateInstance(typeof(TDataProvider))!;
@@ -48,6 +51,10 @@ namespace Grynwald.ChangeLog.Test
         }
 
 
+        private static bool TesteeImplementsEqualitsOperators =>
+            typeof(TTestee).GetMethod("op_Equality", BindingFlags.Static | BindingFlags.Public) != null;
+
+
         [Theory]
         [MemberData(nameof(EqualityTestCases))]
         public void Comparision_of_two_equal_instances_yield_expected_result(TTestee left, TTestee right)
@@ -58,6 +65,24 @@ namespace Grynwald.ChangeLog.Test
             Assert.True(left.Equals((object)right));
             Assert.True(right.Equals(left));
             Assert.True(right.Equals((object)left));
+
+            if (TesteeImplementsEqualitsOperators)
+            {
+                var opEquality = typeof(TTestee).GetMethod("op_Equality", BindingFlags.Static | BindingFlags.Public);
+                var opInequality = typeof(TTestee).GetMethod("op_Inequality", BindingFlags.Static | BindingFlags.Public);
+                Assert.NotNull(opEquality);
+                Assert.NotNull(opInequality);
+
+                var isEqual1 = (bool)opEquality!.Invoke(null, new object[] { left, right })!;
+                var isEqual2 = (bool)opEquality!.Invoke(null, new object[] { right, left })!;
+                var isNotEqual1 = (bool)opInequality!.Invoke(null, new object[] { left, right })!;
+                var isNotEqual2 = (bool)opInequality!.Invoke(null, new object[] { right, left })!;
+
+                Assert.True(isEqual1);
+                Assert.True(isEqual2);
+                Assert.False(isNotEqual1);
+                Assert.False(isNotEqual2);
+            }
         }
 
         [Theory]
@@ -69,6 +94,25 @@ namespace Grynwald.ChangeLog.Test
             Assert.False(left.Equals((object)right));
             Assert.False(right.Equals(left));
             Assert.False(right.Equals((object)left));
+
+
+            if (TesteeImplementsEqualitsOperators)
+            {
+                var opEquality = typeof(TTestee).GetMethod("op_Equality", BindingFlags.Static | BindingFlags.Public);
+                var opInequality = typeof(TTestee).GetMethod("op_Inequality", BindingFlags.Static | BindingFlags.Public);
+                Assert.NotNull(opEquality);
+                Assert.NotNull(opInequality);
+
+                var isEqual1 = (bool)opEquality!.Invoke(null, new object[] { left, right })!;
+                var isEqual2 = (bool)opEquality!.Invoke(null, new object[] { right, left })!;
+                var isNotEqual1 = (bool)opInequality!.Invoke(null, new object[] { left, right })!;
+                var isNotEqual2 = (bool)opInequality!.Invoke(null, new object[] { right, left })!;
+
+                Assert.False(isEqual1);
+                Assert.False(isEqual2);
+                Assert.True(isNotEqual1);
+                Assert.True(isNotEqual2);
+            }
         }
 
         [Theory]
@@ -77,5 +121,7 @@ namespace Grynwald.ChangeLog.Test
         {
             Assert.False(sut.Equals(new object()));
         }
+
+
     }
 }
