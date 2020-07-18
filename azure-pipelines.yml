@@ -89,6 +89,15 @@ jobs:
     displayName: Check code formatting
 
   # Restore, Build, Test
+  - task: SonarCloudPrepare@1
+    displayName: 'Prepare SonarCloud analysis'
+    inputs:
+      SonarCloud: SonarCloud
+      organization: ap0llo
+      scannerMode: MSBuild
+      projectKey: ap0llo_changelog
+      projectName: changelog
+
   - task: CmdLine@2
     displayName: Restore NuGet packages
     inputs:
@@ -122,6 +131,10 @@ jobs:
       summaryFileLocation: $(Agent.TempDirectory)/TestResults/Coverage/Cobertura.xml
       failIfCoverageEmpty: true
 
+  - task: SonarCloudAnalyze@1
+    displayName: 'Run SonarCloud code analysis'
+  - task: SonarCloudPublish@1
+    displayName: 'Publish SonarCloud quality gate results'
 
   # Create NuGet Package and  publish as build artifact
   - task: DotNetCoreCLI@2
