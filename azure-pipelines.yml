@@ -89,18 +89,6 @@ jobs:
     displayName: Check code formatting
 
   # Restore, Build, Test
-  - task: SonarCloudPrepare@1
-    displayName: 'Prepare SonarCloud analysis'
-    inputs:
-      SonarCloud: SonarCloud
-      organization: ap0llo
-      scannerMode: MSBuild
-      projectKey: ap0llo_changelog
-      projectName: changelog
-      projectVersion: '$(Build.BuildNumber)'
-      extraProperties: |
-        sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
-
   - task: CmdLine@2
     displayName: Restore NuGet packages
     inputs:
@@ -117,7 +105,7 @@ jobs:
       command: test
       publishTestResults: true
       projects: $(solutionPath)
-      arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover'
+      arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage"'
   # The PublishCodeCoverageResults task only supports publishing a single coverage result file,
   # so the results are merged into a single cobertura file using "ReportGenerator"
   # The dotnet test task redirects test results to $(Agent.TempDirectory) so coverage reports will be written there, too
@@ -134,10 +122,6 @@ jobs:
       summaryFileLocation: $(Agent.TempDirectory)/TestResults/Coverage/Cobertura.xml
       failIfCoverageEmpty: true
 
-  - task: SonarCloudAnalyze@1
-    displayName: 'Run SonarCloud code analysis'
-  - task: SonarCloudPublish@1
-    displayName: 'Publish SonarCloud quality gate results'
 
   # Create NuGet Package and  publish as build artifact
   - task: DotNetCoreCLI@2
