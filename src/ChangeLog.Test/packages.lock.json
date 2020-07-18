@@ -69,6 +69,17 @@
         "resolved": "3.1.91",
         "contentHash": "eQI9TrHjxDtM4eUtl8zCAT5DGtQgZ6mpRd/qkHBEWUeLK/cn1wXnTdJ/6ffs5tlFDP1mEmGHc//wUzFdfr4Eiw=="
       },
+      "NetArchTest.Rules": {
+        "type": "Direct",
+        "requested": "[1.2.5, )",
+        "resolved": "1.2.5",
+        "contentHash": "E9aKDlrCVwShdQu/QT5VQZXP4dh/P4mZTLMDiv0LXdnN5d+3F/TcYQY4MQ7+2vkUHKnPz9pbTtlSGEjQ1BYeBw==",
+        "dependencies": {
+          "Mono.Cecil": "0.11.2",
+          "System.Reflection.Extensions": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0"
+        }
+      },
       "Newtonsoft.Json": {
         "type": "Direct",
         "requested": "[12.0.3, )",
@@ -471,6 +482,11 @@
           "System.Text.Encoding.CodePages": "4.7.0",
           "System.Threading.AccessControl": "4.7.0"
         }
+      },
+      "Mono.Cecil": {
+        "type": "Transitive",
+        "resolved": "0.11.2",
+        "contentHash": "hZNAnXKQsOs/SZMFtT/e82/nA/iLgkeDy+sHD8xix4f0m9/3G0RNZplE1QHB+0n8QXq54jLqR/IPgVOkLapkyg=="
       },
       "NETStandard.Library": {
         "type": "Transitive",
@@ -1472,6 +1488,17 @@
         "resolved": "3.1.91",
         "contentHash": "eQI9TrHjxDtM4eUtl8zCAT5DGtQgZ6mpRd/qkHBEWUeLK/cn1wXnTdJ/6ffs5tlFDP1mEmGHc//wUzFdfr4Eiw=="
       },
+      "NetArchTest.Rules": {
+        "type": "Direct",
+        "requested": "[1.2.5, )",
+        "resolved": "1.2.5",
+        "contentHash": "E9aKDlrCVwShdQu/QT5VQZXP4dh/P4mZTLMDiv0LXdnN5d+3F/TcYQY4MQ7+2vkUHKnPz9pbTtlSGEjQ1BYeBw==",
+        "dependencies": {
+          "Mono.Cecil": "0.11.2",
+          "System.Reflection.Extensions": "4.3.0",
+          "System.Reflection.Primitives": "4.3.0"
+        }
+      },
       "Newtonsoft.Json": {
         "type": "Direct",
         "requested": "[12.0.3, )",
@@ -1849,6 +1876,11 @@
           "System.Text.Encoding.CodePages": "4.7.0",
           "System.Threading.AccessControl": "4.7.0"
         }
+      },
+      "Mono.Cecil": {
+        "type": "Transitive",
+        "resolved": "0.11.2",
+        "contentHash": "hZNAnXKQsOs/SZMFtT/e82/nA/iLgkeDy+sHD8xix4f0m9/3G0RNZplE1QHB+0n8QXq54jLqR/IPgVOkLapkyg=="
       },
       "NETStandard.Library": {
         "type": "Transitive",

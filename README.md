@@ -63,6 +63,7 @@ Thanks to all the people contributing to these projects:
 - [xUnit](http://xunit.github.io/)
 - [Coverlet](https://github.com/coverlet-coverage/coverlet)
 - [ReportGenerator](https://github.com/danielpalme/ReportGenerator)
+- [NetArchTest](https://github.com/BenMorris/NetArchTest)
 
 ## Versioning and Branching
 
