@@ -97,6 +97,9 @@ jobs:
       scannerMode: MSBuild
       projectKey: ap0llo_changelog
       projectName: changelog
+      projectVersion: '$(Build.BuildNumber)'
+      extraProperties: |
+        sonar.cs.opencover.reportsPaths=$(Agent.TempDirectory)/**/coverage.opencover.xml
 
   - task: CmdLine@2
     displayName: Restore NuGet packages
@@ -114,7 +117,7 @@ jobs:
       command: test
       publishTestResults: true
       projects: $(solutionPath)
-      arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage"'
+      arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,opencover'
   # The PublishCodeCoverageResults task only supports publishing a single coverage result file,
   # so the results are merged into a single cobertura file using "ReportGenerator"
   # The dotnet test task redirects test results to $(Agent.TempDirectory) so coverage reports will be written there, too
