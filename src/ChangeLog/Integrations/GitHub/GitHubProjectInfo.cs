@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Grynwald.ChangeLog.Integrations.GitHub
 {
-    internal class GitHubProjectInfo : IEquatable<GitHubProjectInfo>
+    public sealed class GitHubProjectInfo : IEquatable<GitHubProjectInfo>
     {
         public string Host { get; }
 

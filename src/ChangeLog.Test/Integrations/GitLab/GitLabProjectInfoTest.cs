@@ -1,29 +1,82 @@
-﻿using Grynwald.ChangeLog.Integrations.GitLab;
-using Xunit;
+﻿using System.Collections.Generic;
+using Grynwald.ChangeLog.Integrations.GitLab;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 {
-    public class GitLabProjectInfoTest
+    /// <summary>
+    /// Tests for <see cref="GitLabProjectInfo"/>
+    /// </summary>
+    public class GitLabProjectInfoTest : EqualityTest<GitLabProjectInfo, GitLabProjectInfoTest>, IEqualityTestDataProvider<GitLabProjectInfo>
     {
-        [Theory]
-        [InlineData("example.com", "example.com", "user", "user", "repo", "repo")]
-        [InlineData("example.com", "example.com", "group/subgroup", "group/subgroup", "repo", "repo")]
-        // Comparisons must be case-insensitive
-        [InlineData("EXAMPLE.COM", "example.com", "user", "user", "repo", "repo")]
-        [InlineData("example.com", "example.com", "USER", "user", "repo", "repo")]
-        [InlineData("example.com", "example.com", "user", "user", "REPO", "repo")]
-        [InlineData("example.com", "example.com", "user", "USER", "repo", "repo")]
-        [InlineData("example.com", "example.com", "user", "user", "repo", "REPO")]
-        [InlineData("example.com", "example.com", "group/subgroup", "group/SUBGROUP", "repo", "repo")]
-        [InlineData("example.com", "example.com", "GROUP/subgroup", "group/subgroup", "repo", "repo")]
-        public void Equals_returns_true_is_all_properties_are_equal(string host1, string host2, string namespace1, string namespace2, string project1, string project2)
+        public IEnumerable<(GitLabProjectInfo left, GitLabProjectInfo right)> GetEqualTestCases()
         {
-            var instance1 = new GitLabProjectInfo(host1, namespace1, project1);
-            var instance2 = new GitLabProjectInfo(host2, namespace2, project2);
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("example.com", "user", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo")
+            );
 
-            Assert.Equal(instance1, instance2);
-            Assert.Equal(instance1.GetHashCode(), instance2.GetHashCode());
+            // Comparisons must be case-insensitive
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("EXAMPLE.COM", "user", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("EXAMPLE.COM", "group/subgroup", "repo")
+            );
+
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("example.com", "USER", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "GROUP/SUBGROUP", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("example.com", "user", "REPO")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "group/subgroup", "REPO")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "group/SUBGROUP", "repo")
+            );
         }
 
+        public IEnumerable<(GitLabProjectInfo left, GitLabProjectInfo right)> GetUnequalTestCases()
+        {
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("example.net", "user", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.net", "group/subgroup", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "user1", "repo"),
+                new GitLabProjectInfo("example.com", "user2", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group1/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "group2/subgroup", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo1"),
+                new GitLabProjectInfo("example.com", "user", "repo2")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo1"),
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo2")
+            );
+        }
     }
 }
