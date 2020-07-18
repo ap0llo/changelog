@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Grynwald.ChangeLog.Integrations.GitHub;
+using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 {
@@ -44,6 +46,36 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 new GitHubProjectInfo("example.com", "user", "repo1"),
                 new GitHubProjectInfo("example.com", "user", "repo2")
             );
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        public void Host_must_not_be_null_or_whitespace(string host)
+        {
+            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo(host, "user", "repo"));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        public void User_must_not_be_null_or_whitespace(string user)
+        {
+            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo("example.com", user, "repo"));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        public void Project_must_not_be_null_or_whitespace(string project)
+        {
+            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo("example.com", "user", project));
         }
     }
 }
