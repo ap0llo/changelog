@@ -59,8 +59,15 @@ namespace Grynwald.ChangeLog.Test
         [MemberData(nameof(EqualityTestCases))]
         public void Comparision_of_two_equal_instances_yield_expected_result(TTestee left, TTestee right)
         {
+            // instances must be equal to themselves
+            Assert.Equal(left, left);
+            Assert.Equal(right, right);
+
+            // hash code must be equal
             Assert.Equal(left.GetHashCode(), right.GetHashCode());
+
             Assert.Equal(left, right);
+            Assert.Equal(right, left);
             Assert.True(left.Equals(right));
             Assert.True(left.Equals((object)right));
             Assert.True(right.Equals(left));
@@ -90,6 +97,7 @@ namespace Grynwald.ChangeLog.Test
         public void Comparision_of_two_unequal_instances_yield_expected_result(TTestee left, TTestee right)
         {
             Assert.NotEqual(left, right);
+            Assert.NotEqual(right, left);
             Assert.False(left.Equals(right));
             Assert.False(left.Equals((object)right));
             Assert.False(right.Equals(left));
