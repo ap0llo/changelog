@@ -93,7 +93,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
             }
         }
 
-        public override bool Equals(object? obj) => Equals(obj as CommitMessage);
+        public override bool Equals(object? obj) => Equals(obj as CommitMessageHeader);
 
         public bool Equals([AllowNull] CommitMessageHeader other) =>
             other != null &&
