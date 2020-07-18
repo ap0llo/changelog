@@ -7,6 +7,7 @@
 
 # Variables
 $testResultsDirectory = ".\Build\TestResults"
+$coverageHistoryDirectory = ".\Build\CoverageHistory"
 
 # Main script
 Push-Location (Get-RepositoryRoot)
@@ -24,7 +25,7 @@ try {
     exec "dotnet test ./src/ChangeLog.sln --collect:`"XPlat Code Coverage`" "
     
     log "Generating code coverage report"
-    exec "dotnet tool run reportgenerator -- `"-reports:$testResultsDirectory\*\coverage.cobertura.xml`" `"-targetdir:$testResultsDirectory\Coverage`" `"-reporttypes:html`" "
+    exec "dotnet tool run reportgenerator -- `"-reports:$testResultsDirectory\*\coverage.cobertura.xml`" `"-targetdir:$testResultsDirectory\Coverage`" `"-reporttypes:html`" `"-historyDir:$coverageHistoryDirectory`" "
 
     log "Code Coverage report generated to $((Get-location).Path)\$testResultsDirectory\Coverage\index.html"
 }
