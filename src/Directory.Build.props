@@ -19,7 +19,7 @@
 	<PropertyGroup>
 		<LangVersion>8.0</LangVersion>
 		<Nullable>enable</Nullable>
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
 	<!-- Enable deterministic builds when building in Azure DevOps-->
