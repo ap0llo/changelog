@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Grynwald.ChangeLog.Integrations.GitLab;
+using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 {
@@ -49,6 +51,40 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
                 new GitLabProjectInfo("example.com", "group/SUBGROUP", "repo")
             );
+
+            // Leading and trailing slahes in namespace and project are ignored
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("example.com", "/user", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "/group/subgroup", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("example.com", "user/", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "group/subgroup/", "repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("example.com", "user", "/repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "group/subgroup", "/repo")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "user", "repo"),
+                new GitLabProjectInfo("example.com", "user", "repo/")
+            );
+            yield return (
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo"),
+                new GitLabProjectInfo("example.com", "group/subgroup", "repo/")
+            );
         }
 
         public IEnumerable<(GitLabProjectInfo left, GitLabProjectInfo right)> GetUnequalTestCases()
@@ -77,6 +113,37 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 new GitLabProjectInfo("example.com", "group/subgroup", "repo1"),
                 new GitLabProjectInfo("example.com", "group/subgroup", "repo2")
             );
+        }
+
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        public void Host_must_not_be_null_or_whitespace(string host)
+        {
+            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo(host, "user", "repo"));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        public void Namespace_must_not_be_null_or_whitespace(string @namespace)
+        {
+            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo("example.com", @namespace, "repo"));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("  ")]
+        [InlineData("\t")]
+        public void Project_must_not_be_null_or_whitespace(string project)
+        {
+            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo("example.com", "user", project));
         }
     }
 }
