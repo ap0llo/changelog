@@ -1,5 +1,5 @@
 #
-# This script creates a new release branch for the current version, increments 
+# This script creates a new release branch for the current version, increments
 # the version on master and pushes both master and the new release branch.
 #
 
@@ -34,14 +34,14 @@ function copySchema {
         $versionSpecificSchemaDirectory = "./schemas/configuration/v$majorMinor/"
         New-Item -ItemType Directory -Path $versionSpecificSchemaDirectory  | Out-Null
         Copy-Item -Path $latestSchemaPath  -Destination $versionSpecificSchemaDirectory
-                
+
         # Commit changes
         exec "git add `"$versionSpecificSchemaDirectory`""
         exec "git commit -m `"Add v$majorMinor configuration schema`" "
     }
     finally {
         Pop-Location
-    }    
+    }
 }
 
 
@@ -61,9 +61,9 @@ try {
     exec "dotnet tool restore"
 
     log "Creating release branch"
-    $nbgvOutput = exec "dotnet tool run nbgv -- prepare-release --format json" | ConvertFrom-Json 
+    $nbgvOutput = exec "dotnet tool run nbgv -- prepare-release --format json" | ConvertFrom-Json
     $releaseBranchName = $nbgvOutput.NewBranch.Name
-    
+
     if ($releaseBranchName) {
         log "Release branch name is '$releaseBranchName'"
     }
