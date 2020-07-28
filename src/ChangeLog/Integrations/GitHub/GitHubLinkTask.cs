@@ -73,27 +73,65 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
         private GitHubProjectInfo? GetProjectInfo()
         {
-            // TODO: Allow bypassing parsing by setting project info in the config file
+            var host = m_Configuration.Integrations.GitHub.Host;
+            var owner = m_Configuration.Integrations.GitHub.Owner;
+            var repo = m_Configuration.Integrations.GitHub.Repository;
 
-            var remoteName = m_Configuration.Integrations.GitHub.RemoteName;
-
-            var remote = m_Repository.Remotes.FirstOrDefault(r =>
-                StringComparer.OrdinalIgnoreCase.Equals(r.Name, remoteName)
-            );
-
-            if (remote == null)
+            // if all required properties were specified in the configuration, return project info
+            if (!String.IsNullOrWhiteSpace(host) && !String.IsNullOrWhiteSpace(owner) && !String.IsNullOrWhiteSpace(repo))
             {
-                m_Logger.LogWarning($"Remote '{remoteName}' does not exist in the git repository.");
-                return null;
+                m_Logger.LogDebug("Using GitHub project information from configuration");
+                return new GitHubProjectInfo(host, owner, repo);
             }
-            else if (GitHubUrlParser.TryParseRemoteUrl(remote.Url, out var projectInfo))
-            {
-                return projectInfo;
-            }
+            // otherwise try to determine the missing properties from the repository's remote url
             else
             {
-                return null;
+                // get configured remote
+                var remoteName = m_Configuration.Integrations.GitHub.RemoteName;
+                m_Logger.LogDebug(
+                    $"GitHub project information from configuration is incomplete. " +
+                    $"Tyring to get missing properties from git remote '{remoteName}'");
+
+                var remote = m_Repository.Remotes.FirstOrDefault(r =>
+                    StringComparer.OrdinalIgnoreCase.Equals(r.Name, remoteName)
+                );
+
+                if (remote == null)
+                {
+                    m_Logger.LogWarning($"Remote '{remoteName}' does not exist in the git repository.");
+                    return null;
+                }
+
+                // if remote url could be parsed, replace missing properties with value from remote url
+                if (GitHubUrlParser.TryParseRemoteUrl(remote.Url, out var parsedProjectInfo))
+                {
+                    if (String.IsNullOrWhiteSpace(host))
+                    {
+                        m_Logger.LogDebug($"Using GitHub host '{parsedProjectInfo.Host}' from remote url.");
+                        host = parsedProjectInfo.Host;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(owner))
+                    {
+                        m_Logger.LogDebug($"Using GitHub owner '{parsedProjectInfo.Owner}' from remote url.");
+                        owner = parsedProjectInfo.Owner;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(repo))
+                    {
+                        m_Logger.LogDebug($"Using GitHub repository '{parsedProjectInfo.Repository}' from remote url.");
+                        repo = parsedProjectInfo.Repository;
+                    }
+
+                    return new GitHubProjectInfo(host, owner, repo);
+                }
+                else
+                {
+                    m_Logger.LogDebug($"Failed to determine GitHub project information from remote url '{remote.Url}'");
+                }
             }
+
+            return null;
         }
 
         private async Task ProcessEntryAsync(GitHubProjectInfo projectInfo, IGitHubClient githubClient, ChangeLogEntry entry)
