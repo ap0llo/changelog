@@ -1,17 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitHub;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Test.Configuration;
+using Grynwald.ChangeLog.Test.Git;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Octokit;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 {
@@ -44,7 +49,62 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             }
         }
 
+
+        public class GitHubProjectInfoTestCase : IXunitSerializable
+        {
+            public string Description { get; private set; }
+
+            public IReadOnlyList<GitRemote> Remotes { get; set; } = Array.Empty<GitRemote>();
+
+            public ChangeLogConfiguration.GitHubIntegrationConfiguration Configuration { get; set; } = new ChangeLogConfiguration.GitHubIntegrationConfiguration();
+
+            public string ExpectedHost { get; set; } = "";
+
+            public string ExpectedOwner { get; set; } = "";
+
+            public string ExpectedRepository { get; set; } = "";
+
+
+            public GitHubProjectInfoTestCase(string description)
+            {
+                if (String.IsNullOrWhiteSpace(description))
+                    throw new ArgumentException("Value must not be null or whitespace", nameof(description));
+
+                Description = description;
+
+            }
+
+            [Obsolete("For use by Xunit only", true)]
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+            public GitHubProjectInfoTestCase()
+            { }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+
+
+            public void Deserialize(IXunitSerializationInfo info)
+            {
+                Description = info.GetValue<string>(nameof(Description));
+                Remotes = info.GetValue<XunitSerializableGitRemote[]>(nameof(Remotes)).Select(x => x.Value).ToArray();
+                Configuration = info.GetValue<XunitSerializableGitHubIntegrationConfiguration>(nameof(Configuration));
+                ExpectedHost = info.GetValue<string>(nameof(ExpectedHost));
+                ExpectedOwner = info.GetValue<string>(nameof(ExpectedOwner));
+                ExpectedRepository = info.GetValue<string>(nameof(ExpectedRepository));
+            }
+
+            public void Serialize(IXunitSerializationInfo info)
+            {
+                info.AddValue(nameof(Description), Description);
+                info.AddValue(nameof(Remotes), Remotes.Select(x => new XunitSerializableGitRemote(x)).ToArray());
+                info.AddValue(nameof(Configuration), new XunitSerializableGitHubIntegrationConfiguration(Configuration));
+                info.AddValue(nameof(ExpectedHost), ExpectedHost);
+                info.AddValue(nameof(ExpectedOwner), ExpectedOwner);
+                info.AddValue(nameof(ExpectedRepository), ExpectedRepository);
+            }
+            public override string ToString() => Description;
+        }
+
         private readonly ILogger<GitHubLinkTask> m_Logger = NullLogger<GitHubLinkTask>.Instance;
+        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
         private readonly Mock<IGitHubClient> m_GithubClientMock;
         private readonly Mock<IRepositoryCommitsClient> m_GitHubCommitsClientMock;
         private readonly Mock<IRepositoriesClient> m_GitHubRepositoriesClientMock;
@@ -79,6 +139,31 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             m_GitHubClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(m_GithubClientMock.Object);
         }
 
+
+        [Fact]
+        public void Logger_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(null!, m_DefaultConfiguration, Mock.Of<IGitRepository>(MockBehavior.Strict), Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+        }
+
+        [Fact]
+        public void Configuration_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, null!, Mock.Of<IGitRepository>(MockBehavior.Strict), Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+        }
+
+        [Fact]
+        public void GitRepository_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, m_DefaultConfiguration, null!, Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+        }
+
+        [Fact]
+        public void GitHubClientFactoty_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, m_DefaultConfiguration, Mock.Of<IGitRepository>(MockBehavior.Strict), null!));
+        }
+
         [Fact]
         public async Task Run_does_nothing_if_repository_does_not_have_remotes()
         {
@@ -86,7 +171,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(Enumerable.Empty<GitRemote>());
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
@@ -98,15 +183,20 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         }
 
         [Theory]
-        [InlineData("not-a-url")]
-        [InlineData("http://not-a-github-url.com")]
-        public async Task Run_does_nothing_if_remote_url_cannot_be_parsed(string url)
+        [InlineData("origin", "not-a-url")]
+        [InlineData("origin", "http://not-a-github-url.com")]
+        [InlineData("some-other-remote", "not-a-url")]
+        [InlineData("some-other-remote", "http://not-a-github-url.com")]
+        public async Task Run_does_nothing_if_remote_url_cannot_be_parsed(string remoteName, string url)
         {
             // ARRANGE
-            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", url) });
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            configuration.Integrations.GitHub.RemoteName = remoteName;
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote(remoteName, url) });
+
+            var sut = new GitHubLinkTask(m_Logger, configuration, repoMock.Object, m_GitHubClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
@@ -116,6 +206,256 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             Assert.Equal(ChangeLogTaskResult.Skipped, result);
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
+
+        public static IEnumerable<object[]> GitHubProjectInfoTestCases()
+        {
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("ProjectInfo from default remote")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/someUser/someRepo.git"),
+                        new GitRemote("upstream", "https://example.com/upstreamUser/upstreamRepo.git"),
+                        new GitRemote("some-other-remote", "https://example.com/someOtherOwner/someOtherRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "origin"
+                    },
+                    ExpectedHost = "github.com",
+                    ExpectedOwner = "someUser",
+                    ExpectedRepository = "someRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("ProjectInfo from custom remote name")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/someUser/someRepo.git"),
+                        new GitRemote("upstream", "https://example.com/upstreamUser/upstreamRepo.git"),
+                        new GitRemote("some-other-remote", "https://example.com/someOtherOwner/someOtherRepo.git"),
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "upstream"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedOwner = "upstreamUser",
+                    ExpectedRepository = "upstreamRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("ProjectInfo from configuration with no remotes")
+                {
+                    Remotes = Array.Empty<GitRemote>(),
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        Host = "example.com",
+                        Owner = "configOwner",
+                        Repository = "configRepo"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedOwner = "configOwner",
+                    ExpectedRepository = "configRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("ProjectInfo from configuration with remotes")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/remoteUrlOwner/remoteUrlRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Host = "example.com",
+                        Owner = "configOwner",
+                        Repository = "configRepo"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedOwner = "configOwner",
+                    ExpectedRepository = "configRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("Host from config, owner and repository from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/remoteUrlOwner/remoteUrlRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Host = "example.com",
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedOwner = "remoteUrlOwner",
+                    ExpectedRepository = "remoteUrlRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("Owner from config, host and repository from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/remoteUrlOwner/remoteUrlRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Owner = "configOwner"
+                    },
+                    ExpectedHost = "github.com",
+                    ExpectedOwner = "configOwner",
+                    ExpectedRepository = "remoteUrlRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("Repository from config, owner and host from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/remoteUrlOwner/remoteUrlRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Repository = "configRepo"
+                    },
+                    ExpectedHost = "github.com",
+                    ExpectedOwner = "remoteUrlOwner",
+                    ExpectedRepository = "configRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("Host and owner from config, repository from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/remoteUrlOwner/remoteUrlRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Host = "example.com",
+                        Owner = "configOwner"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedOwner = "configOwner",
+                    ExpectedRepository = "remoteUrlRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("Host and repository from config, owner from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/remoteUrlOwner/remoteUrlRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Host = "example.com",
+                        Repository = "configRepo"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedOwner = "remoteUrlOwner",
+                    ExpectedRepository = "configRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitHubProjectInfoTestCase("Repository and owner from config, host from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://github.com/remoteUrlOwner/remoteUrlRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitHubIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Owner = "configOwner",
+                        Repository = "configRepo"
+                    },
+                    ExpectedHost = "github.com",
+                    ExpectedOwner = "configOwner",
+                    ExpectedRepository = "configRepo"
+                }
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(GitHubProjectInfoTestCases))]
+        public async Task Run_parses_the_configured_remote_url(GitHubProjectInfoTestCase testCase)
+        {
+            //
+            // ARRANGE
+            //
+
+            // Prepare GitHub client
+            m_GitHubCommitsClientMock
+                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(
+                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
+                );
+
+            // Prepare Git Repository
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.Remotes).Returns(testCase.Remotes);
+
+            // Configure remote name to use
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            configuration.Integrations.GitHub = testCase.Configuration;
+
+            // Prepare changelog
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    version: "1.2.3",
+                    commitId: "abc123",
+                    entries: new []{ GetChangeLogEntry(commit: "abc123") })
+            };
+
+            var sut = new GitHubLinkTask(m_Logger, configuration, repoMock.Object, m_GitHubClientFactoryMock.Object);
+
+            //
+            // ACT 
+            //
+            var result = await sut.RunAsync(changeLog);
+
+            //
+            // ASSERT
+            //
+
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
+            // Ensure the web link was requested from the expected server and repository
+            m_GitHubClientFactoryMock.Verify(x => x.CreateClient(testCase.ExpectedHost), Times.Once);
+            m_GitHubCommitsClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            m_GitHubCommitsClientMock.Verify(x => x.Get(testCase.ExpectedOwner, testCase.ExpectedRepository, "abc123"), Times.Once);
+        }
+
 
         [Fact]
         public async Task Run_adds_a_link_to_all_commits_if_url_can_be_parsed()
@@ -130,7 +470,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -192,7 +532,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     Task.FromResult<Issue>(new TestGitHubIssue($"https://example.com/issue/{issueNumber}"))
                 );
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -263,7 +603,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 );
 
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -319,7 +659,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -376,7 +716,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
                 .ThrowsAsync(new NotFoundException("Not found", HttpStatusCode.NotFound));
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -420,7 +760,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", $"http://{hostName}/owner/repo.git") });
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             // ACT 
             var result = await sut.RunAsync(new ApplicationChangeLog());

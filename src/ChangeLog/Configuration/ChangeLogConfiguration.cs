@@ -29,6 +29,14 @@ namespace Grynwald.ChangeLog.Configuration
         public class GitHubIntegrationConfiguration
         {
             public string? AccessToken { get; set; } = null;
+
+            public string? RemoteName { get; set; } = null;
+
+            public string? Host { get; set; } = null;
+
+            public string? Owner { get; set; } = null;
+
+            public string? Repository { get; set; } = null;
         }
 
         public class GitLabIntegrationConfiguration

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Tasks;
@@ -22,39 +23,39 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
         };
 
         private readonly ILogger<GitHubLinkTask> m_Logger;
+        private readonly ChangeLogConfiguration m_Configuration;
         private readonly IGitRepository m_Repository;
         private readonly IGitHubClientFactory m_GitHubClientFactory;
-        private readonly GitHubProjectInfo? m_ProjectInfo;
 
 
-        public GitHubLinkTask(ILogger<GitHubLinkTask> logger, IGitRepository repository, IGitHubClientFactory gitHubClientFactory)
+        public GitHubLinkTask(ILogger<GitHubLinkTask> logger, ChangeLogConfiguration configuration, IGitRepository repository, IGitHubClientFactory gitHubClientFactory)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             m_GitHubClientFactory = gitHubClientFactory ?? throw new ArgumentNullException(nameof(gitHubClientFactory));
-
-            // TODO: Allow configuration of remote name
-            // TODO: Allow bypassing parsing by setting project info in the config file
-            var remote = m_Repository.Remotes.FirstOrDefault(r => StringComparer.OrdinalIgnoreCase.Equals(r.Name, "origin"));
-            if (remote != null && GitHubUrlParser.TryParseRemoteUrl(remote.Url, out var projectInfo))
-            {
-                m_ProjectInfo = projectInfo;
-            }
-            else
-            {
-                m_Logger.LogWarning("Failed to determine GitHub project name. Disabling GitHub integration");
-            }
         }
 
 
         public async Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog)
         {
-            if (m_ProjectInfo == null)
+            var projectInfo = GetProjectInfo();
+            if (projectInfo != null)
+            {
+                m_Logger.LogInformation($"Enabling GitHub inegration with settings: " +
+                    $"{nameof(projectInfo.Host)} = '{projectInfo.Host}', " +
+                    $"{nameof(projectInfo.Owner)} = '{projectInfo.Owner}', " +
+                    $"{nameof(projectInfo.Repository)} = '{projectInfo.Repository}'");
+            }
+            else
+            {
+                m_Logger.LogWarning("Failed to determine GitHub project name. Disabling GitHub integration");
                 return ChangeLogTaskResult.Skipped;
+            }
 
             m_Logger.LogInformation("Adding GitHub links to changelog");
 
-            var githubClient = m_GitHubClientFactory.CreateClient(m_ProjectInfo.Host);
+            var githubClient = m_GitHubClientFactory.CreateClient(projectInfo.Host);
 
             var rateLimit = await githubClient.Miscellaneous.GetRateLimits();
             m_Logger.LogDebug($"GitHub rate limit: {rateLimit.Rate.Remaining} requests of {rateLimit.Rate.Limit} remaining");
@@ -63,19 +64,81 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             {
                 foreach (var entry in versionChangeLog.AllEntries)
                 {
-                    await ProcessEntryAsync(githubClient, entry);
+                    await ProcessEntryAsync(projectInfo, githubClient, entry);
                 }
             }
 
             return ChangeLogTaskResult.Success;
         }
 
+        private GitHubProjectInfo? GetProjectInfo()
+        {
+            var host = m_Configuration.Integrations.GitHub.Host;
+            var owner = m_Configuration.Integrations.GitHub.Owner;
+            var repo = m_Configuration.Integrations.GitHub.Repository;
 
-        private async Task ProcessEntryAsync(IGitHubClient githubClient, ChangeLogEntry entry)
+            // if all required properties were specified in the configuration, return project info
+            if (!String.IsNullOrWhiteSpace(host) && !String.IsNullOrWhiteSpace(owner) && !String.IsNullOrWhiteSpace(repo))
+            {
+                m_Logger.LogDebug("Using GitHub project information from configuration");
+                return new GitHubProjectInfo(host, owner, repo);
+            }
+            // otherwise try to determine the missing properties from the repository's remote url
+            else
+            {
+                // get configured remote
+                var remoteName = m_Configuration.Integrations.GitHub.RemoteName;
+                m_Logger.LogDebug(
+                    $"GitHub project information from configuration is incomplete. " +
+                    $"Tyring to get missing properties from git remote '{remoteName}'");
+
+                var remote = m_Repository.Remotes.FirstOrDefault(r =>
+                    StringComparer.OrdinalIgnoreCase.Equals(r.Name, remoteName)
+                );
+
+                if (remote == null)
+                {
+                    m_Logger.LogWarning($"Remote '{remoteName}' does not exist in the git repository.");
+                    return null;
+                }
+
+                // if remote url could be parsed, replace missing properties with value from remote url
+                if (GitHubUrlParser.TryParseRemoteUrl(remote.Url, out var parsedProjectInfo))
+                {
+                    if (String.IsNullOrWhiteSpace(host))
+                    {
+                        m_Logger.LogDebug($"Using GitHub host '{parsedProjectInfo.Host}' from remote url.");
+                        host = parsedProjectInfo.Host;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(owner))
+                    {
+                        m_Logger.LogDebug($"Using GitHub owner '{parsedProjectInfo.Owner}' from remote url.");
+                        owner = parsedProjectInfo.Owner;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(repo))
+                    {
+                        m_Logger.LogDebug($"Using GitHub repository '{parsedProjectInfo.Repository}' from remote url.");
+                        repo = parsedProjectInfo.Repository;
+                    }
+
+                    return new GitHubProjectInfo(host, owner, repo);
+                }
+                else
+                {
+                    m_Logger.LogDebug($"Failed to determine GitHub project information from remote url '{remote.Url}'");
+                }
+            }
+
+            return null;
+        }
+
+        private async Task ProcessEntryAsync(GitHubProjectInfo projectInfo, IGitHubClient githubClient, ChangeLogEntry entry)
         {
             m_Logger.LogDebug($"Adding links to entry {entry.Commit}");
 
-            var webUri = await TryGetWebUriAsync(githubClient, entry.Commit);
+            var webUri = await TryGetWebUriAsync(projectInfo, githubClient, entry.Commit);
 
             if (webUri != null)
             {
@@ -88,7 +151,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
             foreach (var footer in entry.Footers)
             {
-                if (TryParseReference(footer.Value, out var owner, out var repo, out var id))
+                if (TryParseReference(projectInfo, footer.Value, out var owner, out var repo, out var id))
                 {
                     var uri = await TryGetWebUriAsync(githubClient, owner, repo, id);
                     if (uri != null)
@@ -103,16 +166,13 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             }
         }
 
-        private async Task<Uri?> TryGetWebUriAsync(IGitHubClient githubClient, GitId commitId)
+        private async Task<Uri?> TryGetWebUriAsync(GitHubProjectInfo projectInfo, IGitHubClient githubClient, GitId commitId)
         {
-            if (m_ProjectInfo == null)
-                throw new InvalidOperationException();
-
             m_Logger.LogDebug($"Getting web uri for commit '{commitId}'");
 
             try
             {
-                var commit = await githubClient.Repository.Commit.Get(m_ProjectInfo.Owner, m_ProjectInfo.Repository, commitId.Id);
+                var commit = await githubClient.Repository.Commit.Get(projectInfo.Owner, projectInfo.Repository, commitId.Id);
                 return new Uri(commit.HtmlUrl);
             }
             catch (Exception ex) when (ex is ApiValidationException || ex is NotFoundException)
@@ -121,12 +181,8 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             }
         }
 
-        private bool TryParseReference(string input, [NotNullWhen(true)] out string? owner, [NotNullWhen(true)] out string? repo, out int id)
+        private bool TryParseReference(GitHubProjectInfo projectInfo, string input, [NotNullWhen(true)] out string? owner, [NotNullWhen(true)] out string? repo, out int id)
         {
-            if (m_ProjectInfo == null)
-                throw new InvalidOperationException();
-
-
             input = input.Trim();
 
             // using every pattern, try to get a issue/PR id from the input text
@@ -143,10 +199,10 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                         repo = match.Groups["repo"].Value;
 
                         if (String.IsNullOrEmpty(owner))
-                            owner = m_ProjectInfo.Owner;
+                            owner = projectInfo.Owner;
 
                         if (String.IsNullOrEmpty(repo))
-                            repo = m_ProjectInfo.Repository;
+                            repo = projectInfo.Repository;
 
                         return true;
                     }
@@ -177,9 +233,6 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
         private async Task<Uri?> TryGetIssueWebUriAsync(IGitHubClient githubClient, string owner, string repo, int id)
         {
-            if (m_ProjectInfo == null)
-                throw new InvalidOperationException();
-
             try
             {
                 var issue = await githubClient.Issue.Get(owner, repo, id);
@@ -193,9 +246,6 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
         private async Task<Uri?> TryGetPullRequestWebUriAsync(IGitHubClient githubClient, string owner, string repo, int id)
         {
-            if (m_ProjectInfo == null)
-                throw new InvalidOperationException();
-
             try
             {
                 var pr = await githubClient.PullRequest.Get(owner, repo, id);
@@ -206,5 +256,6 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                 return null;
             }
         }
+
     }
 }

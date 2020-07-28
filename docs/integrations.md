@@ -1,8 +1,6 @@
 # Integrations
 
-While a changelog can be generated from any git repository, "Integrations"
-provide extended features for repositories hosted by any of the supported
-providers.
+While a change log can be generated from any git repository, *Integrations* provide extended features for repositories hosted by any of the supported providers.
 
 Currently supported providers are:
 
@@ -27,7 +25,7 @@ use the using the `changelog:integrations:provider` setting:
 Allowed values are:
 
 - `none` (default)
-- `GitHub` 
+- `GitHub`
 - `GitLab`
 
 ## GitHub
@@ -44,17 +42,51 @@ The GitHub integration provides the following features:
     different project, e.g. `ap0llo/changelog#123`
   - `GH-<id>`: Reference to an issue or pull request in the same project,
     e.g.`GH-123`
-  
+
 The GitHub integration should work with both github.com and GitHub Enterprise
 installations. However, it was not yet tested with GitHub Enterprise.
 
-The GitHub server address and the project name are read from the url of the
-*origin* remote in the local git repository.
+### Project information
 
-To access private repositories, an access token must be specified using the
-`--gitHubAccessToken` commandline parameter. Because GitHub has a quite low
-rate limit for unauthenticated API requests, it is recommended to use a access
-token even if you only access public repositories.
+By default, the GitHub server name, the repository owner and the repository name are read from the URL of the *origin* remote in the local git repository.
+
+ChangeLog assumes, the remote URL follows the default schema used by github.com:
+
+```txt
+https://github.com/example-owner/example-repo.git
+            ▲           ▲             ▲
+            │           │             │
+            │           │             └── Repository Name: "example-repo"
+            │           │
+            │           └── Repository Owner: "example-owner"
+            │
+            └── Host: "github.com"
+```
+
+Version 0.3 of ChangeLog introduced settings to customize this behaviour:
+
+- [GitHub Remote Name](./configuration.md#github-remote-name)
+  - Specifies the name of the git remote which's URL to parse.
+  - This allows automatically determining the GitHub project information when the remote is not `origin`
+- [GitHub Host](./configuration.md#github-host)
+  - Allows explicitly specifying the host to use.
+  - This setting takes precedence over the host name parsed from the remote URL.
+- [GitHub Repository Owner](./configuration.md#github-repository-owner)
+  - Allows explicitly specifying the repository owner to use.
+  - This setting takes precedence over the owner name parsed from the remote URL.
+- [GitHub Repository Name](./configuration.md#github-repository-name)
+  - Allows explicitly specifying the repository name to use.
+  - This setting takes precedence over the repository name parsed from the remote URL.
+
+When both Host, Repository Owner and Repository Name are set in the configuration, the remote URL is not parsed and the *GitHub Remote Name* setting has no effect.
+
+
+### Access Token
+
+To access private repositories, an access token must be specified.
+This can be achieved using either commandline parameters or environment variables. See [Configuration - GitHub Access token](./configuration.md#github-access-token) for details.
+
+Because GitHub has a quite low rate limit for unauthenticated API requests, it is recommended to use a access token even if you only access public repositories.
 
 ## GitLab
 
@@ -73,7 +105,7 @@ The GitLab integration provides the following features:
     - `!<id>`: Reference to a merge request in the same project, e.g. `!123`
     - `<project>!<id>`: Reference to a merge request in a different project in
       the same namespace, e.g. `<changelog>!123`
-    - `<user>/<project>!<id>`: Reference to a merge request in a different 
+    - `<user>/<project>!<id>`: Reference to a merge request in a different
       project and namespace, e.g. `ap0llo/changelog!123`
   - Milestones
     - `%<id>`: Reference to a milestone in the same project, e.g. `%123`
@@ -86,7 +118,7 @@ The GitLab integration should work with both gitlab.com and self-hosted
 GitLab installations. However, it was not yet tested with a self-hosted
 GitLab instance.
 
-The address of the GitLab server and the project name are read from the url
+The address of the GitLab server and the project name are read from the URL
 of the *origin* remote in the local git repository.
 
 To access private repositories, an access token must be specified using the

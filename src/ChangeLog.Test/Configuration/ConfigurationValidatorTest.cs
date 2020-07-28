@@ -6,6 +6,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Configuration
 {
+    /// <summary>
+    /// Tests for <see cref="ConfigurationValidator"/>
+    /// </summary>
     public class ConfigurationValidatorTest
     {
         private readonly ILogger<ConfigurationValidator> m_Logger = NullLogger<ConfigurationValidator>.Instance;
@@ -185,7 +188,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void GitHubAccessToken_can_be_null_or_empty(string accessToken)
+        public void GitHub_AccessToken_can_be_null_or_empty(string accessToken)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -203,7 +206,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [Theory]
         [InlineData("\t")]
         [InlineData("  ")]
-        public void GitHubAccessToken_must_not_be_whitespace(string accessToken)
+        public void GitHub_AccessToken_must_not_be_whitespace(string accessToken)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -221,7 +224,135 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void GitLabAccessToken_can_be_null_or_empty(string accessToken)
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitHub_RemoteName_must_not_be_null_or_whitespace(string remoteName)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitHub.RemoteName = remoteName;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GitHub_Host_can_be_null_or_empty(string host)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitHub.Host = host;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(valid);
+        }
+
+        [Theory]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitHub_Host_must_not_be_whitespace(string host)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitHub.Host = host;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GitHub_Owner_can_be_null_or_empty(string owner)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitHub.Owner = owner;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(valid);
+        }
+
+        [Theory]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitHub_Owner_must_not_be_whitespace(string owner)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitHub.Owner = owner;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GitHub_Repository_can_be_null_or_empty(string repository)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitHub.Repository = repository;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(valid);
+        }
+
+        [Theory]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitHub_Repository_must_not_be_whitespace(string repository)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitHub.Repository = repository;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GitLab_AccessToken_can_be_null_or_empty(string accessToken)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -239,7 +370,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [Theory]
         [InlineData("\t")]
         [InlineData("  ")]
-        public void GitLabAccessToken_must_not_be_whitespace(string accessToken)
+        public void GitLab_AccessToken_must_not_be_whitespace(string accessToken)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();

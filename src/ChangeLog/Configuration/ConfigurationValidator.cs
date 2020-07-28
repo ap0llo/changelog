@@ -42,7 +42,7 @@ namespace Grynwald.ChangeLog.Configuration
                 }
             }
 
-            // VersinRange must be valid (if set)
+            // VersionRange must be valid (if set)
             if (!String.IsNullOrEmpty(configuration.VersionRange))
             {
                 if (String.IsNullOrWhiteSpace(configuration.VersionRange))
@@ -88,6 +88,43 @@ namespace Grynwald.ChangeLog.Configuration
                 if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.AccessToken))
                 {
                     m_Logger.LogError("Invalid configuration: GitHub access token must not be whitespace");
+                    valid = false;
+                }
+            }
+
+            // GitHub remote name must not be null or whitespace
+            if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.RemoteName))
+            {
+                m_Logger.LogError("Invalid configuration: GitHub remote name must not be null or whitespace");
+                valid = false;
+            }
+
+            // GitHub host must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitHub.Host))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.Host))
+                {
+                    m_Logger.LogError("Invalid configuration: GitHub host must not be whitespace");
+                    valid = false;
+                }
+            }
+
+            // GitHub owner must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitHub.Owner))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.Owner))
+                {
+                    m_Logger.LogError("Invalid configuration: GitHub owner not be whitespace");
+                    valid = false;
+                }
+            }
+
+            // GitHub repository must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitHub.Repository))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.Repository))
+                {
+                    m_Logger.LogError("Invalid configuration: GitHub repository not be whitespace");
                     valid = false;
                 }
             }

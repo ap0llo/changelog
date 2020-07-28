@@ -12,19 +12,19 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
         public string Repository { get; }
 
 
-        public GitHubProjectInfo(string host, string user, string repository)
+        public GitHubProjectInfo(string host, string owner, string repository)
         {
             if (String.IsNullOrWhiteSpace(host))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(host));
 
-            if (String.IsNullOrWhiteSpace(user))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(user));
+            if (String.IsNullOrWhiteSpace(owner))
+                throw new ArgumentException("Value must not be null or whitespace", nameof(owner));
 
             if (String.IsNullOrWhiteSpace(repository))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(repository));
 
             Host = host;
-            Owner = user;
+            Owner = owner;
             Repository = repository;
         }
 
