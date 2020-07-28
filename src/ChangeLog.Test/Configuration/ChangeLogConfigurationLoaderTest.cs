@@ -121,10 +121,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.Integrations));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.IntegrationProvider.None, config.Integrations.Provider));
 
+            // GitHub Integration settings
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub));
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.AccessToken));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.AccessToken));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Host));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Owner));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Repository));
 
+            // GitLab Integration settings
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab));
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.AccessToken));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.AccessToken));
@@ -334,6 +339,96 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotNull(config.Integrations);
             Assert.NotNull(config.Integrations.GitHub);
             Assert.Equal("some-other-access-token", config.Integrations.GitHub.AccessToken);
+        }
+
+        [Theory]
+        [InlineData("example.com")]
+        public void GitHub_host_can_be_set_in_configuration_file(string host)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:github:host", host);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(host, config.Integrations.GitHub.Host);
+        }
+
+        [Theory]
+        [InlineData("example.com")]
+        public void GitHub_host_token_can_be_set_through_environment_variables(string host)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:github:host", host);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(host, config.Integrations.GitHub.Host);
+        }
+
+        [Theory]
+        [InlineData("someuser")]
+        public void GitHub_owner_can_be_set_in_configuration_file(string owner)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:github:owner", owner);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(owner, config.Integrations.GitHub.Owner);
+        }
+
+        [Theory]
+        [InlineData("someuser")]
+        public void GitHub_owner_token_can_be_set_through_environment_variables(string owner)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:github:owner", owner);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(owner, config.Integrations.GitHub.Owner);
+        }
+
+        [Theory]
+        [InlineData("some-repo")]
+        public void GitHub_repository_can_be_set_in_configuration_file(string repository)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:github:repository", repository);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(repository, config.Integrations.GitHub.Repository);
+        }
+
+        [Theory]
+        [InlineData("some-repo")]
+        public void GitHub_repository_token_can_be_set_through_environment_variables(string repository)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:github:repository", repository);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(repository, config.Integrations.GitHub.Repository);
         }
 
         [Theory]

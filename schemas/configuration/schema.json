@@ -165,6 +165,25 @@
                     "default": null,
                     "title": "GitHub Access Token",
                     "description": "Specifies the access token to use for accessing the GitHub API.\r\n❌ While it is possible to set the access token in the configuration file, the command line parameter or environment variable options should be used instead."
+                },
+                "host": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "title": "GitHub Host Name",
+                    "description": "Specifies the host name of the GitHub server to use. When no value is set, the host name will be read from the git repository's remote url."
+                },
+                "owner": {
+                    "type":["string", "null"],
+                    "default" : null,
+                    "title": "GitHub Project Owner Name",
+                    "description": "Specifies the name of the owner (user or organization) of the GitHub repository to use. When no value is set, the owner name will be read from the git repository's remote url."
+
+                },
+                "repository" : {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "title": "GitHub Repository Name",
+                    "description": "Specifies the name of the GitHub repository to use.  When no value is set, the owner name will be read from the git repository's remote url."
                 }
             },
             "additionalProperties": false

@@ -29,7 +29,10 @@
       "provider": "None",
 
       "github": {
-        "accessToken": null
+        "accessToken": null,
+        "host": null,
+        "owner": null,
+        "repository": null
       },
 
       "gitlab": {
