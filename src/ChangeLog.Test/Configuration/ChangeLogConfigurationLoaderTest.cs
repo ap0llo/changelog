@@ -104,20 +104,38 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config));
 
+            //
+            // Scope settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Scopes));
             yield return TestCase(config => Assert.Empty(config.Scopes));
 
+            //
+            // Tag Patterns setting
+            //
             yield return TestCase(config => Assert.NotNull(config.TagPatterns));
             yield return TestCase(config => Assert.Equal(new[] { "^(?<version>\\d+\\.\\d+\\.\\d+.*)", "^v(?<version>\\d+\\.\\d+\\.\\d+.*)" }, config.TagPatterns));
 
+            //
+            // Output path setting
+            //
             yield return TestCase(config => Assert.NotNull(config.OutputPath));
             yield return TestCase(config => Assert.NotEmpty(config.OutputPath));
 
+            //
+            // Repository Path setting
+            //
             yield return TestCase(config => Assert.Null(config.RepositoryPath));    // repository path must be provided through command line parameters
 
+            //
+            // Footer settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Footers));
             yield return TestCase(config => Assert.Empty(config.Footers));
 
+            //
+            // Integration Provider setting
+            //
             yield return TestCase(config => Assert.NotNull(config.Integrations));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.IntegrationProvider.None, config.Integrations.Provider));
 
@@ -144,21 +162,45 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // GitLab Integration settings
             //
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab));
+
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.AccessToken));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.AccessToken));
 
+            yield return TestCase(config => Assert.Equal("origin", config.Integrations.GitLab.RemoteName));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Host));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Host));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Namespace));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Namespace));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Project));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Project));
+
+            //
+            // Version Range setting
+            //
             yield return TestCase(config => Assert.NotNull(config.VersionRange));
             yield return TestCase(config => Assert.Empty(config.VersionRange));
 
+            //
+            // Current Version settting
+            //
             yield return TestCase(config => Assert.NotNull(config.CurrentVersion));
             yield return TestCase(config => Assert.Empty(config.CurrentVersion));
 
+            //
+            // Template settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Template));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.TemplateName.Default, config.Template.Name));
 
             yield return TestCase(config => Assert.NotNull(config.Template.Default));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Template.Default.MarkdownPreset));
 
+            //
+            // Entry Types settings
+            //
             yield return TestCase(config => Assert.NotNull(config.EntryTypes));
             yield return TestCase(config => Assert.Equal(2, config.EntryTypes.Length));
             yield return TestCase(config => Assert.Collection(config.EntryTypes,
@@ -166,6 +208,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 x => AssertEntryType(x, CommitType.BugFix, "Bug Fixes")
             ));
 
+            //
+            // Parser settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Parser));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.ParserMode.Loose, config.Parser.Mode));
         }
@@ -503,6 +548,129 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotNull(config.Integrations.GitLab);
             Assert.Equal(accessToken, config.Integrations.GitLab.AccessToken);
         }
+
+        [Theory]
+        [InlineData("upstream")]
+        public void GitLab_remote_name_can_be_set_in_configuration_file(string remoteName)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:gitlab:remoteName", remoteName);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(remoteName, config.Integrations.GitLab.RemoteName);
+        }
+
+        [Theory]
+        [InlineData("upstream")]
+        public void GitLab_remote_name_can_be_set_through_environment_variables(string remoteName)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:gitlab:remoteName", remoteName);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(remoteName, config.Integrations.GitLab.RemoteName);
+        }
+
+        [Theory]
+        [InlineData("example.com")]
+        public void GitLab_host_can_be_set_in_configuration_file(string host)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:gitlab:host", host);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(host, config.Integrations.GitLab.Host);
+        }
+
+        [Theory]
+        [InlineData("example.com")]
+        public void GitLab_host_can_be_set_through_environment_variables(string host)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:gitlab:host", host);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(host, config.Integrations.GitLab.Host);
+        }
+
+        [Theory]
+        [InlineData("someuser")]
+        [InlineData("group/subgroup")]
+        public void GitLab_namespace_can_be_set_in_configuration_file(string @namespace)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:gitlab:namespace", @namespace);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(@namespace, config.Integrations.GitLab.Namespace);
+        }
+
+        [Theory]
+        [InlineData("someuser")]
+        [InlineData("group/subgroup")]
+        public void GitLab_namespace_can_be_set_through_environment_variables(string @namespace)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:gitlab:namespace", @namespace);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(@namespace, config.Integrations.GitLab.Namespace);
+        }
+
+        [Theory]
+        [InlineData("some-repo")]
+        public void GitLab_project_can_be_set_in_configuration_file(string project)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:gitlab:project", project);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(project, config.Integrations.GitLab.Project);
+        }
+
+        [Theory]
+        [InlineData("some-repo")]
+        public void GitLab_project_can_be_set_through_environment_variables(string project)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:gitlab:project", project);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitLab);
+            Assert.Equal(project, config.Integrations.GitLab.Project);
+        }
+
 
         private class TestSettingsClass3
         {

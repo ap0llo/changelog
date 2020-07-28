@@ -42,6 +42,14 @@ namespace Grynwald.ChangeLog.Configuration
         public class GitLabIntegrationConfiguration
         {
             public string? AccessToken { get; set; } = null;
+
+            public string? RemoteName { get; set; } = null;
+
+            public string? Host { get; set; } = null;
+
+            public string? Namespace { get; set; } = null;
+
+            public string? Project { get; set; } = null;
         }
 
         public class IntegrationsConfiguration
