@@ -58,7 +58,7 @@ jobs:
   pool: Hosted VS2017
   steps:
 
-  # Install .NET Core SDK and runtime (version specified in the variables section)
+  # Install .NET Core SDK and runtime (version specified in global.json)
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
@@ -231,10 +231,9 @@ jobs:
   dependsOn:
   - Build_and_Test
   - Publish_to_NuGet_org
-  condition: succeeded('Publish_to_NuGet_org')
   steps:
 
-  # Install .NET Core SDK and runtime (version specified in the variables section)
+  # Install .NET Core SDK and runtime (version specified in global.json)
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
@@ -271,6 +270,8 @@ jobs:
 
   # Create GitHub release
   - task: GithubRelease@0
+    displayName: Create GitHub Release
+    condition: succeeded('Publish_to_NuGet_org')
     inputs:
       gitHubConnection: $(github_ServiceConnectionName)
       repositoryName: $(github_repositoryName)
@@ -283,3 +284,25 @@ jobs:
       releaseNotesFile: $(Build.ArtifactStagingDirectory)/$(artifactsName_ChangeLog)/changelog.md
       assets: $(Build.ArtifactStagingDirectory)/$(artifactsName_Binaries)/*.nupkg
       addChangeLog: false
+
+  # Create GitHub draft release
+  - task: GithubRelease@0
+    displayName: Create GitHub DRAFT Release
+    condition: |
+      and
+      (
+        succeeded('Build_and_Test'),
+        eq(variables['Build.SourceBranch'], 'refs/heads/master')
+      )
+    inputs:
+      gitHubConnection: $(github_ServiceConnectionName)
+      repositoryName: $(github_repositoryName)
+      action: 'edit'
+      target: '$(Build.SourceVersion)'
+      tagSource: manual
+      tag: vNext
+      title: v$(NBGV_NuGetPackageVersion)
+      releaseNotesSource: file
+      releaseNotesFile: $(Build.ArtifactStagingDirectory)/$(artifactsName_ChangeLog)/changelog.md
+      addChangeLog: false
+      isDraft: true
