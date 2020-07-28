@@ -6,6 +6,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Configuration
 {
+    /// <summary>
+    /// Tests for <see cref="ConfigurationValidator"/>
+    /// </summary>
     public class ConfigurationValidatorTest
     {
         private readonly ILogger<ConfigurationValidator> m_Logger = NullLogger<ConfigurationValidator>.Instance;
@@ -208,6 +211,26 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.AccessToken = accessToken;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitHub_RemoteName_must_not_be_null_or_whitespace(string remoteName)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitHub.RemoteName = remoteName;
 
             var sut = new ConfigurationValidator(m_Logger);
 

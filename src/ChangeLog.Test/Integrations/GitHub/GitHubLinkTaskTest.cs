@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitHub;
@@ -45,6 +46,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         }
 
         private readonly ILogger<GitHubLinkTask> m_Logger = NullLogger<GitHubLinkTask>.Instance;
+        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
         private readonly Mock<IGitHubClient> m_GithubClientMock;
         private readonly Mock<IRepositoryCommitsClient> m_GitHubCommitsClientMock;
         private readonly Mock<IRepositoriesClient> m_GitHubRepositoriesClientMock;
@@ -79,6 +81,31 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             m_GitHubClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(m_GithubClientMock.Object);
         }
 
+
+        [Fact]
+        public void Logger_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(null!, m_DefaultConfiguration, Mock.Of<IGitRepository>(MockBehavior.Strict), Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+        }
+
+        [Fact]
+        public void Configuration_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, null!, Mock.Of<IGitRepository>(MockBehavior.Strict), Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+        }
+
+        [Fact]
+        public void GitRepository_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, m_DefaultConfiguration, null!, Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+        }
+
+        [Fact]
+        public void GitHubClientFactoty_must_not_be_null()
+        {
+            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, m_DefaultConfiguration, Mock.Of<IGitRepository>(MockBehavior.Strict), null!));
+        }
+
         [Fact]
         public async Task Run_does_nothing_if_repository_does_not_have_remotes()
         {
@@ -86,7 +113,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(Enumerable.Empty<GitRemote>());
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
@@ -98,15 +125,20 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         }
 
         [Theory]
-        [InlineData("not-a-url")]
-        [InlineData("http://not-a-github-url.com")]
-        public async Task Run_does_nothing_if_remote_url_cannot_be_parsed(string url)
+        [InlineData("origin", "not-a-url")]
+        [InlineData("origin", "http://not-a-github-url.com")]
+        [InlineData("some-other-remote", "not-a-url")]
+        [InlineData("some-other-remote", "http://not-a-github-url.com")]
+        public async Task Run_does_nothing_if_remote_url_cannot_be_parsed(string remoteName, string url)
         {
             // ARRANGE
-            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", url) });
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            configuration.Integrations.GitHub.RemoteName = remoteName;
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote(remoteName, url) });
+
+            var sut = new GitHubLinkTask(m_Logger, configuration, repoMock.Object, m_GitHubClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
@@ -116,6 +148,65 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             Assert.Equal(ChangeLogTaskResult.Skipped, result);
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
+
+
+        [Theory]
+        [InlineData("origin", "github.com", "someUser", "someRepo")]
+        [InlineData("upstream", "github.com", "upstreamUser", "upstreamRepo")]
+        [InlineData("some-remote", "example.com", "exampleUser", "exampleRepo")]
+        public async Task Run_parses_the_configured_remote_url(string remoteName, string hostName, string owner, string repository)
+        {
+            //
+            // ARRANGE
+            //
+
+            // Prepare GitHub client
+            m_GitHubCommitsClientMock
+                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(
+                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
+                );
+
+            // Prepare Git Repository
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.Remotes).Returns(new[]
+            {
+                new GitRemote(remoteName, $"http://{hostName}/{owner}/{repository}.git"),
+                new GitRemote("some-other-remote", "https://github.com/someOtherUser/someOtherRepo")
+            });
+
+            // Configure remote name to use
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            configuration.Integrations.GitHub.RemoteName = remoteName;
+
+            // Prepare changelog
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    version: "1.2.3",
+                    commitId: "abc123",
+                    entries: new []{ GetChangeLogEntry(commit: "abc123") })
+            };
+
+            var sut = new GitHubLinkTask(m_Logger, configuration, repoMock.Object, m_GitHubClientFactoryMock.Object);
+
+            //
+            // ACT 
+            //
+            var result = await sut.RunAsync(changeLog);
+
+            //
+            // ASSERT
+            //
+
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
+            // Ensure the web link was requested from the expected server and repository
+            m_GitHubClientFactoryMock.Verify(x => x.CreateClient(hostName), Times.Once);
+            m_GitHubCommitsClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            m_GitHubCommitsClientMock.Verify(x => x.Get(owner, repository, "abc123"), Times.Once);
+        }
+
 
         [Fact]
         public async Task Run_adds_a_link_to_all_commits_if_url_can_be_parsed()
@@ -130,7 +221,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -192,7 +283,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     Task.FromResult<Issue>(new TestGitHubIssue($"https://example.com/issue/{issueNumber}"))
                 );
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -263,7 +354,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 );
 
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -319,7 +410,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
                 );
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -376,7 +467,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
                 .ThrowsAsync(new NotFoundException("Not found", HttpStatusCode.NotFound));
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -420,7 +511,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", $"http://{hostName}/owner/repo.git") });
 
-            var sut = new GitHubLinkTask(m_Logger, repoMock.Object, m_GitHubClientFactoryMock.Object);
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             // ACT 
             var result = await sut.RunAsync(new ApplicationChangeLog());

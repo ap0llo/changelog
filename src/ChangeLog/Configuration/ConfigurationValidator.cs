@@ -42,7 +42,7 @@ namespace Grynwald.ChangeLog.Configuration
                 }
             }
 
-            // VersinRange must be valid (if set)
+            // VersionRange must be valid (if set)
             if (!String.IsNullOrEmpty(configuration.VersionRange))
             {
                 if (String.IsNullOrWhiteSpace(configuration.VersionRange))
@@ -90,6 +90,13 @@ namespace Grynwald.ChangeLog.Configuration
                     m_Logger.LogError("Invalid configuration: GitHub access token must not be whitespace");
                     valid = false;
                 }
+            }
+
+            // GitHub remote name must not be null or whitespace
+            if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.RemoteName))
+            {
+                m_Logger.LogError("Invalid configuration: GitHub remote name must not be null or whitespace");
+                valid = false;
             }
 
             // GitLab Access token must not be whitespace (if set)
