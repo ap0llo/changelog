@@ -99,6 +99,36 @@ namespace Grynwald.ChangeLog.Configuration
                 valid = false;
             }
 
+            // GitHub host must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitHub.Host))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.Host))
+                {
+                    m_Logger.LogError("Invalid configuration: GitHub host must not be whitespace");
+                    valid = false;
+                }
+            }
+
+            // GitHub owner must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitHub.Owner))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.Owner))
+                {
+                    m_Logger.LogError("Invalid configuration: GitHub owner not be whitespace");
+                    valid = false;
+                }
+            }
+
+            // GitHub repository must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitHub.Repository))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.Repository))
+                {
+                    m_Logger.LogError("Invalid configuration: GitHub repository not be whitespace");
+                    valid = false;
+                }
+            }
+
             // GitLab Access token must not be whitespace (if set)
             if (!String.IsNullOrEmpty(configuration.Integrations.GitLab.AccessToken))
             {
