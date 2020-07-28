@@ -121,15 +121,28 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.Integrations));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.IntegrationProvider.None, config.Integrations.Provider));
 
+            //
             // GitHub Integration settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub));
+
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.AccessToken));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.AccessToken));
+
+            yield return TestCase(config => Assert.Equal("origin", config.Integrations.GitHub.RemoteName));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.Host));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Host));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.Owner));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Owner));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.Repository));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Repository));
 
+            //
             // GitLab Integration settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab));
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.AccessToken));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.AccessToken));
@@ -342,6 +355,36 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Theory]
+        [InlineData("upstream")]
+        public void GitHub_remote_name_can_be_set_in_configuration_file(string remoteName)
+        {
+            // ARRANGE
+            PrepareConfiguration("integrations:github:remoteName", remoteName);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(remoteName, config.Integrations.GitHub.RemoteName);
+        }
+
+        [Theory]
+        [InlineData("upstream")]
+        public void GitHub_remote_name_can_be_set_through_environment_variables(string remoteName)
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("integrations:github:remoteName", remoteName);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Integrations.GitHub);
+            Assert.Equal(remoteName, config.Integrations.GitHub.RemoteName);
+        }
+
+        [Theory]
         [InlineData("example.com")]
         public void GitHub_host_can_be_set_in_configuration_file(string host)
         {
@@ -358,7 +401,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
         [Theory]
         [InlineData("example.com")]
-        public void GitHub_host_token_can_be_set_through_environment_variables(string host)
+        public void GitHub_host_can_be_set_through_environment_variables(string host)
         {
             // ARRANGE
             SetConfigEnvironmentVariable("integrations:github:host", host);
@@ -388,7 +431,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
         [Theory]
         [InlineData("someuser")]
-        public void GitHub_owner_token_can_be_set_through_environment_variables(string owner)
+        public void GitHub_owner_can_be_set_through_environment_variables(string owner)
         {
             // ARRANGE
             SetConfigEnvironmentVariable("integrations:github:owner", owner);
@@ -418,7 +461,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
         [Theory]
         [InlineData("some-repo")]
-        public void GitHub_repository_token_can_be_set_through_environment_variables(string repository)
+        public void GitHub_repository_can_be_set_through_environment_variables(string repository)
         {
             // ARRANGE
             SetConfigEnvironmentVariable("integrations:github:repository", repository);

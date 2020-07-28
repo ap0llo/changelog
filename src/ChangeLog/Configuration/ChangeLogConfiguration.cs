@@ -30,6 +30,8 @@ namespace Grynwald.ChangeLog.Configuration
         {
             public string? AccessToken { get; set; } = null;
 
+            public string? RemoteName { get; set; } = null;
+
             public string? Host { get; set; } = null;
 
             public string? Owner { get; set; } = null;
