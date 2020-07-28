@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.Utilities.Configuration;
@@ -72,13 +73,31 @@ namespace Grynwald.ChangeLog.Test.Configuration
             File.WriteAllText(m_ConfigurationFilePath, json);
         }
 
+        private static void AssertEntryType(ChangeLogConfiguration.EntryTypeConfiguration x, CommitType expectedCommitType, string expectedDisplayName)
+        {
+            // Compares a instance of EntryTypeConfiguration to the specified values.
+            // This is a method instead of an inline lambda-expression, because a multi-line lambda
+            // cannot be converted to an expression-tree.
+            // However, expression trees are preferrable over lambdas because they make the actual assertion
+            // visible in the test output.
+            // (See https://twitter.com/bradwilson/status/1282374907670654976)
+
+            Assert.NotNull(x.Type);
+            Assert.NotEmpty(x.Type);
+            Assert.Equal(expectedCommitType, new CommitType(x.Type!));
+            Assert.Equal(expectedDisplayName, x.DisplayName);
+        }
+
 
         /// <summary>
         /// Gets the assertions that must be true for the default configuration
         /// </summary>
         public static IEnumerable<object[]> DefaultConfigAssertions()
         {
-            static object[] TestCase(Action<ChangeLogConfiguration> assertion)
+            // Use Expression<Action<ChangeLogConfiguration>> instead of Action<ChangeLogConfiguration>
+            // to make the assertion visible in the test-output
+            // (see https://twitter.com/bradwilson/status/1282374907670654976)
+            static object[] TestCase(Expression<Action<ChangeLogConfiguration>> assertion)
             {
                 return new[] { assertion };
             }
@@ -125,20 +144,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.EntryTypes));
             yield return TestCase(config => Assert.Equal(2, config.EntryTypes.Length));
             yield return TestCase(config => Assert.Collection(config.EntryTypes,
-                x =>
-                {
-                    Assert.NotNull(x.Type);
-                    Assert.NotEmpty(x.Type);
-                    Assert.Equal(CommitType.Feature, new CommitType(x.Type!));
-                    Assert.Equal("New Features", x.DisplayName);
-                },
-                x =>
-                {
-                    Assert.NotNull(x.Type);
-                    Assert.NotEmpty(x.Type);
-                    Assert.Equal(CommitType.BugFix, new CommitType(x.Type!));
-                    Assert.Equal("Bug Fixes", x.DisplayName);
-                }));
+                x => AssertEntryType(x, CommitType.Feature, "New Features"),
+                x => AssertEntryType(x, CommitType.BugFix, "Bug Fixes")
+            ));
 
             yield return TestCase(config => Assert.NotNull(config.Parser));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.ParserMode.Loose, config.Parser.Mode));
@@ -146,15 +154,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
         [Theory]
         [MemberData(nameof(DefaultConfigAssertions))]
-        public void Default_configuration_is_valid(Action<ChangeLogConfiguration> assertion)
+        public void Default_configuration_is_valid(Expression<Action<ChangeLogConfiguration>> assertion)
         {
             var defaultConfig = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            assertion(defaultConfig);
+            assertion.Compile()(defaultConfig);
         }
 
         [Theory]
         [MemberData(nameof(DefaultConfigAssertions))]
-        public void Empty_configuration_is_valid(Action<ChangeLogConfiguration> assertion)
+        public void Empty_configuration_is_valid(Expression<Action<ChangeLogConfiguration>> assertion)
         {
             // ARRANGE           
             File.WriteAllText(m_ConfigurationFilePath, "{ }");
@@ -163,15 +171,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
-            assertion(config);
+            assertion.Compile()(config);
         }
 
         [Theory]
         [MemberData(nameof(DefaultConfigAssertions))]
-        public void GetConfiguration_returns_default_configuration_if_config_file_does_not_exist(Action<ChangeLogConfiguration> assertion)
+        public void GetConfiguration_returns_default_configuration_if_config_file_does_not_exist(Expression<Action<ChangeLogConfiguration>> assertion)
         {
             var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-            assertion(config);
+            assertion.Compile()(config);
         }
 
         [Fact]
