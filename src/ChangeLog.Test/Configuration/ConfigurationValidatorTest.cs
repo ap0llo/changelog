@@ -384,5 +384,133 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ASSERT
             Assert.False(valid);
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitLab_RemoteName_must_not_be_null_or_whitespace(string remoteName)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitLab.RemoteName = remoteName;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GitLab_Host_can_be_null_or_empty(string host)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitLab.Host = host;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(valid);
+        }
+
+        [Theory]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitLab_Host_must_not_be_whitespace(string host)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitLab.Host = host;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GitLab_Namespace_can_be_null_or_empty(string @namespace)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitLab.Namespace = @namespace;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(valid);
+        }
+
+        [Theory]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitLab_Namespace_must_not_be_whitespace(string @namespace)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitLab.Namespace = @namespace;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GitLab_Project_can_be_null_or_empty(string project)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitLab.Project = project;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(valid);
+        }
+
+        [Theory]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void GitLab_Project_must_not_be_whitespace(string project)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitLab.Project = project;
+
+            var sut = new ConfigurationValidator(m_Logger);
+
+            // ACT 
+            var valid = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(valid);
+        }
     }
 }

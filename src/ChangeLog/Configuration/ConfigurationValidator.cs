@@ -114,7 +114,7 @@ namespace Grynwald.ChangeLog.Configuration
             {
                 if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.Owner))
                 {
-                    m_Logger.LogError("Invalid configuration: GitHub owner not be whitespace");
+                    m_Logger.LogError("Invalid configuration: GitHub owner must not be whitespace");
                     valid = false;
                 }
             }
@@ -124,7 +124,7 @@ namespace Grynwald.ChangeLog.Configuration
             {
                 if (String.IsNullOrWhiteSpace(configuration.Integrations.GitHub.Repository))
                 {
-                    m_Logger.LogError("Invalid configuration: GitHub repository not be whitespace");
+                    m_Logger.LogError("Invalid configuration: GitHub repository must not be whitespace");
                     valid = false;
                 }
             }
@@ -135,6 +135,43 @@ namespace Grynwald.ChangeLog.Configuration
                 if (String.IsNullOrWhiteSpace(configuration.Integrations.GitLab.AccessToken))
                 {
                     m_Logger.LogError("Invalid configuration: GitLab access token must not be whitespace");
+                    valid = false;
+                }
+            }
+
+            // GitLab remote name must not be null or whitespace
+            if (String.IsNullOrWhiteSpace(configuration.Integrations.GitLab.RemoteName))
+            {
+                m_Logger.LogError("Invalid configuration: GitLab remote name must not be null or whitespace");
+                valid = false;
+            }
+
+            // GitLab host must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitLab.Host))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitLab.Host))
+                {
+                    m_Logger.LogError("Invalid configuration: GitLab host must not be whitespace");
+                    valid = false;
+                }
+            }
+
+            // GitLab namespace must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitLab.Namespace))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitLab.Namespace))
+                {
+                    m_Logger.LogError("Invalid configuration: GitLab namespace must not be whitespace");
+                    valid = false;
+                }
+            }
+
+            // GitLab project must not be whitespace (if set)
+            if (!String.IsNullOrEmpty(configuration.Integrations.GitLab.Project))
+            {
+                if (String.IsNullOrWhiteSpace(configuration.Integrations.GitLab.Project))
+                {
+                    m_Logger.LogError("Invalid configuration: GitLab project must not not be whitespace");
                     valid = false;
                 }
             }
