@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
-using CommandLine;
 using FluentValidation;
+using Grynwald.ChangeLog.Validation;
 using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog
@@ -14,12 +13,7 @@ namespace Grynwald.ChangeLog
     {
         public CommandLineParametersValidator()
         {
-            ValidatorOptions.Global.DisplayNameResolver = (type, member, expression) =>
-            {
-                return (member is PropertyInfo property)
-                    ? property?.GetCustomAttribute<OptionAttribute>()?.LongName
-                    : null;
-            };
+            ValidatorOptions.Global.UseCustomDisplayNameResolver();
 
             RuleFor(x => x.RepositoryPath).NotEmpty();
             RuleFor(x => x.RepositoryPath)

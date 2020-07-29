@@ -91,9 +91,15 @@ namespace Grynwald.ChangeLog
                 using (var container = containerBuilder.Build())
                 {
                     var configurationValidator = container.Resolve<ConfigurationValidator>();
+                    var validationResult = configurationValidator.Validate(configuration);
 
-                    if (!configurationValidator.Validate(configuration))
+                    if (!validationResult.IsValid)
                     {
+                        foreach (var error in validationResult.Errors)
+                        {
+                            logger.LogError($"Invalid configuration: {error.ErrorMessage}");
+                        }
+
                         logger.LogCritical($"Validation of configuration failed");
                         return 1;
                     }

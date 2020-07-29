@@ -11,34 +11,24 @@ namespace Grynwald.ChangeLog.Test.Configuration
     /// </summary>
     public class ConfigurationValidatorTest
     {
-        private readonly ILogger<ConfigurationValidator> m_Logger = NullLogger<ConfigurationValidator>.Instance;
-
-
-        [Fact]
-        public void Constructor_checks_arguments_for_null()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ConfigurationValidator(null!));
-        }
-
         [Fact]
         public void Validate_checks_arguments_for_null()
         {
-            var sut = new ConfigurationValidator(m_Logger);
-            Assert.Throws<ArgumentNullException>(() => sut.Validate(null!));
+            var sut = new ConfigurationValidator();
+            Assert.Throws<ArgumentNullException>(() => sut.Validate((ChangeLogConfiguration)null!));
         }
-
 
         [Fact]
         public void No_errors_are_found_in_default_configuration()
         {
             // ARRANGE
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(ChangeLogConfigurationLoader.GetDefaultConfiguration());
+            var result = sut.Validate(ChangeLogConfigurationLoader.GetDefaultConfiguration());
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
         }
 
         [Theory]
@@ -55,13 +45,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 new ChangeLogConfiguration.ScopeConfiguration(){ Name = scopeName, DisplayName = "Display Name"}
             };
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'Scope Name'", error.ErrorMessage);
         }
 
         [Theory]
@@ -78,13 +70,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 new ChangeLogConfiguration.FooterConfiguration(){ Name = footerName, DisplayName = "Display Name"}
             };
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'Footer Name'", error.ErrorMessage);
         }
 
         [Theory]
@@ -96,13 +90,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.VersionRange = versionRange;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -115,13 +110,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.VersionRange = versionRange;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            Assert.All(result.Errors, error => Assert.Contains("'Version Range'", error.ErrorMessage));
         }
 
         [Theory]
@@ -133,13 +129,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.CurrentVersion = currentVersion;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -152,13 +149,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.CurrentVersion = currentVersion;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            Assert.All(result.Errors, error => Assert.Contains("'Current Version'", error.ErrorMessage));
         }
 
         [Theory]
@@ -175,15 +173,16 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 new ChangeLogConfiguration.EntryTypeConfiguration(){ Type = entryType, DisplayName = "Display Name"}
             };
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'Entry Type'", error.ErrorMessage);
         }
-
 
         [Theory]
         [InlineData("")]
@@ -194,13 +193,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.AccessToken = accessToken;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -212,13 +212,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.AccessToken = accessToken;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitHub Access Token'", error.ErrorMessage);
         }
 
         [Theory]
@@ -232,13 +234,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.RemoteName = remoteName;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitHub Remote Name'", error.ErrorMessage);
         }
 
         [Theory]
@@ -250,13 +254,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.Host = host;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -268,13 +273,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.Host = host;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitHub Host'", error.ErrorMessage);
         }
 
         [Theory]
@@ -286,13 +293,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.Owner = owner;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -304,13 +312,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.Owner = owner;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitHub Owner Name'", error.ErrorMessage);
         }
 
         [Theory]
@@ -322,13 +332,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.Repository = repository;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -340,13 +351,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitHub.Repository = repository;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitHub Repository Name'", error.ErrorMessage);
         }
 
         [Theory]
@@ -358,13 +371,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.AccessToken = accessToken;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -376,13 +390,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.AccessToken = accessToken;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitLab Access Token'", error.ErrorMessage);
         }
 
         [Theory]
@@ -396,13 +412,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.RemoteName = remoteName;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitLab Remote Name'", error.ErrorMessage);
         }
 
         [Theory]
@@ -414,13 +432,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.Host = host;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -432,13 +451,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.Host = host;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitLab Host'", error.ErrorMessage);
         }
 
         [Theory]
@@ -450,13 +471,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.Namespace = @namespace;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -468,13 +490,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.Namespace = @namespace;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitLab Namespace'", error.ErrorMessage);
         }
 
         [Theory]
@@ -486,13 +510,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.Project = project;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.True(valid);
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
         }
 
         [Theory]
@@ -504,13 +529,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab.Project = project;
 
-            var sut = new ConfigurationValidator(m_Logger);
+            var sut = new ConfigurationValidator();
 
             // ACT 
-            var valid = sut.Validate(config);
+            var result = sut.Validate(config);
 
             // ASSERT
-            Assert.False(valid);
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'GitLab Project Name'", error.ErrorMessage);
         }
     }
 }
