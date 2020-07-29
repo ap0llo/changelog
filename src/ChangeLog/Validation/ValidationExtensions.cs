@@ -70,6 +70,22 @@ namespace Grynwald.ChangeLog.Validation
         }
 
         /// <summary>
+        /// Disables the rule if the value is <c>null</c> or whitespace.
+        /// </summary>
+        public static IRuleBuilderOptions<T, string?> UnlessNullOrWhiteSpace<T>(this IRuleBuilderOptions<T, string?> builder)
+        {
+            // cast to internal type of FluentValidation to get access to the property being validated
+            // (probably not a good idea)
+            var internalBuilder = (RuleBuilder<T, string>)builder;
+
+            return builder.When(x =>
+            {
+                var value = (string)internalBuilder.Rule.PropertyFunc(x);
+                return !String.IsNullOrWhiteSpace(value);
+            });
+        }
+
+        /// <summary>
         /// Defines a validator that will fail if the value cannot be parsed as <see cref="VersionRange"/>.
         /// </summary>
         public static IRuleBuilderOptions<T, string?> IsVersionRange<T>(this IRuleBuilder<T, string?> ruleBuilder)
