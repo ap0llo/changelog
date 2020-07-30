@@ -377,7 +377,7 @@ Enable the GitHub integration provider:
 ### GitHub Integration
 
 The *GitHub Integration* settings control the behaviour of the GitHub integration.
-See also [Integrations - GitHub](./integrations.md#github).
+See also [Integrations - GitHub](./integrations/github.md).
 
 - [GitHub Access Token](#github-access-token)
 - [GitHub Remote Name](#github-remote-name)
@@ -452,7 +452,7 @@ By default, the URL of the `origin` remote is used, but the name of the remote c
 Note that this setting is not used, when [host](#github-host), [repository owner](#github-repository-owner) and [repository name](#github-repository-name) are set explicitly.
 When the repository information is specified in the configuration partially, ChangeLog will attempt to add the missing information from the remote URL.
 
-For details on how the remote URL is parsed, see [Integrations - GitHub](./integrations.md#github).
+For details on how the remote URL is parsed, see [Integrations - GitHub](./integrations/github.md).
 
 #### GitHub Host
 
@@ -546,7 +546,7 @@ When no repository name is specified (default behaviour), ChangeLog will attempt
 ### GitLab Integration
 
 The *GitLab Integration* settings control the behaviour of the GitLab integration.
-See also [Integrations - GitLab](./integrations.md#gitlab).
+See also [Integrations - GitLab](./integrations/gitlab.md).
 
 - [GitLab Access Token](#gitlab-access-token)
 - [GitLab Remote Name](#gitlab-remote-name)
@@ -622,7 +622,7 @@ By default, the URL of the `origin` remote is used, but the name of the remote c
 Note that this setting is not used, when [host](#gitlab-host), [namespace](#gitlab-namespace) and [project name](#gitlab-project-name) are set explicitly.
 When the repository information is specified in the configuration partially, ChangeLog will attempt to add the missing information from the remote URL.
 
-For details on how the remote URL is parsed, see [Integrations - GitLab](./integrations.md#gitlab).
+For details on how the remote URL is parsed, see [Integrations - GitLab](./integrations/gitlab.md).
 
 #### GitLab Host
 

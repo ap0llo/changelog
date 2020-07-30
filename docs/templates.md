@@ -25,7 +25,7 @@ The GitHub Release Template renders a change log suited to be used as the descri
 This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](./configuration.md#version-range).
 Compared to the default template, the GitHub Release template omits the "Change Log" and version headings and adjusts the heading levels so the changelog can is properly rendered in the Releases view of the GitHub web interface.
 
-**Note:** The GitHub Release template is independent of the [GitHub integration](./integrations.md#github) for links.
+**Note:** The GitHub Release template is independent of the [GitHub integration](./integrations/github.md) for links.
 Both features can be used independently of each other.
 
 ## GitLab Release Template
@@ -35,7 +35,7 @@ The GitLab Release Template renders a change log suited to be used as the descri
 This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](./configuration.md#version-range).
 Compared to the default template, the GitLab Release template omits the "Change Log" and version headings and adjusts the heading levels so the changelog can is properly rendered in the Releases view of the GitLab web interface.
 
-**Note:** The GitLab Release template is independent of the [GitLab integration](./integrations.md#gitlab) for links.
+**Note:** The GitLab Release template is independent of the [GitLab integration](./integrations/gitlab.md) for links.
 Both features can be used independently of each other.
 
 ## Version support
