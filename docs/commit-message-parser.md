@@ -9,7 +9,7 @@ The parser has two *modes*:
 - *Loose* mode is more lenient and allows minor deviations from the specification.
 
 By default, the *Loose* mode is used.
-For documentation on how to change the parser mode, see [Configuration](./configuration.md#parser-mode).
+For documentation on how to change the parser mode, see [Configuration](./configuration/settings/parser-mode.md).
 
 ## Differences between *Strict* and *Loose* Parser modes
 
@@ -88,4 +88,4 @@ Description of the feature
 ## See Also
 
 - [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0)
-- [Configuration - Parser Mode](./configuration.md#parser-mode)
+- [Configuration - Parser Mode Setting](./configuration/settings/parser-mode.md)

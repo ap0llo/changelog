@@ -3,15 +3,11 @@
 The GitHub integration provides the following features:
 
 - Adds link to the GitHub web site to the commit for every changelog entry
-- Adds link to the GitHub web site to issues and pull requests if they
-  are referenced in footers.<br>
+- Adds link to the GitHub web site to issues and pull requests if they are referenced in footers.<br>
   The following types of references are recognized:
-  - `#<id>`: Reference to an issue or pull request in the same project,
-    e.g. `#123`
-  - `<user>/<project>#<id>`: Reference to an issue or pull request in a
-    different project, e.g. `ap0llo/changelog#123`
-  - `GH-<id>`: Reference to an issue or pull request in the same project,
-    e.g.`GH-123`
+  - `#<id>`: Reference to an issue or pull request in the same project, e.g. `#123`
+  - `<user>/<project>#<id>`: Reference to an issue or pull request in a different project, e.g. `ap0llo/changelog#123`
+  - `GH-<id>`: Reference to an issue or pull request in the same project, e.g.`GH-123`
 
 The GitHub integration should work with both github.com and GitHub Enterprise
 installations. However, it was not yet tested with GitHub Enterprise.
@@ -36,16 +32,16 @@ https://github.com/example-owner/example-repo.git
 
 Version 0.3 of ChangeLog introduced settings to customize this behaviour:
 
-- [GitHub Remote Name](../configuration.md#github-remote-name)
+- [GitHub Remote Name](../configuration/settings/github-integration.md#github-remote-name)
   - Specifies the name of the git remote which's URL to parse.
   - This allows automatically determining the GitHub project information when the remote is not `origin`
-- [GitHub Host](../configuration.md#github-host)
+- [GitHub Host](../configuration/settings/github-integration.md#github-host)
   - Allows explicitly specifying the host to use.
   - This setting takes precedence over the host name parsed from the remote URL.
-- [GitHub Repository Owner](../configuration.md#github-repository-owner)
+- [GitHub Repository Owner](../configuration/settings/github-integration.md#github-repository-owner)
   - Allows explicitly specifying the repository owner to use.
   - This setting takes precedence over the owner name parsed from the remote URL.
-- [GitHub Repository Name](../configuration.md#github-repository-name)
+- [GitHub Repository Name](../configuration/settings/github-integration.md#github-repository-name)
   - Allows explicitly specifying the repository name to use.
   - This setting takes precedence over the repository name parsed from the remote URL.
 
@@ -54,7 +50,7 @@ When both host, repository owner and repository name settings are specified, the
 ## Access Token
 
 To access private repositories, an access token must be specified.
-This can be achieved using either commandline parameters or environment variables. See [Configuration - GitHub Access token](../configuration.md#github-access-token) for details.
+This can be achieved using either commandline parameters or environment variables. See [Configuration - GitHub Access token](../configuration/settings/github-integration.md#github-access-token) for details.
 
 Because GitHub has a quite low rate limit for unauthenticated API requests, it is recommended to use a access token even if you only access public repositories.
 
@@ -62,3 +58,4 @@ Because GitHub has a quite low rate limit for unauthenticated API requests, it i
 
 - [Integrations](../integrations.md)
 - [Configuration](../configuration.md)
+- [GitHub Integration Configuration](../configuration/settings/github-integration.md)

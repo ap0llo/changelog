@@ -2,7 +2,7 @@
 
 Template allow customizing the generated changelog and generate a changelog in different formats of for different environments.
 
-The template to use can be configured using the `changelog:template:name` setting (see [Configuration](./configuration.md#template-name) for details).
+The template to use can be configured using the `changelog:template:name` setting (see [Configuration](./configuration/settings/template-name.md) for details).
 
 The following templates are supported:
 
@@ -16,13 +16,13 @@ The default template renders the change log to a Markdown file.
 It is the most generic template and should work in most Markdown implementations.
 
 The default template supports customizing serialization settings for the generated markdown.
-For details, see [Markdown Preset (Default Template)](./configuration.md#markdown-preset-default-template).
+For details, see [Default Template Settings](./configuration/settings/default-template.md).
 
 ## GitHub Release Template
 
 The GitHub Release Template renders a change log suited to be used as the description of a [GitHub Release](https://help.github.com/en/github/administering-a-repository/about-releases).
 
-This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](./configuration.md#version-range).
+This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](./configuration/settings/version-range.md).
 Compared to the default template, the GitHub Release template omits the "Change Log" and version headings and adjusts the heading levels so the changelog can is properly rendered in the Releases view of the GitHub web interface.
 
 **Note:** The GitHub Release template is independent of the [GitHub integration](./integrations/github.md) for links.
@@ -32,7 +32,7 @@ Both features can be used independently of each other.
 
 The GitLab Release Template renders a change log suited to be used as the description of a [GitLab Release](https://docs.gitlab.com/ee/user/project/releases/).
 
-This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](./configuration.md#version-range).
+This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](./configuration/settings/version-range.md).
 Compared to the default template, the GitLab Release template omits the "Change Log" and version headings and adjusts the heading levels so the changelog can is properly rendered in the Releases view of the GitLab web interface.
 
 **Note:** The GitLab Release template is independent of the [GitLab integration](./integrations/gitlab.md) for links.

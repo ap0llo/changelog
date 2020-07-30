@@ -30,6 +30,6 @@ Allowed values are:
 
 ## See Also
 
-- [Configuration](./configuration.md)
+- [Configuration Overview](./configuration.md)
 - [GitHub Integration](./integrations/github.md)
 - [GitLab Integration](./integrations/gitlab.md)
