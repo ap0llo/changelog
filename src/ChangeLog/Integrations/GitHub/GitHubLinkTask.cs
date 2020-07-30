@@ -42,7 +42,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             var projectInfo = GetProjectInfo();
             if (projectInfo != null)
             {
-                m_Logger.LogInformation($"Enabling GitHub inegration with settings: " +
+                m_Logger.LogInformation($"Enabling GitHub integration with settings: " +
                     $"{nameof(projectInfo.Host)} = '{projectInfo.Host}', " +
                     $"{nameof(projectInfo.Owner)} = '{projectInfo.Owner}', " +
                     $"{nameof(projectInfo.Repository)} = '{projectInfo.Repository}'");
@@ -90,7 +90,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                 var remoteName = m_Configuration.Integrations.GitHub.RemoteName;
                 m_Logger.LogDebug(
                     $"GitHub project information from configuration is incomplete. " +
-                    $"Tyring to get missing properties from git remote '{remoteName}'");
+                    $"Trying to get missing properties from git remote '{remoteName}'");
 
                 var remote = m_Repository.Remotes.FirstOrDefault(r =>
                     StringComparer.OrdinalIgnoreCase.Equals(r.Name, remoteName)
