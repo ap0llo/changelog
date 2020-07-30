@@ -78,7 +78,12 @@ For example setting `key:subkey` to `value` would need to be specified in the co
   - [GitHub Host](#github-host)
   - [GitHub Repository Owner](#github-repository-owner)
   - [GitHub Repository Name](#github-repository-name)
-- [GitLab Access Token](#gitlab-access-token)
+- [GitLab Integration](#gitlab-integration)
+   - [GitLab Access Token](#gitlab-access-token)
+   - [GitLab Remote Name](#gitlab-remote-name)
+   - [GitLab Host](#gitlab-host)
+   - [GitLab Namespace](#gitlab-namespace)
+   - [GitLab Project Name](#gitlab-project-name)
 - [Version Range](#version-range)
 - [Current Version](#current-version)
 - [Template Name](#template-name)
@@ -538,8 +543,19 @@ The *GitHub Repository Name* setting specifies the name of the GitHub repository
 
 When no repository name is specified (default behaviour), ChangeLog will attempt to determine the repository name from the git repository's remote URL (see also [*GitHub Remote Name* setting](#github-remote-name)).
 
+### GitLab Integration
 
-### GitLab Access Token
+The *GitLab Integration* settings control the behaviour of the GitLab integration.
+See also [Integrations - GitLab](./integrations.md#gitlab).
+
+- [GitLab Access Token](#gitlab-access-token)
+- [GitLab Remote Name](#gitlab-remote-name)
+- [GitLab Host](#gitlab-host)
+- [GitLab Namespace](#gitlab-namespace)
+- [GitLab Project Name](#gitlab-project-name)
+
+
+#### GitLab Access Token
 
 <table>
     <tr>
@@ -570,6 +586,131 @@ accessing the GitLab  API when the GitLab integration is enabled.
 **❌ While it is possible to set the access token in the configuration file**
 **you should use the command line parameter or environment variable options**
 **instead.**
+
+#### GitLab Remote Name
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:integrations:gitlab:remoteName</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__REMOTENAME</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td><code>origin</code></td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.3+</td>
+    </tr>
+</table>
+
+The GitLab integration requires information about the repository on GitLab in order to function.
+This information includes the host name of the GitLab server, the namespace of the project (GitLab user or group/subgroup) as well as the name of the project.
+
+When these settings are not explicitly set in the configuration file, ChangeLog will parse the remote URL of the git repository to determine the project information.
+
+By default, the URL of the `origin` remote is used, but the name of the remote can be adjusted using the *GitLab Remote Name* setting.
+
+Note that this setting is not used, when [host](#gitlab-host), [namespace](#gitlab-namespace) and [project name](#gitlab-project-name) are set explicitly.
+When the repository information is specified in the configuration partially, ChangeLog will attempt to add the missing information from the remote URL.
+
+For details on how the remote URL is parsed, see [Integrations - GitLab](./integrations.md#gitlab).
+
+#### GitLab Host
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:integrations:gitlab:host</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__HOST</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.3+</td>
+    </tr>
+</table>
+
+The *GitLab Host* setting specifies the host-name of the GitLab server to communicate with.
+
+When no host name is specified (default behaviour), ChangeLog will attempt to determine the host name from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
+
+#### GitLab Namespace
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:integrations:gitlab:namespace</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__NAMESPACE</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.3+</td>
+    </tr>
+</table>
+
+The *GitLab Namespace* setting specifies the namespace of the GitLab project to use.
+This can be a GitLab user name or the name of a group/subgroup.
+
+When no namespace is specified (default behaviour), ChangeLog will attempt to determine the namespace from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
+
+#### GitLab Project Name
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:integrations:gitlab:project</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__PROJECT</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.3+</td>
+    </tr>
+</table>
+
+The *GitLab Project Name* setting specifies the name of the GitLab project to use.
+
+When no project name is specified (default behaviour), ChangeLog will attempt to determine the name from the git repository's remote URL (see also [*GitLab Remote Name* setting](#github-remote-name)).
 
 ### Version Range
 
