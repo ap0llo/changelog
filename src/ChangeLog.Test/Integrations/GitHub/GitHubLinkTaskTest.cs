@@ -100,6 +100,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 info.AddValue(nameof(ExpectedOwner), ExpectedOwner);
                 info.AddValue(nameof(ExpectedRepository), ExpectedRepository);
             }
+
             public override string ToString() => Description;
         }
 
@@ -407,7 +408,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
         [Theory]
         [MemberData(nameof(GitHubProjectInfoTestCases))]
-        public async Task Run_parses_the_configured_remote_url(GitHubProjectInfoTestCase testCase)
+        public async Task Run_uses_the_expected_remote_url(GitHubProjectInfoTestCase testCase)
         {
             //
             // ARRANGE
@@ -416,8 +417,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             // Prepare GitHub client
             m_GitHubCommitsClientMock
                 .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(
-                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
+                .ReturnsAsync(
+                    (string owner, string repo, string sha) => new TestGitHubCommit($"https://example.com/{sha}")
                 );
 
             // Prepare Git Repository

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GitLabApiClient;
 using GitLabApiClient.Models.MergeRequests.Requests;
 using GitLabApiClient.Models.Milestones.Responses;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Tasks;
@@ -28,46 +29,46 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
 
         private readonly ILogger<GitLabLinkTask> m_Logger;
+        private readonly ChangeLogConfiguration m_Configuration;
         private readonly IGitRepository m_Repository;
         private readonly IGitLabClientFactory m_ClientFactory;
-        private readonly GitLabProjectInfo? m_ProjectInfo;
 
 
-        public GitLabLinkTask(ILogger<GitLabLinkTask> logger, IGitRepository repository, IGitLabClientFactory clientFactory)
+        public GitLabLinkTask(ILogger<GitLabLinkTask> logger, ChangeLogConfiguration configuration, IGitRepository repository, IGitLabClientFactory clientFactory)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             m_ClientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
-
-            // TODO: Allow configuration of remote name
-            // TODO: Allow bypassing parsing by setting project info in the config file
-            var remote = m_Repository.Remotes.FirstOrDefault(r => StringComparer.OrdinalIgnoreCase.Equals(r.Name, "origin"));
-            if (remote != null && GitLabUrlParser.TryParseRemoteUrl(remote.Url, out var projectInfo))
-            {
-                m_ProjectInfo = projectInfo;
-            }
-            else
-            {
-                m_Logger.LogWarning("Failed to determine GitLab project path. Disabling GitLab integration");
-            }
         }
 
 
         /// <inheritdoc />
         public async Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog)
         {
-            if (m_ProjectInfo == null)
+            var projectInfo = GetProjectInfo();
+            if (projectInfo != null)
+            {
+                m_Logger.LogInformation($"Enabling GitLab integration with settings: " +
+                    $"{nameof(projectInfo.Host)} = '{projectInfo.Host}', " +
+                    $"{nameof(projectInfo.Namespace)} = '{projectInfo.Namespace}', " +
+                    $"{nameof(projectInfo.Project)} = '{projectInfo.Project}'");
+            }
+            else
+            {
+                m_Logger.LogWarning("Failed to determine GitLab project information. Disabling GitLab integration");
                 return ChangeLogTaskResult.Skipped;
+            }
 
-            m_Logger.LogInformation("Adding GitHub links to changelog");
+            m_Logger.LogInformation("Adding GitLab links to changelog");
 
-            var gitlabClient = m_ClientFactory.CreateClient(m_ProjectInfo.Host);
+            var gitlabClient = m_ClientFactory.CreateClient(projectInfo.Host);
 
             foreach (var versionChangeLog in changeLog.ChangeLogs)
             {
                 foreach (var entry in versionChangeLog.AllEntries)
                 {
-                    await ProcessEntryAsync(gitlabClient, entry);
+                    await ProcessEntryAsync(projectInfo, gitlabClient, entry);
                 }
             }
 
@@ -75,11 +76,74 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         }
 
 
-        private async Task ProcessEntryAsync(IGitLabClient githubClient, ChangeLogEntry entry)
+        private GitLabProjectInfo? GetProjectInfo()
+        {
+            var host = m_Configuration.Integrations.GitLab.Host;
+            var @namespace = m_Configuration.Integrations.GitLab.Namespace;
+            var project = m_Configuration.Integrations.GitLab.Project;
+
+            // if all required properties were specified in the configuration, return project info
+            if (!String.IsNullOrWhiteSpace(host) && !String.IsNullOrWhiteSpace(@namespace) && !String.IsNullOrWhiteSpace(project))
+            {
+                m_Logger.LogDebug("Using GitLab project information from configuration");
+                return new GitLabProjectInfo(host, @namespace, project);
+            }
+            // otherwise, try to determine the missing properties from the repository's remote url
+            else
+            {
+                // get configured remote
+                var remoteName = m_Configuration.Integrations.GitLab.RemoteName;
+                m_Logger.LogDebug(
+                    $"GitLab project information from configuration is incomplete. " +
+                    $"Trying to get missing properties from git remote '{remoteName}'");
+
+                var remote = m_Repository.Remotes.FirstOrDefault(r =>
+                    StringComparer.OrdinalIgnoreCase.Equals(r.Name, remoteName)
+                );
+
+                if (remote == null)
+                {
+                    m_Logger.LogWarning($"Remote '{remoteName}' does not exist in the git repository.");
+                    return null;
+                }
+
+                // if remote url could be parsed, replace missing properties with value from remote url
+                if (GitLabUrlParser.TryParseRemoteUrl(remote.Url, out var parsedProjectInfo))
+                {
+                    if (String.IsNullOrWhiteSpace(host))
+                    {
+                        m_Logger.LogDebug($"Using GitLab host '{parsedProjectInfo.Host}' from remote url.");
+                        host = parsedProjectInfo.Host;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(@namespace))
+                    {
+                        m_Logger.LogDebug($"Using GitLab namespace '{parsedProjectInfo.Namespace}' from remote url.");
+                        @namespace = parsedProjectInfo.Namespace;
+                    }
+
+                    if (String.IsNullOrWhiteSpace(project))
+                    {
+                        m_Logger.LogDebug($"Using GitLab project name '{parsedProjectInfo.Project}' from remote url.");
+                        project = parsedProjectInfo.Project;
+                    }
+
+                    return new GitLabProjectInfo(host, @namespace, project);
+                }
+                else
+                {
+                    m_Logger.LogDebug($"Failed to determine GitLab project information from remote url '{remote.Url}'");
+                }
+            }
+
+            return null;
+        }
+
+        private async Task ProcessEntryAsync(GitLabProjectInfo projectInfo, IGitLabClient gitlabClient, ChangeLogEntry entry)
         {
             m_Logger.LogDebug($"Adding links to entry {entry.Commit}");
 
-            var webUri = await TryGetWebUriAsync(githubClient, entry.Commit);
+            var webUri = await TryGetWebUriAsync(projectInfo, gitlabClient, entry.Commit);
 
             if (webUri != null)
             {
@@ -93,9 +157,9 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
             foreach (var footer in entry.Footers)
             {
-                if (TryParseReference(footer.Value, out var type, out var projectPath, out var id))
+                if (TryParseReference(projectInfo, footer.Value, out var type, out var projectPath, out var id))
                 {
-                    var uri = await TryGetWebUriAsync(githubClient, type.Value, projectPath, id);
+                    var uri = await TryGetWebUriAsync(gitlabClient, type.Value, projectPath, id);
                     if (uri != null)
                     {
                         footer.WebUri = uri;
@@ -108,16 +172,13 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             }
         }
 
-        private async Task<Uri?> TryGetWebUriAsync(IGitLabClient gitlabClient, GitId commitId)
+        private async Task<Uri?> TryGetWebUriAsync(GitLabProjectInfo projectInfo, IGitLabClient gitlabClient, GitId commitId)
         {
-            if (m_ProjectInfo == null)
-                throw new InvalidOperationException();
-
             m_Logger.LogDebug($"Getting web uri for commit '{commitId}'");
 
             try
             {
-                var commit = await gitlabClient.Commits.GetAsync(m_ProjectInfo.ProjectPath, commitId.Id);
+                var commit = await gitlabClient.Commits.GetAsync(projectInfo.ProjectPath, commitId.Id);
                 return new Uri(commit.WebUrl);
             }
             catch (Exception ex) when (ex is GitLabException gitlabException && gitlabException.HttpStatusCode == HttpStatusCode.NotFound)
@@ -126,11 +187,8 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             }
         }
 
-        private bool TryParseReference(string input, [NotNullWhen(true)] out GitLabReferenceType? type, [NotNullWhen(true)] out string? projectPath, out int id)
+        private bool TryParseReference(GitLabProjectInfo projectInfo, string input, [NotNullWhen(true)] out GitLabReferenceType? type, [NotNullWhen(true)] out string? projectPath, out int id)
         {
-            if (m_ProjectInfo == null)
-                throw new InvalidOperationException();
-
             input = input.Trim();
 
             var match = s_GitLabReferencePattern.Match(input);
@@ -166,13 +224,13 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                     // no project name or namespace => reference within the current project
                     if (String.IsNullOrEmpty(projectNamespace) && String.IsNullOrEmpty(projectName))
                     {
-                        projectPath = m_ProjectInfo.ProjectPath;
+                        projectPath = projectInfo.ProjectPath;
                         return true;
                     }
                     // project name without namespace => reference to another project within the same namespace
                     else if (String.IsNullOrEmpty(projectNamespace) && !String.IsNullOrEmpty(projectName))
                     {
-                        projectPath = $"{m_ProjectInfo.Namespace}/{projectName}";
+                        projectPath = $"{projectInfo.Namespace}/{projectName}";
                         return true;
                     }
                     // namespace and project name found => full reference

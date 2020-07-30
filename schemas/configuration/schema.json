@@ -189,7 +189,7 @@
                     "type": ["string", "null"],
                     "default": null,
                     "title": "GitHub Repository Name",
-                    "description": "Specifies the name of the GitHub repository to use.  When no value is set, the owner name will be read from the git repository's remote url  (as specified in the 'remoteName' setting)."
+                    "description": "Specifies the name of the GitHub repository to use.  When no value is set, the repository name will be read from the git repository's remote url  (as specified in the 'remoteName' setting)."
                 }
             },
             "additionalProperties": false
@@ -202,6 +202,31 @@
                     "default": null,
                     "title": "GitLab Access Token",
                     "description": "Specifies the access token to use for accessing the GitLab API.\r\n❌ While it is possible to set the access token in the configuration file, the command line parameter or environment variable options should be used instead."
+                },
+                "remoteName": {
+                    "type": "string",
+                    "default" : "origin",
+                    "title": "GitLab Remote Name",
+                    "description": "Specifies the name of the git remote to use for determining the GitLab project information. Setting has no effect if 'host', 'namespace' and 'project' are set."
+                },
+                "host": {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "title": "GitLab Host Name",
+                    "description": "Specifies the host name of the GitLab server to use. When no value is set, the host name will be read from the git repository's remote url (as specified in the 'remoteName' setting)."
+                },
+                "namespace": {
+                    "type":["string", "null"],
+                    "default" : null,
+                    "title": "GitLab Project Namespace",
+                    "description": "Specifies the namespace (user or group/subgroup) of the repository on GitLab to use. When no value is set, the namespace will be read from the git repository's remote url (as specified in the 'remoteName' setting)."
+
+                },
+                "project" : {
+                    "type": ["string", "null"],
+                    "default": null,
+                    "title": "GitLab Project Name",
+                    "description": "Specifies the name of project on GitLab.  When no value is set, the project name name will be read from the git repository's remote url  (as specified in the 'remoteName' setting)."
                 }
             },
             "additionalProperties": false

@@ -12,15 +12,19 @@ using GitLabApiClient.Models.MergeRequests.Requests;
 using GitLabApiClient.Models.MergeRequests.Responses;
 using GitLabApiClient.Models.Milestones.Requests;
 using GitLabApiClient.Models.Milestones.Responses;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitLab;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Test.Configuration;
+using Grynwald.ChangeLog.Test.Git;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 {
@@ -29,7 +33,62 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
     /// </summary>
     public class GitLabLinkTaskTest : TestBase
     {
+        public class GitLabProjectInfoTestCase : IXunitSerializable
+        {
+            public string Description { get; private set; }
+
+            public IReadOnlyList<GitRemote> Remotes { get; set; } = Array.Empty<GitRemote>();
+
+            public ChangeLogConfiguration.GitLabIntegrationConfiguration Configuration { get; set; } = new ChangeLogConfiguration.GitLabIntegrationConfiguration();
+
+            public string ExpectedHost { get; set; } = "";
+
+            public string ExpectedNamespace { get; set; } = "";
+
+            public string ExpectedProject { get; set; } = "";
+
+
+            public GitLabProjectInfoTestCase(string description)
+            {
+                if (String.IsNullOrWhiteSpace(description))
+                    throw new ArgumentException("Value must not be null or whitespace", nameof(description));
+
+                Description = description;
+
+            }
+
+            [Obsolete("For use by Xunit only", true)]
+#pragma warning disable CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+            public GitLabProjectInfoTestCase()
+            { }
+#pragma warning restore CS8618 // Non-nullable field is uninitialized. Consider declaring as nullable.
+
+
+            public void Deserialize(IXunitSerializationInfo info)
+            {
+                Description = info.GetValue<string>(nameof(Description));
+                Remotes = info.GetValue<XunitSerializableGitRemote[]>(nameof(Remotes)).Select(x => x.Value).ToArray();
+                Configuration = info.GetValue<XunitSerializableGitLabIntegrationConfiguration>(nameof(Configuration));
+                ExpectedHost = info.GetValue<string>(nameof(ExpectedHost));
+                ExpectedNamespace = info.GetValue<string>(nameof(ExpectedNamespace));
+                ExpectedProject = info.GetValue<string>(nameof(ExpectedProject));
+            }
+
+            public void Serialize(IXunitSerializationInfo info)
+            {
+                info.AddValue(nameof(Description), Description);
+                info.AddValue(nameof(Remotes), Remotes.Select(x => new XunitSerializableGitRemote(x)).ToArray());
+                info.AddValue(nameof(Configuration), new XunitSerializableGitLabIntegrationConfiguration(Configuration));
+                info.AddValue(nameof(ExpectedHost), ExpectedHost);
+                info.AddValue(nameof(ExpectedNamespace), ExpectedNamespace);
+                info.AddValue(nameof(ExpectedProject), ExpectedProject);
+            }
+
+            public override string ToString() => Description;
+        }
+
         private readonly ILogger<GitLabLinkTask> m_Logger = NullLogger<GitLabLinkTask>.Instance;
+        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
         private readonly Mock<IGitLabClientFactory> m_ClientFactoryMock;
         private readonly Mock<IGitLabClient> m_ClientMock;
         private readonly Mock<ICommitsClient> m_CommitsClientMock;
@@ -62,7 +121,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
         private ProjectId MatchProjectId(string expected)
         {
-            return It.Is<ProjectId>((ProjectId actual) => actual.ToString() == ((ProjectId)expected).ToString());
+            return It.Is((ProjectId actual) => actual.ToString() == ((ProjectId)expected).ToString());
         }
 
         /// <summary>
@@ -108,7 +167,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             // ARRANGE            
             m_RepositoryMock.Setup(x => x.Remotes).Returns(Enumerable.Empty<GitRemote>());
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
@@ -128,7 +187,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             // ARRANGE            
             m_RepositoryMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", url) });
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
 
             // ACT 
@@ -152,7 +211,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     (ProjectId id, string sha) => Task.FromResult(new Commit() { WebUrl = $"https://example.com/{sha}" })
                 );
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -197,7 +256,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             // ARRANGE          
             m_RepositoryMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", $"http://{hostName}/owner/repo.git") });
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             // ACT 
             var result = await sut.RunAsync(new ApplicationChangeLog());
@@ -242,7 +301,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     Task.FromResult(new Issue() { WebUrl = $"https://example.com/{projectPath}/issues/{id}" })
                 );
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -300,7 +359,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 .Setup(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<int>()))
                 .Throws(new GitLabException(HttpStatusCode.NotFound));
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -361,7 +420,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     Task.FromResult<IList<MergeRequest>>(new List<MergeRequest>() { new MergeRequest() { WebUrl = $"https://example.com/{projectPath}/merge_requests/{id}" } })
                 );
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -431,7 +490,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 .Setup(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<Action<ProjectMergeRequestsQueryOptions>>()))
                 .Throws(new GitLabException(HttpStatusCode.NotFound));
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -492,7 +551,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     Task.FromResult<IList<Milestone>>(new List<Milestone>() { new Milestone() { WebUrl = $"https://example.com/{projectPath}/milestones/{id}" } })
                 );
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -561,7 +620,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 .Setup(x => x.GetMilestonesAsync(It.IsAny<ProjectId>(), It.IsAny<Action<MilestonesQueryOptions>>()))
                 .Throws(new GitLabException(HttpStatusCode.NotFound));
 
-            var sut = new GitLabLinkTask(m_Logger, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -596,5 +655,265 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         }
 
         //TODO: Run does not add a commit link if commit cannot be found
+
+        public static IEnumerable<object[]> GitLabProjectInfoTestCases()
+        {
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("ProjectInfo from default remote (user namespace)")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/someUser/someProject.git"),
+                        new GitRemote("upstream", "https://example.com/upstreamUser/upstreamRepo.git"),
+                        new GitRemote("some-other-remote", "https://example.com/someOtherUser/someOtherRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin"
+                    },
+                    ExpectedHost = "gitlab.com",
+                    ExpectedNamespace = "someUser",
+                    ExpectedProject = "someProject"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("ProjectInfo from default remote (group/subgroup namespace)")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/group/subGroup/someProject.git"),
+                        new GitRemote("upstream", "https://example.com/upstreamUser/upstreamRepo.git"),
+                        new GitRemote("some-other-remote", "https://example.com/someOtherUser/someOtherRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin"
+                    },
+                    ExpectedHost = "gitlab.com",
+                    ExpectedNamespace = "group/subGroup",
+                    ExpectedProject = "someProject"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("ProjectInfo from custom remote name")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/someUser/someRepo.git"),
+                        new GitRemote("upstream", "https://example.com/upstreamUser/upstreamRepo.git"),
+                        new GitRemote("some-other-remote", "https://example.com/someOtherProject/someOtherRepo.git"),
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "upstream"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedNamespace = "upstreamUser",
+                    ExpectedProject = "upstreamRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("ProjectInfo from configuration with no remotes")
+                {
+                    Remotes = Array.Empty<GitRemote>(),
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        Host = "example.com",
+                        Namespace = "group/subgroup",
+                        Project = "configRepo"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedNamespace = "group/subgroup",
+                    ExpectedProject = "configRepo"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("ProjectInfo from configuration with remotes")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/remoteUrlNamespace/remoteUrlProject.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Host = "example.com",
+                        Namespace = "configNamespace",
+                        Project = "configProject"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedNamespace = "configNamespace",
+                    ExpectedProject = "configProject"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("Host from config, namespace and project from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/group/subgroup/remoteUrlProject.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Host = "example.com",
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedNamespace = "group/subgroup",
+                    ExpectedProject = "remoteUrlProject"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("Namespace from config, host and project from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/remoteUrlNamespace/remoteUrlProject.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Namespace = "configNamespace"
+                    },
+                    ExpectedHost = "gitlab.com",
+                    ExpectedNamespace = "configNamespace",
+                    ExpectedProject = "remoteUrlProject"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("Project from config, namespace and host from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/remoteUrlNamespace/remoteUrlRepo.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Project = "configProject"
+                    },
+                    ExpectedHost = "gitlab.com",
+                    ExpectedNamespace = "remoteUrlNamespace",
+                    ExpectedProject = "configProject"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("Host and namespace from config, proejct from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/remoteUrlNamespace/remoteUrlProject.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Host = "example.com",
+                        Namespace = "configNamespace"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedNamespace = "configNamespace",
+                    ExpectedProject = "remoteUrlProject"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("Host and project from config, namespace from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/remoteUrlNamespace/remoteUrlProject.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Host = "example.com",
+                        Project = "configProject"
+                    },
+                    ExpectedHost = "example.com",
+                    ExpectedNamespace = "remoteUrlNamespace",
+                    ExpectedProject = "configProject"
+                }
+            };
+
+            yield return new[]
+            {
+                new GitLabProjectInfoTestCase("Project and namespace from config, host from remote url")
+                {
+                    Remotes = new[]
+                    {
+                        new GitRemote("origin", "https://gitlab.com/remoteUrlNamespace/remoteUrlProject.git")
+                    },
+                    Configuration = new ChangeLogConfiguration.GitLabIntegrationConfiguration()
+                    {
+                        RemoteName = "origin",
+                        Namespace = "configNamespace",
+                        Project = "configProject"
+                    },
+                    ExpectedHost = "gitlab.com",
+                    ExpectedNamespace = "configNamespace",
+                    ExpectedProject = "configProject"
+                }
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(GitLabProjectInfoTestCases))]
+        public async Task Run_uses_the_expected_remote_url(GitLabProjectInfoTestCase testCase)
+        {
+            //
+            // ARRANGE
+            //
+            // Prepare changelog
+            m_RepositoryMock.Setup(x => x.Remotes).Returns(testCase.Remotes);
+            m_CommitsClientMock
+                .Setup(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<string>()))
+                .ReturnsAsync((ProjectId projectId, string sha) => new Commit() { Id = sha, WebUrl = "http://example.com" });
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    version: "1.2.3",
+                    commitId: "abc123",
+                    entries: new []{ GetChangeLogEntry(commit: "abc123") })
+            };
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.GitLab = testCase.Configuration;
+
+            var sut = new GitLabLinkTask(m_Logger, config, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+
+            //
+            // ACT
+            //
+            var result = await sut.RunAsync(changeLog);
+
+            //
+            // ASSERT
+            //
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
+            m_ClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Once);
+            m_ClientFactoryMock.Verify(x => x.CreateClient(testCase.ExpectedHost), Times.Once);
+
+            m_CommitsClientMock.Verify(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<string>()), Times.Once);
+            m_CommitsClientMock.Verify(x => x.GetAsync(MatchProjectId($"{testCase.ExpectedNamespace}/{testCase.ExpectedProject}"), "abc123"), Times.Once);
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         public void Dispose() => m_ConfigurationDirectory.Dispose();
 
 
-        private void SetConfigEnvironmentVariable(string configKey, string value)
+        private void SetConfigEnvironmentVariable(string configKey, string? value)
         {
             var variableName = "CHANGELOG__" + configKey.Replace(":", "__");
             Environment.SetEnvironmentVariable(variableName, value, EnvironmentVariableTarget.Process);
@@ -104,20 +104,38 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config));
 
+            //
+            // Scope settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Scopes));
             yield return TestCase(config => Assert.Empty(config.Scopes));
 
+            //
+            // Tag Patterns setting
+            //
             yield return TestCase(config => Assert.NotNull(config.TagPatterns));
             yield return TestCase(config => Assert.Equal(new[] { "^(?<version>\\d+\\.\\d+\\.\\d+.*)", "^v(?<version>\\d+\\.\\d+\\.\\d+.*)" }, config.TagPatterns));
 
+            //
+            // Output path setting
+            //
             yield return TestCase(config => Assert.NotNull(config.OutputPath));
             yield return TestCase(config => Assert.NotEmpty(config.OutputPath));
 
+            //
+            // Repository Path setting
+            //
             yield return TestCase(config => Assert.Null(config.RepositoryPath));    // repository path must be provided through command line parameters
 
+            //
+            // Footer settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Footers));
             yield return TestCase(config => Assert.Empty(config.Footers));
 
+            //
+            // Integration Provider setting
+            //
             yield return TestCase(config => Assert.NotNull(config.Integrations));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.IntegrationProvider.None, config.Integrations.Provider));
 
@@ -144,21 +162,48 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // GitLab Integration settings
             //
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab));
+
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.AccessToken));
             yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.AccessToken));
 
+            yield return TestCase(config => Assert.Equal("origin", config.Integrations.GitLab.RemoteName));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Host));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Host));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Namespace));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Namespace));
+
+            yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Project));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Project));
+
+            //
+            // Version Range setting
+            //
             yield return TestCase(config => Assert.NotNull(config.VersionRange));
             yield return TestCase(config => Assert.Empty(config.VersionRange));
 
+            //
+            // Current Version settting
+            //
             yield return TestCase(config => Assert.NotNull(config.CurrentVersion));
             yield return TestCase(config => Assert.Empty(config.CurrentVersion));
 
+            //
+            // Template settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Template));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.TemplateName.Default, config.Template.Name));
 
+            //
+            // Default Template settings
+            // 
             yield return TestCase(config => Assert.NotNull(config.Template.Default));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Template.Default.MarkdownPreset));
 
+            //
+            // Entry Types settings
+            //
             yield return TestCase(config => Assert.NotNull(config.EntryTypes));
             yield return TestCase(config => Assert.Equal(2, config.EntryTypes.Length));
             yield return TestCase(config => Assert.Collection(config.EntryTypes,
@@ -166,6 +211,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 x => AssertEntryType(x, CommitType.BugFix, "Bug Fixes")
             ));
 
+            //
+            // Parser settings
+            //
             yield return TestCase(config => Assert.NotNull(config.Parser));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.ParserMode.Loose, config.Parser.Mode));
         }
@@ -201,437 +249,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Fact]
-        public void Scopes_can_be_set_in_configuration_file()
-        {
-            // ARRANGE            
-            var scopes = new[]
-            {
-                new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "DisplayName 1" },
-                new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope2", DisplayName = "DisplayName 2" }
-            };
-
-            PrepareConfiguration("scopes", scopes);
-
-            // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.Equal(scopes.Length, config.Scopes.Length);
-            for (var i = 0; i < scopes.Length; i++)
-            {
-                Assert.Equal(scopes[i].Name, config.Scopes[i].Name);
-                Assert.Equal(scopes[i].DisplayName, config.Scopes[i].DisplayName);
-            }
-        }
-
-        [Fact]
-        public void TagPatterns_can_be_set_in_configuration_file()
-        {
-            // ARRANGE            
-            var patterns = new[] { "pattern1", "pattern2" };
-
-            PrepareConfiguration("tagpatterns", patterns);
-
-            // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.Equal(patterns, config.TagPatterns);
-        }
-
-        [Fact]
-        public void Footers_can_be_set_in_configuration_file()
-        {
-            // ARRANGE            
-            var footers = new[]
-            {
-                new ChangeLogConfiguration.FooterConfiguration() { Name = "footer1", DisplayName = "DisplayName 1" },
-                new ChangeLogConfiguration.FooterConfiguration() { Name = "footer2", DisplayName = "DisplayName 2" }
-            };
-
-            PrepareConfiguration("footers", footers);
-
-            // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.Equal(footers.Length, config.Footers.Length);
-            for (var i = 0; i < footers.Length; i++)
-            {
-                Assert.Equal(footers[i].Name, config.Footers[i].Name);
-                Assert.Equal(footers[i].DisplayName, config.Footers[i].DisplayName);
-            }
-        }
-
-        public static IEnumerable<object?[]> IntegrationProviders()
-        {
-            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.IntegrationProvider)))
-            {
-                yield return new object?[] { value };
-            }
-        }
-
-        [Theory]
-        [MemberData(nameof(IntegrationProviders))]
-        public void IntegrationProvider_can_be_set_in_configuration_file(ChangeLogConfiguration.IntegrationProvider integrationProvider)
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:provider", integrationProvider.ToString());
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations);
-            Assert.Equal(integrationProvider, config.Integrations.Provider);
-        }
-
-        [Theory]
-        [MemberData(nameof(IntegrationProviders))]
-        public void IntegrationProvider_can_be_set_through_environment_variables(ChangeLogConfiguration.IntegrationProvider integrationProvider)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("integrations:provider", integrationProvider.ToString());
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations);
-            Assert.Equal(integrationProvider, config.Integrations.Provider);
-        }
-
-
-        [Theory]
-        [InlineData("some-access-token")]
-        public void GitHub_access_token_can_be_set_in_configuration_file(string accessToken)
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:github:accesstoken", accessToken);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(accessToken, config.Integrations.GitHub.AccessToken);
-        }
-
-        [Theory]
-        [InlineData("some-access-token")]
-        public void GitHub_access_token_can_be_set_through_environment_variables(string accessToken)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("integrations:github:accesstoken", accessToken);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(accessToken, config.Integrations.GitHub.AccessToken);
-        }
-
-        private class TestSettingsClass2
-        {
-            [ConfigurationValue("changelog:integrations:github:accesstoken")]
-            public string? GitHubAccessToken { get; set; }
-        }
-
-        [Fact]
-        public void Configuration_from_settings_object_can_override_GitHub_access_token()
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:github:accesstoken", "some-access-token");
-            var settingsObject = new TestSettingsClass2() { GitHubAccessToken = "some-other-access-token" };
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations);
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal("some-other-access-token", config.Integrations.GitHub.AccessToken);
-        }
-
-        [Theory]
-        [InlineData("upstream")]
-        public void GitHub_remote_name_can_be_set_in_configuration_file(string remoteName)
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:github:remoteName", remoteName);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(remoteName, config.Integrations.GitHub.RemoteName);
-        }
-
-        [Theory]
-        [InlineData("upstream")]
-        public void GitHub_remote_name_can_be_set_through_environment_variables(string remoteName)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("integrations:github:remoteName", remoteName);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(remoteName, config.Integrations.GitHub.RemoteName);
-        }
-
-        [Theory]
-        [InlineData("example.com")]
-        public void GitHub_host_can_be_set_in_configuration_file(string host)
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:github:host", host);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(host, config.Integrations.GitHub.Host);
-        }
-
-        [Theory]
-        [InlineData("example.com")]
-        public void GitHub_host_can_be_set_through_environment_variables(string host)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("integrations:github:host", host);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(host, config.Integrations.GitHub.Host);
-        }
-
-        [Theory]
-        [InlineData("someuser")]
-        public void GitHub_owner_can_be_set_in_configuration_file(string owner)
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:github:owner", owner);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(owner, config.Integrations.GitHub.Owner);
-        }
-
-        [Theory]
-        [InlineData("someuser")]
-        public void GitHub_owner_can_be_set_through_environment_variables(string owner)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("integrations:github:owner", owner);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(owner, config.Integrations.GitHub.Owner);
-        }
-
-        [Theory]
-        [InlineData("some-repo")]
-        public void GitHub_repository_can_be_set_in_configuration_file(string repository)
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:github:repository", repository);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(repository, config.Integrations.GitHub.Repository);
-        }
-
-        [Theory]
-        [InlineData("some-repo")]
-        public void GitHub_repository_can_be_set_through_environment_variables(string repository)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("integrations:github:repository", repository);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitHub);
-            Assert.Equal(repository, config.Integrations.GitHub.Repository);
-        }
-
-        [Theory]
-        [InlineData("some-access-token")]
-        public void GitLab_access_token_can_be_set_in_configuration_file(string accessToken)
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:gitlab:accesstoken", accessToken);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitLab);
-            Assert.Equal(accessToken, config.Integrations.GitLab.AccessToken);
-        }
-
-        [Theory]
-        [InlineData("some-access-token")]
-        public void GitLab_access_token_can_be_set_through_environment_variables(string accessToken)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("integrations:gitlab:accesstoken", accessToken);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations.GitLab);
-            Assert.Equal(accessToken, config.Integrations.GitLab.AccessToken);
-        }
-
-        private class TestSettingsClass3
-        {
-            [ConfigurationValue("changelog:integrations:gitlab:accesstoken")]
-            public string? GitLabAccessToken { get; set; }
-        }
-
-        [Fact]
-        public void Configuration_from_settings_object_can_override_GitLab_access_token()
-        {
-            // ARRANGE
-            PrepareConfiguration("integrations:gitlab:accesstoken", "some-access-token");
-            var settingsObject = new TestSettingsClass3() { GitLabAccessToken = "some-other-access-token" };
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
-
-            // ASSERT
-            Assert.NotNull(config.Integrations);
-            Assert.NotNull(config.Integrations.GitLab);
-            Assert.Equal("some-other-access-token", config.Integrations.GitLab.AccessToken);
-        }
-
-        [Theory]
-        [InlineData("[1.2.3,)")]
-        public void Version_range_can_be_set_in_configuration_file(string versionRange)
-        {
-            // ARRANGE
-            PrepareConfiguration("versionRange", versionRange);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.VersionRange);
-            Assert.Equal(versionRange, config.VersionRange);
-        }
-
-        [Theory]
-        [InlineData("[1.2.3,)")]
-        public void Version_range_can_be_set_through_environment_variables(string versionRange)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("versionRange", versionRange);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.VersionRange);
-            Assert.Equal(versionRange, config.VersionRange);
-        }
-
-
-        private class TestSettingsClass4
-        {
-            [ConfigurationValue("changelog:versionrange")]
-            public string? VersionRange { get; set; }
-        }
-
-        [Fact]
-        public void Configuration_from_settings_object_can_override_version_range()
-        {
-            // ARRANGE
-            PrepareConfiguration("versionRange", "[1.2.3]");
-            var settingsObject = new TestSettingsClass4() { VersionRange = "[4.5.6]" };
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
-
-            // ASSERT
-            Assert.NotNull(config.VersionRange);
-            Assert.Equal("[4.5.6]", config.VersionRange);
-        }
-
-        [Theory]
-        [InlineData("1.2.3")]
-        public void Current_version_can_be_set_in_the_configuration_file(string currentVersion)
-        {
-            // ARRANGE
-            PrepareConfiguration("currentVersion", currentVersion);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.CurrentVersion);
-            Assert.Equal(currentVersion, config.CurrentVersion);
-        }
-
-        [Theory]
-        [InlineData("1.2.3")]
-        public void Current_version_can_be_set_in_through_environment_variables(string currentVersion)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("currentVersion", currentVersion);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.CurrentVersion);
-            Assert.Equal(currentVersion, config.CurrentVersion);
-        }
-
-
-        private class TestSettingsClass5
-        {
-            [ConfigurationValue("changelog:currentVersion")]
-            public string? CurrentVersion { get; set; }
-        }
-
-        [Fact]
-        public void Configuration_from_settings_object_can_override_current_version()
-        {
-            // ARRANGE
-            PrepareConfiguration("currentVersion", "1.2.3");
-            var settingsObject = new TestSettingsClass5() { CurrentVersion = "4.5.6" };
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
-
-            // ASSERT
-            Assert.NotNull(config.CurrentVersion);
-            Assert.Equal("4.5.6", config.CurrentVersion);
-        }
-
-        [Fact]
-        public void Configuration_from_environment_variables_overrides_settings_from_config_file()
+        public void Value_from_environment_variables_overrides_value_from_config_file()
         {
             // ARRANGE
             PrepareConfiguration("currentVersion", "1.2.3");
@@ -645,19 +263,61 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal("4.5.6", config.CurrentVersion);
         }
 
-        private class TestSettingsClass6
+        private class TestSettingsClass
         {
             [ConfigurationValue("changelog:currentVersion")]
             public string? CurrentVersion { get; set; }
         }
 
         [Fact]
-        public void Configuration_from_settings_object_overrides_settings_from_config_file_and_environment_variables()
+        public void Value_from_settings_object_overrides_value_from_config_file()
         {
             // ARRANGE
             PrepareConfiguration("currentVersion", "1.2.3");
-            SetConfigEnvironmentVariable("currentVersion", "4.5.6");
-            var settingsObject = new TestSettingsClass6() { CurrentVersion = "7.8.9" };
+
+            var settingsObject = new TestSettingsClass()
+            {
+                CurrentVersion = "4.5.6"
+            };
+
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.CurrentVersion);
+            Assert.Equal("4.5.6", config.CurrentVersion);
+        }
+
+        [Fact]
+        public void Value_from_settings_object_overrides_value_from_environment_variables()
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("currentVersion", "1.2.3");
+
+            var settingsObject = new TestSettingsClass()
+            {
+                CurrentVersion = "4.5.6"
+            };
+
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
+
+            // ASSERT
+            Assert.NotNull(config.CurrentVersion);
+            Assert.Equal("4.5.6", config.CurrentVersion);
+        }
+
+        [Fact]
+        public void Value_from_settings_object_overrides_values_from_configuration_file_and_environment_variables()
+        {
+            // ARRANGE
+            SetConfigEnvironmentVariable("currentVersion", "1.2.3");
+            PrepareConfiguration("currentVersion", "4.5.6");
+
+            var settingsObject = new TestSettingsClass()
+            {
+                CurrentVersion = "7.8.9"
+            };
 
             // ACT
             var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
@@ -667,229 +327,311 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal("7.8.9", config.CurrentVersion);
         }
 
-        [Fact]
-        public void OutputPath_can_be_set_in_the_configuration_file()
+        [Flags]
+        private enum SettingsTarget
         {
-            // ARRANGE
-            PrepareConfiguration("outputPath", "outputPath1");
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.Equal("outputPath1", config.OutputPath);
+            All = ConfigurationFile | EnvironmentVariables | SettingsObject,
+            ConfigurationFile = 0x01,
+            EnvironmentVariables = 0x01 << 1,
+            SettingsObject = 0x01 << 2
         }
 
-        [Fact]
-        public void OutputPath_can_be_set_through_environment_variables()
+        private static IEnumerable<T> GetEnumValues<T>() where T : Enum
         {
-            // ARRANGE
-            PrepareConfiguration("outputPath", "outputPath1");
-            SetConfigEnvironmentVariable("outputPath", "outputPath2");
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            // environment variables override configuration file
-            Assert.Equal("outputPath2", config.OutputPath);
+            return Enum.GetValues(typeof(T)).Cast<T>();
         }
 
-        private class TestSettingsClass7
+        private static IEnumerable<(object[] testData, SettingsTarget target)> AllSetValueTestCases()
         {
-            [ConfigurationValue("changelog:outputPath")]
-            public string? OutputPath { get; set; }
-        }
-
-        [Fact]
-        public void OutputPath_from_settings_object_overrides_output_path()
-        {
-            // ARRANGE
-            PrepareConfiguration("outputPath", "outputPath1");
-            SetConfigEnvironmentVariable("outputPath", "outputPath2");
-
-            var settingsObject = new TestSettingsClass7() { OutputPath = "outputPath3" };
-
-            // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
-
-            // ASSERT
-            // settings objects overrides both configuration file and environment variables
-            Assert.Equal("outputPath3", config.OutputPath);
-        }
-
-
-        [Theory]
-        [EnumData]
-        public void Template_can_be_set_in_the_configuration_file(ChangeLogConfiguration.TemplateName templateName)
-        {
-            // ARRANGE
-            PrepareConfiguration("template:name", templateName.ToString());
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Template);
-            Assert.Equal(templateName, config.Template.Name);
-        }
-
-        [Theory]
-        [EnumData]
-        public void Template_can_be_set_through_environment_variables(ChangeLogConfiguration.TemplateName templateName)
-        {
-            // ARRANGE
-            SetConfigEnvironmentVariable("template:name", templateName.ToString());
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Template);
-            Assert.Equal(templateName, config.Template.Name);
-        }
-
-        private class TestSettingsClass8
-        {
-            [ConfigurationValue("changelog:template:name")]
-            public ChangeLogConfiguration.TemplateName TemplateName { get; set; }
-        }
-
-        [Theory]
-        [EnumData]
-        public void Template_can_be_set_through_settings_object(ChangeLogConfiguration.TemplateName templateName)
-        {
-            // ARRANGE
-            var settingsObject = new TestSettingsClass8() { TemplateName = templateName };
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
-
-            // ASSERT
-            Assert.NotNull(config.Template);
-            Assert.Equal(templateName, config.Template.Name);
-        }
-
-
-
-        public static IEnumerable<object[]> MarkdownPresets()
-        {
-            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.MarkdownPreset)))
+            static (object[], SettingsTarget) TestCase(
+                string key,
+                Expression<Func<ChangeLogConfiguration, object?>> getter,
+                object value,
+                SettingsTarget target = SettingsTarget.All,
+                Action<ChangeLogConfiguration>? assert = null)
             {
-                yield return new object[] { value!, value!.ToString()! };
-                yield return new object[] { value!, value!.ToString()!.ToLower() };
+                return (new object[] { key, getter, value, assert! }, target);
+            }
+
+            //
+            // Current Version setting
+            //
+            yield return TestCase("currentVersion", config => config.CurrentVersion, "1.2.3");
+
+            //
+            // Version Range setting
+            //
+            yield return TestCase("versionRange", config => config.VersionRange, "[1.2.3,)");
+
+            //
+            // Outout Path setting
+            //
+            yield return TestCase("outputPath", config => config.OutputPath, "outputPath1");
+
+            //
+            // Template setting
+            //
+            foreach (var value in GetEnumValues<ChangeLogConfiguration.TemplateName>())
+            {
+                yield return TestCase("template:name", config => config.Template.Name, value);
+            }
+
+            //
+            // Default Template settings
+            //
+            foreach (var value in GetEnumValues<ChangeLogConfiguration.MarkdownPreset>())
+            {
+                yield return TestCase("template:default:markdownpreset", config => config.Template.Default.MarkdownPreset, value);
+            }
+
+            //
+            // Integration provider setting
+            //
+            foreach (var value in GetEnumValues<ChangeLogConfiguration.IntegrationProvider>())
+            {
+                yield return TestCase("integrations:provider", config => config.Integrations.Provider, value);
+            }
+
+            //
+            // GitHub Integration settings
+            //
+            yield return TestCase("integrations:github:accesstoken", config => config.Integrations.GitHub.AccessToken, "some-value");
+            yield return TestCase("integrations:github:remoteName", config => config.Integrations.GitHub.RemoteName, "upstream");
+            yield return TestCase("integrations:github:host", config => config.Integrations.GitHub.Host, "example.com");
+            yield return TestCase("integrations:github:owner", config => config.Integrations.GitHub.Owner, "some user");
+            yield return TestCase("integrations:github:repository", config => config.Integrations.GitHub.Repository, "some-repo");
+
+            //
+            // GitLab Integration settings
+            //
+            yield return TestCase("integrations:gitlab:accesstoken", config => config.Integrations.GitLab.AccessToken, "some-access-token");
+            yield return TestCase("integrations:gitlab:remoteName", config => config.Integrations.GitLab.RemoteName, "upstream");
+            yield return TestCase("integrations:gitlab:host", config => config.Integrations.GitLab.Host, "example.com");
+            yield return TestCase("integrations:gitlab:namespace", config => config.Integrations.GitLab.Namespace, "someuser");
+            yield return TestCase("integrations:gitlab:namespace", config => config.Integrations.GitLab.Namespace, "group/subgroup");
+            yield return TestCase("integrations:gitlab:project", config => config.Integrations.GitLab.Project, "some-repo");
+
+            //
+            // Parser Mode setting
+            //
+            foreach (var value in GetEnumValues<ChangeLogConfiguration.ParserMode>())
+            {
+                yield return TestCase("parser:mode", config => config.Parser.Mode, value);
+            }
+
+            //
+            // Tag Patterns settting
+            //
+            yield return TestCase("tagpatterns", config => config.TagPatterns, new[] { "pattern1", "pattern2" }, SettingsTarget.ConfigurationFile);
+
+            //
+            // Footer settings
+            //
+            yield return TestCase(
+                key: "footers",
+                getter: config => config.Footers,
+                value: new[]
+                {
+                    new ChangeLogConfiguration.FooterConfiguration() { Name = "footer1", DisplayName = "DisplayName 1" },
+                    new ChangeLogConfiguration.FooterConfiguration() { Name = "footer2", DisplayName = "DisplayName 2" }
+                },
+                target: SettingsTarget.ConfigurationFile,
+                assert: config =>
+                {
+                    Assert.Collection(config.Footers,
+                       f =>
+                       {
+                           Assert.Equal("footer1", f.Name);
+                           Assert.Equal("DisplayName 1", f.DisplayName);
+                       },
+                       f =>
+                       {
+                           Assert.Equal("footer2", f.Name);
+                           Assert.Equal("DisplayName 2", f.DisplayName);
+                       });
+                });
+
+            //
+            // Scope settings
+            //
+            yield return TestCase(
+                key: "scopes",
+                getter: config => config.Scopes,
+                value: new[]
+                {
+                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "Display Name 1" },
+                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope2", DisplayName = "Display Name 2" }
+                },
+                target: SettingsTarget.ConfigurationFile,
+                assert: config =>
+                {
+                    Assert.Collection(config.Scopes,
+                      s =>
+                      {
+                          Assert.Equal("scope1", s.Name);
+                          Assert.Equal("Display Name 1", s.DisplayName);
+                      },
+                      s =>
+                      {
+                          Assert.Equal("scope2", s.Name);
+                          Assert.Equal("Display Name 2", s.DisplayName);
+                      });
+                });
+
+            //
+            // Entry Types setting
+            //
+            yield return TestCase(
+                key: "entryTypes",
+                getter: config => config.EntryTypes,
+                value: new[]
+                {
+                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = "Documentation Updates" },
+                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "bugfix", DisplayName = "Bug Fixes" }
+                },
+                target: SettingsTarget.ConfigurationFile,
+                assert: config =>
+                {
+                    Assert.Collection(config.EntryTypes,
+                        e =>
+                        {
+                            Assert.Equal("docs", e.Type);
+                            Assert.Equal("Documentation Updates", e.DisplayName);
+                        },
+                        e =>
+                        {
+                            Assert.Equal("bugfix", e.Type);
+                            Assert.Equal("Bug Fixes", e.DisplayName);
+                        });
+                });
+        }
+
+        public static IEnumerable<object[]> ConfigurationFileSetValueTestCases()
+        {
+            foreach (var (testData, target) in AllSetValueTestCases())
+            {
+                if (target.HasFlag(SettingsTarget.ConfigurationFile))
+                {
+                    yield return testData;
+                }
+            }
+        }
+
+        public static IEnumerable<object[]> EnvironmentVariablesSetValueTestCases()
+        {
+            foreach (var (testData, target) in AllSetValueTestCases())
+            {
+                if (target.HasFlag(SettingsTarget.EnvironmentVariables))
+                {
+                    yield return testData;
+                }
+            }
+        }
+
+        public static IEnumerable<object[]> SettingsObjectSetValueTestCases()
+        {
+            foreach (var (testData, target) in AllSetValueTestCases())
+            {
+                if (target.HasFlag(SettingsTarget.SettingsObject))
+                {
+                    yield return testData;
+                }
+            }
+        }
+
+
+        [Theory]
+        [MemberData(nameof(ConfigurationFileSetValueTestCases))]
+        public void Value_can_be_set_in_configuration_file(
+            string key,
+            Expression<Func<ChangeLogConfiguration, object?>> getter,
+            object expectedValue,
+            Action<ChangeLogConfiguration>? assert)
+        {
+            // ARRANGE
+            PrepareConfiguration(key, expectedValue);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            if (assert is null)
+            {
+                var actualValue = getter.Compile()(config);
+                Assert.Equal(expectedValue, actualValue);
+            }
+            else
+            {
+                assert(config);
             }
         }
 
         [Theory]
-        [MemberData(nameof(MarkdownPresets))]
-        public void Markdown_preset_for_default_template_can_be_set_in_configuration_file(ChangeLogConfiguration.MarkdownPreset preset, string configurationValue)
+        [MemberData(nameof(EnvironmentVariablesSetValueTestCases))]
+        public void Value_can_be_set_through_environment_variables(
+            string key,
+            Expression<Func<ChangeLogConfiguration, object?>> getter,
+            object expectedValue,
+            Action<ChangeLogConfiguration>? assert)
         {
             // ARRANGE
-            PrepareConfiguration("template:default:markdownpreset", configurationValue);
+            SetConfigEnvironmentVariable(key, expectedValue?.ToString());
 
             // ACT 
             var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
 
             // ASSERT
-            Assert.NotNull(config.Template.Default);
-            Assert.Equal(preset, config.Template.Default.MarkdownPreset);
+            if (assert is null)
+            {
+                var actualValue = getter.Compile()(config);
+                Assert.Equal(expectedValue, actualValue);
+            }
+            else
+            {
+                assert(config);
+            }
         }
 
         [Theory]
-        [MemberData(nameof(MarkdownPresets))]
-        public void Markdown_preset_for_default_template_can_be_set_through_environment_variables(ChangeLogConfiguration.MarkdownPreset preset, string configurationValue)
+        [MemberData(nameof(SettingsObjectSetValueTestCases))]
+        public void Value_can_be_set_through_settings_object(
+            string key,
+            Expression<Func<ChangeLogConfiguration, object?>> getter,
+            object expectedValue,
+            Action<ChangeLogConfiguration>? assert)
         {
             // ARRANGE
-            SetConfigEnvironmentVariable("template:default:markdownpreset", configurationValue);
+            var cs = $@"
+            using Grynwald.Utilities.Configuration;
 
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+            public class SettingsObject
+            {{
+                [ConfigurationValue(""changelog:{key}"")]
+                public {expectedValue.GetType().FullName!.Replace("+", ".")} Value {{ get; set; }}
 
-            // ASSERT
-            Assert.NotNull(config.Template.Default);
-            Assert.Equal(preset, config.Template.Default.MarkdownPreset);
-        }
+                public SettingsObject({expectedValue.GetType().FullName!.Replace("+", ".")} value)
+                {{
+                    Value = value;
+                }}
+            }}
+            ";
 
-
-        [Fact]
-        public void Configuration_from_environment_variables_can_override_markown_preset_for_default_template()
-        {
-            // ARRANGE
-            PrepareConfiguration("template:default:markdownpreset", "default");
-            SetConfigEnvironmentVariable("template:default:markdownpreset", "mkdocs");
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Template.Default);
-            Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Template.Default.MarkdownPreset);
-        }
-
-        private class TestSettingsClass9
-        {
-            [ConfigurationValue("changelog:template:default:markdownpreset")]
-            public string? MarkdownPreset { get; set; }
-        }
-
-        [Fact]
-        public void Configuration_from_settings_object_can_override_markown_preset_for_default_template()
-        {
-            // ARRANGE
-            PrepareConfiguration("template:default:markdownpreset", "default");
-            var settingsObject = new TestSettingsClass9() { MarkdownPreset = "MkDocs" };
+            var dynamicAssembly = CSharpCompiler.Compile(sourceCode: cs, assemblyName: Guid.NewGuid().ToString());
+            var settingsObject = Activator.CreateInstance(dynamicAssembly.GetType("SettingsObject")!, new object[] { expectedValue });
 
             // ACT 
             var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
 
             // ASSERT
-            Assert.NotNull(config.Template.Default);
-            Assert.Equal(ChangeLogConfiguration.MarkdownPreset.MkDocs, config.Template.Default.MarkdownPreset);
-        }
-
-        [Fact]
-        public void EntryTypes_can_be_set_in_the_configuration_file()
-        {
-            // ARRANGE            
-            var entryTypes = new[]
+            if (assert is null)
             {
-                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = "Documentation Updates" },
-                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "bugfix", DisplayName = "Bug Fixes" }
-            };
-
-            PrepareConfiguration("entryTypes", entryTypes);
-
-            // ACT
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            var assertions = entryTypes
-                .Select<ChangeLogConfiguration.EntryTypeConfiguration, Action<ChangeLogConfiguration.EntryTypeConfiguration>>(
-                    expected => actual =>
-                    {
-                        Assert.Equal(expected.Type, actual.Type);
-                        Assert.Equal(expected.DisplayName, actual.DisplayName);
-                    })
-                .ToArray();
-
-            Assert.Equal(entryTypes.Length, config.EntryTypes.Length);
-            Assert.Collection(config.EntryTypes, assertions);
-        }
-
-        [Theory]
-        [EnumData]
-        public void ParserMode_can_be_set_in_configuration_file(ChangeLogConfiguration.ParserMode value)
-        {
-            // ARRANGE
-            PrepareConfiguration("parser:mode", value);
-
-            // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
-
-            // ASSERT
-            Assert.NotNull(config.Parser);
-            Assert.Equal(value, config.Parser.Mode);
+                var actualValue = getter.Compile()(config);
+                Assert.Equal(expectedValue, actualValue);
+            }
+            else
+            {
+                assert(config);
+            }
         }
     }
 }

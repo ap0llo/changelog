@@ -66,6 +66,7 @@ Thanks to all the people contributing to these projects:
 - [Coverlet](https://github.com/coverlet-coverage/coverlet)
 - [ReportGenerator](https://github.com/danielpalme/ReportGenerator)
 - [NetArchTest](https://github.com/BenMorris/NetArchTest)
+- [Microsoft.CodeAnalysis.CSharp](https://github.com/dotnet/roslyn)
 
 ## Versioning and Branching
 

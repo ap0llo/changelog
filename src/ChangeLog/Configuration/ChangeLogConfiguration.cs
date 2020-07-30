@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Grynwald.ChangeLog.Validation;
 
 namespace Grynwald.ChangeLog.Configuration
 {
@@ -7,6 +8,7 @@ namespace Grynwald.ChangeLog.Configuration
     {
         public class ScopeConfiguration
         {
+            [ValidationDisplayName("Scope Name")]
             public string Name { get; set; } = "";
 
             public string? DisplayName { get; set; }
@@ -14,6 +16,7 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class FooterConfiguration
         {
+            [ValidationDisplayName("Footer Name")]
             public string? Name { get; set; }
 
             public string? DisplayName { get; set; }
@@ -28,20 +31,38 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class GitHubIntegrationConfiguration
         {
+            [ValidationDisplayName("GitHub Access Token")]
             public string? AccessToken { get; set; } = null;
 
+            [ValidationDisplayName("GitHub Remote Name")]
             public string? RemoteName { get; set; } = null;
 
+            [ValidationDisplayName("GitHub Host")]
             public string? Host { get; set; } = null;
 
+            [ValidationDisplayName("GitHub Owner Name")]
             public string? Owner { get; set; } = null;
 
+            [ValidationDisplayName("GitHub Repository Name")]
             public string? Repository { get; set; } = null;
         }
 
         public class GitLabIntegrationConfiguration
         {
+            [ValidationDisplayName("GitLab Access Token")]
             public string? AccessToken { get; set; } = null;
+
+            [ValidationDisplayName("GitLab Remote Name")]
+            public string? RemoteName { get; set; } = null;
+
+            [ValidationDisplayName("GitLab Host")]
+            public string? Host { get; set; } = null;
+
+            [ValidationDisplayName("GitLab Namespace")]
+            public string? Namespace { get; set; } = null;
+
+            [ValidationDisplayName("GitLab Project Name")]
+            public string? Project { get; set; } = null;
         }
 
         public class IntegrationsConfiguration
@@ -80,6 +101,7 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class EntryTypeConfiguration
         {
+            [ValidationDisplayName("Entry Type")]
             public string Type { get; set; } = "";
 
             public string? DisplayName { get; set; }
@@ -109,8 +131,10 @@ namespace Grynwald.ChangeLog.Configuration
 
         public IntegrationsConfiguration Integrations { get; set; } = new IntegrationsConfiguration();
 
+        [ValidationDisplayName("Version Range")]
         public string? VersionRange { get; set; } = "";
 
+        [ValidationDisplayName("Current Version")]
         public string? CurrentVersion { get; set; }
 
         public TemplateConfiguration Template { get; set; } = new TemplateConfiguration();

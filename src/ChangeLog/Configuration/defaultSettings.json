@@ -37,7 +37,11 @@
       },
 
       "gitlab": {
-        "accessToken": null
+        "accessToken": null,
+        "remoteName": "origin",
+        "host": null,
+        "namespace": null,
+        "project": null
       }
     },
 

@@ -54,6 +54,7 @@ ChangeLog assumes, the remote URL follows the default schema used by github.com:
 
 ```txt
 https://github.com/example-owner/example-repo.git
+        └────────┘ └───────────┘ └──────────┘
             ▲           ▲             ▲
             │           │             │
             │           │             └── Repository Name: "example-repo"
@@ -78,8 +79,7 @@ Version 0.3 of ChangeLog introduced settings to customize this behaviour:
   - Allows explicitly specifying the repository name to use.
   - This setting takes precedence over the repository name parsed from the remote URL.
 
-When both Host, Repository Owner and Repository Name are set in the configuration, the remote URL is not parsed and the *GitHub Remote Name* setting has no effect.
-
+When both host, repository owner and repository name settings are specified, the remote URL is not parsed and the *GitHub Remote Name* setting has no effect.
 
 ### Access Token
 
@@ -118,11 +118,47 @@ The GitLab integration should work with both gitlab.com and self-hosted
 GitLab installations. However, it was not yet tested with a self-hosted
 GitLab instance.
 
-The address of the GitLab server and the project name are read from the URL
-of the *origin* remote in the local git repository.
+### Project information
 
-To access private repositories, an access token must be specified using the
-`--gitLabAccessToken` commandline parameter.
+By default, the GitLAb server name, the project's namespace and the project's name are read from the URL of the *origin* remote in the local git repository.
+
+ChangeLog assumes, the remote URL follows the default schema used by gitlab.com:
+
+```txt
+https://gitlab.com/group/subgroup/example-project.git
+        └────────┘ └────────────┘ └─────────────┘
+            ▲           ▲                ▲
+            │           │                │
+            │           │                └── Project Name: "example-project"
+            │           │
+            │           └── Project Namespace: "group/subgroup"
+            │
+            └── Host: "gitlab.com"
+```
+
+Version 0.3 of ChangeLog introduced settings to customize this behaviour:
+
+- [GitLab Remote Name](./configuration.md#gitlab-remote-name)
+  - Specifies the name of the git remote which's URL to parse.
+  - This allows automatically determining the GitLab project information when the remote is not `origin`
+- [GitLab Host](./configuration.md#gitlab-host)
+  - Allows explicitly specifying the host to use.
+  - This setting takes precedence over the host name parsed from the remote URL.
+- [GitLab Namespace](./configuration.md#gitlab-namespace)
+  - Allows explicitly specifying the project namespace to use.
+  - This setting takes precedence over the namespace parsed from the remote URL.
+- [GitLab Project Name](./configuration.md#gitlab-project-name)
+  - Allows explicitly specifying the repository name to use.
+  - This setting takes precedence over the project name parsed from the remote URL.
+
+When both host, namespace and project name settings are specified, the remote URL is not parsed and the *GitLab Remote Name* setting has no effect.
+
+### Access Token
+
+To access private repositories, an access token must be specified.
+This can be achieved using either commandline parameters or environment variables. See [Configuration - GitLab Access token](./configuration.md#gitlab-access-token) for details.
+
+
 
 ## See Also
 
