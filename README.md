@@ -67,6 +67,7 @@ Thanks to all the people contributing to these projects:
 - [ReportGenerator](https://github.com/danielpalme/ReportGenerator)
 - [NetArchTest](https://github.com/BenMorris/NetArchTest)
 - [Microsoft.CodeAnalysis.CSharp](https://github.com/dotnet/roslyn)
+- [Markdig](https://github.com/lunet-io/markdig)
 
 ## Versioning and Branching
 
