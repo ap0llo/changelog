@@ -7,8 +7,8 @@ The template to use can be configured using the `changelog:template:name` settin
 The following templates are supported:
 
 - [Default](#default-template)
-- [GitHubRelease](#githubrelease-template)
-- [GitLabRelease](#gitlabrelease-template)
+- [GitHubRelease](#github-release-template)
+- [GitLabRelease](#gitlab-release-template)
 
 ## Default Template
 

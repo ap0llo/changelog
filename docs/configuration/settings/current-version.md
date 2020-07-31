@@ -31,4 +31,4 @@ The value must be a valid semantic version.
 
 ## See Also
 
-[Configuration Overview](./configuration.md)
+[Configuration Overview](../../configuration.md)

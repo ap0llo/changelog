@@ -2,7 +2,7 @@
 
 ⚠️ **The Markdown Preset setting was removed in version 0.2.16:**
 With the introduction of templates, output settings have become template-specific.
-To set the preset for the default template use the [Markdown Preset (Default Template)](#markdown-preset-default-template) setting.
+see [Default Template settings](./default-template.md) for details.
 
 <table>
     <tr>

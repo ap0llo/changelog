@@ -35,7 +35,7 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 - [Current Version](./configuration/settings/current-version.md)
 - [Markdown Preset](./configuration/settings/markdown-preset.md)
 - [Tag Patterns](./configuration/settings/tag-patterns.md)
-- [Output Path](./configuration/settings/output-path.d)
+- [Output Path](./configuration/settings/output-path.md)
 - [Integration Provider](./configuration/settings/integration-provider.md)
 - [GitHub Integration](./configuration/settings/github-integration.md)
   - [GitHub Access Token](./configuration/settings/github-integration.md#github-access-token)
@@ -56,7 +56,7 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 ## See Also
 
 - [Commandline reference](./commandline-reference/index.md)
-- [`defaultSettings.json`](../src/ChangeLog/configuration/settings/defaultSettings.json)
+- [`defaultSettings.json`](../src/ChangeLog/configuration/defaultSettings.json)
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [Semantic Versioning](https://semver.org/)
 - [Integrations](./integrations.md)

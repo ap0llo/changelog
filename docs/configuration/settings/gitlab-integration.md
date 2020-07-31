@@ -164,7 +164,7 @@ When no namespace is specified (default behaviour), ChangeLog will attempt to de
 
 The *GitLab Project Name* setting specifies the name of the GitLab project to use.
 
-When no project name is specified (default behaviour), ChangeLog will attempt to determine the name from the git repository's remote URL (see also [*GitLab Remote Name* setting](#github-remote-name)).
+When no project name is specified (default behaviour), ChangeLog will attempt to determine the name from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
 
 ## See Also
 
