@@ -531,8 +531,8 @@
       },
       "NuGet.Versioning": {
         "type": "Transitive",
-        "resolved": "5.6.0",
-        "contentHash": "UIUh1X1XXSOJwc18a7ssTmCAyN7sDXOTfNJN9HfJnWX8NStzQeZq/6RHfSHYMxUjECk6n5alCQjUA51C36R46A=="
+        "resolved": "5.7.0",
+        "contentHash": "wS84PkpHd7V+HWdNiehlWnQ5tnqtlJakXVXovskdrnTJVTUf/IU4tJ2vvVfwdLyES5Z1CxkMmkh7Qmx2Wp2zzQ=="
       },
       "Octokit": {
         "type": "Transitive",
@@ -1465,7 +1465,7 @@
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.7",
           "Microsoft.Extensions.Configuration.Json": "3.1.7",
           "Microsoft.Extensions.Logging": "3.1.7",
-          "NuGet.Versioning": "5.6.0",
+          "NuGet.Versioning": "5.7.0",
           "Octokit": "0.48.0"
         }
       }
@@ -2006,8 +2006,8 @@
       },
       "NuGet.Versioning": {
         "type": "Transitive",
-        "resolved": "5.6.0",
-        "contentHash": "UIUh1X1XXSOJwc18a7ssTmCAyN7sDXOTfNJN9HfJnWX8NStzQeZq/6RHfSHYMxUjECk6n5alCQjUA51C36R46A=="
+        "resolved": "5.7.0",
+        "contentHash": "wS84PkpHd7V+HWdNiehlWnQ5tnqtlJakXVXovskdrnTJVTUf/IU4tJ2vvVfwdLyES5Z1CxkMmkh7Qmx2Wp2zzQ=="
       },
       "Octokit": {
         "type": "Transitive",
@@ -3397,7 +3397,7 @@
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "3.1.7",
           "Microsoft.Extensions.Configuration.Json": "3.1.7",
           "Microsoft.Extensions.Logging": "3.1.7",
-          "NuGet.Versioning": "5.6.0",
+          "NuGet.Versioning": "5.7.0",
           "Octokit": "0.48.0"
         }
       }
