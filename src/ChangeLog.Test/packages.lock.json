@@ -80,9 +80,9 @@
       },
       "NetArchTest.Rules": {
         "type": "Direct",
-        "requested": "[1.2.5, )",
-        "resolved": "1.2.5",
-        "contentHash": "E9aKDlrCVwShdQu/QT5VQZXP4dh/P4mZTLMDiv0LXdnN5d+3F/TcYQY4MQ7+2vkUHKnPz9pbTtlSGEjQ1BYeBw==",
+        "requested": "[1.2.6, )",
+        "resolved": "1.2.6",
+        "contentHash": "sadNb+vCi3JngM1gNyzrYT0bDJOMapvX4f+T+D/3kxh5Q3ev+ESmwXcj6E2VP0VDnHaZlGVunx2IfUnXn+85qA==",
         "dependencies": {
           "Mono.Cecil": "0.11.2",
           "System.Reflection.Extensions": "4.3.0",
@@ -1537,9 +1537,9 @@
       },
       "NetArchTest.Rules": {
         "type": "Direct",
-        "requested": "[1.2.5, )",
-        "resolved": "1.2.5",
-        "contentHash": "E9aKDlrCVwShdQu/QT5VQZXP4dh/P4mZTLMDiv0LXdnN5d+3F/TcYQY4MQ7+2vkUHKnPz9pbTtlSGEjQ1BYeBw==",
+        "requested": "[1.2.6, )",
+        "resolved": "1.2.6",
+        "contentHash": "sadNb+vCi3JngM1gNyzrYT0bDJOMapvX4f+T+D/3kxh5Q3ev+ESmwXcj6E2VP0VDnHaZlGVunx2IfUnXn+85qA==",
         "dependencies": {
           "Mono.Cecil": "0.11.2",
           "System.Reflection.Extensions": "4.3.0",
