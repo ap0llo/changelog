@@ -19,9 +19,9 @@
       },
       "Markdig": {
         "type": "Direct",
-        "requested": "[0.21.0, )",
-        "resolved": "0.21.0",
-        "contentHash": "AjY4Wg2cgSfgwAaJQ4GHqnUcAeMw5h8zqroHYpQqsNgvE9P99CfVx7F+yxSghIbpE6IaO1erOojyA0OuLSnLqA=="
+        "requested": "[0.21.1, )",
+        "resolved": "0.21.1",
+        "contentHash": "1tC4yb1lOnx7xPwNIaIFvlfDIYObiYylmYXcHP+QdIOEXaJif5PXcp71QHH5sYKNuiql/28oegDYS+2t6W1zpg=="
       },
       "Microsoft.NET.Test.Sdk": {
         "type": "Direct",
