@@ -19,7 +19,7 @@ The default settings are defined in [`defaultSettings.json`](../../src/ChangeLog
 
 You can customize settings by placing them in a configuration file.
 The configuration file is a JSON file and uses the same schema as [`defaultSettings.json`](../../src/ChangeLog/Configuration/defaultSettings.json).
-A JSON Schema for the configuration file can be found at <https://raw.githubusercontent.com/ap0llo/changelog/master/schemas/configuration/settings/schema.json>.
+A JSON Schema for the configuration file can be found at <https://raw.githubusercontent.com/ap0llo/changelog/master/schemas/configuration/schema.json>.
 The schema provides auto-completion support when editing the configuration file in editors that support JSON Schema (e.g. Visual Studio Code).
 
 The use of a configuration file is **optional**.
