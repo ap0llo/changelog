@@ -18,3 +18,5 @@ navbaritems:
       link: ref:docs/templates.md
     - title: Commandline Reference
       link: ref:docs/commandline-reference/index.md
+    - title: Commit Message Parser
+      link: ref:docs/commit-message-parser.md
