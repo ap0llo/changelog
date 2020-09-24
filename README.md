@@ -24,8 +24,8 @@ using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ## Building from source
 
-ChangeLog is a .NET Core application. Building it from source
-requires the .NET SDK 3.1 (version 3.1.100)
+ChangeLog is a .NET Core application.
+Building it from source requires the .NET 5 SDK (version 5.0.100 as specified in [global.json](./global.json))
 
 ```ps1
 dotnet restore .\ChangeLog.sln
