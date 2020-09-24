@@ -75,7 +75,7 @@ namespace schema
             else if (runtimeType.IsEnum)
             {
                 // Map enum values to strings with an enumeration of valid values
-                var enumValues = Enum.GetValues(runtimeType).Cast<object>().Select(x => x.ToString()!).ToArray();
+                var enumValues = Enum.GetValues(runtimeType).Cast<object>().Select(x => x!.ToString()!).ToArray();
                 return new JObject()
                     .WithProperty("type", "string")
                     .WithProperty("enum", new JArray(enumValues));

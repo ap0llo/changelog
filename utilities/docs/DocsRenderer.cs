@@ -48,7 +48,7 @@ namespace docs
 
                 return value switch
                 {
-                    IEnumerable enumerable => enumerable.Cast<object>(),
+                    IEnumerable enumerable => (IEnumerable<object>)enumerable.Cast<object>(),
                     _ => Enumerable.Empty<object>()
                 };
             }
@@ -57,7 +57,7 @@ namespace docs
             {
                 return GetConfigurationValue(settingsKey) switch
                 {
-                    Enum enumValue => Enum.GetValues(enumValue.GetType()).Cast<object>().Select(x => x.ToString()!),
+                    Enum enumValue => Enum.GetValues(enumValue.GetType()).Cast<object>()?.Select(x => x!.ToString()!)!,
                     _ => Enumerable.Empty<string>()
                 };
             }
@@ -83,7 +83,7 @@ namespace docs
         {
             public static object? OrderByDescending(IEnumerable toSort, string sortBy)
             {
-                return toSort?.Cast<object>()?.OrderByDescending(obj => GetPropertyValue(obj, sortBy, '.'));
+                return toSort?.Cast<object>()?.OrderByDescending(obj => GetPropertyValue(obj!, sortBy, '.'));
             }
         }
 

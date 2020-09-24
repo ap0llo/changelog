@@ -91,7 +91,7 @@ namespace schema
 
             WriteMessage($"Saving schema to '{schemaPath}'");
 
-            Directory.CreateDirectory(Path.GetDirectoryName(schemaPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(schemaPath)!);
             File.WriteAllText(schemaPath, schema);
             return 0;
         }
