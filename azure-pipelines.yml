@@ -394,10 +394,10 @@ jobs:
       foreach($variableName in $variableNames) {
         $value = $json."$variableName"
         Write-Host "Setting variable '$variableName' to '$value'"
-        Write-Host ""##vso[task.setvariable variable=$variableName]$value""
+        Write-Host "##vso[task.setvariable variable=$variableName]$value"
       }
     displayName: Load version variables
 
   - powershell : |
-      Write-Host "NBGV_NuGetPackageVersion is $($env:NBGV_NuGetPackageVersion)"
+      Write-Host "NBGV_NuGetPackageVersion is $(NBGV_NuGetPackageVersion)"
     displayName: "Print NBGV_NuGetPackageVersion"
