@@ -161,10 +161,16 @@ jobs:
         --output $(Build.ArtifactStagingDirectory) 
         --no-build 
         /warnaserror        
-  - task: PublishBuildArtifacts@1
+  # Use a inline Powershell script for publishing artifacts instead of the built-in PublishBuildArtifacts task
+  # because the built-in task does not support wildcards and the artifacts staging directory contains other 
+  # artifacts as well (e.g. the variables JSON file published as the 'Variables' artifacts)
+  - powershell: |
+      $packageFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Filter "*.nupkg"
+      foreach($packageFile in $packageFiles) {
+        Write-Host "Publishing Artifact '$($packageFile.FullName)'"
+        Write-Host "##vso[artifact.upload artifactname=$(artifactsName_Binaries)]$($packageFile.FullName)"
+      }
     displayName: 'Publish Artifacts: $(artifactsName_Binaries)'
-    inputs:
-      artifactName: $(artifactsName_Binaries)
 
   # Generate changelog and publish as build artifact
   - task: DotNetCoreCLI@2
@@ -254,7 +260,7 @@ jobs:
       nugetFeedType: external
       publishFeedCredentials: $(nuget_org_ServiceConnectionName)
 
-# Job to create a GitHub release (only if a package was uploaded to NuGet.org)
+# Job to create a GitHub release (only when building a release branch and the package was uploaded to NuGet.org)
 - job: Create_GitHub_Release
   displayName: Create GitHub Release
   pool: 
@@ -327,7 +333,7 @@ jobs:
       assets: $(Build.ArtifactStagingDirectory)/$(artifactsName_Binaries)/*.nupkg
       addChangeLog: false
 
-# Job to create a GitHub *DRAFT* release (only if a package was uploaded to myget.org)
+# Job to create a GitHub *DRAFT* release (only when building the 'master' branch)
 - job: Create_GitHub_Draft_Release
   displayName: Create GitHub DRAFT Release
   pool:
