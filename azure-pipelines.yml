@@ -198,6 +198,10 @@ jobs:
   dependsOn: Build_and_Test
   condition: and(succeeded('Build_and_Test'), or(eq(variables['build.sourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/') ))
   steps:
+
+  # Skip checkout of sources, all data required for this step can be laoded from the previous job's artifacts
+  - checkout: none  
+  
   # Get artifacts
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Artifacts: $(artifactsName_Binaries)'
@@ -206,6 +210,7 @@ jobs:
       downloadType: single
       artifactName: $(artifactsName_Binaries)
       downloadPath: $(Build.ArtifactStagingDirectory)
+  
   # Upload to MyGet.org
   - task: NuGetCommand@2
     displayName: "Upload package"
@@ -228,6 +233,10 @@ jobs:
       startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
     )
   steps:
+  
+  # Skip checkout of sources, all data required for this step can be laoded from the previous job's artifacts
+  - checkout: none
+  
   # Get artifacts
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Artifacts: $(artifactsName_Binaries)'
@@ -236,6 +245,7 @@ jobs:
       downloadType: single
       artifactName: $(artifactsName_Binaries)
       downloadPath: $(Build.ArtifactStagingDirectory)
+  
   # Upload to NuGet.org
   - task: NuGetCommand@2
     displayName: 'Upload package to NuGet.org'
@@ -261,7 +271,7 @@ jobs:
     )
   steps:
 
-  # Skip checkout of sources, all data required for this setp can be laoded from the previous job's artifacts
+  # Skip checkout of sources, all data required for this step can be laoded from the previous job's artifacts
   - checkout: none
 
   # Get variables from Build job (the Build_an_Test job saves variables to a JSON files and publishes it as build artifact)
@@ -329,7 +339,7 @@ jobs:
 
   steps:
 
-  # Skip checkout of sources, all data required for this setp can be laoded from the previous job's artifacts
+  # Skip checkout of sources, all data required for this step can be laoded from the previous job's artifacts
   - checkout: none
 
   # Get variables from Build job (the Build_an_Test job saves variables to a JSON files and publishes it as build artifact)
