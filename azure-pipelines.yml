@@ -8,7 +8,7 @@
 #   - Pushes the NuGet package to MyGet
 #   - Assumes a Service Connection for MyGet was set up in the Team project running the pipeline
 #   - The name of the service connection is stored in the variable myget_ServiceConnectionName (defined below)
-#   - Only runs when building a release branch or the master branch
+#   - Only runs when building a release branch or the 'master' branch
 # - Publish_to_NuGet_org
 #   - Pushes the NuGet package to NuGet.org
 #   - Assumes a Service Connection for NuGet was set up in the Team project running the pipeline
@@ -16,7 +16,10 @@
 #   - The variable nuget_org_PackageName defines which package is produced by the pipeline
 # - Create_GitHub_Release
 #   - Creates a GitHub release for the build
-#   - Only runs if the build was published to NuGet.org
+#   - Only runs when building the a release branch and publishing to nuget.org succeeded
+# - Create_GitHub_Draft_Release
+#   - Creates a *DRAFT* release on GitHub
+#   - Only runs when building the 'master' branch
 
 trigger:
   - master
@@ -54,7 +57,7 @@ jobs:
 # Main Build and test job: Builds the projects and runs all tests
 - job: Build_and_Test
   displayName: Build and Test
-  pool: 
+  pool:
     vmImage: $(azuredevops_vmimage)
   steps:
 
@@ -89,18 +92,18 @@ jobs:
       # Caculate output path
       $outDirPath = Join-Path "$(Build.ArtifactStagingDirectory)" "$(artifactsName_Variables)"
       $outFilePath = Join-Path $outDirPath "nbgv.json"
-      
-      # Get version variables (the value of the 'CloudBuildAllVars' property in the JSON outpu of nbgv)      
+
+      # Get version variables (the value of the 'CloudBuildAllVars' property in the JSON output of nbgv)
       $json = Invoke-Expression "dotnet tool run nbgv -- get-version --format json" | ConvertFrom-Json
       if($LASTEXITCODE -ne 0) {
         throw "'nbgv get-version' completed with exit code $LASTEXITCODE"
       }
-      $json = $json.CloudBuildAllVars | ConvertTo-Json 
-      
-      # Create output directory      
+      $json = $json.CloudBuildAllVars | ConvertTo-Json
+
+      # Create output directory
       if(-not (Test-Path $outDirPath)) {
         New-Item -ItemType Directory -Path $outDirPath | Out-Null
-      } 
+      }
 
       # Save variables to file
       [System.IO.File]::WriteAllText($outFilePath, $json)
@@ -258,26 +261,31 @@ jobs:
     )
   steps:
 
-  # Install .NET Core SDK and runtime (version specified in global.json)
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
+  # Skip checkout of sources, all data required for this setp can be laoded from the previous job's artifacts
+  - checkout: none
+
+  # Get variables from Build job (the Build_an_Test job saves variables to a JSON files and publishes it as build artifact)
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Artifacts: $(artifactsName_Variables)'
     inputs:
-      packageType: sdk
-      useGlobalJson: true
+      buildType: current
+      downloadType: single
+      artifactName: variables
+      downloadPath: $(Build.ArtifactStagingDirectory)
+  - powershell : |
+      # Load variables JSON file generated during build
+      $json = Get-Content -Raw "$(Build.ArtifactStagingDirectory)/$(artifactsName_Variables)/nbgv.json" | ConvertFrom-Json
 
-  # Restore local .NET Core tools
-  - task: DotNetCoreCLI@2
-    displayName: Restore local tools
-    inputs:
-      command: custom
-      custom: tool
-      arguments: restore
+      # for each variable, set the value as Azure Pipelines variable
+      $variableNames = $json | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
+      foreach($variableName in $variableNames) {
+        $value = $json."$variableName"
+        Write-Host "Setting variable '$variableName' to '$value'"
+        Write-Host "##vso[task.setvariable variable=$variableName]$value"
+      }
+    displayName: Load version variables
 
-  # Set the build number using Nerdbank.GitVersioning
-  - script: dotnet tool run nbgv cloud --all-vars
-    displayName: Set Version
-
-  # Get artifacts
+  # Get artifacts (Changelog and Binaries/packages)
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Artifacts: $(artifactsName_Binaries)'
     inputs:
@@ -312,34 +320,40 @@ jobs:
 # Job to create a GitHub *DRAFT* release (only if a package was uploaded to myget.org)
 - job: Create_GitHub_Draft_Release
   displayName: Create GitHub DRAFT Release
-  pool: 
+  pool:
     vmImage: $(azuredevops_vmimage)
   # Only run if build was successful and a package was uploaded to nuget.org
   dependsOn:
   - Build_and_Test
   condition: eq(variables['build.sourceBranch'], 'refs/heads/master')
+
   steps:
 
-  # Install .NET Core SDK and runtime (version specified in global.json)
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core SDK'
+  # Skip checkout of sources, all data required for this setp can be laoded from the previous job's artifacts
+  - checkout: none
+
+  # Get variables from Build job (the Build_an_Test job saves variables to a JSON files and publishes it as build artifact)
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Artifacts: $(artifactsName_Variables)'
     inputs:
-      packageType: sdk
-      useGlobalJson: true
+      buildType: current
+      downloadType: single
+      artifactName: variables
+      downloadPath: $(Build.ArtifactStagingDirectory)
+  - powershell : |
+      # Load variables JSON file generated during build
+      $json = Get-Content -Raw "$(Build.ArtifactStagingDirectory)/$(artifactsName_Variables)/nbgv.json" | ConvertFrom-Json
 
-  # Restore local .NET Core tools
-  - task: DotNetCoreCLI@2
-    displayName: Restore local tools
-    inputs:
-      command: custom
-      custom: tool
-      arguments: restore
+      # for each variable, set the value as Azure Pipelines variable
+      $variableNames = $json | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
+      foreach($variableName in $variableNames) {
+        $value = $json."$variableName"
+        Write-Host "Setting variable '$variableName' to '$value'"
+        Write-Host "##vso[task.setvariable variable=$variableName]$value"
+      }
+    displayName: Load version variables
 
-  # Set the build number using Nerdbank.GitVersioning
-  - script: dotnet tool run nbgv cloud --all-vars
-    displayName: Set Version
-
-  # Get artifacts (changelog)
+  # Download changelog (gernated by the Build_and_Test job and published as build artifact)
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Artifacts: $(artifactsName_ChangeLog)'
     inputs:
@@ -363,41 +377,3 @@ jobs:
       releaseNotesFile: $(Build.ArtifactStagingDirectory)/$(artifactsName_ChangeLog)/changelog.md
       addChangeLog: false
       isDraft: true
-
-
-- job: Test_Job
-  displayName: Test Job
-  pool: 
-    vmImage: $(azuredevops_vmimage)
-  # Only run if build was successful and a package was uploaded to nuget.org
-  dependsOn:
-  - Build_and_Test
-
-  steps:
-  - checkout: none
-
-  # Get artifacts (variables)
-  - task: DownloadBuildArtifacts@0
-    displayName: 'Download Artifacts: Variables'
-    inputs:
-      buildType: current
-      downloadType: single
-      artifactName: variables
-      downloadPath: $(Build.ArtifactStagingDirectory)
-
-  - powershell : |
-      # Load variables JSON file generated during build      
-      $json = Get-Content -Raw "$(Build.ArtifactStagingDirectory)/$(artifactsName_Variables)/nbgv.json" | ConvertFrom-Json
-
-      # for each variable, set the value as Azure Pipelines variable
-      $variableNames = $json | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
-      foreach($variableName in $variableNames) {
-        $value = $json."$variableName"
-        Write-Host "Setting variable '$variableName' to '$value'"
-        Write-Host "##vso[task.setvariable variable=$variableName]$value"
-      }
-    displayName: Load version variables
-
-  - powershell : |
-      Write-Host "NBGV_NuGetPackageVersion is $(NBGV_NuGetPackageVersion)"
-    displayName: "Print NBGV_NuGetPackageVersion"
