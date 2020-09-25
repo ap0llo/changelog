@@ -356,6 +356,9 @@ namespace Grynwald.ChangeLog.Test.Git
 
             var process = Process.Start(startInfo);
 
+            if (process is null)
+                throw new InvalidOperationException("Failed to start git process. Process.Start() returned null");
+
             process.ErrorDataReceived += (s, e) =>
             {
                 if (e.Data is string)

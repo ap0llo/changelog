@@ -45,13 +45,6 @@
 		<NoWarn>8632</NoWarn>  <!-- Suppress warning about nullable annotation in the source code although nullable is disabled-->
 	</PropertyGroup>
 
-	<!-- Disable nullable support on .NET 5 -->
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
-		<Nullable>disable</Nullable>
-		<NoWarn>8632</NoWarn>  <!-- Suppress warning about nullable annotation in the source code although nullable is disabled-->
-	</PropertyGroup>
-
-
 	<!--NuGet package properties -->
 	<PropertyGroup>
 		<Authors>Andreas Gruenwald</Authors>

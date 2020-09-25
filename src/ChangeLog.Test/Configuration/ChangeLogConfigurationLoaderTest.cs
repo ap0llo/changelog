@@ -28,9 +28,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             // clear environment variables (might be set by previous test runs)
             var envVars = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
-            foreach (var key in envVars.Keys.Cast<string>().Where(x => x.StartsWith("CHANGELOG__")))
+            foreach (var key in envVars.Keys.Cast<string>().Where(x => x?.StartsWith("CHANGELOG__") == true))
             {
-                Environment.SetEnvironmentVariable(key, null, EnvironmentVariableTarget.Process);
+                Environment.SetEnvironmentVariable(key!, null, EnvironmentVariableTarget.Process);
             }
         }
 
@@ -391,7 +391,17 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
         private static IEnumerable<T> GetEnumValues<T>() where T : Enum
         {
-            return Enum.GetValues(typeof(T)).Cast<T>();
+            foreach (var value in Enum.GetValues(typeof(T)))
+            {
+                if (value is T)
+                {
+                    yield return (T)value;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Enum.GetValues() returned null value");
+                }
+            }
         }
 
         private static IEnumerable<(object?[] testData, SettingsTarget target)> AllSetValueTestCases()
