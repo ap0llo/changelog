@@ -360,6 +360,7 @@ jobs:
   - Build_and_Test
 
   steps:
+  - checkout: none
 
   # Get artifacts (variables)
   - task: DownloadBuildArtifacts@0
