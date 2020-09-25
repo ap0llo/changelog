@@ -371,7 +371,7 @@ jobs:
       downloadPath: $(Build.ArtifactStagingDirectory)
 
   - powershell : |
-      $json = Get-Content -Raw "$(Build.ArtifactStagingDirectory)/nbgv.json" | ConvertFrom-Json
+      $json = Get-Content -Raw "$(Build.ArtifactStagingDirectory)/variables/nbgv.json" | ConvertFrom-Json
 
       $variableNames = $json | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
       foreach($name in $variableNames) {
