@@ -349,3 +349,38 @@ jobs:
       releaseNotesFile: $(Build.ArtifactStagingDirectory)/$(artifactsName_ChangeLog)/changelog.md
       addChangeLog: false
       isDraft: true
+
+
+- job: Test_Job
+  displayName: Test Job
+  pool: 
+    vmImage: $(azuredevops_vmimage)
+  # Only run if build was successful and a package was uploaded to nuget.org
+  dependsOn:
+  - Build_and_Test
+
+  steps:
+
+  # Get artifacts (variables)
+  - task: DownloadBuildArtifacts@0
+    displayName: 'Download Artifacts: Variables'
+    inputs:
+      buildType: current
+      downloadType: single
+      artifactName: variables
+      downloadPath: $(Build.ArtifactStagingDirectory)
+
+  - powershell : |
+      $json = Get-Content -Raw "$(Build.ArtifactStagingDirectory)/nbgv.json" | ConvertFrom-Json
+
+      $variableNames = $json | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name
+      foreach($name in $variableNames) {
+        $value = $json."$name"
+        Write-Host "Setting variable '$name' to '$value'"
+        Write-Host ""##vso[task.setvariable variable=$name]$value""
+      }
+    displayName: Load variables
+
+  - powershell : |
+      Write-Host "NBGV_GitCommitDate is $(NBGV_GitCommitDate)"
+    displayName: "Print variable value"
