@@ -85,11 +85,15 @@ jobs:
 
   # Save nbgv variables as json artifac
   - powershell: |
-      $tempPath = [System.IO.Path]::GetTempFileName()
+      $variableOutputPath = "$(Build.ArtifactStagingDirectory)/nbgv.json"
       $json = Invoke-Expression "dotnet tool run nbgv -- get-version --format json" | ConvertFrom-Json
       $json = $json.CloudBuildAllVars | ConvertTo-Json 
-      [System.IO.File]::WriteAllText($tempPath, $json)
-      Write-Host "##vso[artifact.upload artifactname=variables]$tempPath"
+      [System.IO.File]::WriteAllText($variableOutputPath, $json)
+      Write-Host "##vso[artifact.upload artifactname=variables]$variableOutputPath"
+
+      $variableOutputPath2 = "$(Build.ArtifactStagingDirectory)/nbgv2.json"
+      cp $variableOutputPath $variableOutputPath2
+      Write-Host "##vso[artifact.upload artifactname=variables]$variableOutputPath2"      
 
   # Check the formatting using dotnet-format
   - script: dotnet format ./src --folder --check
