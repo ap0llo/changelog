@@ -97,6 +97,10 @@
                 "parser": {
                     "$ref": "#/definitions/parserConfiguration",
                     "description": "Specifies settings on how Conventional Commit messages are parsed."
+                },
+                "filter": {
+                    "$ref": "#/definitions/filterConfiguration",
+                    "description": "Specifies which change log entries to include in the output"
                 }
             },
             "additionalProperties": false
@@ -295,6 +299,50 @@
                 }
             },
             "additionalProperties": false
+        },
+        "filterConfiguration": {
+            "type": "object",
+            "properties": {
+                "include": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/filterExpression"
+                    },
+                    "default": [
+                        { "type": "feat" },
+                        { "type": "fix" }
+                    ],
+                    "title": "Include Expressions",
+                    "description": "Defines which change log entries to include in the output. All entries that match *any* of the specified include expressions are included. After all includes were evaluated, the 'exclude' expressions are applied to the already filtered list of change log entries."
+                },
+                "exclude": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/filterExpression"
+                    },
+                    "default": [],
+                    "title": "Exclude Expression",
+                    "description": "Defines oen or more filter expressions to remove change log entries matched by the 'include' patterns. A change log entry will be removed from the output, if *any* of the specified 'exclude' expressions match the entry."
+                }
+            },
+            "description": "Specifies one or more 'include' and 'exclude' expressions to define a filter for a change log."
+        },
+        "filterExpression": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "default": "*",
+                    "title": "Commit Message Type",
+                    "description": "Matches a change log entry's type. Supports wildcards."
+                },
+                "scope": {
+                    "type": "string",
+                    "default": "*",
+                    "title": "Commit Message Scope",
+                    "description": "Matches a change log entry's scope. Supports wildcards."
+                }
+            }
         }
     }
 }

@@ -17,6 +17,14 @@
 
     "footers": [],
 
+    "filter": {
+      "include": [
+        { "type": "feat" },
+        { "type": "fix" }
+      ],
+      "exclude": []
+    },
+
     "tagPatterns": [
       "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
       "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
