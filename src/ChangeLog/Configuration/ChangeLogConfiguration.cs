@@ -121,12 +121,12 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class FilterConfiguration
         {
-            public FilterExpression[] Include { get; set; } = Array.Empty<FilterExpression>();
+            public FilterExpressionConfiguration[] Include { get; set; } = Array.Empty<FilterExpressionConfiguration>();
 
-            public FilterExpression[] Exclude { get; set; } = Array.Empty<FilterExpression>();
+            public FilterExpressionConfiguration[] Exclude { get; set; } = Array.Empty<FilterExpressionConfiguration>();
         }
 
-        public class FilterExpression
+        public class FilterExpressionConfiguration
         {
             public string Type { get; set; } = "*";
 

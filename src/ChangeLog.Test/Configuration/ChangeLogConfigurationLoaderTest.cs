@@ -88,7 +88,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal(expectedDisplayName, x.DisplayName);
         }
 
-        private static void AssertFilterExpression(ChangeLogConfiguration.FilterExpression x, string type, string scope)
+        private static void AssertFilterExpression(ChangeLogConfiguration.FilterExpressionConfiguration x, string type, string scope)
         {
             Assert.NotNull(x);
             Assert.Equal(type, x.Type);
@@ -525,8 +525,8 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 getter: config => config.Filter.Include,
                 value: new[]
                 {
-                    new ChangeLogConfiguration.FilterExpression() { Type = "docs", Scope = "some-scope"},
-                    new ChangeLogConfiguration.FilterExpression() { Type = "ci" },
+                    new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "docs", Scope = "some-scope"},
+                    new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "ci" },
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
@@ -540,8 +540,8 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 getter: config => config.Filter.Exclude,
                 value: new[]
                 {
-                    new ChangeLogConfiguration.FilterExpression() { Type = "docs", Scope = "some-scope"},
-                    new ChangeLogConfiguration.FilterExpression() { Type = "ci" },
+                    new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "docs", Scope = "some-scope"},
+                    new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "ci" },
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
