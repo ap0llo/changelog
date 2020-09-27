@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
+using Grynwald.ChangeLog.Filtering;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test.Tasks
+namespace Grynwald.ChangeLog.Test.Filtering
 {
     /// <summary>
     /// Unit tests for <see cref="FilterEntriesTask"/>
@@ -42,17 +43,23 @@ namespace Grynwald.ChangeLog.Test.Tasks
             Assert.All(changeLog.AllEntries, e => Assert.True(e.Type == CommitType.Feature || e.Type == CommitType.BugFix));
         }
 
-
         [Fact]
-        public async Task RunAsync_removes_all_entries_configured_types()
+        public async Task RunAsync_removes_entries_as_according_to_the_filter_configuration()
         {
             // ARRANGE
             var config = new ChangeLogConfiguration()
             {
-                EntryTypes = new[]
+                Filter = new ChangeLogConfiguration.FilterConfiguration()
                 {
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "build", DisplayName= "Irrelevant"},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "refactor", DisplayName= "Irrelevant"}
+                    Include = new[]
+                    {
+                        new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "build" },
+                        new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "refactor" }
+                    },
+                    Exclude = new[]
+                    {
+                        new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "build", Scope = "ignored-scope" }
+                    },
                 }
             };
             var changeLog = GetSingleVersionChangeLog("1.2.3", entries: new[]
@@ -60,6 +67,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 GetChangeLogEntry(type: "feat"),
                 GetChangeLogEntry(type: "fix"),
                 GetChangeLogEntry(type: "refactor"),
+                GetChangeLogEntry(type: "build", scope: "ignored-scope"),
                 GetChangeLogEntry(type: "build"),
             });
 
@@ -71,9 +79,12 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
             Assert.Equal(2, changeLog.AllEntries.Count());
-            Assert.All(changeLog.AllEntries, e => Assert.True(e.Type == new CommitType("build") || e.Type == new CommitType("refactor")));
+            Assert.All(changeLog.AllEntries, e =>
+            {
+                Assert.True(e.Type == new CommitType("build") || e.Type == new CommitType("refactor"));
+                Assert.Null(e.Scope);
+            });
         }
-
 
         [Fact]
         public async Task RunAsync_does_not_remote_entries_if_they_contain_breaking_changes()
@@ -82,7 +93,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var changeLog = GetSingleVersionChangeLog("1.2.3", entries: new[]
             {
                 GetChangeLogEntry(type: "refactor", isBreakingChange: true),
-                GetChangeLogEntry(type: "build", breakingChangeDescriptions: new[]{ "Some breaking change" }),
+                GetChangeLogEntry(type: "build", breakingChangeDescriptions: new[] { "Some breaking change" }),
             });
 
             var sut = new FilterEntriesTask(m_Logger, m_DefaultConfiguration);

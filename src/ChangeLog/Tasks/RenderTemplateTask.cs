@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
 {
+    //TODO: Consider moving this class to the "Templates" namespace
     internal sealed class RenderTemplateTask : SynchronousChangeLogTask
     {
         private readonly ILogger<RenderTemplateTask> m_Logger;
