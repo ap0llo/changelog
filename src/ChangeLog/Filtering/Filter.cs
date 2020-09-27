@@ -13,11 +13,11 @@ namespace Grynwald.ChangeLog.Filtering
     /// <list type="number">
     ///     <item><description>
     ///         First, the 'include' expressions are applied.
-    ///         The filter matches an entry if *any* include expression matches the entry.
+    ///         The filter 'includes' an entry  if *any* include expression matches the entry.
     ///     </description></item>
     ///     <item><description>
     ///         Secondly, the 'exclude' expressions are applied to the entry if it was matched by the include expressions.
-    ///         If any of the exclude expression matches the changelog entry, the entry is considered not matched.
+    ///         If any of the exclude expression matches the change log entry, the entry is not 'included' by the filter.
     ///     </description></item>
     /// </list>
     /// </remarks>
@@ -41,17 +41,16 @@ namespace Grynwald.ChangeLog.Filtering
             m_ExcludeExpressions = excludeExpressions ?? throw new ArgumentNullException(nameof(excludeExpressions));
         }
 
-
         /// <summary>
-        /// Determines whether the specified entry is matched by the filter.
+        /// Determines whether the specified entry should be included in the output.
         /// </summary>
         /// <remarks>
-        /// A entry is matched if it is matched by *any* of the 'include' expressions and *not* by any ot the 'exclude' expressions.
+        /// A entry is included if it is matched by *any* of the 'include' expressions and *not* by any of the 'exclude' expressions.
         /// </remarks>
         /// <param name="entry">The entry to evaluate the filter for.</param>
         /// <returns>Returns <c>true</c> if the entry was matched by the filter, otherwise returns <c>false</c></returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="entry"/> is <c>null</c></exception>
-        public bool IsMatch(ChangeLogEntry entry)
+        public bool IsIncluded(ChangeLogEntry entry)
         {
             if (entry is null)
                 throw new ArgumentNullException(nameof(entry));

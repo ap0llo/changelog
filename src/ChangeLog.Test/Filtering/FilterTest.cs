@@ -169,7 +169,7 @@ namespace Grynwald.ChangeLog.Test.Filtering
 
         [Theory]
         [MemberData(nameof(TestCases))]
-        public void IsMatch_returns_expected_result(string id, XunitSerializableChangeLogEntry entry, IReadOnlyList<XunitSerializableFilterExpression> include, IReadOnlyList<XunitSerializableFilterExpression> exclude, bool expected)
+        public void IsIncluded_returns_expected_result(string id, XunitSerializableChangeLogEntry entry, IReadOnlyList<XunitSerializableFilterExpression> include, IReadOnlyList<XunitSerializableFilterExpression> exclude, bool expected)
         {
             // ARRANGE
             _ = id;
@@ -177,7 +177,7 @@ namespace Grynwald.ChangeLog.Test.Filtering
             var sut = new Filter(include.Select(x => x.Value).ToArray(), exclude.Select(x => x.Value).ToArray());
 
             // ACT 
-            var actual = sut.IsMatch(entry.Value);
+            var actual = sut.IsIncluded(entry.Value);
 
             // ASSERT
             Assert.Equal(expected, actual);
@@ -197,13 +197,13 @@ namespace Grynwald.ChangeLog.Test.Filtering
         }
 
         [Fact]
-        public void IsMatch_throws_ArgumentNullException_if_entry_is_null()
+        public void IsIncluded_throws_ArgumentNullException_if_entry_is_null()
         {
             // ARRANGE
             var sut = new Filter(Array.Empty<FilterExpression>(), Array.Empty<FilterExpression>());
 
             // ACT / ASSERT
-            Assert.Throws<ArgumentNullException>(() => sut.IsMatch(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.IsIncluded(null!));
         }
 
     }

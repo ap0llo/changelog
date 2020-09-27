@@ -36,7 +36,7 @@ namespace Grynwald.ChangeLog.Filtering
             foreach (var versionChangeLog in changelog.ChangeLogs)
             {
                 var entriesToRemove = versionChangeLog.AllEntries
-                    .Where(x => !filter.IsMatch(x) && !x.ContainsBreakingChanges);
+                    .Where(x => !filter.IsIncluded(x) && !x.ContainsBreakingChanges);
 
                 foreach (var entry in entriesToRemove)
                 {
