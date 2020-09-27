@@ -21,56 +21,59 @@ namespace Grynwald.ChangeLog.Test.Filtering
             // Match entry type
             //
 
-            // "" would match entries without a type (which is not a valid entry and hence no entry is matched)
+            // "" or null would match entries without a type (which is not a valid entry and hence no entry is matched)
             yield return TestCase("T01", filterType: "", entryType: "feat", expectedResult: false);
+            yield return TestCase("T02", filterType: null, entryType: "feat", expectedResult: false);
 
             // "*" matches any type
-            yield return TestCase("T02", filterType: "*", entryType: "feat", expectedResult: true);
-            yield return TestCase("T03", filterType: "*", entryType: "fix", expectedResult: true);
-            yield return TestCase("T04", filterType: "*", entryType: "some-type", expectedResult: true);
+            yield return TestCase("T03", filterType: "*", entryType: "feat", expectedResult: true);
+            yield return TestCase("T04", filterType: "*", entryType: "fix", expectedResult: true);
+            yield return TestCase("T05", filterType: "*", entryType: "some-type", expectedResult: true);
 
             // wildcard types matches entries with types matching the wildcard (case-insensitive)
-            yield return TestCase("T05", filterType: "f*", entryType: "feat", expectedResult: true);
-            yield return TestCase("T06", filterType: "f*", entryType: "fix", expectedResult: true);
-            yield return TestCase("T07", filterType: "f*", entryType: "docs", expectedResult: false);
+            yield return TestCase("T06", filterType: "f*", entryType: "feat", expectedResult: true);
+            yield return TestCase("T07", filterType: "f*", entryType: "fix", expectedResult: true);
+            yield return TestCase("T08", filterType: "f*", entryType: "docs", expectedResult: false);
 
             // non-wildcard scope filters match the scope exactly (but are case-insensitive)
-            yield return TestCase("T08", filterType: "feat", entryType: "feat", expectedResult: true);
-            yield return TestCase("T09", filterType: "fix", entryType: "fix", expectedResult: true);
-            yield return TestCase("T10", filterType: "feat", entryType: "fix", expectedResult: false);
-            yield return TestCase("T11", filterType: "fix", entryType: "feat", expectedResult: false);
+            yield return TestCase("T09", filterType: "feat", entryType: "feat", expectedResult: true);
+            yield return TestCase("T10", filterType: "fix", entryType: "fix", expectedResult: true);
+            yield return TestCase("T11", filterType: "feat", entryType: "fix", expectedResult: false);
+            yield return TestCase("T12", filterType: "fix", entryType: "feat", expectedResult: false);
 
             //
             // Match scope
             //
 
-            // "" matches only entries without scope
-            yield return TestCase("T12", filterScope: "", entryScope: "", expectedResult: true);
-            yield return TestCase("T13", filterScope: "", entryScope: "some-scope", expectedResult: false);
+            // "" or null matches only entries without scope
+            yield return TestCase("T13", filterScope: "", entryScope: "", expectedResult: true);
+            yield return TestCase("T14", filterScope: null, entryScope: "", expectedResult: true);
+            yield return TestCase("T15", filterScope: "", entryScope: "some-scope", expectedResult: false);
+            yield return TestCase("T16", filterScope: null, entryScope: "some-scope", expectedResult: false);
 
             // "*" matches entries with any scope (including entries without scope)
-            yield return TestCase("T14", filterScope: "*", entryScope: null, expectedResult: true);
-            yield return TestCase("T15", filterScope: "*", entryScope: "", expectedResult: true);
-            yield return TestCase("T16", filterScope: "*", entryScope: "some-scope", expectedResult: true);
+            yield return TestCase("T17", filterScope: "*", entryScope: null, expectedResult: true);
+            yield return TestCase("T18", filterScope: "*", entryScope: "", expectedResult: true);
+            yield return TestCase("T19", filterScope: "*", entryScope: "some-scope", expectedResult: true);
 
             // wildcard scopes matches entries with scopes matching the wildcard
-            yield return TestCase("T17", filterScope: "some*", entryScope: "some-scope", expectedResult: true);
-            yield return TestCase("T18", filterScope: "some*", entryScope: "SOME-SCOPE", expectedResult: true);
-            yield return TestCase("T19", filterScope: "some*", entryScope: "some-other-scope", expectedResult: true);
-            yield return TestCase("T20", filterScope: "some*", entryScope: "non-matching-scope", expectedResult: false);
+            yield return TestCase("T21", filterScope: "some*", entryScope: "some-scope", expectedResult: true);
+            yield return TestCase("T22", filterScope: "some*", entryScope: "SOME-SCOPE", expectedResult: true);
+            yield return TestCase("T23", filterScope: "some*", entryScope: "some-other-scope", expectedResult: true);
+            yield return TestCase("T24", filterScope: "some*", entryScope: "non-matching-scope", expectedResult: false);
 
             // non-wildcard scope filters match the scope exactly (but are case-insensitive)
-            yield return TestCase("T21", filterScope: "some-scope", entryScope: "some-scope", expectedResult: true);
-            yield return TestCase("T22", filterScope: "some-scope", entryScope: "SOME-scope", expectedResult: true);
-            yield return TestCase("T23", filterScope: "some-scope", entryScope: "some-other-scope", expectedResult: false);
+            yield return TestCase("T25", filterScope: "some-scope", entryScope: "some-scope", expectedResult: true);
+            yield return TestCase("T26", filterScope: "some-scope", entryScope: "SOME-scope", expectedResult: true);
+            yield return TestCase("T27", filterScope: "some-scope", entryScope: "some-other-scope", expectedResult: false);
 
             //
             // Match type and scope: Entry is only matched if both type and scope match
             //
-            yield return TestCase("T24", filterType: "*", filterScope: "*", entryType: "feat", entryScope: "some-scope", expectedResult: true);
-            yield return TestCase("T24", filterType: "feat", filterScope: "some-scope", entryType: "feat", entryScope: "some-scope", expectedResult: true);
-            yield return TestCase("T24", filterType: "feat", filterScope: "some-scope", entryType: "fix", entryScope: "some-scope", expectedResult: false);
-            yield return TestCase("T24", filterType: "feat", filterScope: "some-scope", entryType: "feat", entryScope: "some-other-scope", expectedResult: false);
+            yield return TestCase("T28", filterType: "*", filterScope: "*", entryType: "feat", entryScope: "some-scope", expectedResult: true);
+            yield return TestCase("T29", filterType: "feat", filterScope: "some-scope", entryType: "feat", entryScope: "some-scope", expectedResult: true);
+            yield return TestCase("T30", filterType: "feat", filterScope: "some-scope", entryType: "fix", entryScope: "some-scope", expectedResult: false);
+            yield return TestCase("T31", filterType: "feat", filterScope: "some-scope", entryType: "feat", entryScope: "some-other-scope", expectedResult: false);
         }
 
         [Theory]
@@ -91,33 +94,33 @@ namespace Grynwald.ChangeLog.Test.Filtering
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(" ")]
         [InlineData("\t")]
-        public void Type_must_not_be_null_or_whitespace(string type)
+        public void Type_must_not_be_whitespace(string type)
         {
             Assert.Throws<ArgumentException>(() => new FilterExpression(type, "*"));
         }
 
         [Theory]
+        [InlineData(null)]
         [InlineData("")]
-        public void Type_may_be_an_empty_string(string type)
+        public void Type_may_be_null_or_empty(string type)
         {
             _ = new FilterExpression(type, "*");
         }
 
         [Theory]
-        [InlineData(null)]
         [InlineData(" ")]
         [InlineData("\t")]
-        public void Scope_must_not_be_null_or_whitespace(string scope)
+        public void Scope_must_not_be_whitespace(string scope)
         {
             Assert.Throws<ArgumentException>(() => new FilterExpression("*", scope));
         }
 
         [Theory]
+        [InlineData(null)]
         [InlineData("")]
-        public void Scope_may_be_an_empty_string(string scope)
+        public void Scope_may_be_null_or_empty(string scope)
         {
             _ = new FilterExpression("*", scope);
         }

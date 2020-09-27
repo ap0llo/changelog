@@ -29,36 +29,36 @@ namespace Grynwald.ChangeLog.Filtering
         /// <summary>
         /// Gets the entry type matched by this filter expression
         /// </summary>
-        public string Type { get; }
+        public string? Type { get; }
 
         /// <summary>
         /// Gets the entry scope matched by this filter expression
         /// </summary>
-        public string Scope { get; }
+        public string? Scope { get; }
 
 
         /// <summary>
         /// Initializes a new instance of <see cref="FilterExpression"/>.
         /// </summary>
-        /// <param name="type">The type to match, supports wildcards.</param>
-        /// <param name="scope">The scope to match, sipports wildcards.</param>
+        /// <param name="type">The type to match, supports wildcards. If value is <c>null</c> or empty, matches entries without a type.</param>
+        /// <param name="scope">The scope to match, supports wildcards. If value is <c>null</c> or empty, matches entries without a scope.</param>
         /// <exception cref="ArgumentException">Thrown when <paramref name="type"/> is <c>null</c> or whitespace and not an empty string.</exception>
         /// <exception cref="ArgumentException">Thrown when <paramref name="scope"/> is <c>null</c> or whitespace and not an empty string.</exception>
-        public FilterExpression(string type, string scope)
+        public FilterExpression(string? type, string? scope)
         {
-            // Type and Scope must not be null or whitespace-only strings BUT may be an empty string
+            // Type must not be a whitespace-only strings BUT may be an null or empty
+            if (!String.IsNullOrEmpty(type) && String.IsNullOrWhiteSpace(type))
+                throw new ArgumentException("Value must not be whitespace", nameof(type));
 
-            if (type is null || (type != "" && String.IsNullOrWhiteSpace(type)))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(type));
-
-            if (scope is null || (scope != "" && String.IsNullOrWhiteSpace(scope)))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(scope));
+            // Scope must not be a whitespace-only strings BUT may be an null or empty
+            if (!String.IsNullOrEmpty(scope) && String.IsNullOrWhiteSpace(scope))
+                throw new ArgumentException("Value must not be whitespace", nameof(scope));
 
             Type = type;
             Scope = scope;
 
             // when type is an empty string, match entry without type (= type is null or empty)
-            if (type == "")
+            if (String.IsNullOrEmpty(type))
             {
                 m_MatchType = entry => String.IsNullOrEmpty(entry.Type.Type);
             }
