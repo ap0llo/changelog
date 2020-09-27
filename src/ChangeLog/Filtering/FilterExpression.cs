@@ -27,6 +27,17 @@ namespace Grynwald.ChangeLog.Filtering
 
 
         /// <summary>
+        /// Gets the entry type matched by this filter expression
+        /// </summary>
+        public string Type { get; }
+
+        /// <summary>
+        /// Gets the entry scope matched by this filter expression
+        /// </summary>
+        public string Scope { get; }
+
+
+        /// <summary>
         /// Initializes a new instance of <see cref="FilterExpression"/>.
         /// </summary>
         /// <param name="type">The type to match, supports wildcards.</param>
@@ -43,6 +54,8 @@ namespace Grynwald.ChangeLog.Filtering
             if (scope is null || (scope != "" && String.IsNullOrWhiteSpace(scope)))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(scope));
 
+            Type = type;
+            Scope = scope;
 
             // when type is an empty string, match entry without type (= type is null or empty)
             if (type == "")
@@ -72,7 +85,7 @@ namespace Grynwald.ChangeLog.Filtering
         /// <summary>
         /// Determines whether the specified entry matches the filter expression.
         /// </summary>
-        /// <param name="entry">The entry to evaluate the filter expression for,</param>
+        /// <param name="entry">The entry to evaluate the filter expression for.</param>
         /// <returns>Returns <c>true</c> if the entry matches the filter expression, otherwise returns <c>false</c></returns>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="entry"/> is <c>null</c></exception>
         public bool IsMatch(ChangeLogEntry entry)
