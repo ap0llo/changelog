@@ -128,8 +128,10 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class FilterExpressionConfiguration
         {
+            [ValidationDisplayName("Filter Type Expression")]
             public string Type { get; set; } = "*";
 
+            [ValidationDisplayName("Filter Scope Expression")]
             public string Scope { get; set; } = "*";
         }
 

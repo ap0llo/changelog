@@ -1,7 +1,6 @@
 ﻿using System;
 using Grynwald.ChangeLog.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using Grynwald.ChangeLog.Test.ConventionalCommits;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Configuration
@@ -538,6 +537,138 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
             Assert.Contains("'GitLab Project Name'", error.ErrorMessage);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void Filter_Type_expression_can_be_null_or_empty(string filterType)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Filter.Include = new[]
+            {
+                new ChangeLogConfiguration.FilterExpressionConfiguration()
+                {
+                    Type = filterType
+                }
+            };
+            config.Filter.Exclude = new[]
+            {
+                new ChangeLogConfiguration.FilterExpressionConfiguration()
+                {
+                    Type = filterType
+                }
+            };
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
+        }
+
+        [Theory]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void Filter_Type_expression_must_not_be_whitespace(string filterType)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Filter.Include = new[]
+            {
+                new ChangeLogConfiguration.FilterExpressionConfiguration()
+                {
+                    Type = filterType
+                }
+            };
+            config.Filter.Exclude = new[]
+            {
+                new ChangeLogConfiguration.FilterExpressionConfiguration()
+                {
+                    Type = filterType
+                }
+            };
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Filter Type Expression'", error.ErrorMessage),
+                error => Assert.Contains("'Filter Type Expression'", error.ErrorMessage)
+            );
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void Filter_Scope_expression_can_be_null_or_empty(string filterType)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Filter.Include = new[]
+            {
+                new ChangeLogConfiguration.FilterExpressionConfiguration()
+                {
+                    Scope = filterType
+                }
+            };
+            config.Filter.Exclude = new[]
+            {
+                new ChangeLogConfiguration.FilterExpressionConfiguration()
+                {
+                    Scope = filterType
+                }
+            };
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
+        }
+
+        [Theory]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void Filter_Scope_expression_must_not_be_whitespace(string filterType)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Filter.Include = new[]
+            {
+                new ChangeLogConfiguration.FilterExpressionConfiguration()
+                {
+                    Scope = filterType
+                }
+            };
+            config.Filter.Exclude = new[]
+            {
+                new ChangeLogConfiguration.FilterExpressionConfiguration()
+                {
+                    Scope = filterType
+                }
+            };
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Filter Scope Expression'", error.ErrorMessage),
+                error => Assert.Contains("'Filter Scope Expression'", error.ErrorMessage)
+            );
         }
     }
 }
