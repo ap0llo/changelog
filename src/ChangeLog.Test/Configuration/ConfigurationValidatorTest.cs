@@ -81,6 +81,29 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Theory]
+        [InlineData("some-footer")]
+        public void Footer_name_must_be_unique(string footerName)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Footers = new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>()
+            {
+                { footerName.ToLower(), new ChangeLogConfiguration.FooterConfiguration() },
+                { footerName.ToUpper(), new ChangeLogConfiguration.FooterConfiguration() }
+            };
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'Footer Name' must be unique", error.ErrorMessage);
+        }
+
+        [Theory]
         [InlineData("")]
         [InlineData(null)]
         public void VersionRange_can_be_null_or_empty(string versionRange)
