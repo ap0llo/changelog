@@ -30,6 +30,7 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 - [Scopes](./configuration/settings/scopes.md)
 - [Footers](./configuration/settings/footers.md)
 - [Entry Types](./configuration/settings/entry-types.md)
+- [Filter](./configuration/settings/filter.md)
 - [Parser Mode](./configuration/settings/parser-mode.md)
 - [Version Range](./configuration/settings/version-range.md)
 - [Current Version](./configuration/settings/current-version.md)
