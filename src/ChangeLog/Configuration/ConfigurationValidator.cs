@@ -18,7 +18,7 @@ namespace Grynwald.ChangeLog.Configuration
                 .ChildRules(scope => scope.RuleFor(x => x.Name).NotEmpty());
 
             RuleForEach(x => x.Footers)
-                .ChildRules(footer => footer.RuleFor(x => x.Name).NotEmpty());
+                .ChildRules(footer => footer.RuleFor(x => x.Key).NotEmpty().WithName("Footer Name"));
 
             RuleForEach(x => x.EntryTypes)
                 .ChildRules(entryType => entryType.RuleFor(x => x.Type).NotEmpty());

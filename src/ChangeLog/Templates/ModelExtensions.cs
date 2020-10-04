@@ -37,10 +37,10 @@ namespace Grynwald.ChangeLog.Templates
         public static string GetFooterDisplayName(this ChangeLogEntryFooter footer, ChangeLogConfiguration configuration)
         {
             var displayName = configuration.Footers
-                .FirstOrDefault(c =>
-                    !String.IsNullOrWhiteSpace(c.Name) &&
-                    new CommitMessageFooterName(c.Name).Equals(footer.Name)
-                )?.DisplayName;
+                .FirstOrDefault(kvp =>
+                    !String.IsNullOrWhiteSpace(kvp.Key) &&
+                    new CommitMessageFooterName(kvp.Key).Equals(footer.Name)
+                ).Value?.DisplayName;
 
             return !String.IsNullOrWhiteSpace(displayName) ? displayName : footer.Name.Value;
         }

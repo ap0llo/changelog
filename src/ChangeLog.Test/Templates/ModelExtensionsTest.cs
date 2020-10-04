@@ -1,4 +1,5 @@
-﻿using Grynwald.ChangeLog.Configuration;
+﻿using System.Collections.Generic;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Templates;
@@ -103,9 +104,9 @@ namespace Grynwald.ChangeLog.Test.Templates
             // ARRANGE
             var configuration = new ChangeLogConfiguration()
             {
-                Footers = new[]
+                Footers = new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>()
                 {
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = configuredFooter, DisplayName = "Footer Display Name" }
+                    { configuredFooter, new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "Footer Display Name" } }
                 }
             };
 
@@ -126,9 +127,9 @@ namespace Grynwald.ChangeLog.Test.Templates
             var footerName = "footerName";
             var configuration = new ChangeLogConfiguration()
             {
-                Footers = new[]
+                Footers = new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>()
                 {
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = "someOtherFooter", DisplayName = "Footer Display Name" }
+                    { "someOtherFooter",  new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "Footer Display Name" } }
                 }
             };
 
@@ -152,9 +153,9 @@ namespace Grynwald.ChangeLog.Test.Templates
             var footerName = "footerName";
             var configuration = new ChangeLogConfiguration()
             {
-                Footers = new[]
+                Footers = new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>()
                 {
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = footerName, DisplayName = configuredDisplayName }
+                    { footerName, new ChangeLogConfiguration.FooterConfiguration() { DisplayName = configuredDisplayName } }
                 }
             };
 

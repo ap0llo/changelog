@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Test.ConventionalCommits;
 using Xunit;
@@ -59,14 +60,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [InlineData("")]
         [InlineData("\t")]
         [InlineData("  ")]
-        [InlineData(null)]
-        public void Footer_name_must_not_be_null_of_whitespace(string footerName)
+        public void Footer_name_must_not_be_empty_or_whitespace(string footerName)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.Footers = new[]
+            config.Footers = new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>()
             {
-                new ChangeLogConfiguration.FooterConfiguration(){ Name = footerName, DisplayName = "Display Name"}
+                { footerName, new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "Display Name"} }
             };
 
             var sut = new ConfigurationValidator();

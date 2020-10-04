@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -54,10 +55,17 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 {
                     if (value.GetType().IsArray)
                     {
-                        value = JArray.FromObject(value);
+                        currentConfigObject.Add(new JProperty(keySegments[i], JArray.FromObject(value)));
                     }
-
-                    currentConfigObject.Add(new JProperty(keySegments[i], value));
+                    else if (value is IDictionary)
+                    {
+                        var jsonValue = JsonConvert.SerializeObject(value);
+                        currentConfigObject.Add(new JProperty(keySegments[i], JObject.Parse(jsonValue)));
+                    }
+                    else
+                    {
+                        currentConfigObject.Add(new JProperty(keySegments[i], value));
+                    }
 
                 }
                 // create child configuration object
@@ -451,26 +459,34 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(
                 key: "footers",
                 getter: config => config.Footers,
-                value: new[]
+                value: new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>()
                 {
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = "footer1", DisplayName = "DisplayName 1" },
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = "footer2", DisplayName = "DisplayName 2" }
+                    { "footer1", new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "DisplayName 1" } },
+                    { "footer2",  new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "DisplayName 2" } }
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
                 {
                     Assert.Collection(config.Footers,
-                       f =>
+                       kvp =>
                        {
-                           Assert.Equal("footer1", f.Name);
-                           Assert.Equal("DisplayName 1", f.DisplayName);
+                           Assert.Equal("footer1", kvp.Key);
+                           Assert.NotNull(kvp.Value);
+                           Assert.Equal("DisplayName 1", kvp.Value.DisplayName);
                        },
-                       f =>
+                       kvp =>
                        {
-                           Assert.Equal("footer2", f.Name);
-                           Assert.Equal("DisplayName 2", f.DisplayName);
+                           Assert.Equal("footer2", kvp.Key);
+                           Assert.NotNull(kvp.Value);
+                           Assert.Equal("DisplayName 2", kvp.Value.DisplayName);
                        });
                 });
+
+            yield return TestCase(
+                key: "footers:footer1:displayName",
+                getter: config => config.Footers["footer1"].DisplayName,
+                value: "DisplayName 1",
+                target: SettingsTarget.All);
 
             //
             // Scope settings
