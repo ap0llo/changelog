@@ -1,13 +1,23 @@
-# Footers Setting
+# Footer Settings
+
+---
+
+⚠️ The format of the "Footers" setting has changed in version 0.3 of changelog.
+
+For documentation on the "Footers" setting in version 0.2, see [Footers Setting (v0.2)](https://github.com/ap0llo/changelog/blob/release/v0.2/docs/configuration.md#footers).
+
+---
+
+## Footer Display Name
 
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:footers</code></td>
+        <td><code>changelog:footers:&lt;FOOTERNAME&gt;:displayname</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td>-</td>
+        <td><code>CHANGELOG__FOOTERS__&lt;FOOTERNAME&gt;__DISPLAYNAME</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
@@ -19,23 +29,26 @@
     </tr>
     <tr>
         <td><b>Version Support</b></td>
-        <td>0.1+</td>
+        <td>0.3+</td>
     </tr>
 </table>
 
-The *Footers* setting configures how [Conventional Commit](https://www.conventionalcommits.org/) footers are displayed.
+
+The *Footer Dispaly Name* setting configures how [Conventional Commit](https://www.conventionalcommits.org/) footers are displayed.
+
 By default, footers are included unchanged in the output.
-Using this setting, you can configure a footer's display name.
-When a display name is configured, it will be used in the output instead of the footer's name.
+Using this setting, you can configure a footer's display name which will be used in the output instead of the footer's name.
 
 ## Example
+
+The example below shows how to configure a display name for the `See-Also` footer.
 
 ```json
 {
     "changelog" : {
-        "footers" : [
-            { "name":  "see-also", "displayName":  "See Also" }
-        ]
+        "footers" : {
+            "see-also": {  "displayName":  "See Also" }
+        }
     }
 }
 ```
@@ -43,3 +56,4 @@ When a display name is configured, it will be used in the output instead of the 
 ## See Also
 
 - [Configuration Overview](../../configuration.md)
+- [Conventional Commits](https://www.conventionalcommits.org/)
