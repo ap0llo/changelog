@@ -119,6 +119,23 @@ namespace Grynwald.ChangeLog.Configuration
         }
 
 
+        public class FilterConfiguration
+        {
+            public FilterExpressionConfiguration[] Include { get; set; } = Array.Empty<FilterExpressionConfiguration>();
+
+            public FilterExpressionConfiguration[] Exclude { get; set; } = Array.Empty<FilterExpressionConfiguration>();
+        }
+
+        public class FilterExpressionConfiguration
+        {
+            [ValidationDisplayName("Filter Type Expression")]
+            public string Type { get; set; } = "*";
+
+            [ValidationDisplayName("Filter Scope Expression")]
+            public string Scope { get; set; } = "*";
+        }
+
+
         public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
 
         public string[] TagPatterns { get; set; } = Array.Empty<string>();
@@ -142,6 +159,8 @@ namespace Grynwald.ChangeLog.Configuration
         public EntryTypeConfiguration[] EntryTypes { get; set; } = Array.Empty<EntryTypeConfiguration>();
 
         public ParserConfiguration Parser { get; set; } = new ParserConfiguration();
+
+        public FilterConfiguration Filter { get; set; } = new FilterConfiguration();
 
 
         public string GetFullOutputPath()

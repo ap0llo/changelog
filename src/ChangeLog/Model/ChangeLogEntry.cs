@@ -12,7 +12,9 @@ namespace Grynwald.ChangeLog.Model
 
         public CommitType Type { get; }
 
-        public string? Scope { get; } // TODO: Use a custom type instead of string?
+        // TODO: Ensure scope is either null or not-empty
+        // TODO: Use a custom type instead of string?
+        public string? Scope { get; }
 
         /// <summary>
         /// Gets whether this change contains a breaking change.

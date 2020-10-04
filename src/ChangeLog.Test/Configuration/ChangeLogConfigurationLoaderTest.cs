@@ -88,6 +88,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal(expectedDisplayName, x.DisplayName);
         }
 
+        private static void AssertFilterExpression(ChangeLogConfiguration.FilterExpressionConfiguration x, string type, string scope)
+        {
+            Assert.NotNull(x);
+            Assert.Equal(type, x.Type);
+            Assert.Equal(scope, x.Scope);
+        }
+
 
         /// <summary>
         /// Gets the assertions that must be true for the default configuration
@@ -216,6 +223,20 @@ namespace Grynwald.ChangeLog.Test.Configuration
             //
             yield return TestCase(config => Assert.NotNull(config.Parser));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.ParserMode.Loose, config.Parser.Mode));
+
+            //
+            // Filter settings
+            //
+            yield return TestCase(config => Assert.NotNull(config.Filter));
+
+            yield return TestCase(config => Assert.NotNull(config.Filter.Include));
+            yield return TestCase(config => Assert.Collection(config.Filter.Include,
+                x => AssertFilterExpression(x, "feat", "*"),
+                x => AssertFilterExpression(x, "fix", "*")
+            ));
+
+            yield return TestCase(config => Assert.NotNull(config.Filter.Exclude));
+            yield return TestCase(config => Assert.Empty(config.Filter.Exclude));
         }
 
         [Theory]
@@ -491,19 +512,43 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
-                {
                     Assert.Collection(config.EntryTypes,
-                        e =>
-                        {
-                            Assert.Equal("docs", e.Type);
-                            Assert.Equal("Documentation Updates", e.DisplayName);
-                        },
-                        e =>
-                        {
-                            Assert.Equal("bugfix", e.Type);
-                            Assert.Equal("Bug Fixes", e.DisplayName);
-                        });
-                });
+                        e => AssertEntryType(e, new CommitType("docs"), "Documentation Updates"),
+                        e => AssertEntryType(e, new CommitType("bugfix"), "Bug Fixes")
+                ));
+
+            //
+            // Filter settings
+            //
+            yield return TestCase(
+                key: "filter:include",
+                getter: config => config.Filter.Include,
+                value: new[]
+                {
+                    new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "docs", Scope = "some-scope"},
+                    new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "ci" },
+                },
+                target: SettingsTarget.ConfigurationFile,
+                assert: config =>
+                    Assert.Collection(config.Filter.Include,
+                        x => AssertFilterExpression(x, "docs", "some-scope"),
+                        x => AssertFilterExpression(x, "ci", "*")
+                ));
+
+            yield return TestCase(
+                key: "filter:exclude",
+                getter: config => config.Filter.Exclude,
+                value: new[]
+                {
+                    new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "docs", Scope = "some-scope"},
+                    new ChangeLogConfiguration.FilterExpressionConfiguration() { Type = "ci" },
+                },
+                target: SettingsTarget.ConfigurationFile,
+                assert: config =>
+                    Assert.Collection(config.Filter.Exclude,
+                        x => AssertFilterExpression(x, "docs", "some-scope"),
+                        x => AssertFilterExpression(x, "ci", "*")
+                ));
         }
 
         public static IEnumerable<object[]> ConfigurationFileSetValueTestCases()

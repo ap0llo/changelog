@@ -40,6 +40,14 @@ namespace Grynwald.ChangeLog.Configuration
             RuleFor(x => x.Integrations.GitLab.Host).NotWhitespace();
             RuleFor(x => x.Integrations.GitLab.Namespace).NotWhitespace();
             RuleFor(x => x.Integrations.GitLab.Project).NotWhitespace();
+
+            RuleForEach(x => x.Filter.Include)
+                .ChildRules(filter => filter.RuleFor(f => f.Type).NotWhitespace())
+                .ChildRules(filter => filter.RuleFor(f => f.Scope).NotWhitespace());
+
+            RuleForEach(x => x.Filter.Exclude)
+                .ChildRules(filter => filter.RuleFor(f => f.Type).NotWhitespace())
+                .ChildRules(filter => filter.RuleFor(f => f.Scope).NotWhitespace());
         }
 
 

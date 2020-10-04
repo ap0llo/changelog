@@ -1,5 +1,13 @@
 # Entry Types Setting
 
+---
+
+⚠️ The behaviour of the "Entry Types" setting has changed in version 0.3 of changelog.
+
+For documentation on the "Entry Types" setting in version 0.2, see [Entry Types Setting (v0.2)](https://github.com/ap0llo/changelog/blob/release/v0.2/docs/configuration.md#entry-types).
+
+---
+
 <table>
     <tr>
         <td><b>Setting</b></td>
@@ -25,24 +33,41 @@
     </tr>
     <tr>
         <td><b>Version Support</b></td>
-        <td>0.2+</td>
+        <td>
+        <ul>
+            <li>0.2, see <a href="https://github.com/ap0llo/changelog/blob/release/v0.2/docs/configuration.md#entry-types">Entry Types Setting (v0.2)</a></li>
+            <li>0.3+</li>
+        </ul>        
+        </td>
     </tr>
 </table>
 
-The "Entry Types" setting controls which types of change log entries are included in the change log.
-By default, all entries of type `feat` and `fix` are included.
-The `DisplayName` property controls, the title that is used for displaying entries of this type.
+The "Entry Types" setting controls how different types of entries are display in the output.
+
+In the output, change log entries are grouped by their type.
+The display name configured for each entry type is used as heading for that group of entries.
+If no display name is configured, the entry type itself is used instead.
+
+In the default configuration, the following display names are pre-configured:
+
+| Entry Type | Display Name |
+|------------|--------------|
+| `feat`     | New Features |
+| `fix`      | Bug Fixes    |
+
+
+---
 
 ⚠️ Using this setting in a configuration file will overwrite the default value.
-To also include changes of type `feat` and `fix`, you need to include the default value in your configuration file.
-It is not possible to just add additional types.
-For example, to include all changes of type `feat`, `fix` and `docs`, you must include all three types in the configuration file (see Example).
 
-ℹ️ Change log entries that contain breaking changes are always included, regardless of this setting or the entry type.
+It is not possible to just configured display names for additional entry types.
+If you specify this setting in a configuration file, be sure to also include a display name for the preconfigured entry types.
+
+---
 
 ## Example
 
-The following example shows how to include changes of type `feat`, `fix` and `docs` in the change log:
+The following example shows how to define a display name for entries of type `feat`, `fix` and `docs`:
 
 ```json
 {
@@ -59,3 +84,4 @@ The following example shows how to include changes of type `feat`, `fix` and `do
 ## See Also
 
 - [Configuration Overview](../../configuration.md)
+- [Entry Types Setting (v0.2)](https://github.com/ap0llo/changelog/blob/release/v0.2/docs/configuration.md#entry-types)

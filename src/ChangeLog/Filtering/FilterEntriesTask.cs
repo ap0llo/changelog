@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
-using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Grynwald.ChangeLog.Tasks
+namespace Grynwald.ChangeLog.Filtering
 {
     /// <summary>
     /// Tasks that removed ignored entries from the change log based on their type
@@ -31,12 +31,12 @@ namespace Grynwald.ChangeLog.Tasks
         {
             m_Logger.LogInformation($"Filtering change log entries.");
 
-            var types = m_Configuration.EntryTypes.Select(x => new CommitType(x.Type)).ToHashSet();
+            var filter = m_Configuration.Filter.ToFilter();
 
             foreach (var versionChangeLog in changelog.ChangeLogs)
             {
                 var entriesToRemove = versionChangeLog.AllEntries
-                    .Where(x => !types.Contains(x.Type) && !x.ContainsBreakingChanges);
+                    .Where(x => !filter.IsIncluded(x) && !x.ContainsBreakingChanges);
 
                 foreach (var entry in entriesToRemove)
                 {
