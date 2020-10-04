@@ -43,12 +43,14 @@
                     "description": "Specifies the output path for the generated change log."
                 },
                 "footers": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/footerConfiguration"
+                    "type": "object",
+                    "patternProperties": {
+                        ".*" : {
+                            "$ref": "#/definitions/footerConfiguration"
+                        }
                     },
                     "title": "Footers",
-                    "description": "Sets preferences on how  Conventional Commit footers are processed."
+                    "description": "Sets preferences on how Conventional Commit footers are processed."
                 },
                 "integrations": {
                     "$ref": "#/definitions/integrationsConfiguration",
@@ -125,10 +127,6 @@
         "footerConfiguration": {
             "type": "object",
             "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Specifies the name of the footer the settings apply to."
-                },
                 "displayName": {
                     "type": "string",
                     "description": "Specifies the display name of the footer. When no display name is configured, the footer's name is used as display name."

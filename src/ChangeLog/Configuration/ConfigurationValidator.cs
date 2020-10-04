@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
+using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Validation;
 
 namespace Grynwald.ChangeLog.Configuration
@@ -18,7 +20,15 @@ namespace Grynwald.ChangeLog.Configuration
                 .ChildRules(scope => scope.RuleFor(x => x.Name).NotEmpty());
 
             RuleForEach(x => x.Footers)
-                .ChildRules(footer => footer.RuleFor(x => x.Name).NotEmpty());
+                .ChildRules(footer => footer.RuleFor(x => x.Key).NotEmpty().WithName("Footer Name"))
+                .DependentRules(() =>
+                    RuleFor(x => x.Footers.Keys)
+                       .Must(keys =>
+                       {
+                           var footerNames = keys.Select(key => new CommitMessageFooterName(key));
+                           return footerNames.Distinct().Count() == keys.Count;
+                       })
+                       .WithMessage("'Footer Name' must be unique"));
 
             RuleForEach(x => x.EntryTypes)
                 .ChildRules(entryType => entryType.RuleFor(x => x.Type).NotEmpty());

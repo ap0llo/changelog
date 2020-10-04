@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using ApprovalTests;
 using ApprovalTests.Reporters;
@@ -398,10 +399,10 @@ namespace Grynwald.ChangeLog.Test.Templates
             // the output must use the display name instead of the footer name
 
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.Footers = new[]
+            config.Footers = new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>
             {
-                new ChangeLogConfiguration.FooterConfiguration() { Name = "see-also", DisplayName = "See Also" },
-                new ChangeLogConfiguration.FooterConfiguration() { Name = "reviewed-by", DisplayName = "Reviewed by" }
+                { "see-also", new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "See Also" } },
+                {  "reviewed-by", new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "Reviewed by" } }
             };
 
             var versionChangeLog = GetSingleVersionChangeLog(

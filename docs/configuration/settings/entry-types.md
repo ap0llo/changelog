@@ -55,7 +55,6 @@ In the default configuration, the following display names are pre-configured:
 | `feat`     | New Features |
 | `fix`      | Bug Fixes    |
 
-
 ---
 
 ⚠️ Using this setting in a configuration file will overwrite the default value.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Grynwald.ChangeLog.Validation;
 
@@ -16,9 +17,6 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class FooterConfiguration
         {
-            [ValidationDisplayName("Footer Name")]
-            public string? Name { get; set; }
-
             public string? DisplayName { get; set; }
         }
 
@@ -144,7 +142,7 @@ namespace Grynwald.ChangeLog.Configuration
 
         public string RepositoryPath { get; set; } = null!;
 
-        public FooterConfiguration[] Footers { get; set; } = Array.Empty<FooterConfiguration>();
+        public Dictionary<string, FooterConfiguration> Footers { get; set; } = new Dictionary<string, FooterConfiguration>();
 
         public IntegrationsConfiguration Integrations { get; set; } = new IntegrationsConfiguration();
 

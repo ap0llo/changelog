@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Configuration
 {
+    /// <summary>
+    /// Tests for <see cref="ChangeLogConfigurationLoader"/>.
+    /// </summary>
     public class ChangeLogConfigurationLoaderTest : IDisposable
     {
         private readonly TemporaryDirectory m_ConfigurationDirectory = new TemporaryDirectory();
@@ -52,12 +56,23 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 // last fragment => add value
                 if (i == keySegments.Length - 1)
                 {
-                    if (value.GetType().IsArray)
+                    if (value is null)
                     {
-                        value = JArray.FromObject(value);
+                        currentConfigObject.Add(new JProperty(keySegments[i], (object?)null));
                     }
-
-                    currentConfigObject.Add(new JProperty(keySegments[i], value));
+                    else if (value.GetType().IsArray)
+                    {
+                        currentConfigObject.Add(new JProperty(keySegments[i], JArray.FromObject(value)));
+                    }
+                    else if (value is IDictionary)
+                    {
+                        var jsonValue = JsonConvert.SerializeObject(value);
+                        currentConfigObject.Add(new JProperty(keySegments[i], JObject.Parse(jsonValue)));
+                    }
+                    else
+                    {
+                        currentConfigObject.Add(new JProperty(keySegments[i], value));
+                    }
 
                 }
                 // create child configuration object
@@ -362,16 +377,16 @@ namespace Grynwald.ChangeLog.Test.Configuration
             return Enum.GetValues(typeof(T)).Cast<T>();
         }
 
-        private static IEnumerable<(object[] testData, SettingsTarget target)> AllSetValueTestCases()
+        private static IEnumerable<(object?[] testData, SettingsTarget target)> AllSetValueTestCases()
         {
-            static (object[], SettingsTarget) TestCase(
+            static (object?[], SettingsTarget) TestCase(
                 string key,
                 Expression<Func<ChangeLogConfiguration, object?>> getter,
-                object value,
+                object? value,
                 SettingsTarget target = SettingsTarget.All,
                 Action<ChangeLogConfiguration>? assert = null)
             {
-                return (new object[] { key, getter, value, assert! }, target);
+                return (new object?[] { key, getter, value, assert! }, target);
             }
 
             //
@@ -385,7 +400,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase("versionRange", config => config.VersionRange, "[1.2.3,)");
 
             //
-            // Outout Path setting
+            // Output Path setting
             //
             yield return TestCase("outputPath", config => config.OutputPath, "outputPath1");
 
@@ -451,26 +466,45 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(
                 key: "footers",
                 getter: config => config.Footers,
-                value: new[]
+                value: new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>()
                 {
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = "footer1", DisplayName = "DisplayName 1" },
-                    new ChangeLogConfiguration.FooterConfiguration() { Name = "footer2", DisplayName = "DisplayName 2" }
+                    { "footer1", new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "DisplayName 1" } },
+                    { "footer2",  new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "DisplayName 2" } }
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
                 {
                     Assert.Collection(config.Footers,
-                       f =>
+                       kvp =>
                        {
-                           Assert.Equal("footer1", f.Name);
-                           Assert.Equal("DisplayName 1", f.DisplayName);
+                           Assert.Equal("footer1", kvp.Key);
+                           Assert.NotNull(kvp.Value);
+                           Assert.Equal("DisplayName 1", kvp.Value.DisplayName);
                        },
-                       f =>
+                       kvp =>
                        {
-                           Assert.Equal("footer2", f.Name);
-                           Assert.Equal("DisplayName 2", f.DisplayName);
+                           Assert.Equal("footer2", kvp.Key);
+                           Assert.NotNull(kvp.Value);
+                           Assert.Equal("DisplayName 2", kvp.Value.DisplayName);
                        });
                 });
+
+            yield return TestCase(
+                key: "footers",
+                getter: config => config.Footers,
+                value: null,
+                target: SettingsTarget.ConfigurationFile,
+                assert: config =>
+                {
+                    Assert.NotNull(config.Footers);
+                    Assert.Empty(config.Footers);
+                });
+
+            yield return TestCase(
+                key: "footers:footer1:displayName",
+                getter: config => config.Footers["footer1"].DisplayName,
+                value: "DisplayName 1",
+                target: SettingsTarget.All);
 
             //
             // Scope settings
@@ -551,7 +585,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 ));
         }
 
-        public static IEnumerable<object[]> ConfigurationFileSetValueTestCases()
+        public static IEnumerable<object?[]> ConfigurationFileSetValueTestCases()
         {
             foreach (var (testData, target) in AllSetValueTestCases())
             {
@@ -562,7 +596,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             }
         }
 
-        public static IEnumerable<object[]> EnvironmentVariablesSetValueTestCases()
+        public static IEnumerable<object?[]> EnvironmentVariablesSetValueTestCases()
         {
             foreach (var (testData, target) in AllSetValueTestCases())
             {
@@ -573,7 +607,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             }
         }
 
-        public static IEnumerable<object[]> SettingsObjectSetValueTestCases()
+        public static IEnumerable<object?[]> SettingsObjectSetValueTestCases()
         {
             foreach (var (testData, target) in AllSetValueTestCases())
             {
@@ -678,5 +712,33 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 assert(config);
             }
         }
+
+        [Fact]
+        public void GetConfiguration_ignores_footer_configuration_if_value_is_array()
+        {
+            // ARRANGE
+
+            // Before v0.3, the "footers" property was expected to be a array of configuration objects, but
+            // was changed to a object (de-serialized into a dictionary).
+            // There is no migration for configuration files intended for earlier versions.
+            // Configuration values that are not in the expected format must be ignored.
+
+            var json = @"{
+                ""changelog"" : {
+                    ""footers"" : [
+                        { ""name"":  ""see-also"", ""displayName"":  ""See Also"" }
+                    ]
+                }
+            }";
+            File.WriteAllText(m_ConfigurationFilePath, json);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Footers);
+            Assert.Empty(config.Footers);
+        }
+
     }
 }
