@@ -25,7 +25,7 @@ For documentation on the "Footers" setting in version 0.2, see [Footers Setting 
     </tr>
     <tr>
         <td><b>Default value</b></td>
-        <td><em>Empty</em></td>
+        <td>See <a href="#default-value">Default Value</a></td>
     </tr>
     <tr>
         <td><b>Version Support</b></td>
@@ -39,15 +39,30 @@ The *Footer Dispaly Name* setting configures how [Conventional Commit](https://w
 By default, footers are included unchanged in the output.
 Using this setting, you can configure a footer's display name which will be used in the output instead of the footer's name.
 
+## Default Value
+
+changelog includes display names for the following footers by default (defiined in [defaultSetttings.json](../../../src/ChangeLog/Configuration/defaultSettings.json)):
+
+| Footer           | Display Name   |
+|------------------|----------------|
+| `see-also`       |  See Also      |
+| `closes`         |  Closes        |
+| `fixes`          |  Fixes         |
+| `co-authored-by` | Co-authored by |
+| `reviewed-by`    | Reviewed by    |
+| `pull-request`   | Pull Request   |
+| `merge-request`  | Merge Request  |
+
+
 ## Example
 
-The example below shows how to configure a display name for the `See-Also` footer.
+The example below shows how to overwrite the display name for the `See-Also` footer:
 
 ```json
 {
     "changelog" : {
         "footers" : {
-            "see-also": {  "displayName":  "See Also" }
+            "see-also": {  "displayName":  "My Custom Display Name" }
         }
     }
 }

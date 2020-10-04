@@ -14,10 +14,10 @@
 
 #### <a id="changelog-heading-0003E8"></a> **scope1:** Some change
 
-- See\-Also: Issue \#5
+- See Also: Issue \#5
 - Commit: `0003E8`
 
 #### <a id="changelog-heading-00044C"></a> **scope2:** A bug was fixed
 
-- Reviewed\-by: someone@example.com
+- Reviewed by: someone@example.com
 - Commit: `00044C`

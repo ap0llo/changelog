@@ -15,7 +15,15 @@
 
     "scopes": [],
 
-    "footers": {},
+    "footers": {
+      "see-also" : { "displayName": "See Also" },
+      "closes" : { "displayName": "Closes" },
+      "fixes" : { "displayName": "Fixes" },
+      "co-authored-by" : { "displayName": "Co-authored by" },
+      "reviewed-by" : { "displayName": "Reviewed by" },
+      "pull-request" : { "displayName": "Pull Request" },
+      "merge-request": { "displayName": "Merge Request" }
+    },
 
     "filter": {
       "include": [

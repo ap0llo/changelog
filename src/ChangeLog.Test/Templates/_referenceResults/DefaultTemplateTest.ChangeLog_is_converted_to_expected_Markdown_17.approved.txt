@@ -4,5 +4,5 @@
 
 #### <a id="changelog-heading-0003E8"></a> **scope1:** Some change
 
-- see\-also: [Link](http://example.com/)
+- See Also: [Link](http://example.com/)
 - Commit: `0003E8`

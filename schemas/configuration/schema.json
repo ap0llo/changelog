@@ -45,8 +45,52 @@
                 "footers": {
                     "type": "object",
                     "patternProperties": {
-                        ".*" : {
+                        ".*": {
                             "$ref": "#/definitions/footerConfiguration"
+                        }
+                    },
+                    "properties": {
+                        "see-also": {
+                            "$ref": "#/definitions/footerConfiguration",
+                            "default": {
+                                "displayName": "See Also"
+                            }
+                        },
+                        "closes": {
+                            "$ref": "#/definitions/footerConfiguration",
+                            "default": {
+                                "displayName": "Closes"
+                            }
+                        },
+                        "fixes": {
+                            "$ref": "#/definitions/footerConfiguration",
+                            "default": {
+                                "displayName": "Fixes"
+                            }
+                        },
+                        "co-authored-by": {
+                            "$ref": "#/definitions/footerConfiguration",
+                            "default": {
+                                "displayName": "Co-authored by"
+                            }
+                        },
+                        "reviewed-by": {
+                            "$ref": "#/definitions/footerConfiguration",
+                            "default": {
+                                "displayName": "Reviewed by"
+                            }
+                        },
+                        "pull-request": {
+                            "$ref": "#/definitions/footerConfiguration",
+                            "default": {
+                                "displayName": "Pull Request"
+                            }
+                        },
+                        "merge-request": {
+                            "$ref": "#/definitions/footerConfiguration",
+                            "default": {
+                                "displayName": "Merge Request"
+                            }
                         }
                     },
                     "title": "Footers",

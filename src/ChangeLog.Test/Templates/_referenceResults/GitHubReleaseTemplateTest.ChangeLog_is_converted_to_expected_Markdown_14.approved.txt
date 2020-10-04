@@ -10,10 +10,10 @@
 
 ### **scope1:** Some change
 
-- See\-Also: Issue \#5
+- See Also: Issue \#5
 - Commit: `0003E8`
 
 ### **scope2:** A bug was fixed
 
-- Reviewed\-by: someone@example.com
+- Reviewed by: someone@example.com
 - Commit: `00044C`

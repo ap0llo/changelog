@@ -153,7 +153,15 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Footer settings
             //
             yield return TestCase(config => Assert.NotNull(config.Footers));
-            yield return TestCase(config => Assert.Empty(config.Footers));
+            yield return TestCase(config => Assert.NotEmpty(config.Footers));
+            yield return TestCase(config => Assert.Equal(7, config.Footers.Count));
+            yield return TestCase(config => Assert.Contains("see-also", config.Footers.Keys));
+            yield return TestCase(config => Assert.Contains("closes", config.Footers.Keys));
+            yield return TestCase(config => Assert.Contains("fixes", config.Footers.Keys));
+            yield return TestCase(config => Assert.Contains("co-authored-by", config.Footers.Keys));
+            yield return TestCase(config => Assert.Contains("reviewed-by", config.Footers.Keys));
+            yield return TestCase(config => Assert.Contains("pull-request", config.Footers.Keys));
+            yield return TestCase(config => Assert.Contains("merge-request", config.Footers.Keys));
 
             //
             // Integration Provider setting
@@ -474,30 +482,25 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
                 {
-                    Assert.Collection(config.Footers,
-                       kvp =>
-                       {
-                           Assert.Equal("footer1", kvp.Key);
-                           Assert.NotNull(kvp.Value);
-                           Assert.Equal("DisplayName 1", kvp.Value.DisplayName);
-                       },
-                       kvp =>
-                       {
-                           Assert.Equal("footer2", kvp.Key);
-                           Assert.NotNull(kvp.Value);
-                           Assert.Equal("DisplayName 2", kvp.Value.DisplayName);
-                       });
+                    Assert.Contains("footer1", config.Footers.Keys);
+                    Assert.Equal("DisplayName 1", config.Footers["footer1"].DisplayName);
+                    Assert.Contains("footer2", config.Footers.Keys);
+                    Assert.Equal("DisplayName 2", config.Footers["footer2"].DisplayName);
                 });
 
+            // overwrite display name for one of the footers the default settings define a display name
             yield return TestCase(
                 key: "footers",
                 getter: config => config.Footers,
-                value: null,
+                value: new Dictionary<string, ChangeLogConfiguration.FooterConfiguration>()
+                {
+                    { "see-also", new ChangeLogConfiguration.FooterConfiguration() { DisplayName = "DisplayName 1" } },
+                },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
                 {
-                    Assert.NotNull(config.Footers);
-                    Assert.Empty(config.Footers);
+                    Assert.Contains("see-also", config.Footers.Keys);
+                    Assert.Equal("DisplayName 1", config.Footers["see-also"].DisplayName);
                 });
 
             yield return TestCase(
@@ -726,7 +729,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var json = @"{
                 ""changelog"" : {
                     ""footers"" : [
-                        { ""name"":  ""see-also"", ""displayName"":  ""See Also"" }
+                        { ""name"":  ""some-footer"", ""displayName"":  ""Some Display Name"" }
                     ]
                 }
             }";
@@ -737,7 +740,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             // ASSERT
             Assert.NotNull(config.Footers);
-            Assert.Empty(config.Footers);
+            Assert.DoesNotContain("some-footer", config.Footers.Keys);
         }
 
     }
