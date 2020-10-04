@@ -393,7 +393,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase("versionRange", config => config.VersionRange, "[1.2.3,)");
 
             //
-            // Outout Path setting
+            // Output Path setting
             //
             yield return TestCase("outputPath", config => config.OutputPath, "outputPath1");
 

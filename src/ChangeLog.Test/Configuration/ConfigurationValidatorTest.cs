@@ -36,7 +36,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [InlineData("\t")]
         [InlineData("  ")]
         [InlineData(null)]
-        public void Scope_name_must_not_be_null_of_whitespace(string scopeName)
+        public void Scope_name_must_not_be_null_or_whitespace(string scopeName)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -163,7 +163,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [InlineData("\t")]
         [InlineData("  ")]
         [InlineData(null)]
-        public void Entry_type_must_not_be_null_of_whitespace(string entryType)
+        public void Entry_type_must_not_be_null_or_whitespace(string entryType)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
