@@ -37,10 +37,16 @@ The "Filter" setting controls which entries of a change log are included in the 
 
 By default, all entries of type `feat` and `fix` are included.
 
+---
+
 ⚠️ Using this setting in a configuration file will overwrite the default value.
 To also include changes of type `feat` and `fix`, you need to include the default value in your configuration file.
 
+---
+
 ℹ️ Change log entries that contain breaking changes are always included, regardless of this setting.
+
+---
 
 ## Filtering Syntax
 
@@ -56,58 +62,6 @@ The filter is applied in a two-stage process:
 2. Of the selected entries, all entries that match **none** of the *Exclude Expressions* are selected as output of the filter
 
 For every *Filter Expression* (regardless of whether the expression is used as *include* or *exclude* expression), an entry must fulfil **all** the conditions specified by the expression in order to match.
-
-```mermaid
-graph LR
-    subgraph include
-        subgraph filterExpression1
-            type1(type condition)
-            scope1(scope condition)
-            and1{AND}
-            type1-->and1
-            scope1-->and1
-        end
-
-        subgraph filterExpression2
-            type2(type condition)
-            scope2(scope condition)
-            and2{AND}
-            type2-->and2
-            scope2-->and2
-        end
-
-        or1{OR}
-        and1-->or1
-        and2-->or1
-    end
-
-    subgraph exclude
-        subgraph filterExpression3
-            type3(type condition)
-            scope3(scope condition)
-            and3{AND}
-            type3-->and3
-            scope3-->and3
-        end
-        subgraph filterExpression4
-            type4(type condition)
-            scope4(scope condition)
-            and4{AND}
-            type4-->and4
-            scope4-->and4
-        end
-
-        or2{OR}
-        and3-->or2
-        and4-->or2
-    end
-
-    and5{AND}
-    not1[NOT]
-    or1-->and5
-    or2-->not1
-    not1-->and5
-```
 
 ### Filter Expressions
 
