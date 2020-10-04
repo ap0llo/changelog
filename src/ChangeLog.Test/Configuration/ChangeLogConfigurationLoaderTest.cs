@@ -14,6 +14,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Configuration
 {
+    /// <summary>
+    /// Tests for <see cref="ChangeLogConfigurationLoader"/>.
+    /// </summary>
     public class ChangeLogConfigurationLoaderTest : IDisposable
     {
         private readonly TemporaryDirectory m_ConfigurationDirectory = new TemporaryDirectory();
@@ -53,7 +56,11 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 // last fragment => add value
                 if (i == keySegments.Length - 1)
                 {
-                    if (value.GetType().IsArray)
+                    if (value is null)
+                    {
+                        currentConfigObject.Add(new JProperty(keySegments[i], (object?)null));
+                    }
+                    else if (value.GetType().IsArray)
                     {
                         currentConfigObject.Add(new JProperty(keySegments[i], JArray.FromObject(value)));
                     }
@@ -370,16 +377,16 @@ namespace Grynwald.ChangeLog.Test.Configuration
             return Enum.GetValues(typeof(T)).Cast<T>();
         }
 
-        private static IEnumerable<(object[] testData, SettingsTarget target)> AllSetValueTestCases()
+        private static IEnumerable<(object?[] testData, SettingsTarget target)> AllSetValueTestCases()
         {
-            static (object[], SettingsTarget) TestCase(
+            static (object?[], SettingsTarget) TestCase(
                 string key,
                 Expression<Func<ChangeLogConfiguration, object?>> getter,
-                object value,
+                object? value,
                 SettingsTarget target = SettingsTarget.All,
                 Action<ChangeLogConfiguration>? assert = null)
             {
-                return (new object[] { key, getter, value, assert! }, target);
+                return (new object?[] { key, getter, value, assert! }, target);
             }
 
             //
@@ -483,6 +490,17 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 });
 
             yield return TestCase(
+                key: "footers",
+                getter: config => config.Footers,
+                value: null,
+                target: SettingsTarget.ConfigurationFile,
+                assert: config =>
+                {
+                    Assert.NotNull(config.Footers);
+                    Assert.Empty(config.Footers);
+                });
+
+            yield return TestCase(
                 key: "footers:footer1:displayName",
                 getter: config => config.Footers["footer1"].DisplayName,
                 value: "DisplayName 1",
@@ -567,7 +585,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 ));
         }
 
-        public static IEnumerable<object[]> ConfigurationFileSetValueTestCases()
+        public static IEnumerable<object?[]> ConfigurationFileSetValueTestCases()
         {
             foreach (var (testData, target) in AllSetValueTestCases())
             {
@@ -578,7 +596,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             }
         }
 
-        public static IEnumerable<object[]> EnvironmentVariablesSetValueTestCases()
+        public static IEnumerable<object?[]> EnvironmentVariablesSetValueTestCases()
         {
             foreach (var (testData, target) in AllSetValueTestCases())
             {
@@ -589,7 +607,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             }
         }
 
-        public static IEnumerable<object[]> SettingsObjectSetValueTestCases()
+        public static IEnumerable<object?[]> SettingsObjectSetValueTestCases()
         {
             foreach (var (testData, target) in AllSetValueTestCases())
             {
@@ -694,5 +712,33 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 assert(config);
             }
         }
+
+        [Fact]
+        public void GetConfiguration_ignores_footer_configuration_if_value_is_array()
+        {
+            // ARRANGE
+
+            // Before v0.3, the "footers" property was expected to be a array of configuration objects, but
+            // was changed to a object (de-serialized into a dictionary).
+            // There is no migration for configuration files intended for earlier versions.
+            // Configuration values that are not in the expected format must be ignored.
+
+            var json = @"{
+                ""changelog"" : {
+                    ""footers"" : [
+                        { ""name"":  ""see-also"", ""displayName"":  ""See Also"" }
+                    ]
+                }
+            }";
+            File.WriteAllText(m_ConfigurationFilePath, json);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Footers);
+            Assert.Empty(config.Footers);
+        }
+
     }
 }
