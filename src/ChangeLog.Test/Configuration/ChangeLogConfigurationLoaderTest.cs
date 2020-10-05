@@ -515,24 +515,24 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(
                 key: "scopes",
                 getter: config => config.Scopes,
-                value: new[]
+                value: new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
                 {
-                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "Display Name 1" },
-                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope2", DisplayName = "Display Name 2" }
+                    { "scope1", new ChangeLogConfiguration.ScopeConfiguration() { DisplayName = "Display Name 1" } },
+                    { "scope2", new ChangeLogConfiguration.ScopeConfiguration() { DisplayName = "Display Name 2" } }
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
                 {
                     Assert.Collection(config.Scopes,
-                      s =>
+                      kvp =>
                       {
-                          Assert.Equal("scope1", s.Name);
-                          Assert.Equal("Display Name 1", s.DisplayName);
+                          Assert.Equal("scope1", kvp.Key);
+                          Assert.Equal("Display Name 1", kvp.Value.DisplayName);
                       },
-                      s =>
+                      kvp =>
                       {
-                          Assert.Equal("scope2", s.Name);
-                          Assert.Equal("Display Name 2", s.DisplayName);
+                          Assert.Equal("scope2", kvp.Key);
+                          Assert.Equal("Display Name 2", kvp.Value.DisplayName);
                       });
                 });
 
@@ -743,5 +743,31 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.DoesNotContain("some-footer", config.Footers.Keys);
         }
 
+        [Fact]
+        public void GetConfiguration_ignores_scope_configuration_if_value_is_array()
+        {
+            // ARRANGE
+
+            // Before v0.3, the "scopes" property was expected to be a array of configuration objects, but
+            // was changed to a object (de-serialized into a dictionary).
+            // There is no migration for configuration files intended for earlier versions.
+            // Configuration values that are not in the expected format must be ignored.
+
+            var json = @"{
+                ""changelog"" : {
+                    ""scopes"" : [
+                        { ""name"":  ""some-footer"", ""displayName"":  ""Some Display Name"" }
+                    ]
+                }
+            }";
+            File.WriteAllText(m_ConfigurationFilePath, json);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Scopes);
+            Assert.Empty(config.Scopes);
+        }
     }
 }

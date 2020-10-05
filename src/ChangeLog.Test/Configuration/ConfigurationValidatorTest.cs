@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Grynwald.ChangeLog.Configuration;
-using Grynwald.ChangeLog.Test.ConventionalCommits;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Configuration
@@ -35,14 +34,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [InlineData("")]
         [InlineData("\t")]
         [InlineData("  ")]
-        [InlineData(null)]
-        public void Scope_name_must_not_be_null_or_whitespace(string scopeName)
+        public void Scope_name_must_not_be_empty_or_whitespace(string scopeName)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.Scopes = new[]
+            config.Scopes = new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
             {
-                new ChangeLogConfiguration.ScopeConfiguration(){ Name = scopeName, DisplayName = "Display Name"}
+                { scopeName, new ChangeLogConfiguration.ScopeConfiguration(){ DisplayName = "Display Name"} }
             };
 
             var sut = new ConfigurationValidator();
@@ -55,6 +53,30 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var error = Assert.Single(result.Errors);
             Assert.Contains("'Scope Name'", error.ErrorMessage);
         }
+
+        [Theory]
+        [InlineData("some-scope")]
+        public void Scope_name_must_be_unique(string scopeName)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Scopes = new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
+            {
+                { scopeName.ToLower(), new ChangeLogConfiguration.ScopeConfiguration() },
+                { scopeName.ToUpper(), new ChangeLogConfiguration.ScopeConfiguration() }
+            };
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'Scope Name' must be unique", error.ErrorMessage);
+        }
+
 
         [Theory]
         [InlineData("")]

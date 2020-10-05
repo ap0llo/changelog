@@ -17,10 +17,13 @@
             "type": "object",
             "properties": {
                 "scopes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/scopeConfiguration"
+                    "type": "object",
+                    "patternProperties": {
+                        ".*": {
+                            "$ref": "#/definitions/scopeConfiguration"
+                        }
                     },
+                    "default" : { },
                     "title": "Scopes",
                     "description": "Sets preferences on how  Conventional Commit scopes are processed."
                 },
@@ -154,10 +157,6 @@
         "scopeConfiguration": {
             "type": "object",
             "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Specifies the name of the scope the settings apply to."
-                },
                 "displayName": {
                     "type": [
                         "string",

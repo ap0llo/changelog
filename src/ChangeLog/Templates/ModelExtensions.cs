@@ -22,7 +22,7 @@ namespace Grynwald.ChangeLog.Templates
             if (String.IsNullOrEmpty(entry.Scope))
                 return null;
 
-            var displayName = configuration.Scopes.FirstOrDefault(scope => StringComparer.OrdinalIgnoreCase.Equals(scope.Name, entry.Scope))?.DisplayName;
+            var displayName = configuration.Scopes.FirstOrDefault(kvp => StringComparer.OrdinalIgnoreCase.Equals(kvp.Key, entry.Scope)).Value?.DisplayName;
 
             return !String.IsNullOrWhiteSpace(displayName) ? displayName : entry.Scope;
         }

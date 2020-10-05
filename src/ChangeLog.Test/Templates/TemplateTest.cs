@@ -347,9 +347,9 @@ namespace Grynwald.ChangeLog.Test.Templates
             // it must be used in the output instead of the actual scope
 
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.Scopes = new[]
+            config.Scopes = new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
             {
-                new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "Scope 1 Display Name" }
+                { "scope1", new ChangeLogConfiguration.ScopeConfiguration() { DisplayName = "Scope 1 Display Name" } }
             };
 
 
