@@ -55,7 +55,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Theory]
-        [InlineData("some-footer")]
+        [InlineData("some-scope")]
         public void Scope_name_must_be_unique(string scopeName)
         {
             // ARRANGE
