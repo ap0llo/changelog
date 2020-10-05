@@ -27,7 +27,8 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 
 ## Settings List
 
-- [Scopes](./configuration/settings/scopes.md)
+- [Scope Settings](./configuration/settings/scopes.md)
+  - [Scope Display Name](./configuration/settings/scopes.md#scope-display-name)
 - [Footer Settings](./configuration/settings/footers.md)
   - [Footer Display Name](./configuration/settings/footers.md#footer-display-name)
 - [Entry Types](./configuration/settings/entry-types.md)

@@ -33,8 +33,7 @@ For documentation on the "Footers" setting in version 0.2, see [Footers Setting 
     </tr>
 </table>
 
-
-The *Footer Dispaly Name* setting configures how [Conventional Commit](https://www.conventionalcommits.org/) footers are displayed.
+The *Footer Display Name* setting configures how [Conventional Commit](https://www.conventionalcommits.org/) footers are displayed.
 
 By default, footers are included unchanged in the output.
 Using this setting, you can configure a footer's display name which will be used in the output instead of the footer's name.

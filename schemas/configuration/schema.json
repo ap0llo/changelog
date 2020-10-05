@@ -23,6 +23,7 @@
                             "$ref": "#/definitions/scopeConfiguration"
                         }
                     },
+                    "default" : { },
                     "title": "Scopes",
                     "description": "Sets preferences on how  Conventional Commit scopes are processed."
                 },

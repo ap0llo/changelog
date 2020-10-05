@@ -1,7 +1,7 @@
 {
     "$schema": "./schemas/configuration/schema.json",
     "changelog": {
-    
+
         "integrations": {
             "provider": "GitHub"
         },
@@ -11,6 +11,6 @@
             "gitlab" :  { "displayName": "GitLab Integration" },
             "templates" : { "displayName": "Templates" },
             "parser" : { "displayName" : "Commit Message Parser" }
-        }    
+        }
     }
 }
