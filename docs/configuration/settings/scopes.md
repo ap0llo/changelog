@@ -35,12 +35,10 @@ For documentation on the "Scopes" setting in version 0.2, see [Scopes Setting (v
 
 The *Scope Display Name* setting configures how [Conventional Commit](https://www.conventionalcommits.org/) scopes are displayed.
 
-The *Scopes* setting configures how [Conventional Commit](https://www.conventionalcommits.org/) scopes are displayed.
-
 By default, the scopes are included unchanged in the output.
 Using this setting, you can configure a scope's display name which will be used in the output instead of the scope's name.
 
-## Example
+### Example
 
 To set the display name for the `myScope` scope, in the configuration file, use
 
@@ -57,3 +55,5 @@ To set the display name for the `myScope` scope, in the configuration file, use
 ## See Also
 
 - [Configuration Overview](../../configuration.md)
+- [Conventional Commits](https://www.conventionalcommits.org/)
+- [Scopes Setting (v0.2)](https://github.com/ap0llo/changelog/blob/release/v0.2/docs/configuration.md#scopes)
