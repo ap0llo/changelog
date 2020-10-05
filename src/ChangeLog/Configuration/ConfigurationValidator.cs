@@ -35,7 +35,15 @@ namespace Grynwald.ChangeLog.Configuration
                        .WithMessage("'Footer Name' must be unique"));
 
             RuleForEach(x => x.EntryTypes)
-                .ChildRules(entryType => entryType.RuleFor(x => x.Key).NotEmpty().WithName("Entry Type"));
+                .ChildRules(entryType => entryType.RuleFor(x => x.Key).NotEmpty().WithName("Entry Type"))
+                .DependentRules(() =>
+                    RuleFor(x => x.EntryTypes.Keys)
+                       .Must(keys =>
+                       {
+                           var entryType = keys.Select(key => new CommitType(key));
+                           return entryType.Distinct().Count() == keys.Count;
+                       })
+                       .WithMessage("'Entry Type' must be unique"));
 
             RuleFor(x => x.VersionRange).NotWhitespace();
             RuleFor(x => x.VersionRange).IsVersionRange().UnlessNullOrEmpty();
