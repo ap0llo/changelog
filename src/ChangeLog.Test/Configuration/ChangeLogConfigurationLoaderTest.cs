@@ -88,7 +88,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             File.WriteAllText(m_ConfigurationFilePath, json);
         }
 
-        private static void AssertEntryType(ChangeLogConfiguration.EntryTypeConfiguration x, CommitType expectedCommitType, string expectedDisplayName)
+        private static void AssertEntryType(KeyValuePair<string, ChangeLogConfiguration.EntryTypeConfiguration> x, CommitType expectedCommitType, string expectedDisplayName)
         {
             // Compares a instance of EntryTypeConfiguration to the specified values.
             // This is a method instead of an inline lambda-expression, because a multi-line lambda
@@ -97,10 +97,10 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // visible in the test output.
             // (See https://twitter.com/bradwilson/status/1282374907670654976)
 
-            Assert.NotNull(x.Type);
-            Assert.NotEmpty(x.Type);
-            Assert.Equal(expectedCommitType, new CommitType(x.Type!));
-            Assert.Equal(expectedDisplayName, x.DisplayName);
+            Assert.NotNull(x.Key);
+            Assert.NotEmpty(x.Key);
+            Assert.Equal(expectedCommitType, new CommitType(x.Key));
+            Assert.Equal(expectedDisplayName, x.Value.DisplayName);
         }
 
         private static void AssertFilterExpression(ChangeLogConfiguration.FilterExpressionConfiguration x, string type, string scope)
@@ -235,7 +235,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Entry Types settings
             //
             yield return TestCase(config => Assert.NotNull(config.EntryTypes));
-            yield return TestCase(config => Assert.Equal(2, config.EntryTypes.Length));
+            yield return TestCase(config => Assert.Equal(2, config.EntryTypes.Count));
             yield return TestCase(config => Assert.Collection(config.EntryTypes,
                 x => AssertEntryType(x, CommitType.Feature, "New Features"),
                 x => AssertEntryType(x, CommitType.BugFix, "Bug Fixes")
@@ -542,17 +542,24 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(
                 key: "entryTypes",
                 getter: config => config.EntryTypes,
-                value: new[]
+                value: new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
                 {
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = "Documentation Updates" },
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "bugfix", DisplayName = "Bug Fixes" }
+                    { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates" } },
+                    { "bugfix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Bug Fixes" } }
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
-                    Assert.Collection(config.EntryTypes,
-                        e => AssertEntryType(e, new CommitType("docs"), "Documentation Updates"),
-                        e => AssertEntryType(e, new CommitType("bugfix"), "Bug Fixes")
-                ));
+                {
+                    // Values inherited from default config
+                    Assert.Contains("feat", config.EntryTypes.Keys);
+                    Assert.Contains("fix", config.EntryTypes.Keys);
+
+                    // Values defined in current config
+                    Assert.Contains("docs", config.EntryTypes.Keys);
+                    Assert.Equal("Documentation Updates", config.EntryTypes["docs"].DisplayName);
+                    Assert.Contains("bugfix", config.EntryTypes.Keys);
+                    Assert.Equal("Bug Fixes", config.EntryTypes["bugfix"].DisplayName);
+                });
 
             //
             // Filter settings

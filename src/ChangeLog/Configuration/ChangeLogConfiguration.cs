@@ -96,9 +96,6 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class EntryTypeConfiguration
         {
-            [ValidationDisplayName("Entry Type")]
-            public string Type { get; set; } = "";
-
             public string? DisplayName { get; set; }
         }
 
@@ -151,7 +148,7 @@ namespace Grynwald.ChangeLog.Configuration
 
         public TemplateConfiguration Template { get; set; } = new TemplateConfiguration();
 
-        public EntryTypeConfiguration[] EntryTypes { get; set; } = Array.Empty<EntryTypeConfiguration>();
+        public Dictionary<string, EntryTypeConfiguration> EntryTypes { get; set; } = new Dictionary<string, EntryTypeConfiguration>();
 
         public ParserConfiguration Parser { get; set; } = new ParserConfiguration();
 

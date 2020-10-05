@@ -462,11 +462,11 @@ namespace Grynwald.ChangeLog.Test.Templates
         {
             // all configured types are included in the output, in the configured order
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.EntryTypes = new[]
+            config.EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
             {
-                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "feat", DisplayName = "New Features"},
-                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = "Documentation Updates"},
-                new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "fix", DisplayName = "Fixed bugs"}
+                { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "New Features" } },
+                { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates" } },
+                { "fix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Fixed bugs" } }
             };
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", entries: new[]
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
@@ -18,12 +19,12 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             // ARRANGE
             var config = new ChangeLogConfiguration()
             {
-                EntryTypes = new[]
+                EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
                 {
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "feat", DisplayName = "New Features"},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "fix", DisplayName = "Bug Fixes"},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = "Documentation Updates"},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "build", DisplayName = "Build System Changes"},
+                   { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() {  DisplayName = "New Features" } },
+                   { "fix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Bug Fixes" } },
+                   { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates" } },
+                   { "build", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Build System Changes" } },
                 }
             };
             var changelog = GetSingleVersionChangeLog("1.2.3", entries: new[]
@@ -81,12 +82,12 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             // ARRANGE
             var config = new ChangeLogConfiguration()
             {
-                EntryTypes = new[]
+                EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
                 {
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "feat", DisplayName = "New Features"},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "fix", DisplayName = null},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = ""},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "build", DisplayName = "\t"},
+                    { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() {  DisplayName = "New Features"} },
+                    { "fix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = null } },
+                    { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "" } },
+                    { "build", new ChangeLogConfiguration.EntryTypeConfiguration() {  DisplayName = "\t" } },
                 }
             };
             var changelog = GetSingleVersionChangeLog("1.2.3", entries: new[]
@@ -142,12 +143,12 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             // ARRANGE
             var config = new ChangeLogConfiguration()
             {
-                EntryTypes = new[]
+                EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
                 {
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "feat", DisplayName = "New Features"},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "fix", DisplayName = "Bug Fixes"},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "docs", DisplayName = "Documentation Updates"},
-                    new ChangeLogConfiguration.EntryTypeConfiguration() { Type = "build", DisplayName = "Build System Changes"},
+                    { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "New Features" } },
+                    { "fix",  new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Bug Fixes" } },
+                    { "docs",  new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates" } },
+                    { "build", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Build System Changes" } },
                 }
             };
             var entries = new[]
