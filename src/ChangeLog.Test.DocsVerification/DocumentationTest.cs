@@ -16,30 +16,9 @@ namespace Grynwald.ChangeLog.Test.DocsVerification
     /// <summary>
     /// Tests verifying Markdown documentation files.
     /// </summary>
-    public class DocumentationTest
+    public class DocumentationTest : TestBase
     {
         private readonly ITestOutputHelper m_OutputHelper;
-
-        private static string RootPath
-        {
-            get
-            {
-                // When running in Azure Pipelines, the test output directory is located outside the source folder.
-                // The 'Build.SourcesDirectory' variable defines where the sources are located
-                var sourcesDirectory = Environment.GetEnvironmentVariable("BUILD_SOURCESDIRECTORY");
-                if (!String.IsNullOrEmpty(sourcesDirectory))
-                {
-                    return sourcesDirectory;
-                }
-
-                // find root of repository (assumes the test output directory is a path in the repository)
-                var gitPath = Repository.Discover(Environment.CurrentDirectory);
-
-                // Repository.Discover() returns the path of the '.git' directory or file including a trailing backslash
-                // => the repository root is the parent directory
-                return Path.GetDirectoryName(gitPath.TrimEnd('\\')) ?? "";
-            }
-        }
 
 
         public DocumentationTest(ITestOutputHelper outputHelper)

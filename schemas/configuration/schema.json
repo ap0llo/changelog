@@ -42,6 +42,7 @@
                 },
                 "outputPath": {
                     "type": "string",
+                    "default" : "changelog.md",
                     "title": "Output Path",
                     "description": "Specifies the output path for the generated change log."
                 },
