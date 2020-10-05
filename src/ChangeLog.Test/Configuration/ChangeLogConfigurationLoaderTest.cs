@@ -776,5 +776,37 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotNull(config.Scopes);
             Assert.Empty(config.Scopes);
         }
+
+        [Fact]
+        public void GetConfiguration_ignores_entry_type_configuration_if_value_is_array()
+        {
+            // ARRANGE
+
+            // Before v0.3, the "entryTypes" property was expected to be a array of configuration objects, but
+            // was changed to a object (de-serialized into a dictionary).
+            // There is no migration for configuration files intended for earlier versions.
+            // Configuration values that are not in the expected format must be ignored.
+
+            var json = @"{
+                ""changelog"" : {
+                    ""entryTypes"" : [
+                        { ""type"": ""some-type"", ""displayName"": ""Display Name"" }
+                    ]
+                }
+            }";
+            File.WriteAllText(m_ConfigurationFilePath, json);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.EntryTypes);
+
+            // default settings define display names for 2 entry types
+            // no other entry types should be present in configuration
+            Assert.Equal(2, config.EntryTypes.Count);
+
+            Assert.DoesNotContain("some-type", config.EntryTypes.Keys);
+        }
     }
 }
