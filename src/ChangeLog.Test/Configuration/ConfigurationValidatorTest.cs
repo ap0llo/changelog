@@ -35,14 +35,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [InlineData("")]
         [InlineData("\t")]
         [InlineData("  ")]
-        [InlineData(null)]
-        public void Scope_name_must_not_be_null_or_whitespace(string scopeName)
+        public void Scope_name_must_not_be_empty_or_whitespace(string scopeName)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.Scopes = new[]
+            config.Scopes = new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
             {
-                new ChangeLogConfiguration.ScopeConfiguration(){ Name = scopeName, DisplayName = "Display Name"}
+                { scopeName, new ChangeLogConfiguration.ScopeConfiguration(){ DisplayName = "Display Name"} }
             };
 
             var sut = new ConfigurationValidator();

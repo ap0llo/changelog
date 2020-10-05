@@ -9,9 +9,6 @@ namespace Grynwald.ChangeLog.Configuration
     {
         public class ScopeConfiguration
         {
-            [ValidationDisplayName("Scope Name")]
-            public string Name { get; set; } = "";
-
             public string? DisplayName { get; set; }
         }
 
@@ -134,7 +131,7 @@ namespace Grynwald.ChangeLog.Configuration
         }
 
 
-        public ScopeConfiguration[] Scopes { get; set; } = Array.Empty<ScopeConfiguration>();
+        public Dictionary<string, ScopeConfiguration> Scopes { get; set; } = new Dictionary<string, ScopeConfiguration>();
 
         public string[] TagPatterns { get; set; } = Array.Empty<string>();
 

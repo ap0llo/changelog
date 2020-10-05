@@ -36,9 +36,9 @@ namespace Grynwald.ChangeLog.Test.Templates
             // ARRANGE
             var config = new ChangeLogConfiguration()
             {
-                Scopes = new[]
+                Scopes = new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
                 {
-                    new ChangeLogConfiguration.ScopeConfiguration() { Name = configuredScope, DisplayName = "Scope Display Name" }
+                    { configuredScope, new ChangeLogConfiguration.ScopeConfiguration() { DisplayName = "Scope Display Name" } }
                 }
             };
             var changeLogEntry = GetChangeLogEntry(scope: scope);
@@ -60,9 +60,9 @@ namespace Grynwald.ChangeLog.Test.Templates
             // ARRANGE
             var config = new ChangeLogConfiguration()
             {
-                Scopes = new[]
+                Scopes = new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
                 {
-                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "someScope", DisplayName = displayName }
+                    { "someScope",  new ChangeLogConfiguration.ScopeConfiguration() { DisplayName = displayName } }
                 }
             };
             var changeLogEntry = GetChangeLogEntry(scope: "someScope");
@@ -80,9 +80,9 @@ namespace Grynwald.ChangeLog.Test.Templates
             // ARRANGE
             var config = new ChangeLogConfiguration()
             {
-                Scopes = new[]
+                Scopes = new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
                 {
-                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "someScope", DisplayName = "Scope Display Name" }
+                    { "someScope",  new ChangeLogConfiguration.ScopeConfiguration() { DisplayName = "Scope Display Name" } }
                 }
             };
             var changeLogEntry = GetChangeLogEntry(scope: "someScopeOther");

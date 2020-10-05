@@ -17,7 +17,7 @@ namespace Grynwald.ChangeLog.Configuration
             ValidatorOptions.Global.UseCustomDisplayNameResolver();
 
             RuleForEach(x => x.Scopes)
-                .ChildRules(scope => scope.RuleFor(x => x.Name).NotEmpty());
+                .ChildRules(scope => scope.RuleFor(x => x.Key).NotEmpty().WithName("Scope Name"));
 
             RuleForEach(x => x.Footers)
                 .ChildRules(footer => footer.RuleFor(x => x.Key).NotEmpty().WithName("Footer Name"))

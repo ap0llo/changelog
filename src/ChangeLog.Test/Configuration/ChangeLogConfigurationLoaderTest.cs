@@ -515,24 +515,24 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(
                 key: "scopes",
                 getter: config => config.Scopes,
-                value: new[]
+                value: new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
                 {
-                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope1", DisplayName = "Display Name 1" },
-                    new ChangeLogConfiguration.ScopeConfiguration() { Name = "scope2", DisplayName = "Display Name 2" }
+                    { "scope1", new ChangeLogConfiguration.ScopeConfiguration() { DisplayName = "Display Name 1" } },
+                    { "scope2", new ChangeLogConfiguration.ScopeConfiguration() { DisplayName = "Display Name 2" } }
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
                 {
                     Assert.Collection(config.Scopes,
-                      s =>
+                      kvp =>
                       {
-                          Assert.Equal("scope1", s.Name);
-                          Assert.Equal("Display Name 1", s.DisplayName);
+                          Assert.Equal("scope1", kvp.Key);
+                          Assert.Equal("Display Name 1", kvp.Value.DisplayName);
                       },
-                      s =>
+                      kvp =>
                       {
-                          Assert.Equal("scope2", s.Name);
-                          Assert.Equal("Display Name 2", s.DisplayName);
+                          Assert.Equal("scope2", kvp.Key);
+                          Assert.Equal("Display Name 2", kvp.Value.DisplayName);
                       });
                 });
 

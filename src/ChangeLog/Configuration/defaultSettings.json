@@ -13,7 +13,7 @@
       }
     ],
 
-    "scopes": [],
+    "scopes": { },
 
     "footers": {
       "see-also" : { "displayName": "See Also" },
