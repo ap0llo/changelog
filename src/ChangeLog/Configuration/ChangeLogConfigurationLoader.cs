@@ -78,10 +78,12 @@ namespace Grynwald.ChangeLog.Configuration
                 // To avoid unexpected behavior when loading a "old" configuration file
                 // (Microsoft.Extensions.Configuration will try to bind the array to the dictionary v0.3+ uses)
                 // remove the array from the JSON if it is present.
-                var footersProperty = changelogSetingsObject?.Property("footers");
-                if (footersProperty != null && footersProperty.Value.Type == JTokenType.Array)
                 {
-                    footersProperty.Remove();
+                    var footersProperty = changelogSetingsObject?.Property("footers");
+                    if (footersProperty != null && footersProperty.Value.Type == JTokenType.Array)
+                    {
+                        footersProperty.Remove();
+                    }
                 }
 
                 // Before version 0.3, the "scopes" property was a JSON array.
@@ -89,10 +91,25 @@ namespace Grynwald.ChangeLog.Configuration
                 // To avoid unexpected behavior when loading a "old" configuration file
                 // (Microsoft.Extensions.Configuration will try to bind the array to the dictionary v0.3+ uses)
                 // remove the array from the JSON if it is present.
-                var scopesProperty = changelogSetingsObject?.Property("scopes");
-                if (scopesProperty != null && scopesProperty.Value.Type == JTokenType.Array)
                 {
-                    scopesProperty.Remove();
+                    var scopesProperty = changelogSetingsObject?.Property("scopes");
+                    if (scopesProperty != null && scopesProperty.Value.Type == JTokenType.Array)
+                    {
+                        scopesProperty.Remove();
+                    }
+                }
+
+                // Before version 0.3, the "entryTypes" property was a JSON array.
+                // In version 0.3 the array was replaced by a JSON object in the configuration file
+                // To avoid unexpected behavior when loading a "old" configuration file
+                // (Microsoft.Extensions.Configuration will try to bind the array to the dictionary v0.3+ uses)
+                // remove the array from the JSON if it is present.
+                {
+                    var entryTypesProperty = changelogSetingsObject?.Property("entryTypes");
+                    if (entryTypesProperty != null && entryTypesProperty.Value.Type == JTokenType.Array)
+                    {
+                        entryTypesProperty.Remove();
+                    }
                 }
             }
 

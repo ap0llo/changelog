@@ -2,16 +2,10 @@
   "$schema": "../../../schemas/configuration/schema.json",
   "changelog": {
 
-    "entryTypes": [
-      {
-        "type": "feat",
-        "displayName": "New Features"
-      },
-      {
-        "type": "fix",
-        "displayName": "Bug Fixes"
-      }
-    ],
+    "entryTypes": {
+      "feat": { "displayName": "New Features" },
+      "fix": { "displayName": "Bug Fixes" }
+    },
 
     "scopes": { },
 

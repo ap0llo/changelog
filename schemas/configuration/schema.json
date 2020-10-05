@@ -126,22 +126,28 @@
                     "description": "Specifies settings for templates."
                 },
                 "entryTypes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/entryTypeConfiguration"
-                    },
-                    "default": [
-                        {
-                            "type": "feat",
-                            "DisplayName": "New Features"
-                        },
-                        {
-                            "type": "fix",
-                            "DisplayName": "Bug Fixes"
+                    "type": "object",
+                    "patternProperties": {
+                        ".*": {
+                            "$ref": "#/definitions/entryTypeConfiguration"
                         }
-                    ],
+                    },
+                    "properties": {
+                        "feat": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "New Features"
+                            }
+                        },
+                        "fix": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Bug Fixes"
+                            }
+                        }
+                    },
                     "title": "Entry types",
-                    "description": "Specifies the types of Conventional Commit messages to include in the change log."
+                    "description": "Specifies settings for Conventional Commit message types."
                 },
                 "parser": {
                     "$ref": "#/definitions/parserConfiguration",
@@ -315,10 +321,6 @@
         "entryTypeConfiguration": {
             "type": "object",
             "properties": {
-                "type": {
-                    "type": "string",
-                    "description": "The name of the entry type the settings apply to, e.g. 'feat' or 'fix'."
-                },
                 "displayName": {
                     "type": "string",
                     "description": "The display name for the change type, e.g. 'New Features' for 'feat'."

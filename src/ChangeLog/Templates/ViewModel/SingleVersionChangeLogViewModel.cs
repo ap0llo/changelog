@@ -62,7 +62,7 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         {
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             m_Model = model ?? throw new ArgumentNullException(nameof(model));
-            m_Types = m_Configuration.EntryTypes.ToDictionary(c => new CommitType(c.Type));
+            m_Types = m_Configuration.EntryTypes.ToDictionary(kvp => new CommitType(kvp.Key), kvp => kvp.Value);
         }
     }
 }

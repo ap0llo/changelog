@@ -38,9 +38,9 @@ The *Footer Display Name* setting configures how [Conventional Commit](https://w
 By default, footers are included unchanged in the output.
 Using this setting, you can configure a footer's display name which will be used in the output instead of the footer's name.
 
-## Default Value
+### Default Value
 
-changelog includes display names for the following footers by default (defiined in [defaultSetttings.json](../../../src/ChangeLog/Configuration/defaultSettings.json)):
+changelog includes display names for the following footers by default (defined in [defaultSetttings.json](../../../src/ChangeLog/Configuration/defaultSettings.json)):
 
 | Footer           | Display Name   |
 |------------------|----------------|
@@ -52,8 +52,7 @@ changelog includes display names for the following footers by default (defiined 
 | `pull-request`   | Pull Request   |
 | `merge-request`  | Merge Request  |
 
-
-## Example
+### Example
 
 The example below shows how to overwrite the display name for the `See-Also` footer:
 
@@ -71,3 +70,4 @@ The example below shows how to overwrite the display name for the `See-Also` foo
 
 - [Configuration Overview](../../configuration.md)
 - [Conventional Commits](https://www.conventionalcommits.org/)
+- [Footers Setting (v0.2)](https://github.com/ap0llo/changelog/blob/release/v0.2/docs/configuration.md#footers)

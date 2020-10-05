@@ -207,14 +207,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
         [InlineData("")]
         [InlineData("\t")]
         [InlineData("  ")]
-        [InlineData(null)]
-        public void Entry_type_must_not_be_null_or_whitespace(string entryType)
+        public void Entry_type_must_not_be_empty_or_whitespace(string entryType)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.EntryTypes = new[]
+            config.EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
             {
-                new ChangeLogConfiguration.EntryTypeConfiguration(){ Type = entryType, DisplayName = "Display Name"}
+                { entryType, new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Display Name" } }
             };
 
             var sut = new ConfigurationValidator();
@@ -226,6 +225,30 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
             Assert.Contains("'Entry Type'", error.ErrorMessage);
+        }
+
+
+        [Theory]
+        [InlineData("feat")]
+        public void Entry_types_must_not_be_unique(string entryType)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
+            {
+                { entryType.ToLower(), new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Display Name" } },
+                { entryType.ToUpper(), new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Display Name" } }
+            };
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'Entry Type' must be unique", error.ErrorMessage);
         }
 
         [Theory]
