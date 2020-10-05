@@ -743,5 +743,31 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.DoesNotContain("some-footer", config.Footers.Keys);
         }
 
+        [Fact]
+        public void GetConfiguration_ignores_scope_configuration_if_value_is_array()
+        {
+            // ARRANGE
+
+            // Before v0.3, the "scopes" property was expected to be a array of configuration objects, but
+            // was changed to a object (de-serialized into a dictionary).
+            // There is no migration for configuration files intended for earlier versions.
+            // Configuration values that are not in the expected format must be ignored.
+
+            var json = @"{
+                ""changelog"" : {
+                    ""scopes"" : [
+                        { ""name"":  ""some-footer"", ""displayName"":  ""Some Display Name"" }
+                    ]
+                }
+            }";
+            File.WriteAllText(m_ConfigurationFilePath, json);
+
+            // ACT 
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
+
+            // ASSERT
+            Assert.NotNull(config.Scopes);
+            Assert.Empty(config.Scopes);
+        }
     }
 }
