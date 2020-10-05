@@ -17,7 +17,11 @@ namespace Grynwald.ChangeLog.Configuration
             ValidatorOptions.Global.UseCustomDisplayNameResolver();
 
             RuleForEach(x => x.Scopes)
-                .ChildRules(scope => scope.RuleFor(x => x.Key).NotEmpty().WithName("Scope Name"));
+                .ChildRules(scope => scope.RuleFor(x => x.Key).NotEmpty().WithName("Scope Name"))
+                .DependentRules(() =>
+                    RuleFor(x => x.Scopes.Keys)
+                       .Must(keys => keys.Distinct(StringComparer.OrdinalIgnoreCase).Count() == keys.Count)
+                       .WithMessage("'Scope Name' must be unique"));
 
             RuleForEach(x => x.Footers)
                 .ChildRules(footer => footer.RuleFor(x => x.Key).NotEmpty().WithName("Footer Name"))

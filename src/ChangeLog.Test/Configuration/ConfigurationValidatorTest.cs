@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Grynwald.ChangeLog.Configuration;
-using Grynwald.ChangeLog.Test.ConventionalCommits;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Configuration
@@ -54,6 +53,30 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var error = Assert.Single(result.Errors);
             Assert.Contains("'Scope Name'", error.ErrorMessage);
         }
+
+        [Theory]
+        [InlineData("some-footer")]
+        public void Scope_name_must_be_unique(string scopeName)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Scopes = new Dictionary<string, ChangeLogConfiguration.ScopeConfiguration>()
+            {
+                { scopeName.ToLower(), new ChangeLogConfiguration.ScopeConfiguration() },
+                { scopeName.ToUpper(), new ChangeLogConfiguration.ScopeConfiguration() }
+            };
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            var error = Assert.Single(result.Errors);
+            Assert.Contains("'Scope Name' must be unique", error.ErrorMessage);
+        }
+
 
         [Theory]
         [InlineData("")]
