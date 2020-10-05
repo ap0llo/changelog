@@ -6,24 +6,11 @@
             "provider": "GitHub"
         },
 
-        "scopes": [
-            {
-                "name": "github",
-                "displayName": "GitHub Integration"
-            },
-            {
-                "name": "gitlab",
-                "displayName": "GitLab Integration"
-            },
-            {
-                "name": "templates",
-                "displayName": "Templates"
-            },
-            {
-                "name": "parser",
-                "displayName" : "Commit Message Parser"
-            }
-        ]
-
+        "scopes": {
+            "github" : { "displayName": "GitHub Integration" },
+            "gitlab" :  { "displayName": "GitLab Integration" },
+            "templates" : { "displayName": "Templates" },
+            "parser" : { "displayName" : "Commit Message Parser" }
+        }    
     }
 }
