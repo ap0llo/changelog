@@ -217,7 +217,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.Empty(config.VersionRange));
 
             //
-            // Current Version settting
+            // Current Version setting
             //
             yield return TestCase(config => Assert.NotNull(config.CurrentVersion));
             yield return TestCase(config => Assert.Empty(config.CurrentVersion));
