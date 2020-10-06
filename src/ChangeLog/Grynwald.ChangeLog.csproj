@@ -30,7 +30,7 @@
     <PackageReference Include="NuGet.Versioning" Version="5.7.0" />
     <PackageReference Include="Octokit" Version="0.48.0" />
     <PackageReference Include="Autofac" Version="6.0.0" />
-    <PackageReference Include="GitLabApiClient" Version="1.6.0" />
+    <PackageReference Include="GitLabApiClient" Version="1.7.0" />
   </ItemGroup>
 
   <!-- Auto-Generated command line help -->
