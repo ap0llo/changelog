@@ -11,7 +11,7 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
     {
         private readonly ChangeLogConfiguration m_Configuration;
         private readonly SingleVersionChangeLog m_Model;
-        private readonly Dictionary<CommitType, ChangeLogConfiguration.EntryTypeConfiguration> m_Types;
+        private readonly Dictionary<CommitType, ChangeLogConfiguration.EntryTypeConfiguration> m_EntryTypeConfiguration;
 
 
 
@@ -21,15 +21,13 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         {
             get
             {
-                foreach (var (type, configuration) in m_Types)
+                foreach (var (commitType, entries) in m_Model.AllEntries.GroupBy(x => x.Type))
                 {
-                    var displayName = String.IsNullOrWhiteSpace(configuration.DisplayName)
-                        ? type.Type
-                        : configuration.DisplayName;
+                    var displayName = m_EntryTypeConfiguration.GetValueOrDefault(commitType)?.DisplayName;
+                    if (String.IsNullOrWhiteSpace(displayName))
+                        displayName = commitType.Type;
 
-                    var entryGroup = m_Model[type];
-                    if (entryGroup.Entries.Count > 0)
-                        yield return new ChangeLogEntryGroupViewModel(displayName, entryGroup);
+                    yield return new ChangeLogEntryGroupViewModel(displayName, entries);
                 }
             }
         }
@@ -38,31 +36,24 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         {
             get
             {
-                foreach (var type in m_Types.Keys)
+                foreach (var (_, entries) in m_Model.AllEntries.GroupBy(x => x.Type))
                 {
-                    foreach (var entry in m_Model[type].Entries)
+                    foreach (var entry in entries)
                     {
                         yield return entry;
                     }
                 }
-                foreach (var entry in AdditionalBreakingChanges)
-                {
-                    yield return entry;
-                }
             }
         }
 
-        public IEnumerable<ChangeLogEntry> AllBreakingChanges => m_Model.BreakingChanges;
-
-        public IEnumerable<ChangeLogEntry> AdditionalBreakingChanges =>
-            m_Model.BreakingChanges.Where(e => !m_Types.ContainsKey(e.Type));
+        public IEnumerable<ChangeLogEntry> BreakingChanges => m_Model.BreakingChanges;
 
 
         public SingleVersionChangeLogViewModel(ChangeLogConfiguration configuration, SingleVersionChangeLog model)
         {
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             m_Model = model ?? throw new ArgumentNullException(nameof(model));
-            m_Types = m_Configuration.EntryTypes.ToDictionary(kvp => new CommitType(kvp.Key), kvp => kvp.Value);
+            m_EntryTypeConfiguration = m_Configuration.EntryTypes.ToDictionary(kvp => new CommitType(kvp.Key), kvp => kvp.Value);
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿## New Features
-
-- [Some feature](#some-feature)
-
-## Documentation Updates
+﻿## Documentation Updates
 
 - [A documentation change](#a-documentation-change)
 
@@ -10,11 +6,11 @@
 
 - [Some bug fix](#some-bug-fix)
 
+## New Features
+
+- [Some feature](#some-feature)
+
 ## Details
-
-### Some feature
-
-- Commit: `0004B0`
 
 ### A documentation change
 
@@ -23,3 +19,7 @@
 ### Some bug fix
 
 - Commit: `00044C`
+
+### Some feature
+
+- Commit: `0004B0`

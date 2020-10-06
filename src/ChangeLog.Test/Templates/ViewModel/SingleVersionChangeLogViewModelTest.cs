@@ -14,7 +14,7 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
 
 
         [Fact]
-        public void EntryGroups_returns_configured_groups()
+        public void EntryGroups_returns_entriues_grouped_by_type()
         {
             // ARRANGE
             var config = new ChangeLogConfiguration()
@@ -30,10 +30,10 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             var changelog = GetSingleVersionChangeLog("1.2.3", entries: new[]
             {
                 GetChangeLogEntry(type: "feat"),
+                GetChangeLogEntry(type: "fix"),
                 GetChangeLogEntry(type: "feat"),
                 GetChangeLogEntry(type: "docs"),
                 GetChangeLogEntry(type: "refactor"),
-                GetChangeLogEntry(type: "fix"),
             });
 
             var sut = new SingleVersionChangeLogViewModel(config, changelog);
@@ -55,6 +55,11 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
                 {
                     Assert.Equal("Documentation Updates", docsChanges.DisplayName);
                     Assert.Single(docsChanges.Entries);
+                },
+                refactorings =>
+                {
+                    Assert.Equal("refactor", refactorings.DisplayName);
+                    Assert.Single(refactorings.Entries);
                 });
         }
 
@@ -123,46 +128,11 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
                 GetChangeLogEntry(type: "refactor"),
             };
 
-            var expectedOrder = new[] { entries[1], entries[2], entries[0], entries[3] };
+            var expectedOrder = new[] { entries[0], entries[3], entries[1], entries[2], entries[4] };
 
             var changelog = GetSingleVersionChangeLog("1.2.3", entries: entries);
 
             var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, changelog);
-
-            // ACT / ASSERT
-            var assertions = expectedOrder.Select<ChangeLogEntry, Action<ChangeLogEntry>>(
-                expected => actual => Assert.Same(expected, actual)
-            ).ToArray();
-
-            Assert.Collection(sut.AllEntries, assertions);
-        }
-
-        [Fact]
-        public void AllEntries_returns_changes_of_all_configured_types()
-        {
-            // ARRANGE
-            var config = new ChangeLogConfiguration()
-            {
-                EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
-                {
-                    { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "New Features" } },
-                    { "fix",  new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Bug Fixes" } },
-                    { "docs",  new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates" } },
-                    { "build", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Build System Changes" } },
-                }
-            };
-            var entries = new[]
-            {
-                GetChangeLogEntry(type: "feat"),
-                GetChangeLogEntry(type: "feat"),
-                GetChangeLogEntry(type: "docs"),
-                GetChangeLogEntry(type: "refactor"),
-                GetChangeLogEntry(type: "fix"),
-            };
-
-            var expectedOrder = new[] { entries[0], entries[1], entries[4], entries[2] };
-
-            var sut = new SingleVersionChangeLogViewModel(config, GetSingleVersionChangeLog("1.2.3", entries: entries));
 
             // ACT / ASSERT
             var assertions = expectedOrder.Select<ChangeLogEntry, Action<ChangeLogEntry>>(

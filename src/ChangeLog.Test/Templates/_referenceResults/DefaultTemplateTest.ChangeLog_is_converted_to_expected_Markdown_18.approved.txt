@@ -2,10 +2,6 @@
 
 ## 1.2.3
 
-### New Features
-
-- [Some feature](#changelog-heading-0004B0)
-
 ### Documentation Updates
 
 - [A documentation change](#changelog-heading-0003E8)
@@ -14,11 +10,11 @@
 
 - [Some bug fix](#changelog-heading-00044C)
 
+### New Features
+
+- [Some feature](#changelog-heading-0004B0)
+
 ### Details
-
-#### <a id="changelog-heading-0004B0"></a> Some feature
-
-- Commit: `0004B0`
 
 #### <a id="changelog-heading-0003E8"></a> A documentation change
 
@@ -27,3 +23,7 @@
 #### <a id="changelog-heading-00044C"></a> Some bug fix
 
 - Commit: `00044C`
+
+#### <a id="changelog-heading-0004B0"></a> Some feature
+
+- Commit: `0004B0`

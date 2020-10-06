@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Grynwald.ChangeLog.ConventionalCommits;
 
 namespace Grynwald.ChangeLog.Model
 {
@@ -20,23 +19,10 @@ namespace Grynwald.ChangeLog.Model
         /// </summary>
         public IEnumerable<ChangeLogEntry> BreakingChanges => AllEntries.Where(e => e.ContainsBreakingChanges);
 
+
         /// <summary>
-        /// Gets all change log entries of the specified type
+        /// Initializes a new instance of <see cref="SingleVersionChangeLog"/>
         /// </summary>
-        /// <param name="commitType"></param>
-        /// <returns></returns>
-        public ChangeLogEntryGroup this[CommitType commitType]
-        {
-            get
-            {
-                var entries = AllEntries.Where(x => x.Type == commitType);
-                return new ChangeLogEntryGroup(commitType, entries);
-            }
-        }
-
-
-
-
         public SingleVersionChangeLog(VersionInfo version)
         {
             Version = version ?? throw new ArgumentNullException(nameof(version));
