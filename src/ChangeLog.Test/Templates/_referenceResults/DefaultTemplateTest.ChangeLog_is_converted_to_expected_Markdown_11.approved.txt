@@ -11,6 +11,10 @@
 - [**cli:** A bug was fixed](#changelog-heading-00044C)
 - [A breaking bugfix](#changelog-heading-000514)
 
+### refactor
+
+- [Some breaking change](#changelog-heading-0004B0)
+
 ### Breaking Changes
 
 - [Some breaking change](#changelog-heading-0004B0)

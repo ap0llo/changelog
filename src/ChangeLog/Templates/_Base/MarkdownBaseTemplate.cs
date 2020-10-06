@@ -207,7 +207,7 @@ namespace Grynwald.ChangeLog.Templates
         /// </summary>
         protected virtual MdBlock GetBreakingChangesListBlock(SingleVersionChangeLogViewModel viewModel)
         {
-            if (viewModel.AllBreakingChanges.Any())
+            if (viewModel.BreakingChanges.Any())
             {
                 return new MdContainerBlock(
                     GetBreakingChangesListHeaderBlock(viewModel),
@@ -235,7 +235,7 @@ namespace Grynwald.ChangeLog.Templates
         {
             var breakingChangesList = new MdBulletList();
 
-            foreach (var entry in viewModel.AllBreakingChanges)
+            foreach (var entry in viewModel.BreakingChanges)
             {
                 // If descriptions for breaking changes were provided,
                 // add the descriptions to the list of breaking changes instead of

@@ -6,13 +6,13 @@
 
 - [Some feature](#changelog-heading-0004B0)
 
-### Documentation Updates
-
-- [A documentation change](#changelog-heading-0003E8)
-
 ### Fixed bugs
 
 - [Some bug fix](#changelog-heading-00044C)
+
+### Documentation Updates
+
+- [A documentation change](#changelog-heading-0003E8)
 
 ### Details
 
@@ -20,10 +20,10 @@
 
 - Commit: `0004B0`
 
-#### <a id="changelog-heading-0003E8"></a> A documentation change
-
-- Commit: `0003E8`
-
 #### <a id="changelog-heading-00044C"></a> Some bug fix
 
 - Commit: `00044C`
+
+#### <a id="changelog-heading-0003E8"></a> A documentation change
+
+- Commit: `0003E8`

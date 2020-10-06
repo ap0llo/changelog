@@ -464,9 +464,9 @@ namespace Grynwald.ChangeLog.Test.Templates
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
             {
-                { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "New Features" } },
-                { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates" } },
-                { "fix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Fixed bugs" } }
+                { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "New Features", Priority = 100 } },
+                { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates", Priority = 80 } },
+                { "fix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Fixed bugs", Priority = 90 } }
             };
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", entries: new[]
             {

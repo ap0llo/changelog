@@ -3,8 +3,8 @@
   "changelog": {
 
     "entryTypes": {
-      "feat": { "displayName": "New Features" },
-      "fix": { "displayName": "Bug Fixes" }
+      "feat": { "displayName": "New Features", "priority": 100 },
+      "fix": { "displayName": "Bug Fixes", "priority": 90 }
     },
 
     "scopes": { },

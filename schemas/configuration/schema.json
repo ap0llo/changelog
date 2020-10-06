@@ -137,13 +137,15 @@
                         "feat": {
                             "$ref": "#/definitions/entryTypeConfiguration",
                             "default": {
-                                "displayName": "New Features"
+                                "displayName": "New Features",
+                                "priority": 100
                             }
                         },
                         "fix": {
                             "$ref": "#/definitions/entryTypeConfiguration",
                             "default": {
-                                "displayName": "Bug Fixes"
+                                "displayName": "Bug Fixes",
+                                "priority": 90
                             }
                         }
                     },
@@ -325,6 +327,10 @@
                 "displayName": {
                     "type": "string",
                     "description": "The display name for the change type, e.g. 'New Features' for 'feat'."
+                },
+                "priority": {
+                    "type": "integer",
+                    "description": "Configures the order with which entries of this type are shown in the changelog (entry types with higher priority shown first"
                 }
             },
             "additionalProperties": false

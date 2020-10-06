@@ -11,13 +11,11 @@ namespace Grynwald.ChangeLog.Test.Model
     /// </summary>
     public class SingleVersionChangeLogTest : TestBase
     {
-
         [Fact]
         public void Constructor_checks_arguments_for_null()
         {
             Assert.Throws<ArgumentNullException>(() => new SingleVersionChangeLog(null!));
         }
-
 
         [Fact]
         public void Entries_are_returned_sorted_by_date()
@@ -37,77 +35,17 @@ namespace Grynwald.ChangeLog.Test.Model
             sut.Add(entry5);
 
             var expectedOrdered = new[] { entry3, entry4, entry1, entry2, entry5 };
-            var expectedOrderedFeatures = new[] { entry1, entry2 };
-            var expectedOrderedBugFixes = new[] { entry3, entry4 };
             var expectedOrderedBreakingChanges = new[] { entry4, entry5 };
 
             // ACT 
             var actualOrdered1 = sut.AllEntries.ToArray();
             var actualOrdered2 = sut.ToArray();
-            var actualOrderedFeatures = sut[CommitType.Feature].Entries.ToArray();
-            var actualOrderedBugFixes = sut[CommitType.BugFix].Entries.ToArray();
             var actualOrderedBreakingChanges = sut.BreakingChanges.ToArray();
 
             // ASSERT
             Assert.Equal(expectedOrdered, actualOrdered1);
             Assert.Equal(expectedOrdered, actualOrdered2);
-            Assert.Equal(expectedOrderedFeatures, actualOrderedFeatures);
-            Assert.Equal(expectedOrderedBugFixes, actualOrderedBugFixes);
             Assert.Equal(expectedOrderedBreakingChanges, actualOrderedBreakingChanges);
-        }
-
-        [Fact]
-        public void Indexer_returns_expected_entry_group_01()
-        {
-            // ARRANGE
-            var sut = GetSingleVersionChangeLog("1.2.3", entries: new[]
-            {
-                GetChangeLogEntry(type: "feat"),
-                GetChangeLogEntry(type: "fix")
-            });
-
-            var type = new CommitType("build");
-
-            // ACT
-            var group = sut[type];
-
-            // ASSERT
-            Assert.NotNull(group);
-            Assert.Equal(type, group.Type);
-            Assert.Empty(group.Entries);
-        }
-
-        [Fact]
-        public void Indexer_returns_expected_entry_group_02()
-        {
-            // ARRANGE
-            var sut = GetSingleVersionChangeLog("1.2.3", entries: new[]
-            {
-                GetChangeLogEntry(type: "feat"),
-                GetChangeLogEntry(type: "fix"),
-                GetChangeLogEntry(type: "feat"),
-                GetChangeLogEntry(type: "build"),
-                GetChangeLogEntry(type: "refactor"),
-            });
-
-            // ACT
-            var features = sut[CommitType.Feature];
-            var bugFixes = sut[CommitType.BugFix];
-            var buildChanges = sut[new CommitType("build")];
-
-
-            // ASSERT
-            Assert.NotNull(features);
-            Assert.Equal(CommitType.Feature, features.Type);
-            Assert.Equal(2, features.Entries.Count);
-
-            Assert.NotNull(bugFixes);
-            Assert.Equal(CommitType.BugFix, bugFixes.Type);
-            Assert.Single(bugFixes.Entries);
-
-            Assert.NotNull(buildChanges);
-            Assert.Equal(new CommitType("build"), buildChanges.Type);
-            Assert.Single(buildChanges.Entries);
         }
 
         [Fact]
