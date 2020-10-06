@@ -147,6 +147,62 @@
                                 "displayName": "Bug Fixes",
                                 "priority": 90
                             }
+                        },
+                        "perf": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Performance Improvements",
+                                "priority": 80
+                            }
+                        },
+                        "docs": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Documentation Changes",
+                                "priority": 70
+                            }
+                        },
+                        "refactor": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Code Refactorings",
+                                "priority": 60
+                            }
+                        },
+                        "test": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Test Changes",
+                                "priority": 50
+                            }
+                        },
+                        "build": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Build System and Dependency Changes",
+                                "priority": 40
+                            }
+                        },
+                        "ci": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Continuous Integration System Changes",
+                                "priority": 30
+                            }
+                        },
+                        "style": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Style Changes",
+                                "priority": 20
+                            }
+                        },
+                        "chore": {
+                            "$ref": "#/definitions/entryTypeConfiguration",
+                            "default": {
+                                "displayName": "Chores",
+                                "priority": 10
+                            }
                         }
                     },
                     "title": "Entry types",

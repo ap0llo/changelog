@@ -43,10 +43,26 @@ If no display name is configured, the entry type itself is used instead.
 
 In the default configuration, the following display names are pre-configured (defined in [defaultSetttings.json](../../../src/ChangeLog/Configuration/defaultSettings.json)):
 
-| Entry Type | Display Name |
-|------------|--------------|
-| `feat`     | New Features |
-| `fix`      | Bug Fixes    |
+| Entry Type | Display Name                          |
+|------------|---------------------------------------|
+| `feat`     | New Features                          |
+| `fix`      | Bug Fixes                             |
+| `perf`     | Performance Improvements              |
+| `docs`     | Documentation Changes                 |
+| `refactor` | Code Refactorings                     |
+| `test`     | Test Changes                          |
+| `build`    | Build System and Dependency Changes   |
+| `ci`       | Continuous Integration System Changes |
+| `style`    | Style Changes                         |
+| `chore`    | Chores                                |
+
+---
+
+ℹ️ **Note:** While the default configuration defines display names for common entry types, by default only `feat` and `fix` entries and breaking changes are included in the output.
+
+To include additional entries, adjust the [*Filter* Setting](./filter.md).
+
+---
 
 ### Example
 
@@ -99,14 +115,30 @@ If multiple entry types have the same priority, the order in which they appear i
 
 In the default configuration, the priorities are pre-configured (defined in [defaultSetttings.json](../../../src/ChangeLog/Configuration/defaultSettings.json)):
 
-| Entry Type | Display Name |
-|------------|--------------|
-| `feat`     | 100          |
-| `fix`      | 90           |
+| Entry Type | Priority |
+|------------|----------|
+| `feat`     | 100      |
+| `fix`      | 90       |
+| `perf`     | 80       |
+| `docs`     | 70       |
+| `refactor` | 60       |
+| `test`     | 50       |
+| `build`    | 40       |
+| `ci`       | 30       |
+| `style`    | 20       |
+| `chore`    | 10       |
+
+---
+
+ℹ️ **Note:** While the default configuration defines priorities for common entry types, by default only `feat` and `fix` entries and breaking changes are included in the output.
+
+To include additional entries, adjust the [*Filter* Setting](./filter.md).
+
+---
 
 ### Example
 
-The following example shows how to define a priority for entries of type `docs` and override the priority for entries of type `feat`:
+The following example shows how to override the priority for entries of type `docs` and `feat`:
 
 ```json
 {

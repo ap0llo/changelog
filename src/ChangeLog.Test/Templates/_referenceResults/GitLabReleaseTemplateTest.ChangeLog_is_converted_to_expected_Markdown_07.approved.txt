@@ -7,7 +7,7 @@
 - [**cli:** A bug was fixed](#cli-a-bug-was-fixed)
 - [A breaking bugfix](#a-breaking-bugfix)
 
-#### refactor
+#### Code Refactorings
 
 - [Some breaking change](#some-breaking-change)
 

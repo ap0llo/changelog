@@ -3,8 +3,46 @@
   "changelog": {
 
     "entryTypes": {
-      "feat": { "displayName": "New Features", "priority": 100 },
-      "fix": { "displayName": "Bug Fixes", "priority": 90 }
+      "feat": {
+        "displayName": "New Features",
+        "priority": 100
+      },
+      "fix": {
+        "displayName": "Bug Fixes",
+        "priority": 90
+      },
+      "perf": {
+        "displayName": "Performance Improvements",
+        "priority": 80
+      },
+      "docs": {
+        "displayName": "Documentation Changes",
+        "priority": 70
+      },
+      "refactor": {
+        "displayName": "Code Refactorings",
+        "priority": 60
+      },
+      "test": {
+        "displayName": "Test Changes",
+        "priority": 50
+      },
+      "build": {
+        "displayName": "Build System and Dependency Changes",
+        "priority": 40
+      },
+      "ci": {
+        "displayName": "Continuous Integration System Changes",
+        "priority": 30
+      },
+      "style": {
+        "displayName": "Style Changes",
+        "priority": 20
+      },
+      "chore": {
+        "displayName": "Chores",
+        "priority": 10
+      }
     },
 
     "scopes": { },

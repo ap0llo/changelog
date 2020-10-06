@@ -88,14 +88,16 @@ namespace Grynwald.ChangeLog.Test.Configuration
             File.WriteAllText(m_ConfigurationFilePath, json);
         }
 
-        private static void AssertEntryType(KeyValuePair<string, ChangeLogConfiguration.EntryTypeConfiguration> x, CommitType expectedCommitType, string expectedDisplayName, int expectedOrder)
+        private static void AssertEntryTypes(IEnumerable<KeyValuePair<string, ChangeLogConfiguration.EntryTypeConfiguration>> entryTypes, CommitType expectedCommitType, string expectedDisplayName, int expectedOrder)
         {
-            // Compares a instance of EntryTypeConfiguration to the specified values.
+            // Asserts the specified list of entry type configs contains a instance matching the expected values.
             // This is a method instead of an inline lambda-expression, because a multi-line lambda
             // cannot be converted to an expression-tree.
             // However, expression trees are preferrable over lambdas because they make the actual assertion
             // visible in the test output.
             // (See https://twitter.com/bradwilson/status/1282374907670654976)
+
+            var x = Assert.Single(entryTypes.Where(kvp => new CommitType(kvp.Key) == expectedCommitType));
 
             Assert.NotNull(x.Key);
             Assert.NotEmpty(x.Key);
@@ -236,11 +238,17 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Entry Types settings
             //
             yield return TestCase(config => Assert.NotNull(config.EntryTypes));
-            yield return TestCase(config => Assert.Equal(2, config.EntryTypes.Count));
-            yield return TestCase(config => Assert.Collection(config.EntryTypes,
-                x => AssertEntryType(x, CommitType.Feature, "New Features", 100),
-                x => AssertEntryType(x, CommitType.BugFix, "Bug Fixes", 90)
-            ));
+            yield return TestCase(config => Assert.Equal(10, config.EntryTypes.Count));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, CommitType.Feature, "New Features", 100));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, CommitType.BugFix, "Bug Fixes", 90));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, new CommitType("perf"), "Performance Improvements", 80));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, new CommitType("docs"), "Documentation Changes", 70));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, new CommitType("refactor"), "Code Refactorings", 60));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, new CommitType("test"), "Test Changes", 50));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, new CommitType("build"), "Build System and Dependency Changes", 40));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, new CommitType("ci"), "Continuous Integration System Changes", 30));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, new CommitType("style"), "Style Changes", 20));
+            yield return TestCase(config => AssertEntryTypes(config.EntryTypes, new CommitType("chore"), "Chores", 10));
 
             //
             // Parser settings
@@ -806,9 +814,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ASSERT
             Assert.NotNull(config.EntryTypes);
 
-            // default settings define display names for 2 entry types
+            // default settings define display names for 10 entry types
             // no other entry types should be present in configuration
-            Assert.Equal(2, config.EntryTypes.Count);
+            Assert.Equal(10, config.EntryTypes.Count);
 
             Assert.DoesNotContain("some-type", config.EntryTypes.Keys);
         }
