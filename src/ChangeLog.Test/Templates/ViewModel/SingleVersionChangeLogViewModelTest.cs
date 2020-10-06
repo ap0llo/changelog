@@ -14,17 +14,17 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
 
 
         [Fact]
-        public void EntryGroups_returns_entriues_grouped_by_type()
+        public void EntryGroups_returns_entries_grouped_by_type_in_the_configured_order()
         {
             // ARRANGE
             var config = new ChangeLogConfiguration()
             {
                 EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
                 {
-                   { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() {  DisplayName = "New Features" } },
-                   { "fix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Bug Fixes" } },
-                   { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates" } },
-                   { "build", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Build System Changes" } },
+                   { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() {  DisplayName = "New Features", Priority = 100 } },
+                   { "fix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Bug Fixes", Priority = 90 } },
+                   { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates", Priority = 80 } },
+                   { "build", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Build System Changes", Priority = 70 } }
                 }
             };
             var changelog = GetSingleVersionChangeLog("1.2.3", entries: new[]
@@ -32,8 +32,8 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
                 GetChangeLogEntry(type: "feat"),
                 GetChangeLogEntry(type: "fix"),
                 GetChangeLogEntry(type: "feat"),
-                GetChangeLogEntry(type: "docs"),
                 GetChangeLogEntry(type: "refactor"),
+                GetChangeLogEntry(type: "docs"),
             });
 
             var sut = new SingleVersionChangeLogViewModel(config, changelog);
@@ -119,6 +119,16 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
         public void AllEntries_returns_entries_in_group_order()
         {
             // ARRANGE
+            var config = new ChangeLogConfiguration()
+            {
+                EntryTypes = new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
+                {
+                    { "fix", new ChangeLogConfiguration.EntryTypeConfiguration() { Priority = 10 } },
+                    { "feat", new ChangeLogConfiguration.EntryTypeConfiguration() { Priority = 5 } },
+                    { "refactor", new ChangeLogConfiguration.EntryTypeConfiguration() { Priority = 20 } }
+                }
+            };
+
             var entries = new[]
             {
                 GetChangeLogEntry(type: "fix"),
@@ -128,15 +138,19 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
                 GetChangeLogEntry(type: "refactor"),
             };
 
-            var expectedOrder = new[] { entries[0], entries[3], entries[1], entries[2], entries[4] };
+            var expectedOrder = new[] { entries[4], entries[0], entries[3], entries[1], entries[2] };
 
             var changelog = GetSingleVersionChangeLog("1.2.3", entries: entries);
 
-            var sut = new SingleVersionChangeLogViewModel(m_DefaultConfiguration, changelog);
+            var sut = new SingleVersionChangeLogViewModel(config, changelog);
 
             // ACT / ASSERT
             var assertions = expectedOrder.Select<ChangeLogEntry, Action<ChangeLogEntry>>(
-                expected => actual => Assert.Same(expected, actual)
+                expected => actual =>
+                {
+                    Assert.Equal(expected.Type, actual.Type);
+                    Assert.Same(expected, actual);
+                }
             ).ToArray();
 
             Assert.Collection(sut.AllEntries, assertions);

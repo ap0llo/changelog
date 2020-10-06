@@ -21,7 +21,7 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         {
             get
             {
-                foreach (var (commitType, entries) in m_Model.AllEntries.GroupBy(x => x.Type))
+                foreach (var (commitType, entries) in GetGroupedEntries())
                 {
                     var displayName = m_EntryTypeConfiguration.GetValueOrDefault(commitType)?.DisplayName;
                     if (String.IsNullOrWhiteSpace(displayName))
@@ -36,7 +36,8 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         {
             get
             {
-                foreach (var (_, entries) in m_Model.AllEntries.GroupBy(x => x.Type))
+                // Return entries in group order
+                foreach (var (_, entries) in GetGroupedEntries())
                 {
                     foreach (var entry in entries)
                     {
@@ -54,6 +55,14 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             m_Model = model ?? throw new ArgumentNullException(nameof(model));
             m_EntryTypeConfiguration = m_Configuration.EntryTypes.ToDictionary(kvp => new CommitType(kvp.Key), kvp => kvp.Value);
+        }
+
+
+        private IEnumerable<IGrouping<CommitType, ChangeLogEntry>> GetGroupedEntries()
+        {
+            return m_Model.AllEntries
+               .GroupBy(x => x.Type)
+               .OrderByDescending(group => m_EntryTypeConfiguration.GetValueOrDefault(group.Key)?.Priority ?? 0);
         }
     }
 }

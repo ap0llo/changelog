@@ -1,25 +1,25 @@
-﻿## Documentation Updates
+﻿## New Features
 
-- [A documentation change](#a-documentation-change)
+- [Some feature](#some-feature)
 
 ## Fixed bugs
 
 - [Some bug fix](#some-bug-fix)
 
-## New Features
+## Documentation Updates
 
-- [Some feature](#some-feature)
+- [A documentation change](#a-documentation-change)
 
 ## Details
 
-### A documentation change
+### Some feature
 
-- Commit: `0003E8`
+- Commit: `0004B0`
 
 ### Some bug fix
 
 - Commit: `00044C`
 
-### Some feature
+### A documentation change
 
-- Commit: `0004B0`
+- Commit: `0003E8`
