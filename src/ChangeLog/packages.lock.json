@@ -26,9 +26,9 @@
       },
       "GitLabApiClient": {
         "type": "Direct",
-        "requested": "[1.6.0, )",
-        "resolved": "1.6.0",
-        "contentHash": "9qVJeLylf3W3oSGALSuiKVcsBuPo7i+x9AZagoMHyJK9RWsV31zYs6T5004LzuG7NfAfto43FjWGQLeYA+2COg==",
+        "requested": "[1.7.0, )",
+        "resolved": "1.7.0",
+        "contentHash": "su6z8EdghQpk/3UDc5OzsGnOOBMNpTu0G2Lqjt1/IBcDkFvelFKS645h4fNrI2Awvni2DIl//Z/A3HczY9Kd9w==",
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         }
@@ -375,9 +375,9 @@
       },
       "GitLabApiClient": {
         "type": "Direct",
-        "requested": "[1.6.0, )",
-        "resolved": "1.6.0",
-        "contentHash": "9qVJeLylf3W3oSGALSuiKVcsBuPo7i+x9AZagoMHyJK9RWsV31zYs6T5004LzuG7NfAfto43FjWGQLeYA+2COg==",
+        "requested": "[1.7.0, )",
+        "resolved": "1.7.0",
+        "contentHash": "su6z8EdghQpk/3UDc5OzsGnOOBMNpTu0G2Lqjt1/IBcDkFvelFKS645h4fNrI2Awvni2DIl//Z/A3HczY9Kd9w==",
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         }
