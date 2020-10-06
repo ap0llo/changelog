@@ -97,6 +97,8 @@ namespace Grynwald.ChangeLog.Configuration
         public class EntryTypeConfiguration
         {
             public string? DisplayName { get; set; }
+
+            public int Order { get; set; }
         }
 
         public enum ParserMode
