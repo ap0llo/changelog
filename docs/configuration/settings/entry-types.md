@@ -25,7 +25,7 @@ For documentation on the "Entry Types" setting in version 0.2, see [Entry Types 
     </tr>
     <tr>
         <td><b>Default value</b></td>
-        <td>See <a href="#default-value">Default Value</a></td>
+        <td>See <a href="#default-display-names">Default Display Names</a></td>
     </tr>
     <tr>
         <td><b>Version Support</b></td>
@@ -39,7 +39,7 @@ In the output, change log entries are grouped by their type.
 The display name configured for each entry type is used as heading for that group of entries.
 If no display name is configured, the entry type itself is used instead.
 
-### Default Value
+### Default Display Names
 
 In the default configuration, the following display names are pre-configured (defined in [defaultSetttings.json](../../../src/ChangeLog/Configuration/defaultSettings.json)):
 
@@ -58,6 +58,62 @@ The following example shows how to define a display name for entries of type `do
         "entryTypes": {
             "docs" : { "displayName" : "Documentation changes" },
             "feat" : { "displayName": "Custom Display Name" }
+        }
+    }
+}
+```
+
+## Entry Type Priority
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:entryTypes:&lt;ENTRYTYPE&gt;:priority</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__ENTRYTYPES__&lt;ENTRYTYPE&gt;__PRIORITY</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>See <a href="#default-priorities">Default Priorities</a></td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.3+</td>
+    </tr>
+</table>
+
+The "Entry Type Priority" setting controls how the order in which entries of a given type appear in the generated change log.
+
+In the output, change log entries are grouped by their type.
+The entry type with the highest priority will be shown first.
+If no priority for a entry type is configured, a priority of `0` is used (hence, entry types without priority will appear last).
+If multiple entry types have the same priority, the order in which they appear is undefined (and might change between different runs of changelog).
+
+### Default Priorities
+
+In the default configuration, the priorities are pre-configured (defined in [defaultSetttings.json](../../../src/ChangeLog/Configuration/defaultSettings.json)):
+
+| Entry Type | Display Name |
+|------------|--------------|
+| `feat`     | 100          |
+| `fix`      | 90           |
+
+### Example
+
+The following example shows how to define a priority for entries of type `docs` and override the priority for entries of type `feat`:
+
+```json
+{
+    "changelog" :{
+        "entryTypes": {
+            "docs" : { "priority" : 23 },
+            "feat" : { "priority": 42 }
         }
     }
 }

@@ -33,6 +33,7 @@ For example setting `key:subkey` to `value` would need to be specified in the co
   - [Footer Display Name](./configuration/settings/footers.md#footer-display-name)
 - [Entry Type Settings](./configuration/settings/entry-types.md)
   - [Entry Type Display Name](./configuration/settings/entry-types.md#entry-type-display-name)
+  - [Entry Type Priority](./configuration/settings/entry-types.md#entry-type-priority)
 - [Filter](./configuration/settings/filter.md)
 - [Parser Mode](./configuration/settings/parser-mode.md)
 - [Version Range](./configuration/settings/version-range.md)
