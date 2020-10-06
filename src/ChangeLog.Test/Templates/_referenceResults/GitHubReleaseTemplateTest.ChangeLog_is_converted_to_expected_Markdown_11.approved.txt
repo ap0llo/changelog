@@ -1,25 +1,25 @@
 ﻿## New Features
 
-- [**api:** Some change](#api-some-change)
+- [**api:** Some change](#changelog-heading-0003e8)
 
 ## Bug Fixes
 
-- [**cli:** A bug was fixed](#cli-a-bug-was-fixed)
-- [A breaking bugfix](#a-breaking-bugfix)
+- [**cli:** A bug was fixed](#changelog-heading-00044c)
+- [A breaking bugfix](#changelog-heading-000514)
 
 ## Code Refactorings
 
-- [Some breaking change](#some-breaking-change)
+- [Some breaking change](#changelog-heading-0004b0)
 
 ## Breaking Changes
 
-- [Some breaking change](#some-breaking-change)
-- [Description of breaking change](#a-breaking-bugfix)
-- [Another breaking change](#a-breaking-bugfix)
+- [Some breaking change](#changelog-heading-0004b0)
+- [Description of breaking change](#changelog-heading-000514)
+- [Another breaking change](#changelog-heading-000514)
 
 ## Details
 
-### **api:** Some change
+### <a id="changelog-heading-0003e8"></a> **api:** Some change
 
 Changelog entry body Line1  
 Line2
@@ -29,18 +29,18 @@ Line4
 
 - Commit: `0003E8`
 
-### **cli:** A bug was fixed
+### <a id="changelog-heading-00044c"></a> **cli:** A bug was fixed
 
 - Commit: `00044C`
 
-### A breaking bugfix
+### <a id="changelog-heading-000514"></a> A breaking bugfix
 
 - **Breaking Change:** Description of breaking change
 - **Breaking Change:** Another breaking change
 
 - Commit: `000514`
 
-### Some breaking change
+### <a id="changelog-heading-0004b0"></a> Some breaking change
 
 **Breaking Change**
 

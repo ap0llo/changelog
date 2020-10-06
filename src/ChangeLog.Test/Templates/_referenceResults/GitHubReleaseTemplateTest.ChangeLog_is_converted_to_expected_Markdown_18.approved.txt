@@ -1,25 +1,25 @@
 ﻿## New Features
 
-- [Some feature](#some-feature)
+- [Some feature](#changelog-heading-0004b0)
 
 ## Fixed bugs
 
-- [Some bug fix](#some-bug-fix)
+- [Some bug fix](#changelog-heading-00044c)
 
 ## Documentation Updates
 
-- [A documentation change](#a-documentation-change)
+- [A documentation change](#changelog-heading-0003e8)
 
 ## Details
 
-### Some feature
+### <a id="changelog-heading-0004b0"></a> Some feature
 
 - Commit: `0004B0`
 
-### Some bug fix
+### <a id="changelog-heading-00044c"></a> Some bug fix
 
 - Commit: `00044C`
 
-### A documentation change
+### <a id="changelog-heading-0003e8"></a> A documentation change
 
 - Commit: `0003E8`

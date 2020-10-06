@@ -1,4 +1,4 @@
-﻿### **api:** Some change
+﻿### <a id="changelog-heading-0003e8"></a> **api:** Some change
 
 Changelog entry body Line1  
 Line2

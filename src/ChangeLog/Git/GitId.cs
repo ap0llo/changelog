@@ -28,7 +28,7 @@ namespace Grynwald.ChangeLog.Git
 
         public bool Equals(GitId other) => StringComparer.OrdinalIgnoreCase.Equals(Id, other.Id);
 
-        public override string ToString() => Id;
+        public override string ToString() => Id.ToLower();
 
 
         public static bool operator ==(GitId left, GitId right) => left.Equals(right);

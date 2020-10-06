@@ -2,6 +2,6 @@
 
 ## 1.2.3
 
-#### <a id="changelog-heading-0003E8"></a> **scope1:** Some change
+#### <a id="changelog-heading-0003e8"></a> **scope1:** Some change
 
 - Commit: [`0003E8`](http://example.com/some-link)

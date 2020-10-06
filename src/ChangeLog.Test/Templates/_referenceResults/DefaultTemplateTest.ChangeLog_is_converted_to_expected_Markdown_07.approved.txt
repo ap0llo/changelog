@@ -4,25 +4,25 @@
 
 ### New Features
 
-- [**api:** Some change](#changelog-heading-0003E8)
+- [**api:** Some change](#changelog-heading-0003e8)
 
 ### Bug Fixes
 
-- [**cli:** A bug was fixed](#changelog-heading-00044C)
+- [**cli:** A bug was fixed](#changelog-heading-00044c)
 - [A breaking bugfix](#changelog-heading-000514)
 
 ### Code Refactorings
 
-- [Some breaking change](#changelog-heading-0004B0)
+- [Some breaking change](#changelog-heading-0004b0)
 
 ### Breaking Changes
 
-- [Some breaking change](#changelog-heading-0004B0)
+- [Some breaking change](#changelog-heading-0004b0)
 - [A breaking bugfix](#changelog-heading-000514)
 
 ### Details
 
-#### <a id="changelog-heading-0003E8"></a> **api:** Some change
+#### <a id="changelog-heading-0003e8"></a> **api:** Some change
 
 Changelog entry body Line1  
 Line2
@@ -32,7 +32,7 @@ Line4
 
 - Commit: `0003E8`
 
-#### <a id="changelog-heading-00044C"></a> **cli:** A bug was fixed
+#### <a id="changelog-heading-00044c"></a> **cli:** A bug was fixed
 
 - Commit: `00044C`
 
@@ -42,7 +42,7 @@ Line4
 
 - Commit: `000514`
 
-#### <a id="changelog-heading-0004B0"></a> Some breaking change
+#### <a id="changelog-heading-0004b0"></a> Some breaking change
 
 **Breaking Change**
 

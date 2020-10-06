@@ -2,7 +2,7 @@
 
 ## 1.2.3
 
-#### <a id="changelog-heading-0003E8"></a> **api:** Some change
+#### <a id="changelog-heading-0003e8"></a> **api:** Some change
 
 - **Breaking Change:** Description of breaking change
 - **Breaking Change:** Another breaking change

@@ -4,15 +4,15 @@
 
 ### New Features
 
-- [**api:** Some change](#changelog-heading-0003E8)
+- [**api:** Some change](#changelog-heading-0003e8)
 
 ### Bug Fixes
 
-- [**cli:** A bug was fixed](#changelog-heading-00044C)
+- [**cli:** A bug was fixed](#changelog-heading-00044c)
 
 ### Details
 
-#### <a id="changelog-heading-0003E8"></a> **api:** Some change
+#### <a id="changelog-heading-0003e8"></a> **api:** Some change
 
 Changelog entry body Line1  
 Line2
@@ -22,6 +22,6 @@ Line4
 
 - Commit: `0003E8`
 
-#### <a id="changelog-heading-00044C"></a> **cli:** A bug was fixed
+#### <a id="changelog-heading-00044c"></a> **cli:** A bug was fixed
 
 - Commit: `00044C`

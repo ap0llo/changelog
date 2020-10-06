@@ -1,17 +1,17 @@
 ﻿## New Features
 
-- [**Scope 1 Display Name:** Some change](#scope-1-display-name-some-change)
+- [**Scope 1 Display Name:** Some change](#changelog-heading-0003e8)
 
 ## Bug Fixes
 
-- [**scope2:** A bug was fixed](#scope2-a-bug-was-fixed)
+- [**scope2:** A bug was fixed](#changelog-heading-00044c)
 
 ## Details
 
-### **Scope 1 Display Name:** Some change
+### <a id="changelog-heading-0003e8"></a> **Scope 1 Display Name:** Some change
 
 - Commit: `0003E8`
 
-### **scope2:** A bug was fixed
+### <a id="changelog-heading-00044c"></a> **scope2:** A bug was fixed
 
 - Commit: `00044C`

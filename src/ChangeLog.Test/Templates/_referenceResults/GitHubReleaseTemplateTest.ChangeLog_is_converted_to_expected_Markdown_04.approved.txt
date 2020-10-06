@@ -1,22 +1,22 @@
 ﻿## New Features
 
-- [**api:** Some change](#api-some-change)
-- [Some other change](#some-other-change)
+- [**api:** Some change](#changelog-heading-0003e8)
+- [Some other change](#changelog-heading-0004b0)
 
 ## Bug Fixes
 
-- [**cli:** A bug was fixed](#cli-a-bug-was-fixed)
+- [**cli:** A bug was fixed](#changelog-heading-00044c)
 
 ## Details
 
-### **api:** Some change
+### <a id="changelog-heading-0003e8"></a> **api:** Some change
 
 - Commit: `0003E8`
 
-### Some other change
+### <a id="changelog-heading-0004b0"></a> Some other change
 
 - Commit: `0004B0`
 
-### **cli:** A bug was fixed
+### <a id="changelog-heading-00044c"></a> **cli:** A bug was fixed
 
 - Commit: `00044C`

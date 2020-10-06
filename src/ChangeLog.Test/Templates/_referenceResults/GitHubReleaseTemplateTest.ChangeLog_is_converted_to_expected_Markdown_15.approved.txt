@@ -1,19 +1,19 @@
 ﻿## New Features
 
-- [**scope1:** Some change](#scope1-some-change)
+- [**scope1:** Some change](#changelog-heading-0003e8)
 
 ## Bug Fixes
 
-- [**scope2:** A bug was fixed](#scope2-a-bug-was-fixed)
+- [**scope2:** A bug was fixed](#changelog-heading-00044c)
 
 ## Details
 
-### **scope1:** Some change
+### <a id="changelog-heading-0003e8"></a> **scope1:** Some change
 
 - See Also: Issue \#5
 - Commit: `0003E8`
 
-### **scope2:** A bug was fixed
+### <a id="changelog-heading-00044c"></a> **scope2:** A bug was fixed
 
 - Reviewed by: someone@example.com
 - Commit: `00044C`

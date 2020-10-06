@@ -4,18 +4,18 @@
 
 ### New Features
 
-- [**Scope 1 Display Name:** Some change](#changelog-heading-0003E8)
+- [**Scope 1 Display Name:** Some change](#changelog-heading-0003e8)
 
 ### Bug Fixes
 
-- [**scope2:** A bug was fixed](#changelog-heading-00044C)
+- [**scope2:** A bug was fixed](#changelog-heading-00044c)
 
 ### Details
 
-#### <a id="changelog-heading-0003E8"></a> **Scope 1 Display Name:** Some change
+#### <a id="changelog-heading-0003e8"></a> **Scope 1 Display Name:** Some change
 
 - Commit: `0003E8`
 
-#### <a id="changelog-heading-00044C"></a> **scope2:** A bug was fixed
+#### <a id="changelog-heading-00044c"></a> **scope2:** A bug was fixed
 
 - Commit: `00044C`
