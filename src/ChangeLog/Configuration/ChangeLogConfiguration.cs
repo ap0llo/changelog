@@ -98,7 +98,7 @@ namespace Grynwald.ChangeLog.Configuration
         {
             public string? DisplayName { get; set; }
 
-            public int Order { get; set; }
+            public int Priority { get; set; }
         }
 
         public enum ParserMode

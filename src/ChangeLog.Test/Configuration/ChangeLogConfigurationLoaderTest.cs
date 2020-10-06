@@ -101,7 +101,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.NotEmpty(x.Key);
             Assert.Equal(expectedCommitType, new CommitType(x.Key));
             Assert.Equal(expectedDisplayName, x.Value.DisplayName);
-            Assert.Equal(expectedOrder, x.Value.Order);
+            Assert.Equal(expectedOrder, x.Value.Priority);
         }
 
         private static void AssertFilterExpression(ChangeLogConfiguration.FilterExpressionConfiguration x, string type, string scope)
@@ -238,8 +238,8 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.EntryTypes));
             yield return TestCase(config => Assert.Equal(2, config.EntryTypes.Count));
             yield return TestCase(config => Assert.Collection(config.EntryTypes,
-                x => AssertEntryType(x, CommitType.Feature, "New Features", 10),
-                x => AssertEntryType(x, CommitType.BugFix, "Bug Fixes", 20)
+                x => AssertEntryType(x, CommitType.Feature, "New Features", 100),
+                x => AssertEntryType(x, CommitType.BugFix, "Bug Fixes", 90)
             ));
 
             //
@@ -545,8 +545,8 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 getter: config => config.EntryTypes,
                 value: new Dictionary<string, ChangeLogConfiguration.EntryTypeConfiguration>()
                 {
-                    { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates", Order = 23 } },
-                    { "bugfix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Bug Fixes", Order = 42 } }
+                    { "docs", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Documentation Updates", Priority = 23 } },
+                    { "bugfix", new ChangeLogConfiguration.EntryTypeConfiguration() { DisplayName = "Bug Fixes", Priority = 42 } }
                 },
                 target: SettingsTarget.ConfigurationFile,
                 assert: config =>
@@ -558,11 +558,11 @@ namespace Grynwald.ChangeLog.Test.Configuration
                     // Values defined in current config
                     Assert.Contains("docs", config.EntryTypes.Keys);
                     Assert.Equal("Documentation Updates", config.EntryTypes["docs"].DisplayName);
-                    Assert.Equal(23, config.EntryTypes["docs"].Order);
+                    Assert.Equal(23, config.EntryTypes["docs"].Priority);
 
                     Assert.Contains("bugfix", config.EntryTypes.Keys);
                     Assert.Equal("Bug Fixes", config.EntryTypes["bugfix"].DisplayName);
-                    Assert.Equal(42, config.EntryTypes["bugfix"].Order);
+                    Assert.Equal(42, config.EntryTypes["bugfix"].Priority);
                 });
 
             //
