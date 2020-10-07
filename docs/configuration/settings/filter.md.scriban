@@ -1,9 +1,12 @@
+{{~
+    settingskey = "changelog:filter"
+~}}
 # Filter Setting
 
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:filter</code></td>
+        <td><code>{{settingskey}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -16,17 +19,11 @@
     <tr>
         <td><b>Default value</b></td>
         <td>
-            <code>{
-  &quot;include&quot;: [
-    {
-      &quot;type&quot;: &quot;feat&quot;
-    },
-    {
-      &quot;type&quot;: &quot;fix&quot;
-    }
-  ],
-  &quot;exclude&quot;: []
-}</code>
+            {{~ if defaultSettings.get settingskey ~}}
+            <code>{{defaultSettings.get settingskey | html.escape}}</code>
+            {{~ else ~}}
+            -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>

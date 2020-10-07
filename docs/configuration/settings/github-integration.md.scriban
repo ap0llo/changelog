@@ -1,3 +1,10 @@
+{{~
+    settingskey_accesstoken = "changelog:integrations:github:accessToken"
+    settingskey_remotename = "changelog:integrations:github:remoteName"
+    settingskey_host = "changelog:integrations:github:host"
+    settingskey_owner = "changelog:integrations:github:owner"
+    settingskey_repository = "changelog:integrations:github:repository"
+~}}
 # GitHub Integration Settings
 
 The *GitHub Integration* settings control the behaviour of the GitHub integration.
@@ -14,7 +21,7 @@ See also [Integrations - GitHub](../../integrations/github.md).
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:accessToken</code></td>
+        <td><code>{{settingskey_accesstoken}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -27,7 +34,11 @@ See also [Integrations - GitHub](../../integrations/github.md).
     <tr>
         <td><b>Default value</b></td>
         <td>
+            {{~ if defaultSettings.get settingskey_accesstoken ~}}
+            <code>{{defaultSettings.get settingskey_accesstoken | html.escape}}</code>
+            {{~ else ~}}
             -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>
@@ -48,7 +59,7 @@ accessing the GitHub API when the GitHub integration is enabled.
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:remoteName</code></td>
+        <td><code>{{settingskey_remotename}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -61,7 +72,11 @@ accessing the GitHub API when the GitHub integration is enabled.
     <tr>
         <td><b>Default value</b></td>
         <td>
-            <code>origin</code>
+            {{~ if defaultSettings.get settingskey_remotename ~}}
+            <code>{{defaultSettings.get settingskey_remotename | html.escape}}</code>
+            {{~ else ~}}
+            -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>
@@ -87,7 +102,7 @@ For details on how the remote URL is parsed, see [Integrations - GitHub](../../i
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:host</code></td>
+        <td><code>{{settingskey_host}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -100,7 +115,11 @@ For details on how the remote URL is parsed, see [Integrations - GitHub](../../i
     <tr>
         <td><b>Default value</b></td>
         <td>
+            {{~ if defaultSettings.get settingskey_host ~}}
+            <code>{{defaultSettings.get settingskey_host | html.escape}}</code>
+            {{~ else ~}}
             -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>
@@ -120,7 +139,7 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:owner</code></td>
+        <td><code>{{settingskey_owner}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -133,7 +152,11 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
     <tr>
         <td><b>Default value</b></td>
         <td>
+            {{~ if defaultSettings.get settingskey_owner ~}}
+            <code>{{defaultSettings.get settingskey_owner | html.escape}}</code>
+            {{~ else ~}}
             -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>
@@ -151,7 +174,7 @@ When no owner is specified (default behaviour), ChangeLog will attempt to determ
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:repository</code></td>
+        <td><code>{{settingskey_repository}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -164,7 +187,11 @@ When no owner is specified (default behaviour), ChangeLog will attempt to determ
     <tr>
         <td><b>Default value</b></td>
         <td>
+            {{~ if defaultSettings.get settingskey_repository ~}}
+            <code>{{defaultSettings.get settingskey_repository | html.escape}}</code>
+            {{~ else ~}}
             -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>

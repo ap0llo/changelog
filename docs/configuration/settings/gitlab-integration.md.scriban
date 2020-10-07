@@ -1,3 +1,10 @@
+{{~
+    settingskey_accesstoken = "changelog:integrations:gitlab:accessToken"
+    settingskey_remotename = "changelog:integrations:gitlab:remoteName"
+    settingskey_host = "changelog:integrations:gitlab:host"
+    settingskey_namespace = "changelog:integrations:gitlab:namespace"
+    settingskey_project = "changelog:integrations:gitlab:project"
+~}}
 # GitLab Integration Settings
 
 The *GitLab Integration* settings control the behaviour of the GitLab integration.
@@ -14,7 +21,7 @@ See also [Integrations - GitLab](../../integrations/gitlab.md).
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:accessToken</code></td>
+        <td><code>{{settingskey_accesstoken}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -27,7 +34,11 @@ See also [Integrations - GitLab](../../integrations/gitlab.md).
     <tr>
         <td><b>Default value</b></td>
         <td>
+            {{~ if defaultSettings.get settingskey_accesstoken ~}}
+            <code>{{defaultSettings.get settingskey_accesstoken | html.escape}}</code>
+            {{~ else ~}}
             -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>
@@ -48,7 +59,7 @@ accessing the GitLab  API when the GitLab integration is enabled.
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:remoteName</code></td>
+        <td><code>{{settingskey_remotename}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -61,7 +72,11 @@ accessing the GitLab  API when the GitLab integration is enabled.
     <tr>
         <td><b>Default value</b></td>
         <td>
-            <code>origin</code>
+            {{~ if defaultSettings.get settingskey_remotename ~}}
+            <code>{{defaultSettings.get settingskey_remotename | html.escape}}</code>
+            {{~ else ~}}
+            -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>
@@ -87,7 +102,7 @@ For details on how the remote URL is parsed, see [Integrations - GitLab](../../i
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:host</code></td>
+        <td><code>{{settingskey_host}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -100,7 +115,11 @@ For details on how the remote URL is parsed, see [Integrations - GitLab](../../i
     <tr>
         <td><b>Default value</b></td>
         <td>
+            {{~ if defaultSettings.get settingskey_host ~}}
+            <code>{{defaultSettings.get settingskey_host | html.escape}}</code>
+            {{~ else ~}}
             -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>
@@ -118,7 +137,7 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:namespace</code></td>
+        <td><code>{{settingskey_namespace}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -131,7 +150,11 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
     <tr>
         <td><b>Default value</b></td>
         <td>
+            {{~ if defaultSettings.get settingskey_namespace ~}}
+            <code>{{defaultSettings.get settingskey_namespace | html.escape}}</code>
+            {{~ else ~}}
             -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>
@@ -150,7 +173,7 @@ When no namespace is specified (default behaviour), ChangeLog will attempt to de
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:project</code></td>
+        <td><code>{{settingskey_project}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -163,7 +186,11 @@ When no namespace is specified (default behaviour), ChangeLog will attempt to de
     <tr>
         <td><b>Default value</b></td>
         <td>
+            {{~ if defaultSettings.get settingskey_project ~}}
+            <code>{{defaultSettings.get settingskey_project | html.escape}}</code>
+            {{~ else ~}}
             -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>

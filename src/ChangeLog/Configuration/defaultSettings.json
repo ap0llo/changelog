@@ -101,7 +101,7 @@
       "name": "Default",
 
       "default": {
-        "markdownPreset": "Default"
+        "markdownPreset": "default"
       }
     },
 

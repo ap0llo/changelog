@@ -1,9 +1,12 @@
+{{~
+    settingskey = "changelog:tagPatterns"
+~}}
 # Tag Patterns Setting
 
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:tagPatterns</code></td>
+        <td><code>{{settingskey}}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -16,10 +19,11 @@
     <tr>
         <td><b>Default value (JSON)</b></td>
         <td>
-            <code>[
-  &quot;^(?&lt;version&gt;\\d+\\.\\d+\\.\\d+.*)&quot;,
-  &quot;^v(?&lt;version&gt;\\d+\\.\\d+\\.\\d+.*)&quot;
-]</code>
+            {{~ if defaultSettings.get settingskey ~}}
+            <code>{{defaultSettings.get settingskey | html.escape}}</code>
+            {{~ else ~}}
+            -
+            {{~ end ~}}
         </td>
     </tr>
     <tr>

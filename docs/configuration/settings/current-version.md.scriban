@@ -1,9 +1,12 @@
+{{~
+    settingskey = "changelog:currentVersion"
+~}}
 # Current Version Setting
 
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:currentVersion</code></td>
+        <td><code>{{ settingskey }}</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
@@ -16,7 +19,11 @@
     <tr>
         <td><b>Default value</b></td>
         <td>
+        {{~ if defaultSettings.get settingskey ~}}
+            <code>{{defaultSettings.get settingskey | html.escape}}</code>                
+        {{~ else ~}}
             -
+        {{~ end ~}}
         </td>
     </tr>
     <tr>
