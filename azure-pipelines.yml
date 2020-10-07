@@ -118,7 +118,9 @@ jobs:
 
   # Restore, Build, Test
   - powershell: ./build.ps1 Restore
+    displayName: Restore
   - powershell: ./build.ps1 Build --no-restore
+    displayName: Build
   - task: DotNetCoreCLI@2
     displayName: Test
     inputs:
@@ -145,6 +147,7 @@ jobs:
 
   # Create NuGet Package and  publish as build artifact
   - powershell: ./build.ps1 Pack --no-build
+    displayName: Pack
   
   # Generate changelog and publish as build artifact
   - task: DotNetCoreCLI@2

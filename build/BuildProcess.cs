@@ -162,7 +162,7 @@ class BuildProcess : NukeBuild
 
                     if(Host == HostType.AzurePipelines)
                     {
-                        AzurePipelines.Instance.UploadArtifacts("Binaries", Path.GetFileName(package), package);
+                        AzurePipelines.Instance.UploadArtifacts("", "Binaries", package);
                     }
                 });
         });
