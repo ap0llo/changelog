@@ -6,8 +6,8 @@
 . (Join-Path $PSScriptRoot "common.ps1")
 
 # Variables
-$testResultsDirectory = ".\Build\TestResults"
-$coverageHistoryDirectory = ".\Build\CoverageHistory"
+$testResultsDirectory = ".\Binaries\TestResults"
+$coverageHistoryDirectory = ".\Binaries\CoverageHistory"
 
 # Main script
 Push-Location (Get-RepositoryRoot)
