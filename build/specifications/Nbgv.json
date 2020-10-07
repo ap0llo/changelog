@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nuke-build/nuke/master/source/Nuke.CodeGeneration/schema.json",
+  "name": "Nbgv",
+  "officialUrl": "https://github.com/dotnet/nerdbank.gitversioning",
+  "pathExecutable": "dotnet",
+  "tasks": [
+    {
+      "postfix": "GetVersion",
+      "definiteArgument": "tool run nbgv -- get-version",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Format",
+            "type": "NbgvOutputFormat",
+            "format": "--format {value}",
+            "default": "NbgvOutputFormat.text"
+          }
+        ]
+      }
+    },
+    {
+      "postfix": "Cloud",
+      "definiteArgument": "tool run nbgv -- cloud",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "AllVariables",
+            "type": "bool",
+            "format": "--all-vars"
+          },
+          {
+            "name": "CiSystem",
+            "type": "NbgvCiSystem",
+            "format": "--ci-system {value}"
+          }
+        ]
+      }
+    }
+  ],
+  "enumerations": [
+    {
+      "name": "NbgvOutputFormat",
+      "values": [
+        "text",
+        "json"
+      ]
+    },
+    {
+      "name": "NbgvCiSystem",
+      "values": [
+        "AppVeyor",
+        "VisualStudioTeamServices",
+        "GitHubActions",
+        "TeamCity",
+        "AtlassianBamboo",
+        "Jenkins",
+        "GitLab",
+        "Travis"
+      ]
+    }
+  ]
+}

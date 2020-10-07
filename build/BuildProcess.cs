@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI.AzurePipelines;
@@ -15,12 +14,15 @@ using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
 using static DotNetFormatTasks;
 using static DotNetTasks;
+using static NbgvTasks;
 using static Nuke.CodeGeneration.CodeGenerator;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Logger;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
+
+//TODO: Pass /warnaserror to msbuild / dotnet.exe
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
@@ -75,7 +77,9 @@ class BuildProcess : NukeBuild
         .Executes(() =>
         {
             Info("Restoring NuGet packages");
-            DotNetRestore(s => s.SetProjectFile(Solution));
+            DotNetRestore(_ => _
+                .SetProjectFile(Solution)
+            );
 
             Info("Restoring .NET local tools");
             RootDirectory
@@ -90,7 +94,6 @@ class BuildProcess : NukeBuild
         .Description("Build the repository")
         .OnlyWhenDynamic(() => !NoBuild)
         .DependsOn(Restore)
-
         .Executes(() =>
         {
             DotNetBuild(s => s
@@ -100,9 +103,16 @@ class BuildProcess : NukeBuild
             );
         });
 
+    Target SetBuildNumber => _ => _
+        .Unlisted()
+        .DependsOn(Restore)
+        .TriggeredBy(Build)
+        .OnlyWhenDynamic(() => IsServerBuild)
+        .Executes(() => NbgvCloud(_ => _.EnableAllVariables()));
+
     Target Test => _ => _
         .Description("Run all tests and optionally collect code coverage")
-        .DependsOn(Build, CleanTestResultsDirectory)
+        .DependsOn(Build, CleanTestResults)
         .Executes(() =>
         {
             // Run tests
@@ -118,13 +128,15 @@ class BuildProcess : NukeBuild
 
             if(CollectCoverage)
             {
+                var coverageReports = TestResultsDirectory.GlobFiles("**/*.cobertura.xml").Select(x => (string)x);
+
                 // Print result files
-                CoberturaCoverageReports.ForEach(result => Info($"Coverage result file: {result}"));
+                coverageReports.ForEach(result => Info($"Coverage result file: {result}"));
 
                 // Generate coverage report
                 ReportGenerator(_ => _
                     .SetFramework("netcoreapp3.0")
-                    .SetReports(CoberturaCoverageReports)
+                    .SetReports(coverageReports)
                     .SetTargetDirectory(CodeCoverageReportDirectory)
                     .SetHistoryDirectory(CodeCoverageReportDirectory / "History")
                 );
@@ -136,7 +148,6 @@ class BuildProcess : NukeBuild
             }
 
         });
-
 
     Target Pack => _ => _
         .Description("Create NuGet Packages")
@@ -167,7 +178,7 @@ class BuildProcess : NukeBuild
                 });
         });
 
-    Target CleanTestResultsDirectory => _ => _
+    Target CleanTestResults => _ => _
         .Unlisted()
         .Executes(() =>
         {
@@ -204,5 +215,4 @@ class BuildProcess : NukeBuild
             );
         });
 
-    IEnumerable<string> CoberturaCoverageReports => TestResultsDirectory.GlobFiles("**/*.cobertura.xml").Select(x => (string)x);
 }

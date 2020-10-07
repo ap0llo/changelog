@@ -83,10 +83,6 @@ jobs:
       custom: tool
       arguments: restore
 
-  # Set the build number using Nerdbank.GitVersioning
-  - script: dotnet tool run nbgv cloud --all-vars
-    displayName: Set Version
-
   # Save nbgv variables as JSON artifact
   - powershell: |
       # Caculate output path
