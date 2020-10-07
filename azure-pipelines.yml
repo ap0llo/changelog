@@ -117,16 +117,8 @@ jobs:
     displayName: Check code formatting
 
   # Restore, Build, Test
-  - task: CmdLine@2
-    displayName: Restore NuGet packages
-    inputs:
-      script: dotnet restore $(solutionPath) /warnaserror
-  - task: DotNetCoreCLI@2
-    displayName: Build
-    inputs:
-      command: build
-      projects: $(solutionPath)
-      arguments: '--configuration $(configuration) --no-restore /warnaserror'
+  - powershell: ./build.ps1 Restore
+  - powershell: ./build.ps1 Build --no-restore
   - task: DotNetCoreCLI@2
     displayName: Test
     inputs:
@@ -152,26 +144,8 @@ jobs:
 
 
   # Create NuGet Package and  publish as build artifact
-  - task: CmdLine@2
-    displayName: Pack NuGet package
-    inputs:
-      script: >-
-        dotnet pack $(solutionPath) 
-        --configuration $(configuration) 
-        --output $(Build.ArtifactStagingDirectory) 
-        --no-build 
-        /warnaserror        
-  # Use a inline Powershell script for publishing artifacts instead of the built-in PublishBuildArtifacts task
-  # because the built-in task does not support wildcards and the artifacts staging directory contains other 
-  # artifacts as well (e.g. the variables JSON file published as the 'Variables' artifacts)
-  - powershell: |
-      $packageFiles = Get-ChildItem -Path "$(Build.ArtifactStagingDirectory)" -Filter "*.nupkg"
-      foreach($packageFile in $packageFiles) {
-        Write-Host "Publishing Artifact '$($packageFile.FullName)'"
-        Write-Host "##vso[artifact.upload artifactname=$(artifactsName_Binaries)]$($packageFile.FullName)"
-      }
-    displayName: 'Publish Artifacts: $(artifactsName_Binaries)'
-
+  - powershell: ./build.ps1 Pack --no-build
+  
   # Generate changelog and publish as build artifact
   - task: DotNetCoreCLI@2
     displayName: Generate Change Log
