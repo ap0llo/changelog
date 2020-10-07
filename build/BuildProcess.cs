@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 using Nuke.Common;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
@@ -59,7 +59,9 @@ class BuildProcess : NukeBuild
 
     AbsolutePath CodeCoverageReportDirectory => RootOutputDirectory / "TestResults" / "Coverage";
 
-    AbsolutePath PackageOutputDirectory => RootOutputDirectory  / Configuration / "packages";
+    AbsolutePath PackageOutputDirectory => RootOutputDirectory / Configuration / "packages";
+
+    bool IsAzurePipelinesBuild => Host == HostType.AzurePipelines;
 
 
     Target Clean => _ => _
@@ -108,7 +110,22 @@ class BuildProcess : NukeBuild
         .DependsOn(Restore)
         .TriggeredBy(Build)
         .OnlyWhenDynamic(() => IsServerBuild)
-        .Executes(() => NbgvCloud(_ => _.EnableAllVariables()));
+        .Executes(() =>
+        {
+            NbgvCloud(_ => _.EnableAllVariables());
+
+            if (IsAzurePipelinesBuild)
+            {
+                var versionInfo = Nbgv.GetVersion();
+                var json = JsonConvert.SerializeObject(versionInfo.CloudBuildVariables, Formatting.Indented);
+
+                var outFilePath = ((AbsolutePath)AzurePipelines.Instance.ArtifactStagingDirectory) / "Variables" / "nbgv.json";
+                Directory.CreateDirectory(outFilePath.Parent);
+                File.WriteAllText(outFilePath, json);
+
+                AzurePipelines.Instance.UploadArtifacts("", "Variables", outFilePath);
+            }
+        });
 
     Target Test => _ => _
         .Description("Run all tests and optionally collect code coverage")
@@ -126,7 +143,7 @@ class BuildProcess : NukeBuild
                     .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
             ));
 
-            if(CollectCoverage)
+            if (CollectCoverage)
             {
                 var coverageReports = TestResultsDirectory.GlobFiles("**/*.cobertura.xml").Select(x => (string)x);
 
@@ -146,7 +163,6 @@ class BuildProcess : NukeBuild
                     .NotEmpty("Code coverage report not found")
                     .ForEach(x => Success($"Coverage Report: {x}"));
             }
-
         });
 
     Target Pack => _ => _
@@ -163,7 +179,7 @@ class BuildProcess : NukeBuild
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
             );
-            
+
             PackageOutputDirectory
                 .GlobFiles("*.nupkg")
                 .NotEmpty("No packages found in package output directory")
@@ -171,10 +187,8 @@ class BuildProcess : NukeBuild
                 {
                     Success($"Created package {package}");
 
-                    if(Host == HostType.AzurePipelines)
-                    {
+                    if (IsAzurePipelinesBuild)
                         AzurePipelines.Instance.UploadArtifacts("", "Binaries", package);
-                    }
                 });
         });
 
@@ -186,7 +200,6 @@ class BuildProcess : NukeBuild
                 .Except(new[] { CodeCoverageReportDirectory })
                 .ForEach(DeleteDirectory);
         });
-
 
     Target Generate => _ => _
         .Description("Update auto-generated files")
@@ -214,5 +227,4 @@ class BuildProcess : NukeBuild
                 .SetProject(BuildDirectory)
             );
         });
-
 }

@@ -81,32 +81,7 @@ jobs:
     inputs:
       command: custom
       custom: tool
-      arguments: restore
-
-  # Save nbgv variables as JSON artifact
-  - powershell: |
-      # Caculate output path
-      $outDirPath = Join-Path "$(Build.ArtifactStagingDirectory)" "$(artifactsName_Variables)"
-      $outFilePath = Join-Path $outDirPath "nbgv.json"
-
-      # Get version variables (the value of the 'CloudBuildAllVars' property in the JSON output of nbgv)
-      $json = Invoke-Expression "dotnet tool run nbgv -- get-version --format json" | ConvertFrom-Json
-      if($LASTEXITCODE -ne 0) {
-        throw "'nbgv get-version' completed with exit code $LASTEXITCODE"
-      }
-      $json = $json.CloudBuildAllVars | ConvertTo-Json
-
-      # Create output directory
-      if(-not (Test-Path $outDirPath)) {
-        New-Item -ItemType Directory -Path $outDirPath | Out-Null
-      }
-
-      # Save variables to file
-      [System.IO.File]::WriteAllText($outFilePath, $json)
-
-      # Publish artifacts
-      Write-Host "##vso[artifact.upload artifactname=$(artifactsName_Variables)]$outFilePath"
-    displayName: Save version variables
+      arguments: restore  
 
   # Check the formatting using dotnet-format
   - script: dotnet format ./src --folder --check
