@@ -1,0 +1,24 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nuke-build/nuke/master/source/Nuke.CodeGeneration/schema.json",
+  "references": [
+    "https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-tool-restore"
+  ],
+  "name": "DotNet",
+  "officialUrl": "https://docs.microsoft.com/en-us/dotnet/core/tools/",
+  "pathExecutable": "dotnet",
+  "tasks": [
+    {
+      "postfix": "ToolRestore",
+      "definiteArgument": "tool restore",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "ToolManifest",
+            "type": "string",
+            "format": "--tool-manifest {value}"
+          }
+        ]
+      }
+    }
+  ]
+}

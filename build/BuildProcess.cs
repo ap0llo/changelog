@@ -11,7 +11,9 @@ using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
-
+using static DotNetFormatTasks;
+using static DotNetTasks;
+using static Nuke.CodeGeneration.CodeGenerator;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Logger;
@@ -24,13 +26,8 @@ class BuildProcess : NukeBuild
 {
     public static int Main() => Execute<BuildProcess>(x => x.Build);
 
-
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
-
-    [Solution] readonly Solution Solution;
-
-    [GitRepository] readonly GitRepository GitRepository;
 
     [Parameter("During test execution, collect code coverage")]
     readonly bool CollectCoverage = false;
@@ -41,7 +38,14 @@ class BuildProcess : NukeBuild
     [Parameter("Skip execution of the '" + nameof(Restore) + "' target")]
     readonly bool NoRestore = false;
 
+
+    [Solution] readonly Solution Solution;
+
+    [GitRepository] readonly GitRepository GitRepository;
+
     AbsolutePath SourceDirectory => RootDirectory / "src";
+
+    AbsolutePath BuildDirectory => RootDirectory / "build";
 
     AbsolutePath RootOutputDirectory => Host == HostType.AzurePipelines
         ? (AbsolutePath)AzurePipelines.Instance.BinariesDirectory
@@ -51,7 +55,9 @@ class BuildProcess : NukeBuild
 
     AbsolutePath CodeCoverageReportDirectory => RootOutputDirectory / "TestResults" / "Coverage";
 
+
     Target Clean => _ => _
+        .Description("Delete all build outputs and intermediate files")
         .Before(Restore)
         .Executes(() =>
         {
@@ -60,17 +66,27 @@ class BuildProcess : NukeBuild
         });
 
     Target Restore => _ => _
+        .Description("Restore all NuGet dependencies")
         .OnlyWhenDynamic(() => !(NoBuild || NoRestore))
         .Executes(() =>
         {
-            DotNetRestore(s => s
-                .SetProjectFile(Solution)
-            );
+            Info("Restoring NuGet packages");
+            DotNetRestore(s => s.SetProjectFile(Solution));
+
+            Info("Restoring .NET local tools");
+            RootDirectory
+                .GlobFiles("**/dotnet-tools.json")
+                .ForEach(manifest =>
+                    DotNetToolRestore(_ => _
+                        .SetToolManifest(manifest)
+                ));
         });
 
     Target Build => _ => _
+        .Description("Build the repository")
         .OnlyWhenDynamic(() => !NoBuild)
         .DependsOn(Restore)
+
         .Executes(() =>
         {
             DotNetBuild(s => s
@@ -81,6 +97,7 @@ class BuildProcess : NukeBuild
         });
 
     Target Test => _ => _
+        .Description("Run all tests and optionally collect code coverage")
         .DependsOn(Build, CleanTestResultsDirectory)
         .Executes(() =>
         {
@@ -110,7 +127,6 @@ class BuildProcess : NukeBuild
                 .ForEach(x => Success($"Coverage Report: {x}"));
         });
 
-
     Target CleanTestResultsDirectory => _ => _
         .Unlisted()
         .Executes(() =>
@@ -120,6 +136,33 @@ class BuildProcess : NukeBuild
                 .ForEach(DeleteDirectory);
         });
 
+
+    Target Generate => _ => _
+        .Description("Update auto-generated files")
+        .Executes(() =>
+        {
+            var specificationDirectory = BuildDirectory / "specifications";
+            Info($"Specification directory: {specificationDirectory}");
+            GenerateCodeFromDirectory(specificationDirectory);
+        });
+
+    Target FormatCode => _ => _
+        .Description("Apply formatting rules to all code files")
+        .DependsOn(Restore)
+        .Executes(() =>
+        {
+            Info($"Formatting code in '{SourceDirectory}'");
+            DotNetFormat(_ => _
+                .EnableFolderMode()
+                .SetProject(SourceDirectory)
+            );
+
+            Info($"Formatting code in '{BuildDirectory}'");
+            DotNetFormat(_ => _
+                .EnableFolderMode()
+                .SetProject(BuildDirectory)
+            );
+        });
 
     IEnumerable<string> CoberturaCoverageReports => TestResultsDirectory.GlobFiles("**/*.cobertura.xml").Select(x => (string)x);
 }

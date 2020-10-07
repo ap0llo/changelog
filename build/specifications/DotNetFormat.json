@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nuke-build/nuke/master/source/Nuke.CodeGeneration/schema.json",
+  "name": "DotNetFormat",
+  "officialUrl": "https://github.com/dotnet/format",
+  "pathExecutable": "dotnet",
+  "tasks": [
+    {
+      "definiteArgument": "format",
+      "settingsClass": {
+        "properties": [
+          {
+            "name": "Project",
+            "type": "string",
+            "format": "{value}",
+            "default": "\".\""
+          },
+          {
+            "name": "FolderMode",
+            "type": "bool",
+            "format": "--folder"
+          }
+        ]
+      }
+    }
+  ]
+}
