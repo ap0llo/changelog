@@ -164,7 +164,7 @@ class BuildProcess : NukeBuild
                     .SetReports(CodeCoverageRawResultFiles)
                     .SetTargetDirectory(TestResultsCodeCoverageOutputDirectory / "Html")
                     .SetHistoryDirectory(TestResultsCodeCoverageOutputDirectory / "History")
-                    .SetReportTypes(ReportTypes.Html)
+                    .SetReportTypes(IsAzurePipelinesBuild ? ReportTypes.HtmlInline_AzurePipelines : ReportTypes.Html)
                 );
 
                 (TestResultsCodeCoverageOutputDirectory / "Html")
@@ -207,7 +207,7 @@ class BuildProcess : NukeBuild
             );
 
             var summaryFile = (TestResultsCodeCoverageOutputDirectory / "Cobertura").GlobFiles("*.xml").Single();
-            AzurePipelines.Instance.PublishCodeCoverage(AzurePipelinesCodeCoverageToolType.Cobertura, summaryFile, "");
+            AzurePipelines.Instance.PublishCodeCoverage(AzurePipelinesCodeCoverageToolType.Cobertura, summaryFile, TestResultsCodeCoverageOutputDirectory / "Html");
         });
 
 
