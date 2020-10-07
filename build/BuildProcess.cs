@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI.AzurePipelines;
@@ -54,6 +56,8 @@ class BuildProcess : NukeBuild
     AbsolutePath TestResultsDirectory => RootOutputDirectory / "TestResults";
 
     AbsolutePath CodeCoverageReportDirectory => RootOutputDirectory / "TestResults" / "Coverage";
+
+    AbsolutePath PackageOutputDirectory => RootOutputDirectory  / Configuration / "packages";
 
 
     Target Clean => _ => _
@@ -112,19 +116,55 @@ class BuildProcess : NukeBuild
                     .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
             ));
 
-            // Print result files
-            CoberturaCoverageReports.ForEach(result => Info($"Coverage result file: {result}"));
+            if(CollectCoverage)
+            {
+                // Print result files
+                CoberturaCoverageReports.ForEach(result => Info($"Coverage result file: {result}"));
 
-            // Generate coverage report
-            ReportGenerator(_ => _
-                .SetFramework("netcoreapp3.0")
-                .SetReports(CoberturaCoverageReports)
-                .SetTargetDirectory(CodeCoverageReportDirectory)
-                .SetHistoryDirectory(CodeCoverageReportDirectory / "History")
+                // Generate coverage report
+                ReportGenerator(_ => _
+                    .SetFramework("netcoreapp3.0")
+                    .SetReports(CoberturaCoverageReports)
+                    .SetTargetDirectory(CodeCoverageReportDirectory)
+                    .SetHistoryDirectory(CodeCoverageReportDirectory / "History")
+                );
+
+                CodeCoverageReportDirectory
+                    .GlobFiles("index.html")
+                    .NotEmpty("Code coverage report not found")
+                    .ForEach(x => Success($"Coverage Report: {x}"));
+            }
+
+        });
+
+
+    Target Pack => _ => _
+        .Description("Create NuGet Packages")
+        .DependsOn(Build)
+        .Executes(() =>
+        {
+            PackageOutputDirectory
+                .GlobFiles("*.nupkg")
+                .ForEach(DeleteFile);
+
+            DotNetPack(_ => _
+                .SetProject(Solution)
+                .SetConfiguration(Configuration)
+                .EnableNoBuild()
             );
-            CodeCoverageReportDirectory
-                .GlobFiles("index.html")
-                .ForEach(x => Success($"Coverage Report: {x}"));
+            
+            PackageOutputDirectory
+                .GlobFiles("*.nupkg")
+                .NotEmpty("No packages found in package output directory")
+                .ForEach(package =>
+                {
+                    Success($"Created package {package}");
+
+                    if(Host == HostType.AzurePipelines)
+                    {
+                        AzurePipelines.Instance.UploadArtifacts("Binaries", Path.GetFileName(package), package);
+                    }
+                });
         });
 
     Target CleanTestResultsDirectory => _ => _

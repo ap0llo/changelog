@@ -6,7 +6,8 @@
 		<BaseOutputPath Condition="'$(BUILD_BINARIESDIRECTORY)' != '' ">$(BUILD_BINARIESDIRECTORY)</BaseOutputPath>
 		<BaseOutputPath Condition="'$(BaseOutputPath)' == '' ">$(MSBuildThisFileDirectory)../Binaries/</BaseOutputPath>
 		<BaseOutputPath Condition="!HasTrailingSlash('BaseOutputPath')">$(BaseOutputPath)/</BaseOutputPath>
-		<OutputPath>$(BaseOutputPath)$(Configuration)/$(MSBuildProjectName)/</OutputPath>		
+		<OutputPath>$(BaseOutputPath)$(Configuration)/$(MSBuildProjectName)/</OutputPath>
+		<PackageOutputPath Condition=" '$(PackageOutputPath)' == '' ">$(BaseOutputPath)$(Configuration)/packages/</PackageOutputPath>
 	</PropertyGroup>
 
 	<!-- Nerdbank.GitVersioning -->	
