@@ -1,0 +1,6 @@
+root = false
+
+[*.cs]
+indent_style = space
+dotnet_style_require_accessibility_modifiers = omit_if_default:suggestion
+dotnet_naming_style.instance_field_style.required_prefix = 

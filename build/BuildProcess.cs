@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using Nuke.Common;
 using Nuke.Common.CI.AzurePipelines;
 using Nuke.Common.Execution;
@@ -9,52 +9,57 @@ using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Coverlet;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.ReportGenerator;
 using Nuke.Common.Utilities.Collections;
 
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Logger;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
-internal class BuildProcess : NukeBuild
+class BuildProcess : NukeBuild
 {
     public static int Main() => Execute<BuildProcess>(x => x.Build);
 
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-    private readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+    readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Solution] private readonly Solution Solution;
-    [GitRepository] private readonly GitRepository GitRepository;
+    [Solution] readonly Solution Solution;
+
+    [GitRepository] readonly GitRepository GitRepository;
 
     [Parameter("During test execution, collect code coverage")]
-    private readonly bool CollectCoverage = false;
+    readonly bool CollectCoverage = false;
 
     [Parameter("Skip execution of the '" + nameof(Build) + "' target")]
-    private readonly bool NoBuild = false;
+    readonly bool NoBuild = false;
 
     [Parameter("Skip execution of the '" + nameof(Restore) + "' target")]
-    private readonly bool NoRestore = false;
+    readonly bool NoRestore = false;
 
-    private AbsolutePath SourceDirectory => RootDirectory / "src";
+    AbsolutePath SourceDirectory => RootDirectory / "src";
 
-    private AbsolutePath RootOutputDirectory => Host == HostType.AzurePipelines
+    AbsolutePath RootOutputDirectory => Host == HostType.AzurePipelines
         ? (AbsolutePath)AzurePipelines.Instance.BinariesDirectory
         : (RootDirectory / "Binaries");
 
-    private AbsolutePath TestResultsDirectory => RootOutputDirectory / "TestResults";
+    AbsolutePath TestResultsDirectory => RootOutputDirectory / "TestResults";
 
-    private Target Clean => _ => _
-        .Before(Restore)            
+    AbsolutePath CodeCoverageReportDirectory => RootOutputDirectory / "TestResults" / "Coverage";
+
+    Target Clean => _ => _
+        .Before(Restore)
         .Executes(() =>
         {
             SourceDirectory.GlobDirectories("**/obj").ForEach(DeleteDirectory);
             DeleteDirectory(RootOutputDirectory);
         });
 
-    private Target Restore => _ => _
+    Target Restore => _ => _
         .OnlyWhenDynamic(() => !(NoBuild || NoRestore))
         .Executes(() =>
         {
@@ -63,7 +68,7 @@ internal class BuildProcess : NukeBuild
             );
         });
 
-    private Target Build => _ => _
+    Target Build => _ => _
         .OnlyWhenDynamic(() => !NoBuild)
         .DependsOn(Restore)
         .Executes(() =>
@@ -75,21 +80,46 @@ internal class BuildProcess : NukeBuild
             );
         });
 
-    private Target Test => _ => _
-        .DependsOn(Build)
+    Target Test => _ => _
+        .DependsOn(Build, CleanTestResultsDirectory)
         .Executes(() =>
         {
-            DotNetTest(s => s
+            // Run tests
+            DotNetTest(_ => _
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
-                .When(CollectCoverage, x => x
+                .SetResultsDirectory(TestResultsDirectory)
+                .When(CollectCoverage, _ => _
                     .SetDataCollector("XPlat Code Coverage")
                     .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
             ));
 
+            // Print result files
             CoberturaCoverageReports.ForEach(result => Info($"Coverage result file: {result}"));
+
+            // Generate coverage report
+            ReportGenerator(_ => _
+                .SetFramework("netcoreapp3.0")
+                .SetReports(CoberturaCoverageReports)
+                .SetTargetDirectory(CodeCoverageReportDirectory)
+                .SetHistoryDirectory(CodeCoverageReportDirectory / "History")
+            );
+            CodeCoverageReportDirectory
+                .GlobFiles("index.html")
+                .ForEach(x => Success($"Coverage Report: {x}"));
         });
 
-    private IEnumerable<string> CoberturaCoverageReports => Directory.GetFiles(TestResultsDirectory, "*.cobertura.xml", SearchOption.AllDirectories);
+
+    Target CleanTestResultsDirectory => _ => _
+        .Unlisted()
+        .Executes(() =>
+        {
+            TestResultsDirectory.GlobDirectories("*")
+                .Except(new[] { CodeCoverageReportDirectory })
+                .ForEach(DeleteDirectory);
+        });
+
+
+    IEnumerable<string> CoberturaCoverageReports => TestResultsDirectory.GlobFiles("**/*.cobertura.xml").Select(x => (string)x);
 }
