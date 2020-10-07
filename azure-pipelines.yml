@@ -92,31 +92,8 @@ jobs:
     displayName: Restore
   - powershell: ./build.ps1 Build --no-restore
     displayName: Build
-  - task: DotNetCoreCLI@2
+  - powershell: ./build.ps1 Test --no-build
     displayName: Test
-    inputs:
-      command: test
-      publishTestResults: true
-      projects: $(solutionPath)
-      arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage"'
-  # The PublishCodeCoverageResults task only supports publishing a single coverage result file,
-  # so the results are merged into a single cobertura file using "ReportGenerator"
-  # The dotnet test task redirects test results to $(Agent.TempDirectory) so coverage reports will be written there, too
-  - script: >-
-      dotnet tool run reportgenerator
-      -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml
-      -targetdir:$(Agent.TempDirectory)/TestResults/Coverage
-      -reporttypes:cobertura
-    displayName: Merge Code Coverage Results
-  - task: PublishCodeCoverageResults@1
-    displayName: Publish Code Coverage results
-    inputs:
-      codeCoverageTool: cobertura
-      summaryFileLocation: $(Agent.TempDirectory)/TestResults/Coverage/Cobertura.xml
-      failIfCoverageEmpty: true
-
-
-  # Create NuGet Package and  publish as build artifact
   - powershell: ./build.ps1 Pack --no-build
     displayName: Pack
   
