@@ -43,10 +43,10 @@ class BuildProcess : NukeBuild
     [Parameter("Skip execution of the '" + nameof(Restore) + "' target")]
     readonly bool NoRestore = false;
 
-
     [Solution] readonly Solution Solution;
 
     [GitRepository] readonly GitRepository GitRepository;
+
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
 
@@ -56,21 +56,28 @@ class BuildProcess : NukeBuild
         ? (AbsolutePath)AzurePipelines.Instance.BinariesDirectory
         : (RootDirectory / "Binaries");
 
-    AbsolutePath TestResultsRootDirectory => RootOutputDirectory / "TestResults";
 
-    AbsolutePath TestResultsRawOutputDirectory => TestResultsRootDirectory / "out";
+    AbsolutePath TestOutputDirectory => RootOutputDirectory / "TestResults" / "out";
 
-    AbsolutePath TestResultsCodeCoverageOutputDirectory => TestResultsRootDirectory / "Coverage";
+    enum CoverageOutputDirectory
+    {
+        Html,
+        Cobertura,
+        History
+    }
 
-    IEnumerable<string> CodeCoverageRawResultFiles => TestResultsRawOutputDirectory.GlobFiles("**/*.cobertura.xml").Select(x => (string)x);
+    AbsolutePath CodeCoverageReportDirectory(CoverageOutputDirectory dir) => RootOutputDirectory / "TestResults" / "Coverage" / dir.ToString();
 
-    IEnumerable<string> TestResultFiles => TestResultsRawOutputDirectory.GlobFiles("**/*.trx").Select(x => (string)x);
+    IEnumerable<string> CodeCoverageOutputFiles => TestOutputDirectory.GlobFiles("**/*.cobertura.xml").Select(x => (string)x);
+
+    IEnumerable<string> TestOutputFiles => TestOutputDirectory.GlobFiles("**/*.trx").Select(x => (string)x);
 
 
     AbsolutePath PackageOutputDirectory => RootOutputDirectory / Configuration / "packages";
 
 
     bool IsAzurePipelinesBuild => Host == HostType.AzurePipelines;
+
 
 
     Target Clean => _ => _
@@ -146,7 +153,7 @@ class BuildProcess : NukeBuild
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
-                .SetResultsDirectory(TestResultsRawOutputDirectory)
+                .SetResultsDirectory(TestOutputDirectory)
                 .SetLogger("trx")
                 .When(CollectCoverage, _ => _
                     .SetDataCollector("XPlat Code Coverage")
@@ -156,18 +163,18 @@ class BuildProcess : NukeBuild
             if (CollectCoverage)
             {
                 // Print result files
-                CodeCoverageRawResultFiles.ForEach(result => Info($"Coverage result file: {result}"));
+                CodeCoverageOutputFiles.ForEach(result => Info($"Coverage result file: {result}"));
 
                 // Generate coverage report
                 ReportGenerator(_ => _
                     .SetFramework("netcoreapp3.0")
-                    .SetReports(CodeCoverageRawResultFiles)
-                    .SetTargetDirectory(TestResultsCodeCoverageOutputDirectory / "Html")
-                    .SetHistoryDirectory(TestResultsCodeCoverageOutputDirectory / "History")
+                    .SetReports(CodeCoverageOutputFiles)
+                    .SetTargetDirectory(CodeCoverageReportDirectory(CoverageOutputDirectory.Html))
+                    .SetHistoryDirectory(CodeCoverageReportDirectory(CoverageOutputDirectory.History))
                     .SetReportTypes(IsAzurePipelinesBuild ? ReportTypes.HtmlInline_AzurePipelines : ReportTypes.Html)
                 );
 
-                (TestResultsCodeCoverageOutputDirectory / "Html")
+                CodeCoverageReportDirectory(CoverageOutputDirectory.Html)
                     .GlobFiles("index.html")
                     .NotEmpty("Code coverage report not found")
                     .ForEach(x => Success($"Coverage Report: {x}"));
@@ -190,7 +197,8 @@ class BuildProcess : NukeBuild
             AzurePipelines.Instance.PublishTestResults(
                 "TestResults",
                 AzurePipelinesTestResultsType.VSTest,
-                TestResultFiles.NotEmpty());
+                TestOutputFiles.NotEmpty()
+            );
 
             //
             // Publish code coverage results
@@ -201,13 +209,16 @@ class BuildProcess : NukeBuild
             // Generate coverage report
             ReportGenerator(_ => _
                 .SetFramework("netcoreapp3.0")
-                .SetReports(CodeCoverageRawResultFiles)
-                .SetTargetDirectory(TestResultsCodeCoverageOutputDirectory / "Cobertura")
+                .SetReports(CodeCoverageOutputFiles)
+                .SetTargetDirectory(CodeCoverageReportDirectory(CoverageOutputDirectory.Cobertura))
                 .SetReportTypes(ReportTypes.Cobertura)
             );
 
-            var summaryFile = (TestResultsCodeCoverageOutputDirectory / "Cobertura").GlobFiles("*.xml").Single();
-            AzurePipelines.Instance.PublishCodeCoverage(AzurePipelinesCodeCoverageToolType.Cobertura, summaryFile, TestResultsCodeCoverageOutputDirectory / "Html");
+            AzurePipelines.Instance.PublishCodeCoverage(
+                    AzurePipelinesCodeCoverageToolType.Cobertura,
+                    CodeCoverageReportDirectory(CoverageOutputDirectory.Cobertura).GlobFiles("*.xml").Single(),
+                    CodeCoverageReportDirectory(CoverageOutputDirectory.Html)
+            );
         });
 
 
@@ -242,7 +253,7 @@ class BuildProcess : NukeBuild
         .Unlisted()
         .Executes(() =>
         {
-            DeleteDirectory(TestResultsRawOutputDirectory);
+            DeleteDirectory(TestOutputDirectory);
         });
 
     Target Generate => _ => _
