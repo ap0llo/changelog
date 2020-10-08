@@ -234,6 +234,8 @@ class BuildProcess : NukeBuild
                     AzurePipelinesTestResultsType.VSTest,
                     new[] { trxFile }
                 );
+
+                AzurePipelines.Instance.UploadArtifacts("", "TestResults", trxFile);
             });
 
             //
