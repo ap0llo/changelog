@@ -18,6 +18,11 @@
             "name": "FolderMode",
             "type": "bool",
             "format": "--folder"
+          },
+          {
+            "name": "CheckMode",
+            "type": "bool",
+            "format": "--check"
           }
         ]
       }

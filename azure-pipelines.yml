@@ -31,9 +31,7 @@ pr:
 
 variables:
   # Build settings
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE : true    # do not populate NuGet caches on build agents (VM will be deleted afterwards anyways)
-  configuration: Release                      # the configuration (Debug/Release) to build
-  solutionPath : src/ChangeLog.sln            # The path of the solution to be built
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE : true    # do not populate NuGet caches on build agents (VM will be deleted afterwards anyways)  
   artifactsName_Binaries: Binaries
   artifactsName_ChangeLog: ChangeLog
   artifactsName_Variables: Variables
@@ -75,28 +73,18 @@ jobs:
       packageType: runtime
       version: 2.1.x
 
-  # Restore local .NET Core tools
-  - task: DotNetCoreCLI@2
-    displayName: Restore local tools
-    inputs:
-      command: custom
-      custom: tool
-      arguments: restore  
-
-  # Check the formatting using dotnet-format
-  - script: dotnet format ./src --folder --check
-    displayName: Check code formatting
-
-  # Restore, Build, Test
   - powershell: ./build.ps1 Restore
     displayName: Restore
+
   - powershell: ./build.ps1 Build --no-restore
     displayName: Build
+
   - powershell: ./build.ps1 Test --no-build
     displayName: Test
+
   - powershell: ./build.ps1 Pack --no-build
     displayName: Pack
-  
+
   # Generate changelog and publish as build artifact
   - task: DotNetCoreCLI@2
     displayName: Generate Change Log
@@ -123,7 +111,7 @@ jobs:
 # Job to push package to MyGet.org after build
 - job: Publish_to_MyGet
   displayName: Publish to MyGet
-  pool: 
+  pool:
     vmImage: $(azuredevops_vmimage)
   # Only run after main build job and only if the current branch is master or a release branch
   dependsOn: Build_and_Test
@@ -131,8 +119,8 @@ jobs:
   steps:
 
   # Skip checkout of sources, all data required for this step can be laoded from the previous job's artifacts
-  - checkout: none  
-  
+  - checkout: none
+
   # Get artifacts
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Artifacts: $(artifactsName_Binaries)'
@@ -141,7 +129,7 @@ jobs:
       downloadType: single
       artifactName: $(artifactsName_Binaries)
       downloadPath: $(Build.ArtifactStagingDirectory)
-  
+
   # Upload to MyGet.org
   - task: NuGetCommand@2
     displayName: "Upload package"
@@ -153,7 +141,7 @@ jobs:
 # Job to push package to NuGet.org after build (only for builds of release branches)
 - job: Publish_to_NuGet_org
   displayName: Publish to NuGet.org
-  pool: 
+  pool:
     vmImage: $(azuredevops_vmimage)
   # Only run after main build job and only if the current branch is a release branch
   dependsOn: Build_and_Test
@@ -164,10 +152,10 @@ jobs:
       startsWith(variables['Build.SourceBranch'], 'refs/heads/release/')
     )
   steps:
-  
+
   # Skip checkout of sources, all data required for this step can be laoded from the previous job's artifacts
   - checkout: none
-  
+
   # Get artifacts
   - task: DownloadBuildArtifacts@0
     displayName: 'Download Artifacts: $(artifactsName_Binaries)'
@@ -176,7 +164,7 @@ jobs:
       downloadType: single
       artifactName: $(artifactsName_Binaries)
       downloadPath: $(Build.ArtifactStagingDirectory)
-  
+
   # Upload to NuGet.org
   - task: NuGetCommand@2
     displayName: 'Upload package to NuGet.org'
@@ -188,7 +176,7 @@ jobs:
 # Job to create a GitHub release (only when building a release branch and the package was uploaded to NuGet.org)
 - job: Create_GitHub_Release
   displayName: Create GitHub Release
-  pool: 
+  pool:
     vmImage: $(azuredevops_vmimage)
   # Only run if build was successful and a package was uploaded to nuget.org
   dependsOn:

@@ -45,6 +45,7 @@ public static partial class DotNetFormatTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>&lt;project&gt;</c> via <see cref="DotNetFormatSettings.Project"/></li>
+    ///     <li><c>--check</c> via <see cref="DotNetFormatSettings.CheckMode"/></li>
     ///     <li><c>--folder</c> via <see cref="DotNetFormatSettings.FolderMode"/></li>
     ///   </ul>
     /// </remarks>
@@ -62,6 +63,7 @@ public static partial class DotNetFormatTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>&lt;project&gt;</c> via <see cref="DotNetFormatSettings.Project"/></li>
+    ///     <li><c>--check</c> via <see cref="DotNetFormatSettings.CheckMode"/></li>
     ///     <li><c>--folder</c> via <see cref="DotNetFormatSettings.FolderMode"/></li>
     ///   </ul>
     /// </remarks>
@@ -76,6 +78,7 @@ public static partial class DotNetFormatTasks
     ///   <p>This is a <a href="http://www.nuke.build/docs/authoring-builds/cli-tools.html#fluent-apis">CLI wrapper with fluent API</a> that allows to modify the following arguments:</p>
     ///   <ul>
     ///     <li><c>&lt;project&gt;</c> via <see cref="DotNetFormatSettings.Project"/></li>
+    ///     <li><c>--check</c> via <see cref="DotNetFormatSettings.CheckMode"/></li>
     ///     <li><c>--folder</c> via <see cref="DotNetFormatSettings.FolderMode"/></li>
     ///   </ul>
     /// </remarks>
@@ -100,12 +103,14 @@ public partial class DotNetFormatSettings : ToolSettings
     public override Action<OutputType, string> CustomLogger => DotNetFormatTasks.DotNetFormatLogger;
     public virtual string Project { get; internal set; } = ".";
     public virtual bool? FolderMode { get; internal set; }
+    public virtual bool? CheckMode { get; internal set; }
     protected override Arguments ConfigureArguments(Arguments arguments)
     {
         arguments
           .Add("format")
           .Add("{value}", Project)
-          .Add("--folder", FolderMode);
+          .Add("--folder", FolderMode)
+          .Add("--check", CheckMode);
         return base.ConfigureArguments(arguments);
     }
 }
@@ -189,6 +194,58 @@ public static partial class DotNetFormatSettingsExtensions
     {
         toolSettings = toolSettings.NewInstance();
         toolSettings.FolderMode = !toolSettings.FolderMode;
+        return toolSettings;
+    }
+    #endregion
+    #region CheckMode
+    /// <summary>
+    ///   <p><em>Sets <see cref="DotNetFormatSettings.CheckMode"/></em></p>
+    /// </summary>
+    [Pure]
+    public static T SetCheckMode<T>(this T toolSettings, bool? checkMode) where T : DotNetFormatSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.CheckMode = checkMode;
+        return toolSettings;
+    }
+    /// <summary>
+    ///   <p><em>Resets <see cref="DotNetFormatSettings.CheckMode"/></em></p>
+    /// </summary>
+    [Pure]
+    public static T ResetCheckMode<T>(this T toolSettings) where T : DotNetFormatSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.CheckMode = null;
+        return toolSettings;
+    }
+    /// <summary>
+    ///   <p><em>Enables <see cref="DotNetFormatSettings.CheckMode"/></em></p>
+    /// </summary>
+    [Pure]
+    public static T EnableCheckMode<T>(this T toolSettings) where T : DotNetFormatSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.CheckMode = true;
+        return toolSettings;
+    }
+    /// <summary>
+    ///   <p><em>Disables <see cref="DotNetFormatSettings.CheckMode"/></em></p>
+    /// </summary>
+    [Pure]
+    public static T DisableCheckMode<T>(this T toolSettings) where T : DotNetFormatSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.CheckMode = false;
+        return toolSettings;
+    }
+    /// <summary>
+    ///   <p><em>Toggles <see cref="DotNetFormatSettings.CheckMode"/></em></p>
+    /// </summary>
+    [Pure]
+    public static T ToggleCheckMode<T>(this T toolSettings) where T : DotNetFormatSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.CheckMode = !toolSettings.CheckMode;
         return toolSettings;
     }
     #endregion

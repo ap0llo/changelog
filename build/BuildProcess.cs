@@ -84,6 +84,19 @@ class BuildProcess : NukeBuild
     AbsolutePath PackageOutputDirectory => RootOutputDirectory / Configuration / "packages";
 
 
+    /// <summary>
+    /// Gets all directories that contain code for which formatting rules should be applied to
+    /// </summary>
+    IEnumerable<AbsolutePath> CodeFormatDirectories
+    {
+        get
+        {
+            yield return SourceDirectory;
+            yield return BuildDirectory;
+        }
+    }
+
+
     bool IsAzurePipelinesBuild => Host == HostType.AzurePipelines;
 
 
@@ -122,6 +135,8 @@ class BuildProcess : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
+            Info($"Configuration is {Configuration}");
+
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
@@ -304,16 +319,32 @@ class BuildProcess : NukeBuild
         .DependsOn(Restore)
         .Executes(() =>
         {
-            Info($"Formatting code in '{SourceDirectory}'");
-            DotNetFormat(_ => _
-                .EnableFolderMode()
-                .SetProject(SourceDirectory)
-            );
+            CodeFormatDirectories.ForEach(dir =>
+            {
+                Info($"Formatting code in '{dir}'");
+                DotNetFormat(_ => _
+                    .EnableFolderMode()
+                    .SetProject(dir)
+                );
 
-            Info($"Formatting code in '{BuildDirectory}'");
-            DotNetFormat(_ => _
-                .EnableFolderMode()
-                .SetProject(BuildDirectory)
-            );
+            });
+        });
+
+    Target CheckCodeFormatting => _ => _
+        .Description("Check if all code files follow the formatting rules")
+        .DependsOn(Restore)
+        .TriggeredBy(Test)
+        .ProceedAfterFailure()
+        .Executes(() =>
+        {
+            CodeFormatDirectories.ForEach(dir =>
+            {
+                Info($"Formatting code in '{dir}'");
+                DotNetFormat(_ => _
+                    .EnableFolderMode()
+                    .SetProject(dir)
+                    .EnableCheckMode()
+                );
+            });
         });
 }
