@@ -389,6 +389,7 @@ partial class BuildProcess : NukeBuild
                DotNetRun(_ => _
                    .SetProjectFile(SourceDirectory / "ChangeLog" / "Grynwald.ChangeLog.csproj")
                    .SetFramework("netcoreapp3.1")
+                   .SetConfiguration(Configuration)
                    .EnableNoBuild()
                    .SetApplicationArguments(arguments.ToString())
                    .When(
