@@ -70,7 +70,13 @@ class BuildProcess : NukeBuild
 
     AbsolutePath CodeCoverageReportDirectory(CoverageOutputDirectory dir) => RootOutputDirectory / "TestResults" / "Coverage" / dir.ToString();
 
-    IEnumerable<string> CodeCoverageOutputFiles => TestOutputDirectory.GlobFiles("**/*.cobertura.xml").Select(x => (string)x);
+    IEnumerable<string> CodeCoverageOutputFiles => TestOutputDirectory.GlobFiles("**/*.cobertura.xml")
+        // When the trx logger and coverage collection is enabled, dotnet test saves the coverage output to two locations:
+        // - <RESULTS-DIRECTORY>/<GUID>/coverage.cobertura.xml
+        // - <TEST-RUN-NAME>/In/<COMPUTERNAME>/coverage.cobertura.xml
+        // To avoid loading the same coverage files twice, ignore the second copy of the output file
+        .Except(TestOutputDirectory.GlobFiles("**/In/**/*.cobertura.xml"))
+        .Select(x => (string)x);
 
     IEnumerable<string> TestOutputFiles => TestOutputDirectory.GlobFiles("**/*.trx").Select(x => (string)x);
 
@@ -162,10 +168,16 @@ class BuildProcess : NukeBuild
                     .SetCoverletOutputFormat(CoverletOutputFormat.cobertura)
             ));
 
+            TestOutputFiles
+                .NotEmpty()
+                .ForEach(trxFile => Info($"Test result file: {trxFile}"));
+
             if (CollectCoverage)
             {
                 // Print result files
-                CodeCoverageOutputFiles.ForEach(result => Info($"Coverage result file: {result}"));
+                CodeCoverageOutputFiles
+                    .NotEmpty()
+                    .ForEach(result => Info($"Coverage result file: {result}"));
 
                 // Generate coverage report
                 ReportGenerator(_ => _
