@@ -28,7 +28,7 @@ using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
 
 [CheckBuildProjectConfigurations]
 [UnsetVisualStudioEnvironmentVariables]
-class BuildProcess : NukeBuild
+partial class BuildProcess : NukeBuild
 {
     public static int Main() => Execute<BuildProcess>(x => x.Build);
 
@@ -79,6 +79,7 @@ class BuildProcess : NukeBuild
 
     IEnumerable<string> TestOutputFiles => TestOutputDirectory.GlobFiles("**/*.trx").Select(x => (string)x);
 
+    AbsolutePath CheckFormattingReportPath(string folderName) => RootOutputDirectory / "TestResults" / $"check-code-formatting-{folderName}.json";
 
     AbsolutePath PackageOutputDirectory => RootOutputDirectory / Configuration / "packages";
 
@@ -161,7 +162,7 @@ class BuildProcess : NukeBuild
                 Directory.CreateDirectory(outFilePath.Parent);
                 File.WriteAllText(outFilePath, json);
 
-                AzurePipelines.Instance.UploadArtifacts("", "Variables", outFilePath);
+                PublishArtifact(ArtifactType.Variables, outFilePath);
             }
         });
 
@@ -235,7 +236,7 @@ class BuildProcess : NukeBuild
                     new[] { trxFile }
                 );
 
-                AzurePipelines.Instance.UploadArtifacts("", "TestResults", trxFile);
+                PublishArtifact(ArtifactType.TestResults, trxFile);
             });
 
             //
@@ -280,9 +281,7 @@ class BuildProcess : NukeBuild
                 .ForEach(package =>
                 {
                     Success($"Created package {package}");
-
-                    if (IsAzurePipelinesBuild)
-                        AzurePipelines.Instance.UploadArtifacts("", "Binaries", package);
+                    PublishArtifact(ArtifactType.Binaries, package);
                 });
         });
 
@@ -327,12 +326,17 @@ class BuildProcess : NukeBuild
         {
             CodeFormatDirectories.ForEach(dir =>
             {
+                var reportPath = CheckFormattingReportPath(Path.GetFileName(dir));
+
                 Info($"Formatting code in '{dir}'");
                 DotNetFormat(_ => _
                     .EnableFolderMode()
                     .SetProject(dir)
                     .EnableCheckMode()
+                    .SetReportPath(reportPath)
                 );
+
+                PublishArtifact(ArtifactType.TestResults, reportPath);
             });
         });
 }

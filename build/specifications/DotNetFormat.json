@@ -23,6 +23,11 @@
             "name": "CheckMode",
             "type": "bool",
             "format": "--check"
+          },
+          {
+            "name": "ReportPath",
+            "type": "string",
+            "format": "--report {value}"
           }
         ]
       }

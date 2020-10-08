@@ -47,6 +47,7 @@ public static partial class DotNetFormatTasks
     ///     <li><c>&lt;project&gt;</c> via <see cref="DotNetFormatSettings.Project"/></li>
     ///     <li><c>--check</c> via <see cref="DotNetFormatSettings.CheckMode"/></li>
     ///     <li><c>--folder</c> via <see cref="DotNetFormatSettings.FolderMode"/></li>
+    ///     <li><c>--report</c> via <see cref="DotNetFormatSettings.ReportPath"/></li>
     ///   </ul>
     /// </remarks>
     public static IReadOnlyCollection<Output> DotNetFormat(DotNetFormatSettings toolSettings = null)
@@ -65,6 +66,7 @@ public static partial class DotNetFormatTasks
     ///     <li><c>&lt;project&gt;</c> via <see cref="DotNetFormatSettings.Project"/></li>
     ///     <li><c>--check</c> via <see cref="DotNetFormatSettings.CheckMode"/></li>
     ///     <li><c>--folder</c> via <see cref="DotNetFormatSettings.FolderMode"/></li>
+    ///     <li><c>--report</c> via <see cref="DotNetFormatSettings.ReportPath"/></li>
     ///   </ul>
     /// </remarks>
     public static IReadOnlyCollection<Output> DotNetFormat(Configure<DotNetFormatSettings> configurator)
@@ -80,6 +82,7 @@ public static partial class DotNetFormatTasks
     ///     <li><c>&lt;project&gt;</c> via <see cref="DotNetFormatSettings.Project"/></li>
     ///     <li><c>--check</c> via <see cref="DotNetFormatSettings.CheckMode"/></li>
     ///     <li><c>--folder</c> via <see cref="DotNetFormatSettings.FolderMode"/></li>
+    ///     <li><c>--report</c> via <see cref="DotNetFormatSettings.ReportPath"/></li>
     ///   </ul>
     /// </remarks>
     public static IEnumerable<(DotNetFormatSettings Settings, IReadOnlyCollection<Output> Output)> DotNetFormat(CombinatorialConfigure<DotNetFormatSettings> configurator, int degreeOfParallelism = 1, bool completeOnFailure = false)
@@ -104,13 +107,15 @@ public partial class DotNetFormatSettings : ToolSettings
     public virtual string Project { get; internal set; } = ".";
     public virtual bool? FolderMode { get; internal set; }
     public virtual bool? CheckMode { get; internal set; }
+    public virtual string ReportPath { get; internal set; }
     protected override Arguments ConfigureArguments(Arguments arguments)
     {
         arguments
           .Add("format")
           .Add("{value}", Project)
           .Add("--folder", FolderMode)
-          .Add("--check", CheckMode);
+          .Add("--check", CheckMode)
+          .Add("--report {value}", ReportPath);
         return base.ConfigureArguments(arguments);
     }
 }
@@ -246,6 +251,28 @@ public static partial class DotNetFormatSettingsExtensions
     {
         toolSettings = toolSettings.NewInstance();
         toolSettings.CheckMode = !toolSettings.CheckMode;
+        return toolSettings;
+    }
+    #endregion
+    #region ReportPath
+    /// <summary>
+    ///   <p><em>Sets <see cref="DotNetFormatSettings.ReportPath"/></em></p>
+    /// </summary>
+    [Pure]
+    public static T SetReportPath<T>(this T toolSettings, string reportPath) where T : DotNetFormatSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.ReportPath = reportPath;
+        return toolSettings;
+    }
+    /// <summary>
+    ///   <p><em>Resets <see cref="DotNetFormatSettings.ReportPath"/></em></p>
+    /// </summary>
+    [Pure]
+    public static T ResetReportPath<T>(this T toolSettings) where T : DotNetFormatSettings
+    {
+        toolSettings = toolSettings.NewInstance();
+        toolSettings.ReportPath = null;
         return toolSettings;
     }
     #endregion
