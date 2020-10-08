@@ -83,6 +83,8 @@ partial class BuildProcess : NukeBuild
 
     AbsolutePath PackageOutputDirectory => RootOutputDirectory / Configuration / "packages";
 
+    AbsolutePath ChangeLogOutputPath => RootOutputDirectory / "changelog.md";
+
 
     /// <summary>
     /// Gets all directories that contain code for which formatting rules should be applied to
@@ -338,5 +340,39 @@ partial class BuildProcess : NukeBuild
 
                 PublishArtifact(ArtifactType.TestResults, reportPath);
             });
+        });
+
+    Target GenerateChangeLog => _ => _
+        .Description("Generate a change log for the current version")
+        .DependsOn(Build)
+        .Executes(() =>
+        {
+            var versionInfo = Nbgv.GetVersion();
+
+            var arguments = new Arguments();
+            arguments.Add("--repository {value}", RootDirectory);
+            arguments.Add("--currentVersion {value}", versionInfo.NuGetPackageVersion);
+            arguments.Add("--versionRange {value}", $"[{versionInfo.NuGetPackageVersion}]");
+            arguments.Add("--outputpath {value}", ChangeLogOutputPath);
+            arguments.Add("--template {value}", "GitHubRelease");
+            arguments.Add("--verbose");
+
+            if(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN")))
+            {
+                Warn("Disabling changelog's GitHub integration, because environment variable 'CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN' is not set");
+            }
+
+            DotNetRun(_ => _
+                .SetProjectFile(SourceDirectory / "ChangeLog" / "Grynwald.ChangeLog.csproj")
+                .SetFramework("netcoreapp3.1")
+                .EnableNoBuild()
+                .SetApplicationArguments(arguments.ToString())
+                .When(
+                    String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN")), _=> _
+                    .AddEnvironmentVariable("CHANGELOG__INTEGRATIONS__PROVIDER", "None")
+            ));
+            Success($"Generated change log: {ChangeLogOutputPath}");
+
+            PublishArtifact(ArtifactType.ChangeLog, ChangeLogOutputPath);
         });
 }

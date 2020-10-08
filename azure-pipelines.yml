@@ -85,28 +85,10 @@ jobs:
   - powershell: ./build.ps1 Pack --no-build
     displayName: Pack
 
-  # Generate changelog and publish as build artifact
-  - task: DotNetCoreCLI@2
+  - powershell: ./build.ps1 GenerateChangeLog --no-build
     displayName: Generate Change Log
-    inputs:
-      command: run
-      arguments: >-
-        --project ./src/ChangeLog/Grynwald.ChangeLog.csproj
-        --framework netcoreapp3.1
-        --repository $(Build.SourcesDirectory)
-        --currentVersion $(NBGV_NuGetPackageVersion)
-        --versionRange [$(NBGV_NuGetPackageVersion)]
-        --outputpath $(Build.StagingDirectory)/changelog.md
-        --template GitHubRelease
-        --verbose
     env:
       CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN: $(GitHub.AccessToken)
-
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Artifacts: $(artifactsName_ChangeLog)'
-    inputs:
-      pathToPublish: $(Build.StagingDirectory)/changelog.md
-      artifactName: $(artifactsName_ChangeLog)
 
 # Job to push package to MyGet.org after build
 - job: Publish_to_MyGet

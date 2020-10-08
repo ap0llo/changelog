@@ -7,7 +7,8 @@ partial class BuildProcess
     {
         Binaries,
         TestResults,
-        Variables
+        Variables,
+        ChangeLog
     }
 
 
