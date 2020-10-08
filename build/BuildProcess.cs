@@ -169,8 +169,13 @@ partial class BuildProcess : NukeBuild
         });
 
     Target Test => _ => _
+        .Description("Perfom all tests and verification steps")
+        .Executes(() => { });
+
+    Target RunTests => _ => _
         .Description("Run all tests and optionally collect code coverage")
         .DependsOn(Build, CleanTestResults)
+        .TriggeredBy(Test)
         .Executes(() =>
         {
             // Run tests
@@ -213,12 +218,13 @@ partial class BuildProcess : NukeBuild
 
         });
 
-    Target PublishTestResults => _ => _
-        .TriggeredBy(Test)
+    Target RunTests_PublishResults => _ => _
+        .TriggeredBy(RunTests)
         .DependsOn(Restore)
-        .After(Test)
+        .After(RunTests)
         .Unlisted()
-        .OnlyWhenStatic(() => IsAzurePipelinesBuild && CollectCoverage)
+        .OnlyWhenStatic(() => IsAzurePipelinesBuild)
+        .AssuredAfterFailure()
         .Executes(() =>
         {
             //
@@ -245,21 +251,25 @@ partial class BuildProcess : NukeBuild
             // Publish code coverage results
             //
 
-            // The Azure Pipelines only supports publishing a single coverage result file,
-            // so the results are merged into a single cobertura file using "ReportGenerator"
-            // Generate coverage report
-            ReportGenerator(_ => _
-                .SetFramework("netcoreapp3.0")
-                .SetReports(CodeCoverageOutputFiles)
-                .SetTargetDirectory(CodeCoverageReportDirectory(CoverageOutputDirectory.Cobertura))
-                .SetReportTypes(ReportTypes.Cobertura)
-            );
+            if (CollectCoverage)
+            {
+                // The Azure Pipelines only supports publishing a single coverage result file,
+                // so the results are merged into a single cobertura file using "ReportGenerator"
+                // Generate coverage report
+                ReportGenerator(_ => _
+                    .SetFramework("netcoreapp3.0")
+                    .SetReports(CodeCoverageOutputFiles)
+                    .SetTargetDirectory(CodeCoverageReportDirectory(CoverageOutputDirectory.Cobertura))
+                    .SetReportTypes(ReportTypes.Cobertura)
+                );
 
-            AzurePipelines.Instance.PublishCodeCoverage(
-                    AzurePipelinesCodeCoverageToolType.Cobertura,
-                    CodeCoverageReportDirectory(CoverageOutputDirectory.Cobertura).GlobFiles("*.xml").Single(),
-                    CodeCoverageReportDirectory(CoverageOutputDirectory.Html)
-            );
+                AzurePipelines.Instance.PublishCodeCoverage(
+                        AzurePipelinesCodeCoverageToolType.Cobertura,
+                        CodeCoverageReportDirectory(CoverageOutputDirectory.Cobertura).GlobFiles("*.xml").Single(),
+                        CodeCoverageReportDirectory(CoverageOutputDirectory.Html)
+                );
+            }
+
         });
 
     Target Pack => _ => _
@@ -337,42 +347,56 @@ partial class BuildProcess : NukeBuild
                     .EnableCheckMode()
                     .SetReportPath(reportPath)
                 );
+            });
+        });
 
+    Target CheckCodeFormatting_PublishResults => _ => _
+        .TriggeredBy(CheckCodeFormatting)
+        .DependsOn(Restore)
+        .After(CheckCodeFormatting)
+        .Unlisted()
+        .OnlyWhenStatic(() => IsAzurePipelinesBuild)
+        .AssuredAfterFailure()
+        .Executes(() =>
+        {
+            CodeFormatDirectories.ForEach(dir =>
+            {
+                var reportPath = CheckFormattingReportPath(Path.GetFileName(dir));
                 PublishArtifact(ArtifactType.TestResults, reportPath);
             });
         });
 
     Target GenerateChangeLog => _ => _
-        .Description("Generate a change log for the current version")
-        .DependsOn(Build)
-        .Executes(() =>
-        {
-            var versionInfo = Nbgv.GetVersion();
+           .Description("Generate a change log for the current version")
+           .DependsOn(Build)
+           .Executes(() =>
+           {
+               var versionInfo = Nbgv.GetVersion();
 
-            var arguments = new Arguments();
-            arguments.Add("--repository {value}", RootDirectory);
-            arguments.Add("--currentVersion {value}", versionInfo.NuGetPackageVersion);
-            arguments.Add("--versionRange {value}", $"[{versionInfo.NuGetPackageVersion}]");
-            arguments.Add("--outputpath {value}", ChangeLogOutputPath);
-            arguments.Add("--template {value}", "GitHubRelease");
-            arguments.Add("--verbose");
+               var arguments = new Arguments();
+               arguments.Add("--repository {value}", RootDirectory);
+               arguments.Add("--currentVersion {value}", versionInfo.NuGetPackageVersion);
+               arguments.Add("--versionRange {value}", $"[{versionInfo.NuGetPackageVersion}]");
+               arguments.Add("--outputpath {value}", ChangeLogOutputPath);
+               arguments.Add("--template {value}", "GitHubRelease");
+               arguments.Add("--verbose");
 
-            if(String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN")))
-            {
-                Warn("Disabling changelog's GitHub integration, because environment variable 'CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN' is not set");
-            }
+               if (String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN")))
+               {
+                   Warn("Disabling changelog's GitHub integration, because environment variable 'CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN' is not set");
+               }
 
-            DotNetRun(_ => _
-                .SetProjectFile(SourceDirectory / "ChangeLog" / "Grynwald.ChangeLog.csproj")
-                .SetFramework("netcoreapp3.1")
-                .EnableNoBuild()
-                .SetApplicationArguments(arguments.ToString())
-                .When(
-                    String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN")), _=> _
-                    .AddEnvironmentVariable("CHANGELOG__INTEGRATIONS__PROVIDER", "None")
-            ));
-            Success($"Generated change log: {ChangeLogOutputPath}");
+               DotNetRun(_ => _
+                   .SetProjectFile(SourceDirectory / "ChangeLog" / "Grynwald.ChangeLog.csproj")
+                   .SetFramework("netcoreapp3.1")
+                   .EnableNoBuild()
+                   .SetApplicationArguments(arguments.ToString())
+                   .When(
+                       String.IsNullOrEmpty(Environment.GetEnvironmentVariable("CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN")), _ => _
+                       .AddEnvironmentVariable("CHANGELOG__INTEGRATIONS__PROVIDER", "None")
+               ));
+               Success($"Generated change log: {ChangeLogOutputPath}");
 
-            PublishArtifact(ArtifactType.ChangeLog, ChangeLogOutputPath);
-        });
+               PublishArtifact(ArtifactType.ChangeLog, ChangeLogOutputPath);
+           });
 }
