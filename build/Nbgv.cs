@@ -8,10 +8,10 @@ using static NbgvTasks;
 class NbgvVersionInfo
 {
     [JsonRequired, JsonProperty("CloudBuildNumber")]
-    public string CloudBuildNumber { get; set; }
+    public string CloudBuildNumber { get; set; } = "";
 
     [JsonRequired, JsonProperty("NuGetPackageVersion")]
-    public string NuGetPackageVersion { get; set; }
+    public string NuGetPackageVersion { get; set; } = "";
 
     [JsonRequired, JsonProperty("CloudBuildAllVars")]
     public IDictionary<string, string> CloudBuildVariables { get; set; } = new Dictionary<string, string>();

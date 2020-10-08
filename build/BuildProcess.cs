@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 using Newtonsoft.Json;
 using Nuke.Common;
 using Nuke.Common.CI.AzurePipelines;
@@ -45,9 +44,9 @@ class BuildProcess : NukeBuild
     [Parameter("Skip execution of the '" + nameof(Restore) + "' target")]
     readonly bool NoRestore = false;
 
-    [Solution] readonly Solution Solution;
+    [Solution] readonly Solution Solution = null!;
 
-    [GitRepository] readonly GitRepository GitRepository;
+    [GitRepository] readonly GitRepository GitRepository = null!;
 
 
     AbsolutePath SourceDirectory => RootDirectory / "src";
@@ -225,22 +224,10 @@ class BuildProcess : NukeBuild
 
             TestOutputFiles.ForEach(trxFile =>
             {
-                var document = XDocument.Load(trxFile);
-
-                // Load the assembly path from the trx files and extract the assembly name and directory (which should be the target framework identifier)
-                var info = document.Descendants(XNamespace.Get("http://microsoft.com/schemas/VisualStudio/TeamTest/2010").GetName("TestMethod"))
-                    .Select(x => x.Attribute("codeBase")?.Value)
-                    .WhereNotNull()
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .Select(codeBase => new
-                    {
-                        AssemblyName = Path.GetFileName(codeBase),
-                        TargetFramework = Path.GetFileName(Path.GetDirectoryName(codeBase))
-                    })
-                    .Distinct()
-                    .FirstOrDefault();
-
-                var title = info == null ? "TestResults" : $"{info.AssemblyName}, {info.TargetFramework}";
+                var title = String.Join(", ",
+                    TrxFile.GetAssemblyInfos(trxFile)
+                           .Select(x => $"{x.Name} ({x.Framework?.ToString() ?? "Unknown Framework"})")
+                );
 
                 AzurePipelines.Instance.PublishTestResults(
                     title,
@@ -269,7 +256,6 @@ class BuildProcess : NukeBuild
                     CodeCoverageReportDirectory(CoverageOutputDirectory.Html)
             );
         });
-
 
     Target Pack => _ => _
         .Description("Create NuGet Packages")
