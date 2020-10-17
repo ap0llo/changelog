@@ -50,8 +50,8 @@ namespace Grynwald.ChangeLog.Test.Model
         public void Add_throws_InvalidOperationException_if_version_already_exists()
         {
             // ARRANGE
-            var versionInfo1 = GetSingleVersionChangeLog("4.5.6", "abc123");
-            var versionInfo2 = GetSingleVersionChangeLog("4.5.6", "def456");
+            var versionInfo1 = GetSingleVersionChangeLog("4.5.6", TestGitIds.Id1);
+            var versionInfo2 = GetSingleVersionChangeLog("4.5.6", TestGitIds.Id2);
 
             var sut = new ApplicationChangeLog() { versionInfo1 };
 

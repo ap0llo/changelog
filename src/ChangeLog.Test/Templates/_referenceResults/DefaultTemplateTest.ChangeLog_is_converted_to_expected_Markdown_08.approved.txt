@@ -2,7 +2,7 @@
 
 ## 1.2.3
 
-#### <a id="changelog-heading-0003e8"></a> **api:** Some change
+#### <a id="changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3"></a> **api:** Some change
 
 **Breaking Change**
 
@@ -12,4 +12,4 @@ Line2
 Changelog entry body Line3  
 Line4
 
-- Commit: `0003E8`
+- Commit: `0398ff2`

@@ -83,7 +83,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 CurrentVersion = "1.2.3"
             };
 
-            var head = GetGitCommit(id: "01234");
+            var head = GetGitCommit(id: TestGitIds.Id1);
 
             m_RepositoryMock.Setup(x => x.Head).Returns(head);
 

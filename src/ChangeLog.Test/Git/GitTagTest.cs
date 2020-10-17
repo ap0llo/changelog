@@ -12,14 +12,21 @@ namespace Grynwald.ChangeLog.Test.Git
     {
         public IEnumerable<(GitTag left, GitTag right)> GetEqualTestCases()
         {
-            yield return (new GitTag("tag1", new GitId("abc123")), new GitTag("tag1", new GitId("abc123")));
-            yield return (new GitTag("tag1", new GitId("abc123")), new GitTag("tag1", new GitId("ABC123")));
+            yield return (new GitTag("tag1", TestGitIds.Id1), new GitTag("tag1", TestGitIds.Id1));
+            yield return (new GitTag("tag1", TestGitIds.Id1), new GitTag("tag1", TestGitIds.Id1));
         }
 
         public IEnumerable<(GitTag left, GitTag right)> GetUnequalTestCases()
         {
-            yield return (new GitTag("tag1", new GitId("abc123")), new GitTag("tag2", new GitId("abc123")));
-            yield return (new GitTag("tag1", new GitId("abc123")), new GitTag("tag1", new GitId("def456")));
+            yield return (
+                new GitTag("tag1", TestGitIds.Id1),
+                new GitTag("tag2", TestGitIds.Id1)
+            );
+
+            yield return (
+                new GitTag("tag1", TestGitIds.Id1),
+                new GitTag("tag1", TestGitIds.Id2)
+            );
         }
 
 
@@ -30,7 +37,7 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("\t")]
         public void Name_must_not_be_null_or_whitespace(string name)
         {
-            Assert.Throws<ArgumentException>(() => new GitTag(name, new GitId("abc123")));
+            Assert.Throws<ArgumentException>(() => new GitTag(name, TestGitIds.Id1));
         }
     }
 }

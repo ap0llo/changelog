@@ -4,25 +4,25 @@
 
 ### New Features
 
-- [**api:** Some change](#changelog-heading-0003e8)
+- [**api:** Some change](#changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3)
 
 ### Bug Fixes
 
-- [**cli:** A bug was fixed](#changelog-heading-00044c)
-- [A breaking bugfix](#changelog-heading-000514)
+- [**cli:** A bug was fixed](#changelog-heading-fecc81adb3c0389ded66e848b1cfd904fd7d7e5b)
+- [A breaking bugfix](#changelog-heading-473a330bdfec458a10787d3b3c9e9e1d740bf2c0)
 
 ### Code Refactorings
 
-- [Some breaking change](#changelog-heading-0004b0)
+- [Some breaking change](#changelog-heading-05e15876bbf34b760498c7acb366ef371652750c)
 
 ### Breaking Changes
 
-- [Some breaking change](#changelog-heading-0004b0)
-- [Description of breaking change](#changelog-heading-000514)
+- [Some breaking change](#changelog-heading-05e15876bbf34b760498c7acb366ef371652750c)
+- [Description of breaking change](#changelog-heading-473a330bdfec458a10787d3b3c9e9e1d740bf2c0)
 
 ### Details
 
-#### <a id="changelog-heading-0003e8"></a> **api:** Some change
+#### <a id="changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3"></a> **api:** Some change
 
 Changelog entry body Line1  
 Line2
@@ -30,20 +30,20 @@ Line2
 Changelog entry body Line3  
 Line4
 
-- Commit: `0003E8`
+- Commit: `0398ff2`
 
-#### <a id="changelog-heading-00044c"></a> **cli:** A bug was fixed
+#### <a id="changelog-heading-fecc81adb3c0389ded66e848b1cfd904fd7d7e5b"></a> **cli:** A bug was fixed
 
-- Commit: `00044C`
+- Commit: `fecc81a`
 
-#### <a id="changelog-heading-000514"></a> A breaking bugfix
+#### <a id="changelog-heading-473a330bdfec458a10787d3b3c9e9e1d740bf2c0"></a> A breaking bugfix
 
 **Breaking Change:** Description of breaking change
 
-- Commit: `000514`
+- Commit: `473a330`
 
-#### <a id="changelog-heading-0004b0"></a> Some breaking change
+#### <a id="changelog-heading-05e15876bbf34b760498c7acb366ef371652750c"></a> Some breaking change
 
 **Breaking Change**
 
-- Commit: `0004B0`
+- Commit: `05e1587`

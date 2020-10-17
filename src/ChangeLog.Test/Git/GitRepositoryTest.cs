@@ -245,11 +245,12 @@ namespace Grynwald.ChangeLog.Test.Git
             Git($"commit --allow-empty -m \"{commitMessage}\"");
             Git("config --local user.name", out var userName);
             Git("config --local user.email", out var userEmail);
-            Git("rev-parse --short HEAD", out var commitId);
+            Git("rev-parse HEAD", out var commitId);
+            Git("rev-parse --short HEAD", out var abbreviatedCommitId);
             Git("log -1 --pretty=\"format:%cI\" ", out var date);
 
             return new GitCommit(
-                new GitId(commitId.Trim()),
+                new GitId(commitId.Trim(), abbreviatedCommitId.Trim()),
                 $"{commitMessage}\n",
                 DateTime.Parse(date.Trim()),
                 new GitAuthor(userName.Trim(), userEmail.Trim())

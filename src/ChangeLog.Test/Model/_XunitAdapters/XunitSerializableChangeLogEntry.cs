@@ -35,7 +35,8 @@ namespace Grynwald.ChangeLog.Test.Model
             var body = info.GetValue<string[]>(nameof(ChangeLogEntry.Body));
             var breakingChangeDescriptions = info.GetValue<string[]>(nameof(ChangeLogEntry.BreakingChangeDescriptions));
             var footers = info.GetValue<XunitSerializableChangeLogEntryFooter[]>(nameof(ChangeLogEntry.Footers));
-            var commit = info.GetValue<string>(nameof(ChangeLogEntry.Commit));
+            var commitId = info.GetValue<string>($"{nameof(ChangeLogEntry.Commit)}.{nameof(ChangeLogEntry.Commit.Id)}");
+            var abbreviatedCommitId = info.GetValue<string>($"{nameof(ChangeLogEntry.Commit)}.{nameof(ChangeLogEntry.Commit.AbbreviatedId)}");
 
             Value = new ChangeLogEntry(
                 date,
@@ -46,7 +47,7 @@ namespace Grynwald.ChangeLog.Test.Model
                 body,
                 footers.Select(x => x.Value).ToArray(),
                 breakingChangeDescriptions,
-                new GitId(commit)
+                new GitId(commitId, abbreviatedCommitId)
             );
         }
 
@@ -60,7 +61,8 @@ namespace Grynwald.ChangeLog.Test.Model
             info.AddValue(nameof(Value.Body), Value.Body.ToArray());
             info.AddValue(nameof(Value.BreakingChangeDescriptions), Value.BreakingChangeDescriptions.ToArray());
             info.AddValue(nameof(Value.Footers), Value.Footers.Select(XunitSerializableChangeLogEntryFooter.Wrap).ToArray());
-            info.AddValue(nameof(Value.Commit), Value.Commit.Id);
+            info.AddValue($"{nameof(Value.Commit)}.{nameof(Value.Commit.Id)}", Value.Commit.Id);
+            info.AddValue($"{nameof(Value.Commit)}.{nameof(Value.Commit.AbbreviatedId)}", Value.Commit.AbbreviatedId);
         }
     }
 }

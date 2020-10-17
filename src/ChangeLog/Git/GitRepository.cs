@@ -61,8 +61,8 @@ namespace Grynwald.ChangeLog.Git
 
         private GitId ToGitId(GitObject gitObject)
         {
-            var sha = m_Repository.ObjectDatabase.ShortenObjectId(gitObject);
-            return new GitId(sha);
+            var abbreviatedId = m_Repository.ObjectDatabase.ShortenObjectId(gitObject);
+            return new GitId(gitObject.Sha, abbreviatedId);
         }
 
         private GitAuthor ToGitAuthor(Signature signature) => new GitAuthor(name: signature.Name, email: signature.Email);

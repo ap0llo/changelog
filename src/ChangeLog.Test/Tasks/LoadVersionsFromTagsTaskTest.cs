@@ -25,8 +25,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
             var tags = new GitTag[]
             {
-                new GitTag("1.2.3-alpha", new GitId("01")),
-                new GitTag("4.5.6", new GitId("02"))
+                new GitTag("1.2.3-alpha", TestGitIds.Id1),
+                new GitTag("4.5.6", TestGitIds.Id2)
             };
 
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -55,8 +55,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
             var tags = new GitTag[]
             {
-                new GitTag("1.2.3-alpha", new GitId("01")),
-                new GitTag("4.5.6", new GitId("02"))
+                new GitTag("1.2.3-alpha", TestGitIds.Id1),
+                new GitTag("4.5.6", TestGitIds.Id2)
             };
 
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -84,7 +84,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
             var tags = new GitTag[]
             {
-                new GitTag(tagName, new GitId("01")),
+                new GitTag(tagName, TestGitIds.Id1),
             };
 
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -114,7 +114,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
             var tags = new GitTag[]
             {
-                new GitTag(tagName, new GitId("0123")),
+                new GitTag(tagName, TestGitIds.Id1),
             };
 
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -140,9 +140,9 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE            
             var tags = new GitTag[]
             {
-                new GitTag("v1.2.3", new GitId("0123")),
-                new GitTag("4.5.6", new GitId("4567")),
-                new GitTag("1.2.3", new GitId("8910"))
+                new GitTag("v1.2.3", TestGitIds.Id1),
+                new GitTag("4.5.6", TestGitIds.Id2),
+                new GitTag("1.2.3", TestGitIds.Id3)
             };
 
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -155,8 +155,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
-            Assert.Contains(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("0123"));
-            Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("8910"));
+            Assert.Contains(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == TestGitIds.Id1);
+            Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == TestGitIds.Id3);
             Assert.Equal(ChangeLogTaskResult.Success, result);
         }
 
@@ -167,7 +167,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE            
             var tags = new GitTag[]
             {
-                new GitTag("1.2.3", new GitId("0123")),
+                new GitTag("1.2.3", TestGitIds.Id1),
             };
 
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
@@ -177,7 +177,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var changeLog = new ApplicationChangeLog()
             {
-                new SingleVersionChangeLog(new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("4567")))
+                new SingleVersionChangeLog(new VersionInfo(NuGetVersion.Parse("1.2.3"), TestGitIds.Id2))
             };
 
             // ACT
@@ -185,7 +185,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ASSERT            
             Assert.Equal(ChangeLogTaskResult.Error, result);
-            Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == new GitId("0123"));
+            Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == TestGitIds.Id1);
         }
 
     }

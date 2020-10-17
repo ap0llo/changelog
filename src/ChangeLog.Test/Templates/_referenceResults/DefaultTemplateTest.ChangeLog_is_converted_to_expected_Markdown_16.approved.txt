@@ -2,6 +2,6 @@
 
 ## 1.2.3
 
-#### <a id="changelog-heading-0003e8"></a> **scope1:** Some change
+#### <a id="changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3"></a> **scope1:** Some change
 
-- Commit: [`0003E8`](http://example.com/some-link)
+- Commit: [`0398ff2`](http://example.com/some-link)

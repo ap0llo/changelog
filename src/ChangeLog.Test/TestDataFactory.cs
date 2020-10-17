@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
@@ -10,15 +11,15 @@ namespace Grynwald.ChangeLog.Test
     public class TestDataFactory
     {
         private DateTime m_NextCommitDate = new DateTime(2020, 1, 1);
-        private int m_NextCommitId = 1000;
+        private Random m_CommitIdSource = new Random(23);
 
 
-        public SingleVersionChangeLog GetSingleVersionChangeLog(string version, string? commitId = null, params ChangeLogEntry[] entries)
+        public SingleVersionChangeLog GetSingleVersionChangeLog(string version, GitId? commitId = null, params ChangeLogEntry[] entries)
         {
             var changelog = new SingleVersionChangeLog(
                 new VersionInfo(
                     NuGetVersion.Parse(version),
-                    commitId == null ? NextGitId() : new GitId(commitId)
+                    commitId ?? NextGitId()
                 ));
 
             foreach (var entry in entries)
@@ -38,7 +39,7 @@ namespace Grynwald.ChangeLog.Test
             IReadOnlyList<string>? body = null,
             IReadOnlyList<ChangeLogEntryFooter>? footers = null,
             IReadOnlyList<string>? breakingChangeDescriptions = null,
-            string? commit = null)
+            GitId? commit = null)
         {
 
             return new ChangeLogEntry(
@@ -50,14 +51,14 @@ namespace Grynwald.ChangeLog.Test
                 body: body ?? Array.Empty<string>(),
                 footers: footers ?? Array.Empty<ChangeLogEntryFooter>(),
                 breakingChangeDescriptions: breakingChangeDescriptions ?? Array.Empty<string>(),
-                commit: commit == null ? NextGitId() : new GitId(commit));
+                commit: commit ?? NextGitId());
         }
 
 
-        public GitCommit GetGitCommit(string? id = null, string? commitMessage = null)
+        public GitCommit GetGitCommit(GitId? id = null, string? commitMessage = null)
         {
             return new GitCommit(
-                id: id == null ? NextGitId() : new GitId(id),
+                id: id ?? NextGitId(),
                 commitMessage: commitMessage ?? "",
                 date: new DateTime(),
                 author: new GitAuthor("Someone", "someone@example.com")
@@ -95,8 +96,12 @@ namespace Grynwald.ChangeLog.Test
 
         protected GitId NextGitId()
         {
-            var id = new GitId(m_NextCommitId.ToString("X6"));
-            m_NextCommitId += 100;
+            var shaBytes = new byte[20];
+            m_CommitIdSource.NextBytes(shaBytes);
+
+            var fullId = String.Join("", shaBytes.Select(x => x.ToString("x2")));
+            var abbreviatedId = fullId.Substring(0, 7);
+            var id = new GitId(fullId, abbreviatedId);
             return id;
         }
     }
