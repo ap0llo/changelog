@@ -114,6 +114,50 @@ namespace Grynwald.ChangeLog.Test.Tasks
         }
 
         [Theory]
+        [InlineData("abcd1234", "abcd1234  ")]
+        [InlineData("abcd1234", "  abcd1234")]
+        public async Task Executes_ignores_leading_and_trailing_whitespace_in_footer_values(string commitId, string footerValue)
+        {
+            // ARRANGE
+            var testData = new TestDataFactory();
+
+            var changelog = new ApplicationChangeLog()
+            {
+                testData.GetSingleVersionChangeLog("1.0", entries: new[]
+                {
+                    testData.GetChangeLogEntry(footers: new[]
+                    {
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue)
+                    })
+                })
+            };
+
+            var expectedCommit = testData.GetGitCommit();
+
+            m_GitRepositoryMock
+                .Setup(x => x.TryGetCommit(commitId))
+                .Returns(expectedCommit);
+
+            var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
+
+            // ACT 
+            var result = await sut.RunAsync(changelog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
+            var footers = changelog.ChangeLogs.SelectMany(x => x.AllEntries).SelectMany(x => x.Footers);
+            var footer = Assert.Single(footers);
+
+            Assert.NotNull(footer.Link);
+            var commitLink = Assert.IsType<CommitLink>(footer.Link);
+            Assert.Equal(expectedCommit.Id, commitLink.Id);
+
+            m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Once);
+            m_GitRepositoryMock.Verify(x => x.TryGetCommit(commitId), Times.Once);
+        }
+
+        [Theory]
         [InlineData("efgh567")]
         [InlineData("abcd1234abcd1234abcd1234abcd1234abcd1234")]
         public async Task Executes_does_not_add_a_commit_link_if_a_link_is_already_set(string footerValue)

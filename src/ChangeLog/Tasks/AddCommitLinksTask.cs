@@ -32,16 +32,18 @@ namespace Grynwald.ChangeLog.Tasks
 
             foreach (var (entry, footer) in EnumerateFootersWithEntries(changelog))
             {
-                if (s_ObjectIdRegex.IsMatch(footer.Value) && m_Repository.TryGetCommit(footer.Value) is GitCommit commit)
+                var footerValue = footer.Value.Trim();
+
+                if (s_ObjectIdRegex.IsMatch(footerValue) && m_Repository.TryGetCommit(footerValue) is GitCommit commit)
                 {
                     if (footer.Link is null)
                     {
-                        m_Logger.LogDebug($"Detected reference to git commit '{commit.Id}' in '{footer.Name}' footer of entry {entry.Commit.AbbreviatedId}");
+                        m_Logger.LogDebug($"Detected reference to git commit '{commit.Id}' in '{footer.Name}' footer of entry {entry.Commit}");
                         footer.Link = new CommitLink(commit.Id);
                     }
                     else
                     {
-                        m_Logger.LogWarning($"Detected reference to git commit '{commit.Id}' in '{footer.Name}' footer of entry {entry.Commit.AbbreviatedId}, but no link was added because the footer's link is already set.");
+                        m_Logger.LogWarning($"Detected reference to git commit '{commit.Id}' in '{footer.Name}' footer of entry {entry.Commit}, but no link was added because the footer's link is already set.");
                     }
                 }
             }
