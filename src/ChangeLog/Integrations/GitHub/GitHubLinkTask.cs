@@ -156,7 +156,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                     var uri = await TryGetWebUriAsync(githubClient, owner, repo, id);
                     if (uri != null)
                     {
-                        footer.WebUri = uri;
+                        footer.Link = new WebLink(uri);
                     }
                     else
                     {

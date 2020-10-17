@@ -558,9 +558,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.NotNull(footer.WebUri);
                     var expectedUri = new Uri($"https://example.com/issue/{issueNumber}");
-                    Assert.Equal(expectedUri, footer.WebUri);
+
+                    Assert.NotNull(footer.Link);
+                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    Assert.Equal(expectedUri, webLink.Uri);
                 });
 
             });
@@ -629,9 +631,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.NotNull(footer.WebUri);
                     var expectedUri = new Uri($"https://example.com/pr/{prNumber}");
-                    Assert.Equal(expectedUri, footer.WebUri);
+
+                    Assert.NotNull(footer.Link);
+                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    Assert.Equal(expectedUri, webLink.Uri);
                 });
 
             });
@@ -685,7 +689,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers, footer =>
                 {
-                    Assert.Null(footer.WebUri);
+                    Assert.Null(footer.Link);
                 });
 
             });
@@ -742,7 +746,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers, footer =>
                 {
-                    Assert.Null(footer.WebUri);
+                    Assert.Null(footer.Link);
                 });
 
             });

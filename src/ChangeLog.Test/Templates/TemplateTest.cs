@@ -447,7 +447,7 @@ namespace Grynwald.ChangeLog.Test.Templates
 
             var entry = GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
             {
-                new ChangeLogEntryFooter(new CommitMessageFooterName("see-also"), "Link") { WebUri = new Uri("http://example.com") }
+                new ChangeLogEntryFooter(new CommitMessageFooterName("see-also"), "Link") { Link = new WebLink(new Uri("http://example.com")) }
             });
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", null, entry);

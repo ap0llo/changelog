@@ -162,7 +162,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                     var uri = await TryGetWebUriAsync(gitlabClient, type.Value, projectPath, id);
                     if (uri != null)
                     {
-                        footer.WebUri = uri;
+                        footer.Link = new WebLink(uri);
                     }
                     else
                     {

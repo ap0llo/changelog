@@ -15,7 +15,13 @@ namespace Grynwald.ChangeLog.Model
         /// </summary>
         public string Value { get; }
 
-        public Uri? WebUri { get; set; }
+        /// <summary>
+        /// Gets the link to the resource this footer refers to.
+        /// </summary>
+        /// <value>
+        /// Gets the link as an instance of <see cref="ILink"/> or null, if this footer has no link.
+        /// </value>
+        public ILink? Link { get; set; }
 
 
         /// <summary>

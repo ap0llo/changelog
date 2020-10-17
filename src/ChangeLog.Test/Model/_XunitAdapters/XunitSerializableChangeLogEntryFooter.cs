@@ -27,16 +27,16 @@ namespace Grynwald.ChangeLog.Test.Model
         {
             var name = info.GetValue<string>(nameof(ChangeLogEntryFooter.Name));
             var value = info.GetValue<string>(nameof(ChangeLogEntryFooter.Value));
-            var webUri = info.GetValue<string>(nameof(ChangeLogEntryFooter.WebUri));
+            var link = info.GetValue<XunitSerializableLink>(nameof(ChangeLogEntryFooter.Link));
 
             Value = new ChangeLogEntryFooter(
                 new CommitMessageFooterName(name),
                 value
             );
 
-            if (webUri != null)
+            if (link != null)
             {
-                Value.WebUri = new Uri(webUri);
+                Value.Link = link.Value;
             }
         }
 
@@ -44,7 +44,12 @@ namespace Grynwald.ChangeLog.Test.Model
         {
             info.AddValue(nameof(Value.Name), Value.Name.Value);
             info.AddValue(nameof(Value.Value), Value.Value);
-            info.AddValue(nameof(Value.WebUri), Value.WebUri?.ToString());
+
+            if (Value.Link != null)
+            {
+                info.AddValue(nameof(Value.Link), new XunitSerializableLink(Value.Link));
+            }
+
         }
 
         internal static XunitSerializableChangeLogEntryFooter Wrap(ChangeLogEntryFooter value) => new XunitSerializableChangeLogEntryFooter(value);

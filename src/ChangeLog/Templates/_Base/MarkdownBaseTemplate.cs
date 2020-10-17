@@ -337,9 +337,9 @@ namespace Grynwald.ChangeLog.Templates
             foreach (var footer in entry.Footers)
             {
                 MdSpan text = footer.Value;
-                if (footer.WebUri != null)
+                if (footer.Link is WebLink webLink)
                 {
-                    text = new MdLinkSpan(text, footer.WebUri);
+                    text = new MdLinkSpan(text, webLink.Uri);
                 }
                 footerList.Add(
                     new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", text)

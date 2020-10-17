@@ -326,9 +326,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.NotNull(footer.WebUri);
                     var expectedUri = new Uri($"https://example.com/{projectPath}/issues/{id}");
-                    Assert.Equal(expectedUri, footer.WebUri);
+
+                    Assert.NotNull(footer.Link);
+                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    Assert.Equal(expectedUri, webLink.Uri);
                 });
 
             });
@@ -384,7 +386,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.Null(footer.WebUri);
+                    Assert.Null(footer.Link);
                 });
 
             });
@@ -445,9 +447,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.NotNull(footer.WebUri);
                     var expectedUri = new Uri($"https://example.com/{projectPath}/issues/{id}");
-                    Assert.Equal(expectedUri, footer.WebUri);
+
+                    Assert.NotNull(footer.Link);
+                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    Assert.Equal(expectedUri, webLink.Uri);
                 });
 
             });
@@ -515,7 +519,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.Null(footer.WebUri);
+                    Assert.Null(footer.Link);
                 });
 
             });
@@ -576,9 +580,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Milestone")), footer =>
                 {
-                    Assert.NotNull(footer.WebUri);
                     var expectedUri = new Uri($"https://example.com/{projectPath}/milestones/{id}");
-                    Assert.Equal(expectedUri, footer.WebUri);
+
+                    Assert.NotNull(footer.Link);
+                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    Assert.Equal(expectedUri, webLink.Uri);
                 });
 
             });
@@ -645,7 +651,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Milestone")), footer =>
                 {
-                    Assert.Null(footer.WebUri);
+                    Assert.Null(footer.Link);
                 });
 
             });
