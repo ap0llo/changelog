@@ -17,6 +17,10 @@ namespace Grynwald.ChangeLog.Git
         public IEnumerable<GitRemote> Remotes => m_Repository.Network.Remotes.Select(ToGitRemote);
 
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="GitRepository"/>
+        /// </summary>
+        /// <param name="repositoyPath">The local path of the git repository.</param>
         public GitRepository(string repositoyPath)
         {
             if (String.IsNullOrWhiteSpace(repositoyPath))
@@ -46,6 +50,17 @@ namespace Grynwald.ChangeLog.Git
         public IReadOnlyList<GitTag> GetTags() => m_Repository.Tags.Select(ToGitTag).ToList();
 
         /// <inheritdoc />
+        public GitCommit? TryGetCommit(string id)
+        {
+            if (String.IsNullOrWhiteSpace(id))
+                throw new ArgumentException("Value must not be null or whitespace", nameof(id));
+
+            var commit = m_Repository.Lookup<Commit>(id);
+            return commit is null ? null : ToGitCommit(commit);
+        }
+
+
+        /// <inheritdoc />
         public void Dispose() => m_Repository.Dispose();
 
 
@@ -70,6 +85,5 @@ namespace Grynwald.ChangeLog.Git
         private GitTag ToGitTag(Tag tag) => new GitTag(tag.FriendlyName, ToGitId(tag.Target));
 
         private GitRemote ToGitRemote(Remote remote) => new GitRemote(remote.Name, remote.Url);
-
     }
 }

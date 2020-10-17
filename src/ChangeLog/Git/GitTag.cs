@@ -18,7 +18,6 @@ namespace Grynwald.ChangeLog.Git
             if (commit.IsNull)
                 throw new ArgumentException("Commit must not be empty", nameof(commit));
 
-
             Name = name;
             Commit = commit;
         }
