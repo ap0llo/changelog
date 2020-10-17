@@ -1,4 +1,5 @@
 ﻿using System;
+using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Xunit.Abstractions;
 
@@ -34,6 +35,12 @@ namespace Grynwald.ChangeLog.Test.Model
                     Value = new WebLink(uri);
                     break;
 
+                case nameof(CommitLink):
+                    var id = info.GetValue<string>(nameof(CommitLink.Id.Id));
+                    var abbreviatedId = info.GetValue<string>(nameof(CommitLink.Id.AbbreviatedId));
+                    Value = new CommitLink(new GitId(id, abbreviatedId));
+                    break;
+
                 default:
                     throw new NotImplementedException();
             }
@@ -46,6 +53,12 @@ namespace Grynwald.ChangeLog.Test.Model
                 case WebLink webLink:
                     info.AddValue(s_Type, nameof(WebLink));
                     info.AddValue(nameof(WebLink.Uri), webLink.Uri.ToString());
+                    break;
+
+                case CommitLink commitLink:
+                    info.AddValue(s_Type, nameof(CommitLink));
+                    info.AddValue(nameof(CommitLink.Id.Id), commitLink.Id.Id);
+                    info.AddValue(nameof(CommitLink.Id.AbbreviatedId), commitLink.Id.AbbreviatedId);
                     break;
 
                 default:
