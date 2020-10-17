@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Grynwald.ChangeLog.Git;
+using Octokit;
+using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Git
 {
@@ -76,5 +78,22 @@ namespace Grynwald.ChangeLog.Test.Git
                     new GitAuthor("user2", "user@example.net"))
             );
         }
+
+
+        [Fact]
+        public void Commit_id_must_not_be_null()
+        {
+            // ARRANGE
+            var id = default(GitId);
+
+            // ACT 
+            var ex = Record.Exception(() => new GitCommit(id, "Some Message", DateTime.Now, new GitAuthor("user", "user@example.com")));
+
+            // ASSERT
+            Assert.NotNull(ex);
+            var argumentException = Assert.IsType<ArgumentException>(ex);
+            Assert.Equal("id", argumentException.ParamName);
+        }
+
     }
 }

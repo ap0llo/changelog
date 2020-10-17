@@ -5,6 +5,9 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Git
 {
+    /// <summary>
+    /// Tests for <see cref="GitId"/>
+    /// </summary>
     public class GitIdTest : EqualityTest<GitId, GitIdTest>, IEqualityTestDataProvider<GitId>
     {
         public IEnumerable<(GitId left, GitId right)> GetEqualTestCases()
@@ -68,6 +71,32 @@ namespace Grynwald.ChangeLog.Test.Git
             // ACT / ASSERT 
             Assert.Equal(id, sut.ToString());
             Assert.Equal(expected, sut.ToString(abbreviate));
+        }
+
+        [Fact]
+        public void IsNull_returns_true_for_uninitialized_instance()
+        {
+            // ARRANGE
+            var sut = default(GitId);
+
+            // ACT 
+            var isNull = sut.IsNull;
+
+            // ASSERT
+            Assert.True(isNull);
+        }
+
+        [Fact]
+        public void IsNull_returns_false_for_initialized_instance()
+        {
+            // ARRANGE
+            var sut = new GitId("abcd1234abcd1234abcd1234abcd1234abcd1234", "abcd123");
+
+            // ACT 
+            var isNull = sut.IsNull;
+
+            // ASSERT
+            Assert.False(isNull);
         }
     }
 }

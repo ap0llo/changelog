@@ -13,9 +13,10 @@ namespace Grynwald.ChangeLog.Test.Model
     public class VersionInfoTest : EqualityTest<VersionInfo, VersionInfoTest>, IEqualityTestDataProvider<VersionInfo>
     {
         [Fact]
-        public void Constructor_checks_arguments_for_null()
+        public void Constructor_checks_arguments()
         {
             Assert.Throws<ArgumentNullException>(() => new VersionInfo(null!, TestGitIds.Id1));
+            Assert.Throws<ArgumentException>(() => new VersionInfo(NuGetVersion.Parse("1.2.3"), default));
         }
 
         [Fact]

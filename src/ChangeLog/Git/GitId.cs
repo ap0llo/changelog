@@ -10,6 +10,8 @@ namespace Grynwald.ChangeLog.Git
     {
         private static readonly Regex s_ObjectIdRegex = new Regex(@"^[\dA-z]+$", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        public bool IsNull => Id is null;
+
         public string Id { get; }
 
         public string AbbreviatedId { get; }

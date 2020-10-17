@@ -15,6 +15,10 @@ namespace Grynwald.ChangeLog.Git
             if (String.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(name));
 
+            if (commit.IsNull)
+                throw new ArgumentException("Commit must not be empty", nameof(commit));
+
+
             Name = name;
             Commit = commit;
         }

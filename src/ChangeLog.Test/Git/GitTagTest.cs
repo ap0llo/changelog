@@ -39,5 +39,20 @@ namespace Grynwald.ChangeLog.Test.Git
         {
             Assert.Throws<ArgumentException>(() => new GitTag(name, TestGitIds.Id1));
         }
+
+        [Fact]
+        public void Commit_must_not_be_null()
+        {
+            // ARRANGE
+            var commit = default(GitId);
+
+            // ACT 
+            var ex = Record.Exception(() => new GitTag("tageName", commit));
+
+            // ASSERT
+            Assert.NotNull(ex);
+            var argumentException = Assert.IsType<ArgumentException>(ex);
+            Assert.Equal("commit", argumentException.ParamName);
+        }
     }
 }

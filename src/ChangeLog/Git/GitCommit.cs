@@ -17,6 +17,9 @@ namespace Grynwald.ChangeLog.Git
 
         public GitCommit(GitId id, string commitMessage, DateTime date, GitAuthor author)
         {
+            if (id.IsNull)
+                throw new ArgumentException("Commit id must not be empty", nameof(id));
+
             Id = id;
             CommitMessage = commitMessage ?? throw new ArgumentNullException(nameof(commitMessage));
             Date = date;
