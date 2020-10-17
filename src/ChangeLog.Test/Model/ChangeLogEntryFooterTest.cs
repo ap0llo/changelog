@@ -20,6 +20,20 @@ namespace Grynwald.ChangeLog.Test.Model
             Assert.Throws<ArgumentException>(() => new ChangeLogEntryFooter(new CommitMessageFooterName("irrelevant"), footerValue));
         }
 
+
+        [Fact]
+        public void Name_must_not_be_empty()
+        {
+            // ARRANGE
+
+            // ACT
+            var ex = Record.Exception(() => new ChangeLogEntryFooter(default, "Value"));
+
+            // ASSERT
+            Assert.NotNull(ex);
+            Assert.IsType<ArgumentException>(ex);
+        }
+
         [Fact]
         public void Constructor_initializes_properties()
         {

@@ -18,8 +18,18 @@ namespace Grynwald.ChangeLog.Model
         public Uri? WebUri { get; set; }
 
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="ChangeLogEntryFooter"/>
+        /// </summary>
+        /// <param name="name">The name of the footer.</param>
+        /// <param name="value">The footer's value.</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="name"/> is empty.</exception>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="value"/> is <c>null</c> or whitespace.</exception>
         public ChangeLogEntryFooter(CommitMessageFooterName name, string value)
         {
+            if (name.IsEmpty)
+                throw new ArgumentException("Footer name must not be empty", nameof(name));
+
             if (String.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(value));
 
