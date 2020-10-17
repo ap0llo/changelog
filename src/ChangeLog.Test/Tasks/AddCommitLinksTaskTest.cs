@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
@@ -43,27 +42,14 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Executes_ignores_footer_values_that_are_not_valid_commit_ids(string footerValue)
         {
             // ARRANGE
-            var testData = new TestDataFactory();
-
-            var changelog = new ApplicationChangeLog()
-            {
-                testData.GetSingleVersionChangeLog("1.0", entries: new[]
-                {
-                    testData.GetChangeLogEntry(footers: new[]
-                    {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue)
-                    })
-                })
-            };
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue);
 
             var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
 
             // ACT 
-            var result = await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(GetChangeLogFromFooter(footer));
 
             // ASSERT
-            var footers = changelog.ChangeLogs.SelectMany(x => x.AllEntries).SelectMany(x => x.Footers);
-            var footer = Assert.Single(footers);
             Assert.Null(footer.Link);
 
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Never);
@@ -75,20 +61,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Executes_adds_a_commit_link_to_footers_if_the_value_is_a_commit_id(string footerValue)
         {
             // ARRANGE
-            var testData = new TestDataFactory();
-
-            var changelog = new ApplicationChangeLog()
-            {
-                testData.GetSingleVersionChangeLog("1.0", entries: new[]
-                {
-                    testData.GetChangeLogEntry(footers: new[]
-                    {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue)
-                    })
-                })
-            };
-
-            var expectedCommit = testData.GetGitCommit();
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue);
+            var expectedCommit = new TestDataFactory().GetGitCommit();
 
             m_GitRepositoryMock
                 .Setup(x => x.TryGetCommit(footerValue))
@@ -97,13 +71,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
 
             // ACT 
-            var result = await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(GetChangeLogFromFooter(footer));
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
-
-            var footers = changelog.ChangeLogs.SelectMany(x => x.AllEntries).SelectMany(x => x.Footers);
-            var footer = Assert.Single(footers);
 
             Assert.NotNull(footer.Link);
             var commitLink = Assert.IsType<CommitLink>(footer.Link);
@@ -119,20 +90,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Executes_ignores_leading_and_trailing_whitespace_in_footer_values(string commitId, string footerValue)
         {
             // ARRANGE
-            var testData = new TestDataFactory();
-
-            var changelog = new ApplicationChangeLog()
-            {
-                testData.GetSingleVersionChangeLog("1.0", entries: new[]
-                {
-                    testData.GetChangeLogEntry(footers: new[]
-                    {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue)
-                    })
-                })
-            };
-
-            var expectedCommit = testData.GetGitCommit();
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue);
+            var expectedCommit = new TestDataFactory().GetGitCommit();
 
             m_GitRepositoryMock
                 .Setup(x => x.TryGetCommit(commitId))
@@ -141,13 +100,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
 
             // ACT 
-            var result = await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(GetChangeLogFromFooter(footer));
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
-
-            var footers = changelog.ChangeLogs.SelectMany(x => x.AllEntries).SelectMany(x => x.Footers);
-            var footer = Assert.Single(footers);
 
             Assert.NotNull(footer.Link);
             var commitLink = Assert.IsType<CommitLink>(footer.Link);
@@ -164,36 +120,20 @@ namespace Grynwald.ChangeLog.Test.Tasks
         {
             // ARRANGE
             var uri = new Uri("https://example.com");
-            var testData = new TestDataFactory();
-
-            var changelog = new ApplicationChangeLog()
-            {
-                testData.GetSingleVersionChangeLog("1.0", entries: new[]
-                {
-                    testData.GetChangeLogEntry(footers: new[]
-                    {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue)
-                        {
-                            Link = new WebLink(uri)
-                        }
-                    })
-                })
-            };
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue) { Link = new WebLink(uri) };
+            var expectedCommit = new TestDataFactory().GetGitCommit();
 
             m_GitRepositoryMock
                 .Setup(x => x.TryGetCommit(footerValue))
-                .Returns(() => testData.GetGitCommit());
+                .Returns(expectedCommit);
 
             var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
 
             // ACT 
-            var result = await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(GetChangeLogFromFooter(footer));
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
-
-            var footers = changelog.ChangeLogs.SelectMany(x => x.AllEntries).SelectMany(x => x.Footers);
-            var footer = Assert.Single(footers);
 
             Assert.NotNull(footer.Link);
             var webLink = Assert.IsType<WebLink>(footer.Link);
@@ -201,6 +141,20 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Once);
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(footerValue), Times.Once);
+        }
+
+
+        private ApplicationChangeLog GetChangeLogFromFooter(ChangeLogEntryFooter footer)
+        {
+            var testData = new TestDataFactory();
+
+            return new ApplicationChangeLog()
+            {
+                testData.GetSingleVersionChangeLog("1.0", entries: new[]
+                {
+                    testData.GetChangeLogEntry(footers: new[] { footer })
+                })
+            };
         }
     }
 }
