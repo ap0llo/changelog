@@ -13,14 +13,14 @@ using Xunit;
 namespace Grynwald.ChangeLog.Test.Tasks
 {
     /// <summary>
-    /// Tests for <see cref="AddCommitLinksTask"/>
+    /// Tests for <see cref="ParseCommitReferencesTask"/>
     /// </summary>
-    public class AddCommitLinksTaskTest
+    public class ParseCommitReferencesTaskTest
     {
         private readonly Mock<IGitRepository> m_GitRepositoryMock;
-        private readonly ILogger<AddCommitLinksTask> m_Logger = NullLogger<AddCommitLinksTask>.Instance;
+        private readonly ILogger<ParseCommitReferencesTask> m_Logger = NullLogger<ParseCommitReferencesTask>.Instance;
 
-        public AddCommitLinksTaskTest()
+        public ParseCommitReferencesTaskTest()
         {
             m_GitRepositoryMock = new Mock<IGitRepository>(MockBehavior.Strict);
         }
@@ -29,13 +29,13 @@ namespace Grynwald.ChangeLog.Test.Tasks
         [Fact]
         public void Logger_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new AddCommitLinksTask(null!, m_GitRepositoryMock.Object));
+            Assert.Throws<ArgumentNullException>(() => new ParseCommitReferencesTask(null!, m_GitRepositoryMock.Object));
         }
 
         [Fact]
         public void GitRepository_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new AddCommitLinksTask(m_Logger, null!));
+            Assert.Throws<ArgumentNullException>(() => new ParseCommitReferencesTask(m_Logger, null!));
         }
 
         [Theory]
@@ -45,7 +45,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
             var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), new PlainTextElement(footerValue));
 
-            var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
+            var sut = new ParseCommitReferencesTask(m_Logger, m_GitRepositoryMock.Object);
 
             // ACT 
             var result = await sut.RunAsync(GetChangeLogFromFooter(footer));
@@ -69,7 +69,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 .Setup(x => x.TryGetCommit(footerValue))
                 .Returns(expectedCommit);
 
-            var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
+            var sut = new ParseCommitReferencesTask(m_Logger, m_GitRepositoryMock.Object);
 
             // ACT 
             var result = await sut.RunAsync(GetChangeLogFromFooter(footer));
@@ -98,7 +98,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 .Setup(x => x.TryGetCommit(commitId))
                 .Returns(expectedCommit);
 
-            var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
+            var sut = new ParseCommitReferencesTask(m_Logger, m_GitRepositoryMock.Object);
 
             // ACT 
             var result = await sut.RunAsync(GetChangeLogFromFooter(footer));
@@ -128,7 +128,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 .Setup(x => x.TryGetCommit(footerValue))
                 .Returns(expectedCommit);
 
-            var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
+            var sut = new ParseCommitReferencesTask(m_Logger, m_GitRepositoryMock.Object);
 
             // ACT 
             var result = await sut.RunAsync(GetChangeLogFromFooter(footer));

@@ -10,17 +10,17 @@ namespace Grynwald.ChangeLog.Tasks
 {
     /// <summary>
     /// Detects footer values that are references to git commits.
-    /// When a valid reference to a git commit is found, sets the footer's link (see <see cref="ChangeLogEntryFooter.Link"/>) to a <see cref="CommitLink"/> to the referenced commit.
+    /// When a valid reference to a git commit is found, replaces sets the footer's value (see <see cref="ChangeLogEntryFooter.Value"/>) with a <see cref="CommitReferenceTextElement"/>.
     /// </summary>
-    internal sealed class AddCommitLinksTask : SynchronousChangeLogTask
+    internal sealed class ParseCommitReferencesTask : SynchronousChangeLogTask
     {
         private static readonly Regex s_ObjectIdRegex = new Regex(@"^[\dA-z]+$", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private readonly ILogger<AddCommitLinksTask> m_Logger;
+        private readonly ILogger<ParseCommitReferencesTask> m_Logger;
         private readonly IGitRepository m_Repository;
 
 
-        public AddCommitLinksTask(ILogger<AddCommitLinksTask> logger, IGitRepository repository)
+        public ParseCommitReferencesTask(ILogger<ParseCommitReferencesTask> logger, IGitRepository repository)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
