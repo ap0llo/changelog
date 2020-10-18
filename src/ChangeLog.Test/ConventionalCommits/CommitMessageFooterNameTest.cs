@@ -66,6 +66,26 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
         {
             Assert.Throws<ArgumentException>(() => new CommitMessageFooterName(key));
         }
+
+        [Fact]
+        public void IsEmpty_returns_true_for_unitialized_instance()
+        {
+            // ARRANGE
+            var sut = default(CommitMessageFooterName);
+
+            // ACT / ASSERT
+            Assert.True(sut.IsEmpty);
+        }
+
+        [Fact]
+        public void IsEmpty_returns_false_for_initialized_instance()
+        {
+            // ARRANGE
+            var sut = new CommitMessageFooterName("Key");
+
+            // ACT / ASSERT
+            Assert.False(sut.IsEmpty);
+        }
     }
 }
 

@@ -21,7 +21,7 @@ namespace Grynwald.ChangeLog.Test.Model
                     body: Array.Empty<string>(),
                     footers: Array.Empty<ChangeLogEntryFooter>(),
                     breakingChangeDescriptions: Array.Empty<string>(),
-                    commit: new GitId("abc123"))
+                    commit: TestGitIds.Id1)
             );
         }
 
@@ -38,7 +38,7 @@ namespace Grynwald.ChangeLog.Test.Model
                     body: null!,
                     footers: Array.Empty<ChangeLogEntryFooter>(),
                     breakingChangeDescriptions: Array.Empty<string>(),
-                    commit: new GitId("abc123"))
+                    commit: TestGitIds.Id1)
             );
         }
 
@@ -55,7 +55,7 @@ namespace Grynwald.ChangeLog.Test.Model
                     body: Array.Empty<string>(),
                     footers: null!,
                     breakingChangeDescriptions: Array.Empty<string>(),
-                    commit: new GitId("abc123"))
+                    commit: TestGitIds.Id1)
             );
         }
 
@@ -72,7 +72,7 @@ namespace Grynwald.ChangeLog.Test.Model
                     body: Array.Empty<string>(),
                     footers: Array.Empty<ChangeLogEntryFooter>(),
                     breakingChangeDescriptions: null!,
-                    commit: new GitId("abc123"))
+                    commit: TestGitIds.Id1)
             );
         }
 
@@ -127,7 +127,7 @@ namespace Grynwald.ChangeLog.Test.Model
             // ASSERT
             var footer = Assert.Single(changelogEntry.Footers);
             Assert.Equal(new CommitMessageFooterName("some-footer"), footer.Name);
-            Assert.Equal("some breaking change", footer.Value);
+            Assert.Equal("some breaking change", footer.Value.Text);
         }
 
         [Fact]

@@ -46,13 +46,13 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 .Setup(x => x.GetCommits(null, It.IsAny<GitId>()))
                 .Returns(new[]
                 {
-                    GetGitCommit("01", "feat: Some new feature"),
-                    GetGitCommit("02", "fix: Some bugfix")
+                    GetGitCommit(TestGitIds.Id1, "feat: Some new feature"),
+                    GetGitCommit(TestGitIds.Id2, "fix: Some bugfix")
                 });
 
             var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
 
-            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", "01");
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
@@ -68,7 +68,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             {
                 var entry = Assert.Single(versionChangeLog.AllEntries, e => e.Type.Equals(CommitType.Feature));
-                Assert.Equal(new GitId("01"), entry.Commit);
+                Assert.Equal(TestGitIds.Id1, entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some new feature", entry.Summary);
                 Assert.NotNull(entry.Body);
@@ -76,7 +76,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             }
             {
                 var entry = Assert.Single(versionChangeLog.AllEntries, e => e.Type.Equals(CommitType.BugFix));
-                Assert.Equal(new GitId("02"), entry.Commit);
+                Assert.Equal(TestGitIds.Id2, entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some bugfix", entry.Summary);
                 Assert.NotNull(entry.Body);
@@ -90,21 +90,21 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
             var repo = new Mock<IGitRepository>(MockBehavior.Strict);
             repo
-                .Setup(x => x.GetCommits(null, new GitId("01")))
+                .Setup(x => x.GetCommits(null, TestGitIds.Id1))
                 .Returns(Array.Empty<GitCommit>());
 
             repo
-                .Setup(x => x.GetCommits(new GitId("01"), new GitId("02")))
+                .Setup(x => x.GetCommits(TestGitIds.Id1, TestGitIds.Id2))
                 .Returns(new[]
                 {
-                    GetGitCommit("ab", "feat: Some new feature" ),
-                    GetGitCommit("cd", "fix: Some bugfix" ),
+                    GetGitCommit(TestGitIds.Id1, "feat: Some new feature" ),
+                    GetGitCommit(TestGitIds.Id2, "fix: Some bugfix" ),
                 });
 
             var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
 
-            var versionChangeLog1 = GetSingleVersionChangeLog("1.2.3", "01");
-            var versionChangeLog2 = GetSingleVersionChangeLog("2.4.5", "02");
+            var versionChangeLog1 = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
+            var versionChangeLog2 = GetSingleVersionChangeLog("2.4.5", TestGitIds.Id2);
             var changelog = new ApplicationChangeLog()
             {
                 versionChangeLog1, versionChangeLog2
@@ -127,7 +127,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             {
                 var entry = Assert.Single(versionChangeLog2.AllEntries, e => e.Type.Equals(CommitType.Feature));
-                Assert.Equal(new GitId("ab"), entry.Commit);
+                Assert.Equal(TestGitIds.Id1, entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some new feature", entry.Summary);
                 Assert.NotNull(entry.Body);
@@ -135,7 +135,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             }
             {
                 var entry = Assert.Single(versionChangeLog2.AllEntries, e => e.Type.Equals(CommitType.BugFix));
-                Assert.Equal(new GitId("cd"), entry.Commit);
+                Assert.Equal(TestGitIds.Id2, entry.Commit);
                 Assert.Null(entry.Scope);
                 Assert.Equal("Some bugfix", entry.Summary);
                 Assert.NotNull(entry.Body);
@@ -157,7 +157,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
 
-            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", "01");
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
@@ -187,7 +187,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var sut = new ParseCommitsTask(m_Logger, config, repo.Object);
 
-            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", "01");
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
@@ -217,7 +217,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var sut = new ParseCommitsTask(m_Logger, config, repo.Object);
 
-            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", "01");
+            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT

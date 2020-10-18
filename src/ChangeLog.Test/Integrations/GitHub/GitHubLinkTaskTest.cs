@@ -8,6 +8,7 @@ using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitHub;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Test.Configuration;
 using Grynwald.ChangeLog.Test.Git;
@@ -434,8 +435,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 GetSingleVersionChangeLog(
                     version: "1.2.3",
-                    commitId: "abc123",
-                    entries: new []{ GetChangeLogEntry(commit: "abc123") })
+                    commitId: TestGitIds.Id1,
+                    entries: new []{ GetChangeLogEntry(commit: TestGitIds.Id1) })
             };
 
             var sut = new GitHubLinkTask(m_Logger, configuration, repoMock.Object, m_GitHubClientFactoryMock.Object);
@@ -454,7 +455,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             // Ensure the web link was requested from the expected server and repository
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(testCase.ExpectedHost), Times.Once);
             m_GitHubCommitsClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            m_GitHubCommitsClientMock.Verify(x => x.Get(testCase.ExpectedOwner, testCase.ExpectedRepository, "abc123"), Times.Once);
+            m_GitHubCommitsClientMock.Verify(x => x.Get(testCase.ExpectedOwner, testCase.ExpectedRepository, TestGitIds.Id1.Id), Times.Once);
         }
 
 
@@ -478,14 +479,14 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 GetSingleVersionChangeLog(
                     "1.2.3",
                     null,
-                    GetChangeLogEntry(summary: "Entry1", commit: "01"),
-                    GetChangeLogEntry(summary: "Entry2", commit: "02")
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1),
+                    GetChangeLogEntry(summary: "Entry2", commit: TestGitIds.Id2)
                 ),
                 GetSingleVersionChangeLog(
                     "4.5.6",
                     null,
-                    GetChangeLogEntry(summary: "Entry1", commit: "03"),
-                    GetChangeLogEntry(summary: "Entry2", commit: "04")
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id3),
+                    GetChangeLogEntry(summary: "Entry2", commit: TestGitIds.Id4)
                 )
             };
 
@@ -498,7 +499,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             Assert.All(entries, entry =>
             {
                 Assert.NotNull(entry.CommitWebUri);
-                var expectedUri = new Uri($"https://example.com/{entry.Commit}");
+                var expectedUri = new Uri($"https://example.com/{entry.Commit.Id}");
                 Assert.Equal(expectedUri, entry.CommitWebUri);
 
                 m_GitHubCommitsClientMock.Verify(x => x.Get("owner", "repo", entry.Commit.Id), Times.Once);
@@ -540,9 +541,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 GetSingleVersionChangeLog(
                     "1.2.3",
                     null,
-                    GetChangeLogEntry(summary: "Entry1", commit: "01", footers: new []
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -558,9 +559,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.NotNull(footer.WebUri);
                     var expectedUri = new Uri($"https://example.com/issue/{issueNumber}");
-                    Assert.Equal(expectedUri, footer.WebUri);
+
+                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
+                    Assert.Equal(expectedUri, webLink.Uri);
+                    Assert.Equal(footerText, webLink.Text);
                 });
 
             });
@@ -611,9 +614,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 GetSingleVersionChangeLog(
                     "1.2.3",
                     null,
-                    GetChangeLogEntry(summary: "Entry1", commit: "01", footers: new []
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -629,9 +632,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.NotNull(footer.WebUri);
                     var expectedUri = new Uri($"https://example.com/pr/{prNumber}");
-                    Assert.Equal(expectedUri, footer.WebUri);
+
+                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
+                    Assert.Equal(expectedUri, webLink.Uri);
+                    Assert.Equal(footerText, webLink.Text);
                 });
 
             });
@@ -667,9 +672,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 GetSingleVersionChangeLog(
                     "1.2.3",
                     null,
-                    GetChangeLogEntry(summary: "Entry1", commit: "01", footers: new []
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), footerText),
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), new PlainTextElement(footerText)),
                     })
                 )
             };
@@ -685,7 +690,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers, footer =>
                 {
-                    Assert.Null(footer.WebUri);
+                    Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
 
             });
@@ -724,9 +729,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 GetSingleVersionChangeLog(
                     "1.2.3",
                     null,
-                    GetChangeLogEntry(summary: "Entry1", commit: "01", footers: new []
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), footerText),
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), new PlainTextElement(footerText)),
                     })
                 )
             };
@@ -742,7 +747,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers, footer =>
                 {
-                    Assert.Null(footer.WebUri);
+                    Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
 
             });

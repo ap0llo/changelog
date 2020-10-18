@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 using Octokit;
@@ -151,12 +152,12 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
             foreach (var footer in entry.Footers)
             {
-                if (TryParseReference(projectInfo, footer.Value, out var owner, out var repo, out var id))
+                if (TryParseReference(projectInfo, footer.Value.Text, out var owner, out var repo, out var id))
                 {
                     var uri = await TryGetWebUriAsync(githubClient, owner, repo, id);
                     if (uri != null)
                     {
-                        footer.WebUri = uri;
+                        footer.Value = new WebLinkTextElement(footer.Value.Text, uri);
                     }
                     else
                     {

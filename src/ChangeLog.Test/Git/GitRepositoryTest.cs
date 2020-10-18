@@ -234,6 +234,81 @@ namespace Grynwald.ChangeLog.Test.Git
             Assert.Contains(commits, c => c.Equals(expectedCommit5));
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("\t")]
+        public void TryGetCommit_throws_ArgumentException_if_id_is_null_or_whitespace(string id)
+        {
+            // ARRANGE
+            using var sut = new GitRepository(m_WorkingDirectory);
+
+            // ACT 
+            var ex = Record.Exception(() => sut.TryGetCommit(id));
+
+            // ASSERT
+            Assert.NotNull(ex);
+            var argumentException = Assert.IsType<ArgumentException>(ex);
+            Assert.Equal("id", argumentException.ParamName);
+        }
+
+        [Theory]
+        [InlineData(7)]
+        [InlineData(23)]
+        [InlineData(40)]
+        public void TryGetCommit_returns_the_expected_commit(int idLength)
+        {
+            // ARRANGE
+            var expectedCommit = GitCommit("Commit 1");
+            _ = GitCommit("Commit 2");
+
+            using var sut = new GitRepository(m_WorkingDirectory);
+
+            // ACT
+            var actualCommit = sut.TryGetCommit(expectedCommit.Id.Id.Substring(0, idLength));
+
+            // ASSERT
+            Assert.NotNull(actualCommit);
+            Assert.Equal(expectedCommit, actualCommit);
+        }
+
+        [Theory]
+        [InlineData("not-a-commit-id")]
+        [InlineData("abcd1234")]
+        public void TryGetCommit_returns_null_if_commit_cannot_be_found(string id)
+        {
+            // ARRANGE
+            _ = GitCommit("Commit 1");
+            _ = GitCommit("Commit 2");
+
+            using var sut = new GitRepository(m_WorkingDirectory);
+
+            // ACT 
+            var commit = sut.TryGetCommit(id);
+
+            // ASSERT
+            Assert.Null(commit);
+        }
+
+        [Fact]
+        public void TryGetCommit_is_case_insensitive()
+        {
+            // ARRANGE
+            var expectedCommit = GitCommit("Commit 1");
+            _ = GitCommit("Commit 2");
+
+            using var sut = new GitRepository(m_WorkingDirectory);
+
+            // ACT
+            var actualCommit = sut.TryGetCommit(expectedCommit.Id.Id.ToUpper());
+
+            // ASSERT
+            Assert.NotNull(actualCommit);
+            Assert.Equal(expectedCommit, actualCommit);
+        }
+
+
         private GitTag GitTag(string name, GitCommit commit)
         {
             Git($"tag {name} {commit.Id}");
@@ -245,11 +320,12 @@ namespace Grynwald.ChangeLog.Test.Git
             Git($"commit --allow-empty -m \"{commitMessage}\"");
             Git("config --local user.name", out var userName);
             Git("config --local user.email", out var userEmail);
-            Git("rev-parse --short HEAD", out var commitId);
+            Git("rev-parse HEAD", out var commitId);
+            Git("rev-parse --short HEAD", out var abbreviatedCommitId);
             Git("log -1 --pretty=\"format:%cI\" ", out var date);
 
             return new GitCommit(
-                new GitId(commitId.Trim()),
+                new GitId(commitId.Trim(), abbreviatedCommitId.Trim()),
                 $"{commitMessage}\n",
                 DateTime.Parse(date.Trim()),
                 new GitAuthor(userName.Trim(), userEmail.Trim())

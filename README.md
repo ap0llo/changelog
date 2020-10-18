@@ -20,6 +20,7 @@ using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 - [Integrations](./docs/integrations.md)
 - [Templates](./docs/templates.md)
 - [Commandline Reference](./docs/commandline-reference/index.md)
+- [Automatic References](./docs/auto-references.md)
 
 ## Building from source
 

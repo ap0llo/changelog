@@ -12,6 +12,11 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         public static readonly CommitMessageFooterName BreakingChange = new CommitMessageFooterName(s_BREAKINGCHANGE);
 
 
+        /// <summary>
+        /// Gets whether this struct is the default instance/not initialized.
+        /// </summary>
+        public bool IsEmpty => Value == null;
+
         public string Value { get; }
 
 

@@ -13,9 +13,10 @@ namespace Grynwald.ChangeLog.Test.Model
     public class VersionInfoTest : EqualityTest<VersionInfo, VersionInfoTest>, IEqualityTestDataProvider<VersionInfo>
     {
         [Fact]
-        public void Constructor_checks_arguments_for_null()
+        public void Constructor_checks_arguments()
         {
-            Assert.Throws<ArgumentNullException>(() => new VersionInfo(null!, new GitId("123abc")));
+            Assert.Throws<ArgumentNullException>(() => new VersionInfo(null!, TestGitIds.Id1));
+            Assert.Throws<ArgumentException>(() => new VersionInfo(NuGetVersion.Parse("1.2.3"), default));
         }
 
         [Fact]
@@ -23,7 +24,7 @@ namespace Grynwald.ChangeLog.Test.Model
         {
             // ARRANGE
             var version = NuGetVersion.Parse("1.2.3-alpha");
-            var commit = new GitId("123abc");
+            var commit = TestGitIds.Id1;
 
             // ACT 
             var sut = new VersionInfo(version, commit);
@@ -36,26 +37,26 @@ namespace Grynwald.ChangeLog.Test.Model
         public IEnumerable<(VersionInfo left, VersionInfo right)> GetEqualTestCases()
         {
             yield return (
-                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123")),
-                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123"))
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), TestGitIds.Id1),
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), TestGitIds.Id1)
             );
 
             yield return (
-                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123")),
-                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("ABC123"))
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), TestGitIds.Id1),
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), TestGitIds.Id1)
             );
         }
 
         public IEnumerable<(VersionInfo left, VersionInfo right)> GetUnequalTestCases()
         {
             yield return (
-                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123")),
-                new VersionInfo(NuGetVersion.Parse("4.5.6"), new GitId("abc123"))
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), TestGitIds.Id1),
+                new VersionInfo(NuGetVersion.Parse("4.5.6"), TestGitIds.Id1)
             );
 
             yield return (
-                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("abc123")),
-                new VersionInfo(NuGetVersion.Parse("1.2.3"), new GitId("def456"))
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), TestGitIds.Id1),
+                new VersionInfo(NuGetVersion.Parse("1.2.3"), TestGitIds.Id2)
             );
         }
     }

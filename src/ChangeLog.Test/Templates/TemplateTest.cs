@@ -6,9 +6,11 @@ using ApprovalTests.Reporters;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Test.Tasks;
 using Grynwald.Utilities.IO;
+using Moq;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Templates
@@ -378,12 +380,12 @@ namespace Grynwald.ChangeLog.Test.Templates
 
                 GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
                 {
-                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), "Issue #5")
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), new PlainTextElement("Issue #5"))
                 }),
 
                 GetChangeLogEntry(scope: "scope2", type: "fix", summary: "A bug was fixed", footers: new[]
                 {
-                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), "someone@example.com")
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), new PlainTextElement("someone@example.com"))
                 })
             );
 
@@ -411,12 +413,12 @@ namespace Grynwald.ChangeLog.Test.Templates
 
                 GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
                 {
-                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), "Issue #5")
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), new PlainTextElement("Issue #5"))
                 }),
 
                 GetChangeLogEntry(scope: "scope2", type: "fix", summary: "A bug was fixed", footers: new[]
                 {
-                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), "someone@example.com")
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), new PlainTextElement("someone@example.com"))
                 })
             );
 
@@ -447,7 +449,10 @@ namespace Grynwald.ChangeLog.Test.Templates
 
             var entry = GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
             {
-                new ChangeLogEntryFooter(new CommitMessageFooterName("see-also"), "Link") { WebUri = new Uri("http://example.com") }
+                new ChangeLogEntryFooter(
+                    new CommitMessageFooterName("see-also"),
+                    new WebLinkTextElement("Link", new Uri("http://example.com"))
+                )
             });
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", null, entry);
@@ -476,6 +481,63 @@ namespace Grynwald.ChangeLog.Test.Templates
             });
 
             var changeLog = new ApplicationChangeLog() { versionChangeLog };
+
+            Approve(changeLog, config);
+        }
+
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_19()
+        {
+            // Footers which's value is a ChangeLogEntryReferenceTextElement are rendered as links to the referenced entries
+
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var entry1 = GetChangeLogEntry(type: "fix", summary: "Some bug fix", commit: TestGitIds.Id1);
+            var entry2 = GetChangeLogEntry(
+                    type: "feat",
+                    summary: "Some feature",
+                    commit: TestGitIds.Id2,
+                    footers: new[]
+                    {
+                        new ChangeLogEntryFooter(
+                            new CommitMessageFooterName("See-Also"),
+                            new ChangeLogEntryReferenceTextElement("irrelevant", entry1))
+                    });
+
+            var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
+
+            Approve(changeLog, config);
+        }
+
+        private class CustomTextElementWithLink : TextElement, IWebLinkTextElement
+        {
+            public Uri Uri { get; } = new Uri("https://example.com");
+
+            public CustomTextElementWithLink() : base("Example")
+            { }
+        }
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_20()
+        {
+            // Footers which's value is a instance of IWebLinkTextElement are rendered as links
+
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var entry1 = GetChangeLogEntry(type: "fix", summary: "Some bug fix", commit: TestGitIds.Id1);
+            var entry2 = GetChangeLogEntry(
+                    type: "feat",
+                    summary: "Some feature",
+                    commit: TestGitIds.Id2,
+                    footers: new[]
+                    {
+                        new ChangeLogEntryFooter(
+                            new CommitMessageFooterName("See-Also"),
+                            new CustomTextElementWithLink())
+                    });
+
+            var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
 
             Approve(changeLog, config);
         }

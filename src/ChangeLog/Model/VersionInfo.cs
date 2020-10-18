@@ -14,6 +14,9 @@ namespace Grynwald.ChangeLog.Model
 
         public VersionInfo(NuGetVersion version, GitId commit)
         {
+            if (commit.IsNull)
+                throw new ArgumentException("Commit must not be empty", nameof(commit));
+
             Version = version ?? throw new ArgumentNullException(nameof(version));
             Commit = commit;
         }

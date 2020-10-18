@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Grynwald.ChangeLog.Git
 {
+    /// <summary>
+    /// Provides access to a local git repository.
+    /// </summary>
     public interface IGitRepository : IDisposable
     {
         /// <summary>
@@ -34,5 +37,11 @@ namespace Grynwald.ChangeLog.Git
         /// <seealso href="https://git-scm.com/docs/git-log">git-log Documentation</seealso>
         /// <seealso href="https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection">Git Revision Selection</seealso>
         IReadOnlyList<GitCommit> GetCommits(GitId? fromCommit, GitId toCommit);
+
+        /// <summary>
+        /// Attempts to find a commit with the speicifed id
+        /// </summary>
+        /// <param name="id">The id to search a commit for. Value can be an abbreviated commit SHA.</param>
+        GitCommit? TryGetCommit(string id);
     }
 }

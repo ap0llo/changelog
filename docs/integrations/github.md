@@ -2,8 +2,8 @@
 
 The GitHub integration provides the following features:
 
-- Adds link to the GitHub web site to the commit for every changelog entry
-- Adds link to the GitHub web site to issues and pull requests if they are referenced in footers.<br>
+- Add GitHub web link for a change log entry's commit.
+- Recognize GitHub Issue and Pull Request references (see also [Automatic References](../auto-references.md)) in footers and generate GitHub web links.<br>
   The following types of references are recognized:
   - `#<id>`: Reference to an issue or pull request in the same project, e.g. `#123`
   - `<user>/<project>#<id>`: Reference to an issue or pull request in a different project, e.g. `ap0llo/changelog#123`
@@ -59,3 +59,4 @@ Because GitHub has a quite low rate limit for unauthenticated API requests, it i
 - [Integrations](../integrations.md)
 - [Configuration](../configuration.md)
 - [GitHub Integration Configuration](../configuration/settings/github-integration.md)
+- [Automatic References](../auto-references.md)

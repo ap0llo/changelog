@@ -1,6 +1,7 @@
 ﻿using System;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Test.Model.Text;
 using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Model
@@ -26,25 +27,15 @@ namespace Grynwald.ChangeLog.Test.Model
         public void Deserialize(IXunitSerializationInfo info)
         {
             var name = info.GetValue<string>(nameof(ChangeLogEntryFooter.Name));
-            var value = info.GetValue<string>(nameof(ChangeLogEntryFooter.Value));
-            var webUri = info.GetValue<string>(nameof(ChangeLogEntryFooter.WebUri));
+            var value = info.GetValue<XunitSerializableTextElement>(nameof(ChangeLogEntryFooter.Value));
 
-            Value = new ChangeLogEntryFooter(
-                new CommitMessageFooterName(name),
-                value
-            );
-
-            if (webUri != null)
-            {
-                Value.WebUri = new Uri(webUri);
-            }
+            Value = new ChangeLogEntryFooter(new CommitMessageFooterName(name), value.Value);
         }
 
         public void Serialize(IXunitSerializationInfo info)
         {
             info.AddValue(nameof(Value.Name), Value.Name.Value);
-            info.AddValue(nameof(Value.Value), Value.Value);
-            info.AddValue(nameof(Value.WebUri), Value.WebUri?.ToString());
+            info.AddValue(nameof(Value.Value), new XunitSerializableTextElement(Value.Value));
         }
 
         internal static XunitSerializableChangeLogEntryFooter Wrap(ChangeLogEntryFooter value) => new XunitSerializableChangeLogEntryFooter(value);

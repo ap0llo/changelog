@@ -14,12 +14,12 @@
 
 ##### Some feature
 
-- Commit: `0004B0`
+- Commit: `05e1587`
 
 ##### Some bug fix
 
-- Commit: `00044C`
+- Commit: `fecc81a`
 
 ##### A documentation change
 
-- Commit: `0003E8`
+- Commit: `0398ff2`
