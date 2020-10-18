@@ -337,16 +337,33 @@ namespace Grynwald.ChangeLog.Templates
 
             foreach (var footer in entry.Footers)
             {
+                // Rendering footers:
+                //  - Footers consists of a name and a value.
+                //  - By default, footers are rendered as a bullet list where each item uses the format <NAME>: <VALUE>
+                //  - Footer values are instances of TextElement but might be custom implementations.
+                //    Two special cases are handled here
+                //      - If the footer value implements IWebLinkTextElement (no matter what the actual type is),
+                //        the footer is rendered as a Markdown link
+                //      - If the footer is an instance of ChangeLogEntryReferenceTextElement,
+                //        the footer is rendered as an intra-page link to the referenced change log entry.
+                //        In that case, the referenced entry's summary is used instead of the footer's value in the output
+
                 MdSpan text = footer.Value.Text;
-                if (footer.Value is IWebLinkTextElement weblinkElement)
+                if (footer.Value is IWebLinkTextElement webLink)
                 {
-                    text = new MdLinkSpan(text, weblinkElement.Uri);
+                    text = new MdLinkSpan(text, webLink.Uri);
                 }
+                else if (footer.Value is ChangeLogEntryReferenceTextElement entryReference)
+                {
+                    var id = GetHtmlHeadingId(entryReference.Entry);
+                    text = new MdLinkSpan(GetSummaryText(entryReference.Entry), $"#{id}");
+                }
+
                 footerList.Add(
                     new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", text)
                 );
-
             }
+
             //TODO: Move this to the model class (an "implicit footer")
             MdSpan commitText = new MdCodeSpan(entry.Commit.ToString(abbreviate: true));
             if (entry.CommitWebUri != null)

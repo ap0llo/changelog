@@ -10,6 +10,7 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Test.Tasks;
 using Grynwald.Utilities.IO;
+using Moq;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Templates
@@ -480,6 +481,63 @@ namespace Grynwald.ChangeLog.Test.Templates
             });
 
             var changeLog = new ApplicationChangeLog() { versionChangeLog };
+
+            Approve(changeLog, config);
+        }
+
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_19()
+        {
+            // Footers which's value is a ChangeLogEntryReferenceTextElement are rendered as links to the referenced entries
+
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var entry1 = GetChangeLogEntry(type: "fix", summary: "Some bug fix", commit: TestGitIds.Id1);
+            var entry2 = GetChangeLogEntry(
+                    type: "feat",
+                    summary: "Some feature",
+                    commit: TestGitIds.Id2,
+                    footers: new[]
+                    {
+                        new ChangeLogEntryFooter(
+                            new CommitMessageFooterName("See-Also"),
+                            new ChangeLogEntryReferenceTextElement("irrelevant", entry1))
+                    });
+
+            var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
+
+            Approve(changeLog, config);
+        }
+
+        private class CustomTextElementWithLink : TextElement, IWebLinkTextElement
+        {
+            public Uri Uri { get; } = new Uri("https://example.com");
+
+            public CustomTextElementWithLink() : base("Example")
+            { }
+        }
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_20()
+        {
+            // Footers which's value is a instance of IWebLinkTextElement are rendered as links
+
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var entry1 = GetChangeLogEntry(type: "fix", summary: "Some bug fix", commit: TestGitIds.Id1);
+            var entry2 = GetChangeLogEntry(
+                    type: "feat",
+                    summary: "Some feature",
+                    commit: TestGitIds.Id2,
+                    footers: new[]
+                    {
+                        new ChangeLogEntryFooter(
+                            new CommitMessageFooterName("See-Also"),
+                            new CustomTextElementWithLink())
+                    });
+
+            var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
 
             Approve(changeLog, config);
         }
