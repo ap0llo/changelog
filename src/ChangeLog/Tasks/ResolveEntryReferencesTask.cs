@@ -36,7 +36,7 @@ namespace Grynwald.ChangeLog.Tasks
 
                     if (entriesByCommitId.TryGetValue(commitReference.CommitId, out var referencedEntry))
                     {
-                        m_Logger.LogDebug($"Detected reference to entry '{referencedEntry.Commit}' from entry '{currentEntry}'");
+                        m_Logger.LogDebug($"Detected reference to entry '{referencedEntry.Commit}' from entry '{currentEntry.Commit}'");
                         footer.Value = new ChangeLogEntryReferenceTextElement(footer.Value.Text, referencedEntry);
                     }
                     else
