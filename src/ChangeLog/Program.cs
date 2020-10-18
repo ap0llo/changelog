@@ -76,6 +76,7 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<ParseCommitReferencesTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
                 containerBuilder.RegisterType<FilterEntriesTask>();
+                containerBuilder.RegisterType<ResolveEntryReferencesTask>();
                 containerBuilder.RegisterType<RenderTemplateTask>();
 
                 containerBuilder.RegisterIntegrations();
@@ -115,6 +116,8 @@ namespace Grynwald.ChangeLog
                         .AddTask<ParseCommitReferencesTask>()
                         .AddTask<FilterVersionsTask>()
                         .AddTask<FilterEntriesTask>()
+                        // ResolveEntryReferencesTask must run *after* filtering in order to avoid resolving references to entries being filtered out
+                        .AddTask<ResolveEntryReferencesTask>()
                         .AddIntegrationTasks()
                         .AddTask<RenderTemplateTask>()
                         .Build();
