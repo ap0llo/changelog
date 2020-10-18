@@ -127,7 +127,7 @@ namespace Grynwald.ChangeLog.Test.Model
             // ASSERT
             var footer = Assert.Single(changelogEntry.Footers);
             Assert.Equal(new CommitMessageFooterName("some-footer"), footer.Name);
-            Assert.Equal("some breaking change", footer.Value);
+            Assert.Equal("some breaking change", footer.Value.Text);
         }
 
         [Fact]

@@ -10,6 +10,7 @@ using GitLabApiClient.Models.Milestones.Responses;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -157,12 +158,12 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
             foreach (var footer in entry.Footers)
             {
-                if (TryParseReference(projectInfo, footer.Value, out var type, out var projectPath, out var id))
+                if (TryParseReference(projectInfo, footer.Value.Text, out var type, out var projectPath, out var id))
                 {
                     var uri = await TryGetWebUriAsync(gitlabClient, type.Value, projectPath, id);
                     if (uri != null)
                     {
-                        footer.Link = new WebLink(uri);
+                        footer.Value = new WebLinkTextElement(footer.Value.Text, uri);
                     }
                     else
                     {

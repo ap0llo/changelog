@@ -17,6 +17,7 @@ using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitLab;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Test.Configuration;
 using Grynwald.ChangeLog.Test.Git;
@@ -310,7 +311,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -328,9 +329,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 {
                     var expectedUri = new Uri($"https://example.com/{projectPath}/issues/{id}");
 
-                    Assert.NotNull(footer.Link);
-                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
                     Assert.Equal(expectedUri, webLink.Uri);
+                    Assert.Equal(footerText, webLink.Text);
                 });
 
             });
@@ -370,7 +371,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -386,7 +387,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.Null(footer.Link);
+                    Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
 
             });
@@ -431,7 +432,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -449,9 +450,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 {
                     var expectedUri = new Uri($"https://example.com/{projectPath}/issues/{id}");
 
-                    Assert.NotNull(footer.Link);
-                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
                     Assert.Equal(expectedUri, webLink.Uri);
+                    Assert.Equal(footerText, webLink.Text);
                 });
 
             });
@@ -503,7 +504,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -519,7 +520,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    Assert.Null(footer.Link);
+                    Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
 
             });
@@ -564,7 +565,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -582,9 +583,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 {
                     var expectedUri = new Uri($"https://example.com/{projectPath}/milestones/{id}");
 
-                    Assert.NotNull(footer.Link);
-                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
                     Assert.Equal(expectedUri, webLink.Uri);
+                    Assert.Equal(footerText, webLink.Text);
                 });
 
             });
@@ -635,7 +636,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -651,7 +652,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Milestone")), footer =>
                 {
-                    Assert.Null(footer.Link);
+                    Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
 
             });

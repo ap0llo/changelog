@@ -8,6 +8,7 @@ using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitHub;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Test.Configuration;
 using Grynwald.ChangeLog.Test.Git;
@@ -542,7 +543,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -560,9 +561,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 {
                     var expectedUri = new Uri($"https://example.com/issue/{issueNumber}");
 
-                    Assert.NotNull(footer.Link);
-                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
                     Assert.Equal(expectedUri, webLink.Uri);
+                    Assert.Equal(footerText, webLink.Text);
                 });
 
             });
@@ -615,7 +616,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), footerText)
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Issue"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -633,9 +634,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 {
                     var expectedUri = new Uri($"https://example.com/pr/{prNumber}");
 
-                    Assert.NotNull(footer.Link);
-                    var webLink = Assert.IsType<WebLink>(footer.Link);
+                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
                     Assert.Equal(expectedUri, webLink.Uri);
+                    Assert.Equal(footerText, webLink.Text);
                 });
 
             });
@@ -673,7 +674,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), footerText),
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), new PlainTextElement(footerText)),
                     })
                 )
             };
@@ -689,7 +690,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers, footer =>
                 {
-                    Assert.Null(footer.Link);
+                    Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
 
             });
@@ -730,7 +731,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), footerText),
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Irrelevant"), new PlainTextElement(footerText)),
                     })
                 )
             };
@@ -746,7 +747,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers, footer =>
                 {
-                    Assert.Null(footer.Link);
+                    Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
 
             });

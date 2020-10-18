@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -42,7 +43,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Executes_ignores_footer_values_that_are_not_valid_commit_ids(string footerValue)
         {
             // ARRANGE
-            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue);
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), new PlainTextElement(footerValue));
 
             var sut = new AddCommitLinksTask(m_Logger, m_GitRepositoryMock.Object);
 
@@ -50,7 +51,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var result = await sut.RunAsync(GetChangeLogFromFooter(footer));
 
             // ASSERT
-            Assert.Null(footer.Link);
+            Assert.IsType<PlainTextElement>(footer.Value);
 
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Never);
         }
@@ -61,7 +62,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Executes_adds_a_commit_link_to_footers_if_the_value_is_a_commit_id(string footerValue)
         {
             // ARRANGE
-            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue);
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), new PlainTextElement(footerValue));
             var expectedCommit = new TestDataFactory().GetGitCommit();
 
             m_GitRepositoryMock
@@ -76,9 +77,9 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
 
-            Assert.NotNull(footer.Link);
-            var commitLink = Assert.IsType<CommitLink>(footer.Link);
+            var commitLink = Assert.IsType<CommitLinkTextElement>(footer.Value);
             Assert.Equal(expectedCommit.Id, commitLink.Id);
+            Assert.Equal(footerValue, commitLink.Text);
 
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Once);
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(footerValue), Times.Once);
@@ -90,7 +91,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Executes_ignores_leading_and_trailing_whitespace_in_footer_values(string commitId, string footerValue)
         {
             // ARRANGE
-            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue);
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), new PlainTextElement(footerValue));
             var expectedCommit = new TestDataFactory().GetGitCommit();
 
             m_GitRepositoryMock
@@ -105,9 +106,9 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
 
-            Assert.NotNull(footer.Link);
-            var commitLink = Assert.IsType<CommitLink>(footer.Link);
+            var commitLink = Assert.IsType<CommitLinkTextElement>(footer.Value);
             Assert.Equal(expectedCommit.Id, commitLink.Id);
+            Assert.Equal(footerValue, commitLink.Text);
 
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Once);
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(commitId), Times.Once);
@@ -120,7 +121,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         {
             // ARRANGE
             var uri = new Uri("https://example.com");
-            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), footerValue) { Link = new WebLink(uri) };
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName("some-footer"), new WebLinkTextElement(footerValue, uri));
             var expectedCommit = new TestDataFactory().GetGitCommit();
 
             m_GitRepositoryMock
@@ -135,9 +136,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
 
-            Assert.NotNull(footer.Link);
-            var webLink = Assert.IsType<WebLink>(footer.Link);
+            Assert.NotNull(footer.Value);
+            var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
             Assert.Equal(uri, webLink.Uri);
+            Assert.Equal(footerValue, webLink.Text);
 
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Once);
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(footerValue), Times.Once);

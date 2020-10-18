@@ -1,14 +1,15 @@
 ﻿using System;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Model
 {
     /// <summary>
-    /// Tests for <see cref="CommitLink"/>
+    /// Tests for <see cref="CommitLinkTextElement"/>
     /// </summary>
-    public class CommitLinkTest
+    public class CommitLinkTextElementTest
     {
         [Fact]
         public void Commit_id_must_not_be_null()
@@ -17,7 +18,7 @@ namespace Grynwald.ChangeLog.Test.Model
             var id = default(GitId);
 
             // ACT 
-            var ex = Record.Exception(() => new CommitLink(id));
+            var ex = Record.Exception(() => new CommitLinkTextElement("some text", id));
 
             // ASSERT
             Assert.NotNull(ex);

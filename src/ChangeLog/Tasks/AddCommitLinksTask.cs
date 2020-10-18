@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
@@ -32,14 +33,14 @@ namespace Grynwald.ChangeLog.Tasks
 
             foreach (var (entry, footer) in EnumerateFootersWithEntries(changelog))
             {
-                var footerValue = footer.Value.Trim();
+                var footerValue = footer.Value.Text.Trim();
 
                 if (s_ObjectIdRegex.IsMatch(footerValue) && m_Repository.TryGetCommit(footerValue) is GitCommit commit)
                 {
-                    if (footer.Link is null)
+                    if (footer.Value is PlainTextElement)
                     {
                         m_Logger.LogDebug($"Detected reference to git commit '{commit.Id}' in '{footer.Name}' footer of entry {entry.Commit}");
-                        footer.Link = new CommitLink(commit.Id);
+                        footer.Value = new CommitLinkTextElement(footer.Value.Text, commit.Id);
                     }
                     else
                     {

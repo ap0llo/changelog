@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates.ViewModel;
 using Grynwald.MarkdownGenerator;
 
@@ -336,10 +337,10 @@ namespace Grynwald.ChangeLog.Templates
 
             foreach (var footer in entry.Footers)
             {
-                MdSpan text = footer.Value;
-                if (footer.Link is WebLink webLink)
+                MdSpan text = footer.Value.Text;
+                if (footer.Value is IWebLinkTextElement weblinkElement)
                 {
-                    text = new MdLinkSpan(text, webLink.Uri);
+                    text = new MdLinkSpan(text, weblinkElement.Uri);
                 }
                 footerList.Add(
                     new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", text)

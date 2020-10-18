@@ -6,6 +6,7 @@ using ApprovalTests.Reporters;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Test.Tasks;
 using Grynwald.Utilities.IO;
@@ -378,12 +379,12 @@ namespace Grynwald.ChangeLog.Test.Templates
 
                 GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
                 {
-                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), "Issue #5")
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), new PlainTextElement("Issue #5"))
                 }),
 
                 GetChangeLogEntry(scope: "scope2", type: "fix", summary: "A bug was fixed", footers: new[]
                 {
-                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), "someone@example.com")
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), new PlainTextElement("someone@example.com"))
                 })
             );
 
@@ -411,12 +412,12 @@ namespace Grynwald.ChangeLog.Test.Templates
 
                 GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
                 {
-                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), "Issue #5")
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), new PlainTextElement("Issue #5"))
                 }),
 
                 GetChangeLogEntry(scope: "scope2", type: "fix", summary: "A bug was fixed", footers: new[]
                 {
-                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), "someone@example.com")
+                    new ChangeLogEntryFooter(new CommitMessageFooterName("Reviewed-by"), new PlainTextElement("someone@example.com"))
                 })
             );
 
@@ -447,7 +448,10 @@ namespace Grynwald.ChangeLog.Test.Templates
 
             var entry = GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change", footers: new[]
             {
-                new ChangeLogEntryFooter(new CommitMessageFooterName("see-also"), "Link") { Link = new WebLink(new Uri("http://example.com")) }
+                new ChangeLogEntryFooter(
+                    new CommitMessageFooterName("see-also"),
+                    new WebLinkTextElement("Link", new Uri("http://example.com"))
+                )
             });
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", null, entry);

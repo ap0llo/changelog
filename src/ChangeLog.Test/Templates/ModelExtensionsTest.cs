@@ -2,6 +2,7 @@
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Xunit;
 
@@ -110,7 +111,7 @@ namespace Grynwald.ChangeLog.Test.Templates
                 }
             };
 
-            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), "Irrelevant");
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), new PlainTextElement("Irrelevant"));
 
             // ACT
             var displayName = footer.GetFooterDisplayName(configuration);
@@ -133,7 +134,7 @@ namespace Grynwald.ChangeLog.Test.Templates
                 }
             };
 
-            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), "Irrelevant");
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), new PlainTextElement("Irrelevant"));
 
             // ACT
             var displayName = footer.GetFooterDisplayName(configuration);
@@ -159,7 +160,7 @@ namespace Grynwald.ChangeLog.Test.Templates
                 }
             };
 
-            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), "Irrelevant");
+            var footer = new ChangeLogEntryFooter(new CommitMessageFooterName(footerName), new PlainTextElement("Irrelevant"));
 
             // ACT
             var displayName = footer.GetFooterDisplayName(configuration);
