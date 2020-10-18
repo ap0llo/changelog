@@ -1,8 +1,8 @@
 # Templates
 
-Template allow customizing the generated changelog and generate a changelog in different formats of for different environments.
+Templates allow generating a change log in different formats of for different environments.
 
-The template to use can be configured using the `changelog:template:name` setting (see [Configuration](./configuration/settings/template-name.md) for details).
+The template to use can be configured using the [Template Name Setting](./configuration/settings/template-name.md) for details.
 
 The following templates are supported:
 
