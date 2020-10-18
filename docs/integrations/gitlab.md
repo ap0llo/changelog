@@ -2,8 +2,8 @@
 
 The GitLab integration provides the following features:
 
-- Adds link to the GitLab web site to the commit for every changelog entry
-- Adds link to the GitLab web site for references in footers.<br>
+- Add link to the GitLab web site to the commit for every change log entry
+- Recognize GitLab-specific references (see also [Automatic References](../auto-references.md)) in footers and add GitLab web links.<br>
   The following types of references are recognized:
   - Issues
     - `#<id>`: Reference to a issue in the same project, e.g. `#123`
@@ -66,3 +66,4 @@ This can be achieved using either commandline parameters or environment variable
 - [Integrations](../integrations.md)
 - [Configuration](../configuration.md)
 - [GitLab Integration Configuration](../configuration/settings/gitlab-integration.md)
+- [Automatic References](../auto-references.md)
