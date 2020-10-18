@@ -1,6 +1,5 @@
 ﻿using System;
 using Grynwald.ChangeLog.Git;
-using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
 using Xunit.Abstractions;
 
@@ -42,11 +41,11 @@ namespace Grynwald.ChangeLog.Test.Model.Text
                     );
                     break;
 
-                case nameof(CommitLinkTextElement):
-                    var id = info.GetValue<string>(nameof(CommitLinkTextElement.Id.Id));
-                    var abbreviatedId = info.GetValue<string>(nameof(CommitLinkTextElement.Id.AbbreviatedId));
-                    Value = new CommitLinkTextElement(
-                        info.GetValue<string>(nameof(CommitLinkTextElement.Text)),
+                case nameof(CommitReferenceTextElement):
+                    var id = info.GetValue<string>(nameof(CommitReferenceTextElement.CommitId.Id));
+                    var abbreviatedId = info.GetValue<string>(nameof(CommitReferenceTextElement.CommitId.AbbreviatedId));
+                    Value = new CommitReferenceTextElement(
+                        info.GetValue<string>(nameof(CommitReferenceTextElement.Text)),
                         new GitId(id, abbreviatedId)
                     );
                     break;
@@ -71,10 +70,10 @@ namespace Grynwald.ChangeLog.Test.Model.Text
                     info.AddValue(nameof(WebLinkTextElement.Uri), webLink.Uri.ToString());
                     break;
 
-                case CommitLinkTextElement commitLink:
-                    info.AddValue(s_Type, nameof(CommitLinkTextElement));
-                    info.AddValue(nameof(CommitLinkTextElement.Id.Id), commitLink.Id.Id);
-                    info.AddValue(nameof(CommitLinkTextElement.Id.AbbreviatedId), commitLink.Id.AbbreviatedId);
+                case CommitReferenceTextElement commitReference:
+                    info.AddValue(s_Type, nameof(CommitReferenceTextElement));
+                    info.AddValue(nameof(CommitReferenceTextElement.CommitId.Id), commitReference.CommitId.Id);
+                    info.AddValue(nameof(CommitReferenceTextElement.CommitId.AbbreviatedId), commitReference.CommitId.AbbreviatedId);
                     break;
 
                 default:

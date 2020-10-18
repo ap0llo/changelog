@@ -77,8 +77,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
 
-            var commitLink = Assert.IsType<CommitLinkTextElement>(footer.Value);
-            Assert.Equal(expectedCommit.Id, commitLink.Id);
+            var commitLink = Assert.IsType<CommitReferenceTextElement>(footer.Value);
+            Assert.Equal(expectedCommit.Id, commitLink.CommitId);
             Assert.Equal(footerValue, commitLink.Text);
 
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Once);
@@ -106,8 +106,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
 
-            var commitLink = Assert.IsType<CommitLinkTextElement>(footer.Value);
-            Assert.Equal(expectedCommit.Id, commitLink.Id);
+            var commitLink = Assert.IsType<CommitReferenceTextElement>(footer.Value);
+            Assert.Equal(expectedCommit.Id, commitLink.CommitId);
             Assert.Equal(footerValue, commitLink.Text);
 
             m_GitRepositoryMock.Verify(x => x.TryGetCommit(It.IsAny<string>()), Times.Once);

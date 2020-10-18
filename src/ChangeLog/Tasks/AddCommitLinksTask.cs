@@ -40,7 +40,7 @@ namespace Grynwald.ChangeLog.Tasks
                     if (footer.Value is PlainTextElement)
                     {
                         m_Logger.LogDebug($"Detected reference to git commit '{commit.Id}' in '{footer.Name}' footer of entry {entry.Commit}");
-                        footer.Value = new CommitLinkTextElement(footer.Value.Text, commit.Id);
+                        footer.Value = new CommitReferenceTextElement(footer.Value.Text, commit.Id);
                     }
                     else
                     {
