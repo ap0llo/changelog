@@ -10,7 +10,7 @@
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__OUTPUTPATH</code></td>
+        <td><code>{{ defaultSettings.get_environment_variable_name settingskey }}</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>

@@ -115,6 +115,8 @@ namespace generate_docs
         }
 
 
+        public static string GetEnvironmentVariableName(string key) => key.Replace(":", "__").ToUpper();
+
         private static JObject LoadDefaultSettings()
         {
             using var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(s_ResourceName);

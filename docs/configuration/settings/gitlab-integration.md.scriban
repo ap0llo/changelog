@@ -25,7 +25,7 @@ See also [Integrations - GitLab](../../integrations/gitlab.md).
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN</code></td>
+        <td><code>{{ defaultSettings.get_environment_variable_name settingskey_accesstoken }}</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
@@ -63,7 +63,7 @@ accessing the GitLab  API when the GitLab integration is enabled.
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__REMOTENAME</code></td>
+        <td><code>{{ defaultSettings.get_environment_variable_name settingskey_remotename }}</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
@@ -106,7 +106,7 @@ For details on how the remote URL is parsed, see [Integrations - GitLab](../../i
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__HOST</code></td>
+        <td><code>{{ defaultSettings.get_environment_variable_name settingskey_host }}</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
@@ -141,7 +141,7 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__NAMESPACE</code></td>
+        <td><code>{{ defaultSettings.get_environment_variable_name settingskey_namespace }}</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
@@ -177,7 +177,7 @@ When no namespace is specified (default behaviour), ChangeLog will attempt to de
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__PROJECT</code></td>
+        <td><code>{{ defaultSettings.get_environment_variable_name settingskey_project }}</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
