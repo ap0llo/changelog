@@ -1,15 +1,14 @@
-﻿using CommandLine;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Scriban;
-using Scriban.Runtime;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using CommandLine;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Scriban;
+using Scriban.Runtime;
 
 namespace generate_docs
 {
@@ -60,8 +59,8 @@ namespace generate_docs
 
         public static string? Get(string key)
         {
-            JObject? defaultSettings = LoadDefaultSettings();
-            JToken? defaultValue = GetPropertyValue(defaultSettings, key);
+            var defaultSettings = LoadDefaultSettings();
+            var defaultValue = GetPropertyValue(defaultSettings, key);
 
             if (defaultValue is null)
             {
@@ -83,13 +82,13 @@ namespace generate_docs
 
         public static IEnumerable<EntryType> GetEntryTypes()
         {
-            JObject? defaultSettings = LoadDefaultSettings();
-            JObject? entryTypes = GetPropertyValue(defaultSettings, "changelog:entryTypes") as JObject;
+            var defaultSettings = LoadDefaultSettings();
+            var entryTypes = GetPropertyValue(defaultSettings, "changelog:entryTypes") as JObject;
 
-            foreach (JProperty? property in entryTypes?.Properties() ?? Enumerable.Empty<JProperty>())
+            foreach (var property in entryTypes?.Properties() ?? Enumerable.Empty<JProperty>())
             {
-                int? priority = (property.Value as JObject)?["priority"]?.Value<int>();
-                string? displayName = (property.Value as JObject)?["displayName"]?.Value<string>();
+                var priority = (property.Value as JObject)?["priority"]?.Value<int>();
+                var displayName = (property.Value as JObject)?["displayName"]?.Value<string>();
 
                 yield return new EntryType(property.Name)
                 {
@@ -101,12 +100,12 @@ namespace generate_docs
 
         public static IEnumerable<Footer> GetFooters()
         {
-            JObject? defaultSettings = LoadDefaultSettings();
-            JObject? entryTypes = GetPropertyValue(defaultSettings, "changelog:footers") as JObject;
+            var defaultSettings = LoadDefaultSettings();
+            var entryTypes = GetPropertyValue(defaultSettings, "changelog:footers") as JObject;
 
-            foreach (JProperty? property in entryTypes?.Properties() ?? Enumerable.Empty<JProperty>())
+            foreach (var property in entryTypes?.Properties() ?? Enumerable.Empty<JProperty>())
             {
-                string? displayName = (property.Value as JObject)?["displayName"]?.Value<string>();
+                var displayName = (property.Value as JObject)?["displayName"]?.Value<string>();
 
                 yield return new Footer(property.Name)
                 {
@@ -118,23 +117,23 @@ namespace generate_docs
 
         private static JObject LoadDefaultSettings()
         {
-            using Stream? resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(s_ResourceName);
+            using var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(s_ResourceName);
             if (resourceStream is null)
             {
                 throw new InvalidOperationException($"Failed to open stream for resource '{s_ResourceName}'");
             }
 
-            using StreamReader? streamReader = new StreamReader(resourceStream);
-            using JsonTextReader? jsonReader = new JsonTextReader(streamReader);
+            using var streamReader = new StreamReader(resourceStream);
+            using var jsonReader = new JsonTextReader(streamReader);
 
             return (JObject)JToken.ReadFrom(jsonReader);
         }
 
         private static JToken? GetPropertyValue(JObject jsonObject, string propertyPath)
         {
-            string[]? propertyNames = propertyPath.Split(':');
+            var propertyNames = propertyPath.Split(':');
             JToken? currentObject = jsonObject;
-            foreach (string? propertyName in propertyNames)
+            foreach (var propertyName in propertyNames)
             {
                 currentObject = currentObject?[propertyName];
             }
@@ -149,9 +148,9 @@ namespace generate_docs
     {
         private static int Main(string[] args)
         {
-            string[]? resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            var resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
 
-            Parser? parser = new Parser(config =>
+            var parser = new Parser(config =>
             {
                 config.CaseSensitive = false;
                 config.CaseInsensitiveEnumValues = true;
@@ -159,7 +158,7 @@ namespace generate_docs
             });
 
 
-            int exitCode = parser.ParseArguments<Opts>(args).MapResult(
+            var exitCode = parser.ParseArguments<Opts>(args).MapResult(
                 opts => Run(opts),
                 errors =>
                 {
@@ -178,7 +177,7 @@ namespace generate_docs
 
         private static int Run(Opts opts)
         {
-            if (string.IsNullOrWhiteSpace(opts.RootPath))
+            if (String.IsNullOrWhiteSpace(opts.RootPath))
             {
                 Console.Error.WriteLine("Root Path must not be null or whitespace");
                 return 1;
@@ -190,14 +189,14 @@ namespace generate_docs
                 return 1;
             }
 
-            string[]? inputFiles = Directory.GetFiles(opts.RootPath, "*.scriban", SearchOption.AllDirectories);
+            var inputFiles = Directory.GetFiles(opts.RootPath, "*.scriban", SearchOption.AllDirectories);
 
-            bool success = true;
+            var success = true;
 
-            foreach (string? inputPath in inputFiles)
+            foreach (var inputPath in inputFiles)
             {
                 Console.WriteLine($"Processing '{inputPath}'");
-                string? outputPath = Path.ChangeExtension(inputPath, "").TrimEnd('.');
+                var outputPath = Path.ChangeExtension(inputPath, "").TrimEnd('.');
 
                 if (opts.Check && !File.Exists(outputPath))
                 {
@@ -206,12 +205,12 @@ namespace generate_docs
                     continue;
                 }
 
-                string? input = File.ReadAllText(inputPath);
-                string? output = RenderTemplate(input, Path.GetFileName(inputPath));
+                var input = File.ReadAllText(inputPath);
+                var output = RenderTemplate(input, Path.GetFileName(inputPath));
 
                 if (opts.Check)
                 {
-                    string? currentOutput = File.ReadAllText(outputPath);
+                    var currentOutput = File.ReadAllText(outputPath);
                     if (!StringComparer.Ordinal.Equals(currentOutput, output))
                     {
                         Console.Error.WriteLine($"Contents of '{outputPath}' are not up-to-date");
@@ -234,14 +233,14 @@ namespace generate_docs
 
         private static string RenderTemplate(string input, string fileName)
         {
-            TemplateContext? context = new TemplateContext();
-            DefaultSettingsFunctions? rootScriptObject = new DefaultSettingsFunctions()
+            var context = new TemplateContext();
+            var rootScriptObject = new DefaultSettingsFunctions()
             {
                 { "defaultSettings", new DefaultSettingsFunctions() }
             };
 
             context.PushGlobal(rootScriptObject);
-           
+
             var output = new StringBuilder();
 
             output.AppendLine("<!--");
@@ -252,7 +251,7 @@ namespace generate_docs
             output.AppendLine("  </auto-generated>");
             output.AppendLine("-->");
 
-            Template? template = Template.Parse(input);
+            var template = Template.Parse(input);
             output.Append(template.Render(context));
             return output.ToString();
         }
