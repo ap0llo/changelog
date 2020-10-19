@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Scriban;
 using Scriban.Runtime;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,6 +24,22 @@ namespace generate_docs
     internal class DefaultSettingsFunctions : ScriptObject
     {
         private const string s_ResourceName = "generate_docs.defaultSettings.json";
+
+        public class EntryType
+        {
+            public string Type { get; }
+
+            public int? Priority { get; set; }
+
+            public string? DisplayName { get; set; }
+
+            public EntryType(string type)
+            {
+                Type = type;
+            }
+        }
+
+
 
 
         public static string? Get(string key)
@@ -46,6 +63,24 @@ namespace generate_docs
             }
 
             return defaultValue.ToString(Formatting.Indented);
+        }
+
+        public static IEnumerable<EntryType> GetEntryTypes()
+        {
+            JObject? defaultSettings = LoadDefaultSettings();
+            JObject? entryTypes = GetPropertyValue(defaultSettings, "changelog:entryTypes") as JObject;
+
+            foreach(var property in entryTypes?.Properties() ?? Enumerable.Empty<JProperty>())
+            {
+                var priority = (property.Value as JObject)?["priority"]?.Value<int>();
+                var displayName = (property.Value as JObject)?["displayName"]?.Value<string>();
+
+                yield return new EntryType(property.Name)
+                {
+                    Priority = priority,
+                    DisplayName = displayName
+                };
+            }
         }
 
 
@@ -174,7 +209,6 @@ namespace generate_docs
             };
 
             context.PushGlobal(rootScriptObject);
-
 
             Template? template = Template.Parse(input);
             string? result = template.Render(context);
