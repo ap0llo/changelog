@@ -31,8 +31,8 @@
         <td>
             <ul>
                 <li><code>Default</code></li>
-                <li><code>GitHubRelease</code></li>
                 <li><code>GitLabRelease</code></li>
+                <li><code>GitHubRelease</code></li>
             </ul>
         </td>
     </tr>

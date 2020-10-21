@@ -30,8 +30,8 @@
         <td><b>Allowed values</b></td>
         <td>
             <ul>
-                <li><code>Loose</code></li>
                 <li><code>Strict</code></li>
+                <li><code>Loose</code></li>
             </ul>
         </td>
     </tr>

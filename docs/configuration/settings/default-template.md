@@ -32,7 +32,7 @@
         <td><b>Allowed values</b></td>
         <td>
             <ul>
-                <li><code>default</code></li>
+                <li><code>Default</code></li>
                 <li><code>MkDocs</code></li>
             </ul>
         </td>

@@ -53,6 +53,15 @@ namespace generate_docs
                 };
             }
 
+            public static IEnumerable<string> GetAllowedValues(string settingsKey)
+            {
+                return GetConfigurationValue(settingsKey) switch
+                {
+                    Enum enumValue => Enum.GetValues(enumValue.GetType()).Cast<object>().Select(x => x.ToString()!),
+                    _ => Enumerable.Empty<string>()
+                };
+            }
+
             public static string GetEnvironmentVariableName(string settingsKey) => settingsKey.Replace(":", "__").ToUpper();
 
 

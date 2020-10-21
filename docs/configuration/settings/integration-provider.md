@@ -30,7 +30,7 @@
         <td><b>Allowed values</b></td>
         <td>
             <ul>
-                <li><code>none</code></li>
+                <li><code>None</code></li>
                 <li><code>GitHub</code></li>
                 <li><code>GitLab</code></li>
             </ul>

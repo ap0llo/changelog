@@ -30,8 +30,9 @@
         <td><b>Allowed values</b></td>
         <td>
             <ul>
-                <li><code>Loose</code></li>
-                <li><code>Strict</code></li>
+                {{~ for item in (configuration.get_allowed_values settingskey) ~}}
+                <li><code>{{item}}</code></li>
+                {{~ end ~}}
             </ul>
         </td>
     </tr>
