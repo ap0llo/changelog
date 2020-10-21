@@ -51,13 +51,13 @@ changelog includes display names for the following footers by default (defined i
 
 | Footer           | Display Name   |
 |------------------|----------------|
-| `see-also` | See Also |
 | `closes` | Closes |
-| `fixes` | Fixes |
 | `co-authored-by` | Co-authored by |
-| `reviewed-by` | Reviewed by |
-| `pull-request` | Pull Request |
+| `fixes` | Fixes |
 | `merge-request` | Merge Request |
+| `pull-request` | Pull Request |
+| `reviewed-by` | Reviewed by |
+| `see-also` | See Also |
 
 ### Example
 

@@ -26,10 +26,12 @@
             <code>{
   &quot;include&quot;: [
     {
-      &quot;type&quot;: &quot;feat&quot;
+      &quot;type&quot;: &quot;feat&quot;,
+      &quot;scope&quot;: &quot;*&quot;
     },
     {
-      &quot;type&quot;: &quot;fix&quot;
+      &quot;type&quot;: &quot;fix&quot;,
+      &quot;scope&quot;: &quot;*&quot;
     }
   ],
   &quot;exclude&quot;: []

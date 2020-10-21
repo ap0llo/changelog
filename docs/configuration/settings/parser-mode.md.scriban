@@ -19,8 +19,8 @@
     <tr>
         <td><b>Default value</b></td>
         <td>
-            {{~ if defaultSettings.get settingskey ~}}
-            <code>{{defaultSettings.get settingskey | html.escape}}</code>
+            {{~ if configuration.get_scalar settingskey ~}}
+            <code>{{configuration.get_scalar settingskey | html.escape}}</code>
             {{~ else ~}}
             -
             {{~ end ~}}

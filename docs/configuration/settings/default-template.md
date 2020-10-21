@@ -25,7 +25,7 @@
     <tr>
         <td><b>Default value</b></td>
         <td>
-            <code>default</code>
+            <code>Default</code>
         </td>
     </tr>
     <tr>

@@ -1,3 +1,6 @@
+{{~
+    settingskey = "changelog:entryTypes"
+~}}
 # Entry Types Setting
 
 ---
@@ -45,8 +48,8 @@ In the default configuration, the following display names are pre-configured (de
 
 | Entry Type | Display Name                          |
 |------------|---------------------------------------|
-{{~ for entryType in defaultSettings.get_entry_types ~}}
-| `{{ entryType.type }}` | {{ entryType.display_name }} |
+{{~ for item in (configuration.get_enumerable settingskey | enumerable.order_by_descending "value.priority") ~}}
+| `{{ item.key }}` | {{ item.value.display_name }} |
 {{~ end ~}}
 
 ---
@@ -110,8 +113,8 @@ In the default configuration, the priorities are pre-configured (defined in [def
 
 | Entry Type | Priority |
 |------------|----------|
-{{~ for entryType in defaultSettings.get_entry_types ~}}
-| `{{ entryType.type }}` | {{ entryType.priority }} |
+{{~ for item in (configuration.get_enumerable settingskey | enumerable.order_by_descending "value.priority") ~}}
+| `{{ item.key }}` | {{ item.value.priority }} |
 {{~ end ~}}
 
 ---

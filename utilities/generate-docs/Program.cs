@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using CommandLine;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Scriban;
-using Scriban.Runtime;
 
 namespace generate_docs
 {
@@ -20,131 +14,6 @@ namespace generate_docs
         [Option("check", Default = false)]
         public bool Check { get; set; } = false;
     }
-
-
-    internal class DefaultSettingsFunctions : ScriptObject
-    {
-        private const string s_ResourceName = "generate_docs.defaultSettings.json";
-
-        public class EntryType
-        {
-            public string Type { get; }
-
-            public int? Priority { get; set; }
-
-            public string? DisplayName { get; set; }
-
-            public EntryType(string type)
-            {
-                Type = type;
-            }
-        }
-
-        public class Footer
-        {
-            public string Name { get; }
-
-
-            public string? DisplayName { get; set; }
-
-            public Footer(string name)
-            {
-                Name = name;
-            }
-        }
-
-
-
-
-
-        public static string? Get(string key)
-        {
-            var defaultSettings = LoadDefaultSettings();
-            var defaultValue = GetPropertyValue(defaultSettings, key);
-
-            if (defaultValue is null)
-            {
-                return null;
-            }
-
-            if (defaultValue.Type == JTokenType.Null)
-            {
-                return null;
-            }
-
-            if (defaultValue is JValue jvalue)
-            {
-                return jvalue.Value?.ToString();
-            }
-
-            return defaultValue.ToString(Formatting.Indented);
-        }
-
-        public static IEnumerable<EntryType> GetEntryTypes()
-        {
-            var defaultSettings = LoadDefaultSettings();
-            var entryTypes = GetPropertyValue(defaultSettings, "changelog:entryTypes") as JObject;
-
-            foreach (var property in entryTypes?.Properties() ?? Enumerable.Empty<JProperty>())
-            {
-                var priority = (property.Value as JObject)?["priority"]?.Value<int>();
-                var displayName = (property.Value as JObject)?["displayName"]?.Value<string>();
-
-                yield return new EntryType(property.Name)
-                {
-                    Priority = priority,
-                    DisplayName = displayName
-                };
-            }
-        }
-
-        public static IEnumerable<Footer> GetFooters()
-        {
-            var defaultSettings = LoadDefaultSettings();
-            var entryTypes = GetPropertyValue(defaultSettings, "changelog:footers") as JObject;
-
-            foreach (var property in entryTypes?.Properties() ?? Enumerable.Empty<JProperty>())
-            {
-                var displayName = (property.Value as JObject)?["displayName"]?.Value<string>();
-
-                yield return new Footer(property.Name)
-                {
-                    DisplayName = displayName
-                };
-            }
-        }
-
-
-        public static string GetEnvironmentVariableName(string key) => key.Replace(":", "__").ToUpper();
-
-        private static JObject LoadDefaultSettings()
-        {
-            using var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(s_ResourceName);
-            if (resourceStream is null)
-            {
-                throw new InvalidOperationException($"Failed to open stream for resource '{s_ResourceName}'");
-            }
-
-            using var streamReader = new StreamReader(resourceStream);
-            using var jsonReader = new JsonTextReader(streamReader);
-
-            return (JObject)JToken.ReadFrom(jsonReader);
-        }
-
-        private static JToken? GetPropertyValue(JObject jsonObject, string propertyPath)
-        {
-            var propertyNames = propertyPath.Split(':');
-            JToken? currentObject = jsonObject;
-            foreach (var propertyName in propertyNames)
-            {
-                currentObject = currentObject?[propertyName];
-            }
-
-            return currentObject;
-        }
-
-    }
-
 
     internal class Program
     {
@@ -207,8 +76,8 @@ namespace generate_docs
                     continue;
                 }
 
-                var input = File.ReadAllText(inputPath);
-                var output = RenderTemplate(input, Path.GetFileName(inputPath));
+
+                var output = DocsRenderer.RenderTemplate(inputPath);
 
                 if (opts.Check)
                 {
@@ -230,32 +99,6 @@ namespace generate_docs
             }
 
             return success ? 0 : 1;
-        }
-
-
-        private static string RenderTemplate(string input, string fileName)
-        {
-            var context = new TemplateContext();
-            var rootScriptObject = new DefaultSettingsFunctions()
-            {
-                { "defaultSettings", new DefaultSettingsFunctions() }
-            };
-
-            context.PushGlobal(rootScriptObject);
-
-            var output = new StringBuilder();
-
-            output.AppendLine("<!--");
-            output.AppendLine("  <auto-generated>");
-            output.AppendLine("    The contents of this file were generated by a tool.");
-            output.AppendLine("    Any changes to this file will be overwritten.");
-            output.AppendLine($"    To change the content of this file, edit '{fileName}'");
-            output.AppendLine("  </auto-generated>");
-            output.AppendLine("-->");
-
-            var template = Template.Parse(input);
-            output.Append(template.Render(context));
-            return output.ToString();
         }
     }
 }

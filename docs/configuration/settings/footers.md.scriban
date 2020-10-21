@@ -1,3 +1,6 @@
+{{~
+    settingskey = "changelog:footers"
+~}}
 # Footer Settings
 
 ---
@@ -44,8 +47,8 @@ changelog includes display names for the following footers by default (defined i
 
 | Footer           | Display Name   |
 |------------------|----------------|
-{{~ for footer in defaultSettings.get_footers ~}}
-| `{{ footer.name }}` | {{ footer.display_name }} |
+{{~ for item in (configuration.get_enumerable settingskey | enumerable.order_by_descending "value.display_name") ~}}
+| `{{ item.key }}` | {{ item.value.display_name }} |
 {{~ end ~}}
 
 ### Example

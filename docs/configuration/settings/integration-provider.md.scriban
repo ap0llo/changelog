@@ -10,7 +10,7 @@
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>{{ defaultSettings.get_environment_variable_name settingskey }}</code></td>
+        <td><code>{{ configuration.get_environment_variable_name settingskey }}</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
@@ -19,8 +19,8 @@
     <tr>
         <td><b>Default value</b></td>
         <td>
-            {{~ if defaultSettings.get settingskey ~}}
-            <code>{{defaultSettings.get settingskey | html.escape}}</code>
+            {{~ if configuration.get_scalar settingskey ~}}
+            <code>{{configuration.get_scalar settingskey | html.escape}}</code>
             {{~ else ~}}
             -
             {{~ end ~}}
