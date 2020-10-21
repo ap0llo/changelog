@@ -90,6 +90,10 @@ namespace generate_docs
 
         public static string RenderTemplate(string inputPath)
         {
+            var extension = Path.GetExtension(inputPath);
+            if (!StringComparer.OrdinalIgnoreCase.Equals(extension, ".scriban"))
+                throw new InvalidOperationException($"Expected extension of template file to be '.scriban' but is '{extension}'");
+
             var input = File.ReadAllText(inputPath);
 
             var context = new TemplateContext();
@@ -115,7 +119,6 @@ namespace generate_docs
             output.Append(template.Render(context));
             return output.ToString();
         }
-
 
         private static object? GetPropertyValue(object configuration, string propertyPath, char separator)
         {
