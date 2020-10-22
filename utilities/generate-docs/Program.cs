@@ -20,8 +20,8 @@ namespace generate_docs
         private class GenerateCommandLineParameters : CommandLineParameterBase
         { }
 
-        [Verb("verify")]
-        private class VerifyCommandLineParameters : CommandLineParameterBase
+        [Verb("validate")]
+        private class ValidateCommandLineParameters : CommandLineParameterBase
         { }
 
 
@@ -37,9 +37,9 @@ namespace generate_docs
             });
 
 
-            var exitCode = parser.ParseArguments<GenerateCommandLineParameters, VerifyCommandLineParameters>(args).MapResult(
+            var exitCode = parser.ParseArguments<GenerateCommandLineParameters, ValidateCommandLineParameters>(args).MapResult(
                 (GenerateCommandLineParameters generateParameters) => GenerateDocs(generateParameters),
-                (VerifyCommandLineParameters verifyParameters) => VerifyDocs(verifyParameters),
+                (ValidateCommandLineParameters validateParameters) => ValidateDocs(validateParameters),
                 errors =>
                 {
                     if (errors.All(e => e is HelpRequestedError || e is VersionRequestedError))
@@ -78,13 +78,13 @@ namespace generate_docs
             return 0;
         }
 
-        private static int VerifyDocs(VerifyCommandLineParameters parameters)
+        private static int ValidateDocs(ValidateCommandLineParameters parameters)
         {
             if (!ValidateParameters(parameters))
                 return 1;
 
 
-            static void AddFileResults(Table table, string path, DocsVerifier.VerificationResult result)
+            static void AddFileResults(Table table, string path, DocsValidator.ValidationResult result)
             {
                 if (result.Success)
                 {
@@ -103,7 +103,7 @@ namespace generate_docs
 
             var success = true;
 
-            Console.WriteLine($"Verifying files in '{parameters.RootPath}'");
+            Console.WriteLine($"Validating docs in '{parameters.RootPath}'");
 
             var resultsTable = new Table()
                 .SetBorder(TableBorder.Square)
@@ -117,7 +117,7 @@ namespace generate_docs
 
                 var outputPath = Path.ChangeExtension(path, "").TrimEnd('.');
 
-                var result = DocsVerifier.VerifyDocument(path);
+                var result = DocsValidator.ValidateDocument(path);
                 success &= result.Success;
 
                 AddFileResults(resultsTable, relativePath, result);

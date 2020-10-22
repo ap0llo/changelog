@@ -125,8 +125,8 @@ jobs:
       arguments: >-
         --project ./utilities/generate-docs/generate-docs.csproj
         --
-        verify ./docs
-    displayName: Verify documentation
+        validate ./docs
+    displayName: Validate documentation
 
     # Restore, Build, Test
   - task: CmdLine@2

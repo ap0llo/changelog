@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace generate_docs
 {
-    internal static class DocsVerifier
+    internal static class DocsValidator
     {
-        public class VerificationResult
+        public class ValidationResult
         {
             private readonly List<string> m_Errors = new List<string>();
 
@@ -27,12 +27,12 @@ namespace generate_docs
 
         private interface IRule
         {
-            void Apply(string path, VerificationResult result);
+            void Apply(string path, ValidationResult result);
         }
 
         private class TemplateOutputIsUpToDateRule : IRule
         {
-            public void Apply(string path, VerificationResult result)
+            public void Apply(string path, ValidationResult result)
             {
                 if (String.IsNullOrWhiteSpace(path))
                     throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace", nameof(path));
@@ -66,12 +66,12 @@ namespace generate_docs
         };
 
 
-        public static VerificationResult VerifyDocument(string path)
+        public static ValidationResult ValidateDocument(string path)
         {
             if (String.IsNullOrWhiteSpace(path))
                 throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace", nameof(path));
 
-            var result = new VerificationResult();
+            var result = new ValidationResult();
             foreach (var rule in s_Rules)
             {
                 rule.Apply(path, result);
