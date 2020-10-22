@@ -118,16 +118,6 @@ jobs:
       dotnet format ./utilities --folder --check 
     displayName: Check code formatting
   
-  # Verify documentation
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: run
-      arguments: >-
-        --project ./utilities/docs/docs.csproj
-        --
-        validate ./docs
-    displayName: Validate documentation
-
     # Restore, Build, Test
   - task: CmdLine@2
     displayName: Restore NuGet packages
@@ -183,6 +173,16 @@ jobs:
         Write-Host "##vso[artifact.upload artifactname=$(artifactsName_Binaries)]$($packageFile.FullName)"
       }
     displayName: 'Publish Artifacts: $(artifactsName_Binaries)'
+
+  # Verify documentation
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: run
+      arguments: >-
+        --project ./utilities/docs/docs.csproj
+        --
+        validate ./docs
+    displayName: Validate documentation  
 
   # Generate changelog and publish as build artifact
   - task: DotNetCoreCLI@2
