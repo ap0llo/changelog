@@ -8,7 +8,7 @@
 . (Join-Path $PSScriptRoot "common.ps1")
 
 # Variables
-$srcFolder = "./src" # The path of the folder to format (relative to the repository root)
+$sourceFolders = @("./src", "./utilities") # The path of the folder to format (relative to the repository root)
 
 # Main script
 Push-Location (Get-RepositoryRoot)
@@ -17,7 +17,9 @@ try {
     exec "dotnet tool restore"
 
     log "Running dotnet format"
-    exec "dotnet format `"$srcFolder`" --folder"
+    foreach($folder in $sourceFolders) {
+        exec "dotnet format `"$folder`" --folder"
+    }
 }
 finally {
     Pop-Location

@@ -28,11 +28,11 @@ ChangeLog is a .NET Core application. Building it from source
 requires the .NET SDK 3.1 (version 3.1.100)
 
 ```ps1
-dotnet restore .\src\ChangeLog.sln
+dotnet restore .\ChangeLog.sln
 
-dotnet build .\src\ChangeLog.sln
+dotnet build .\ChangeLog.sln
 
-dotnet pack .\src\ChangeLog.sln
+dotnet pack .\ChangeLog.sln
 ```
 
 ## Issues
@@ -69,6 +69,10 @@ Thanks to all the people contributing to these projects:
 - [NetArchTest](https://github.com/BenMorris/NetArchTest)
 - [Microsoft.CodeAnalysis.CSharp](https://github.com/dotnet/roslyn)
 - [Markdig](https://github.com/lunet-io/markdig)
+- [SourceLink](https://github.com/dotnet/sourcelink)
+- [Scriban](https://github.com/lunet-io/scriban)
+- [Spectre.Console](https://spectresystems.github.io/spectre.console/)
+- [Xunit.Combinatorial](https://github.com/AArnott/Xunit.Combinatorial)
 
 ## Versioning and Branching
 
