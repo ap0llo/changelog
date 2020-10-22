@@ -101,7 +101,7 @@ namespace generate_docs
                 }
             }
 
-            var success = false;
+            var success = true;
 
             Console.WriteLine($"Verifying files in '{parameters.RootPath}'");
 
@@ -144,7 +144,5 @@ namespace generate_docs
 
             return true;
         }
-
-
     }
 }
