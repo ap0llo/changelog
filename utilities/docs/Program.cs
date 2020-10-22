@@ -16,11 +16,11 @@ namespace docs
 
         }
 
-        [Verb("generate")]
+        [Verb("generate", HelpText = "Update all generated documentation files")]
         private class GenerateCommandLineParameters : CommandLineParameterBase
         { }
 
-        [Verb("validate")]
+        [Verb("validate", HelpText = "Validate all documentation files")]
         private class ValidateCommandLineParameters : CommandLineParameterBase
         { }
 
