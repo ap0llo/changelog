@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CommandLine;
+using Spectre.Console;
 
 namespace generate_docs
 {
@@ -82,23 +83,47 @@ namespace generate_docs
             if (!ValidateParameters(parameters))
                 return 1;
 
+
+            static void AddFileResults(Table table, string path, DocsVerifier.VerificationResult result)
+            {
+                if (result.Success)
+                {
+                    table.AddRow(path, $"[green]No Errors[/]");
+                }
+                else
+                {
+                    var firstRow = true;
+                    foreach (var error in result.Errors)
+                    {
+                        table.AddRow(firstRow ? path : "", $"[red]{error}[/]");
+                        firstRow = false;
+                    }
+                }
+            }
+
             var success = false;
 
             Console.WriteLine($"Verifying files in '{parameters.RootPath}'");
 
+            var resultsTable = new Table()
+                .SetBorder(TableBorder.Square)
+                .SetBorderColor(Color.White)
+                .AddColumn(new TableColumn("[u]Path[/]").LeftAligned())
+                .AddColumn(new TableColumn("[u]Errors[/]").LeftAligned());
+
             foreach (var path in Directory.GetFiles(parameters.RootPath, "*.*", SearchOption.AllDirectories))
             {
-                Console.WriteLine($"  Processing '{path}'");
+                var relativePath = Path.GetRelativePath(parameters.RootPath, path);
+
                 var outputPath = Path.ChangeExtension(path, "").TrimEnd('.');
 
                 var result = DocsVerifier.VerifyDocument(path);
                 success &= result.Success;
 
-                foreach (var error in result.Errors)
-                {
-                    Console.Error.WriteLine($"    ERR: {error}");
-                }
+                AddFileResults(resultsTable, relativePath, result);
             }
+
+            AnsiConsole.Render(resultsTable);
 
             return success ? 0 : 1;
         }
@@ -118,6 +143,8 @@ namespace generate_docs
             }
 
             return true;
-        }        
+        }
+
+
     }
 }
