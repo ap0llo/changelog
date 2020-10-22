@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using CommandLine;
 using Spectre.Console;
 
@@ -28,8 +27,6 @@ namespace docs
 
         private static int Main(string[] args)
         {
-            var resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-
             var parser = new Parser(config =>
             {
                 config.CaseSensitive = false;
@@ -98,18 +95,15 @@ namespace docs
 
             foreach (var path in GetAllInputFiles(parameters))
             {
-                var relativePath = path;
-
                 var outputPath = Path.ChangeExtension(path, "").TrimEnd('.');
 
                 var result = DocsValidator.ValidateDocument(path);
                 success &= result.Success;
 
-
                 if (result.Success)
                 {
                     resultsTable.AddRow(
-                        $"[green]{relativePath}[/]",
+                        $"[green]{path}[/]",
                         "[green]Success[/]"
                     );
                 }
@@ -118,7 +112,7 @@ namespace docs
                     foreach (var error in result.Errors)
                     {
                         resultsTable.AddRow(
-                            $"[red]{relativePath}[/]",
+                            $"[red]{path}[/]",
                             "[red]Error[/]",
                             $"{(error.LineNumber > 0 ? error.LineNumber.ToString() : "")}",
                             $"{error.RuleId}",
