@@ -181,7 +181,7 @@ jobs:
       arguments: >-
         --project ./utilities/docs/docs.csproj
         --
-        validate ./docs
+        validate ./docs README.md
     displayName: Validate documentation  
 
   # Generate changelog and publish as build artifact

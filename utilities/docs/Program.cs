@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,12 +8,12 @@ using Spectre.Console;
 
 namespace docs
 {
-    internal class Program
+    internal static class Program
     {
         private class CommandLineParameterBase
         {
             [Value(0, Required = true, MetaName = "Root Path")]
-            public string RootPath { get; set; } = "";
+            public IEnumerable<string> InputPaths { get; set; } = Enumerable.Empty<string>();
 
         }
 
@@ -60,9 +61,9 @@ namespace docs
             if (!ValidateParameters(parameters))
                 return 1;
 
-            Console.WriteLine($"Generating documentation from template in '{parameters.RootPath}'");
+            Console.WriteLine($"Generating documentation from templates");
 
-            var inputFiles = Directory.GetFiles(parameters.RootPath, "*.*", SearchOption.AllDirectories).Where(x => IO.HasExtension(x, IO.FileExtensions.Scriban));
+            var inputFiles = GetAllInputFiles(parameters).Where(x => IO.HasExtension(x, IO.FileExtensions.Scriban));
 
             foreach (var inputPath in inputFiles)
             {
@@ -83,66 +84,100 @@ namespace docs
             if (!ValidateParameters(parameters))
                 return 1;
 
-
-            static void AddFileResults(Table table, string path, DocsValidator.ValidationResult result)
-            {
-                if (result.Success)
-                {
-                    table.AddRow(path, $"[green]No Errors[/]");
-                }
-                else
-                {
-                    var firstRow = true;
-                    foreach (var error in result.Errors)
-                    {
-                        table.AddRow(firstRow ? path : "", $"[red]{error}[/]");
-                        firstRow = false;
-                    }
-                }
-            }
-
             var success = true;
-
-            Console.WriteLine($"Validating docs in '{parameters.RootPath}'");
 
             var resultsTable = new Table()
                 .SetBorder(TableBorder.Square)
                 .SetBorderColor(Color.White)
-                .AddColumn(new TableColumn("[u]Path[/]").LeftAligned())
-                .AddColumn(new TableColumn("[u]Errors[/]").LeftAligned());
+                .AddColumn(new TableColumn("[u]File[/]").LeftAligned())
+                .AddColumn(new TableColumn("[u]Result[/]").LeftAligned())
+                .AddColumn(new TableColumn("[u]LineNumber[/]").LeftAligned())
+                .AddColumn(new TableColumn("[u]RuleId[/]").LeftAligned())
+                .AddColumn(new TableColumn("[u]Message[/]").LeftAligned());
 
-            foreach (var path in Directory.GetFiles(parameters.RootPath, "*.*", SearchOption.AllDirectories))
+
+            foreach (var path in GetAllInputFiles(parameters))
             {
-                var relativePath = Path.GetRelativePath(parameters.RootPath, path);
+                var relativePath = path;
 
                 var outputPath = Path.ChangeExtension(path, "").TrimEnd('.');
 
                 var result = DocsValidator.ValidateDocument(path);
                 success &= result.Success;
 
-                AddFileResults(resultsTable, relativePath, result);
+
+                if (result.Success)
+                {
+                    resultsTable.AddRow(
+                        $"[green]{relativePath}[/]",
+                        "[green]Success[/]"
+                    );
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        resultsTable.AddRow(
+                            $"[red]{relativePath}[/]",
+                            "[red]Error[/]",
+                            $"{(error.LineNumber > 0 ? error.LineNumber.ToString() : "")}",
+                            $"{error.RuleId}",
+                            $"{error.Message}"
+                        );
+                    }
+                }
             }
 
             AnsiConsole.Render(resultsTable);
-
             return success ? 0 : 1;
         }
 
         private static bool ValidateParameters(CommandLineParameterBase parameters)
         {
-            if (String.IsNullOrWhiteSpace(parameters.RootPath))
+            if (!parameters.InputPaths.Any())
             {
-                Console.Error.WriteLine("Root Path must not be null or whitespace");
+                Console.Error.WriteLine("No input paths specified");
                 return false;
             }
 
-            if (!Directory.Exists(parameters.RootPath))
+            var success = true;
+            foreach (var inputPath in parameters.InputPaths)
             {
-                Console.Error.WriteLine($"Root Path '{parameters.RootPath}' does not exist");
-                return false;
+                if (String.IsNullOrWhiteSpace(inputPath))
+                {
+                    Console.Error.WriteLine("Input path must not be null or whitespace");
+                    success = false;
+                }
+                else if (!Directory.Exists(inputPath) && !File.Exists(inputPath))
+                {
+                    Console.Error.WriteLine($"Input path '{inputPath}' does not exist");
+                    success = false;
+                }
             }
 
-            return true;
+            return success;
+        }
+
+        private static IEnumerable<string> GetAllInputFiles(CommandLineParameterBase parameters)
+        {
+            foreach (var inputPath in parameters.InputPaths)
+            {
+                if (Directory.Exists(inputPath))
+                {
+                    foreach (var path in Directory.GetFiles(inputPath, "*.*", SearchOption.AllDirectories))
+                    {
+                        yield return path;
+                    }
+                }
+                else if (File.Exists(inputPath))
+                {
+                    yield return inputPath;
+                }
+                else
+                {
+                    throw new FileNotFoundException($"Input path '{inputPath}' does not exist");
+                }
+            }
         }
     }
 }

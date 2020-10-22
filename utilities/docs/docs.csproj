@@ -13,6 +13,7 @@
 		<PackageReference Include="Scriban" Version="2.1.4" />
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
 		<PackageReference Include="Spectre.Console" Version="0.26.0" />
+        <PackageReference Include="Markdig" Version="0.22.0" />
 	</ItemGroup>
 
 	<ItemGroup>
