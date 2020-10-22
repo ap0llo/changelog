@@ -90,9 +90,8 @@ namespace generate_docs
 
         public static string RenderTemplate(string inputPath)
         {
-            var extension = Path.GetExtension(inputPath);
-            if (!StringComparer.OrdinalIgnoreCase.Equals(extension, ".scriban"))
-                throw new InvalidOperationException($"Expected extension of template file to be '.scriban' but is '{extension}'");
+            if (!IO.HasExtension(inputPath, IO.FileExtensions.Scriban))
+                throw new InvalidOperationException($"Expected extension of template file to be '{IO.FileExtensions.Scriban}' but is '{Path.GetExtension(inputPath)}'");
 
             var input = File.ReadAllText(inputPath);
 

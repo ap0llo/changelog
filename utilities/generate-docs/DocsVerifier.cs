@@ -9,40 +9,75 @@ namespace generate_docs
     {
         public class VerificationResult
         {
-            public bool Success => Errors.Any();
+            private readonly List<string> m_Errors = new List<string>();
 
-            public IReadOnlyList<string> Errors { get; }
+            public bool Success => !Errors.Any();
 
-            public VerificationResult(IReadOnlyList<string> errors)
+            public IReadOnlyList<string> Errors => m_Errors;
+
+
+            public void AddError(string error)
             {
-                Errors = errors ?? throw new ArgumentNullException(nameof(errors));
+                if (String.IsNullOrWhiteSpace(error))
+                    throw new ArgumentException($"'{nameof(error)}' cannot be null or whitespace", nameof(error));
+
+                m_Errors.Add(error);
             }
         }
 
-        public static VerificationResult VerifyDocument(string path)
+        private interface IRule
         {
-            var extension = Path.GetExtension(path);
-            if (!StringComparer.OrdinalIgnoreCase.Equals(extension, ".md"))
-                throw new InvalidOperationException($"Expected extension of document to verify to be '.md' but is '{extension}'");
+            void Apply(string path, VerificationResult result);
+        }
 
-            var errors = new List<string>();
-
-
-            // If a scriban template exists for the file, verify the file is up-to-date
-            var templatePath = $"{path}.scriban";
-            if (File.Exists(templatePath))
+        private class TemplateOutputIsUpToDateRule : IRule
+        {
+            public void Apply(string path, VerificationResult result)
             {
-                var expectedContent = DocsRenderer.RenderTemplate(templatePath);
-                var actualContent = File.ReadAllText(path);
+                if (String.IsNullOrWhiteSpace(path))
+                    throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace", nameof(path));
 
-                if (!StringComparer.Ordinal.Equals(expectedContent, actualContent))
+                if (!IO.HasExtension(path, IO.FileExtensions.Scriban))
+                    return;
+
+                var outputPath = IO.GetTemplateOutputPath(path);
+
+                if (File.Exists(outputPath))
                 {
-                    errors.Add("File contents are not up-to-date with regards to the scriban template");
+                    var expectedContent = DocsRenderer.RenderTemplate(path);
+                    var actualContent = File.ReadAllText(outputPath);
+
+                    if (!StringComparer.Ordinal.Equals(expectedContent, actualContent))
+                    {
+                        result.AddError("Contents of output file are not up-to-date with regards to the scriban template.");
+                    }
+                }
+                else
+                {
+                    result.AddError($"Template output file does not exists (expected at '{outputPath}')");
                 }
             }
+        }
 
 
-            return new VerificationResult(errors);
+        private static readonly IReadOnlyList<IRule> s_Rules = new IRule[]
+        {
+            new TemplateOutputIsUpToDateRule()
+        };
+
+
+        public static VerificationResult VerifyDocument(string path)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+                throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace", nameof(path));
+
+            var result = new VerificationResult();
+            foreach (var rule in s_Rules)
+            {
+                rule.Apply(path, result);
+            }
+
+            return result;
         }
 
     }

@@ -54,7 +54,6 @@ namespace generate_docs
             return exitCode;
         }
 
-
         private static int GenerateDocs(GenerateCommandLineParameters parameters)
         {
             if (!ValidateParameters(parameters))
@@ -62,12 +61,12 @@ namespace generate_docs
 
             Console.WriteLine($"Generating documentation from template in '{parameters.RootPath}'");
 
-            var inputFiles = Directory.GetFiles(parameters.RootPath, "*.scriban", SearchOption.AllDirectories);
+            var inputFiles = Directory.GetFiles(parameters.RootPath, "*.*", SearchOption.AllDirectories).Where(x => IO.HasExtension(x, IO.FileExtensions.Scriban));
 
             foreach (var inputPath in inputFiles)
             {
                 Console.WriteLine($"  Processing '{inputPath}'");
-                var outputPath = GetTemplateOutputPath(inputPath);
+                var outputPath = IO.GetTemplateOutputPath(inputPath);
 
                 var output = DocsRenderer.RenderTemplate(inputPath);
 
@@ -84,28 +83,15 @@ namespace generate_docs
                 return 1;
 
             var success = false;
-            // Ensure all scriban templates are rendered
-            Console.WriteLine($"Verifying scriban files in '{parameters.RootPath}'");
-            var scribanTemplates = Directory.GetFiles(parameters.RootPath, "*.scriban", SearchOption.AllDirectories);
-            foreach (var templatePath in scribanTemplates)
-            {
-                Console.WriteLine($"  Processing '{templatePath}'");
-                var outputPath = GetTemplateOutputPath(templatePath);
-                if (!File.Exists(outputPath))
-                {
-                    Console.Error.WriteLine($"    ERR: Template output file does not exists (expected at '{outputPath}')");
-                }
-            }
 
-            // Validate all markdown file
-            Console.WriteLine($"Verifying markdown files in '{parameters.RootPath}'");
-            var markdownFiles = Directory.GetFiles(parameters.RootPath, "*.md", SearchOption.AllDirectories);
-            foreach (var markdownPath in markdownFiles)
-            {
-                Console.WriteLine($"  Processing '{markdownPath}'");
-                var outputPath = Path.ChangeExtension(markdownPath, "").TrimEnd('.');
+            Console.WriteLine($"Verifying files in '{parameters.RootPath}'");
 
-                var result = DocsVerifier.VerifyDocument(markdownPath);
+            foreach (var path in Directory.GetFiles(parameters.RootPath, "*.*", SearchOption.AllDirectories))
+            {
+                Console.WriteLine($"  Processing '{path}'");
+                var outputPath = Path.ChangeExtension(path, "").TrimEnd('.');
+
+                var result = DocsVerifier.VerifyDocument(path);
                 success &= result.Success;
 
                 foreach (var error in result.Errors)
@@ -132,8 +118,6 @@ namespace generate_docs
             }
 
             return true;
-        }
-
-        private static string GetTemplateOutputPath(string templatePath) => Path.ChangeExtension(templatePath, "").TrimEnd('.');
+        }        
     }
 }
