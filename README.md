@@ -69,6 +69,10 @@ Thanks to all the people contributing to these projects:
 - [NetArchTest](https://github.com/BenMorris/NetArchTest)
 - [Microsoft.CodeAnalysis.CSharp](https://github.com/dotnet/roslyn)
 - [Markdig](https://github.com/lunet-io/markdig)
+- [SourceLink](https://github.com/dotnet/sourcelink)
+- [Scriban](https://github.com/lunet-io/scriban)
+- [Spectre.Console](https://spectresystems.github.io/spectre.console/)
+- [Xunit.Combinatorial](https://github.com/AArnott/Xunit.Combinatorial)
 
 ## Versioning and Branching
 
