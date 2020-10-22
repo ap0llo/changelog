@@ -118,6 +118,16 @@ jobs:
       dotnet format ./utilities --folder --check 
     displayName: Check code formatting
   
+  # Verify documentation
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: run
+      arguments: >-
+        --project ./utilities/generate-docs/generate-docs.csproj
+        --
+        verify ./docs
+    displayName: Verify documentation
+
     # Restore, Build, Test
   - task: CmdLine@2
     displayName: Restore NuGet packages
