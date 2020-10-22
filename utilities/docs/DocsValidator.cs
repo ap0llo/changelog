@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace generate_docs
+namespace docs
 {
     internal static class DocsValidator
     {

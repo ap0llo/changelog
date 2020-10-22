@@ -50,7 +50,7 @@ The *Markdown Preset (Default Template)* customizes serialization of Markdown fo
 
 Supported values are:
 
-- `default`: Produces Markdown that should work in most environments, including GitHub and GitLab
+- `Default`: Produces Markdown that should work in most environments, including GitHub and GitLab
 - `MkDocs`: Produces Markdown optimized for being rendered by Python-Markdown and [MkDocs](https://www.mkdocs.org/)
 
 For details on the differences between the presets, see also [Markdown Generator docs](https://github.com/ap0llo/markdown-generator/blob/master/docs/apireference/Grynwald/MarkdownGenerator/MdSerializationOptions/Presets/index.md).

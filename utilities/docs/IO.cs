@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace generate_docs
+namespace docs
 {
     internal static class IO
     {

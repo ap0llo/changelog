@@ -2,4 +2,4 @@
 
 [assembly: InternalsVisibleTo("Grynwald.ChangeLog.Test")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: InternalsVisibleTo("generate-docs")]
+[assembly: InternalsVisibleTo("docs")]

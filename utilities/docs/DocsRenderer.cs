@@ -10,7 +10,7 @@ using Newtonsoft.Json.Serialization;
 using Scriban;
 using Scriban.Runtime;
 
-namespace generate_docs
+namespace docs
 {
     internal static class DocsRenderer
     {

@@ -123,7 +123,7 @@ jobs:
     inputs:
       command: run
       arguments: >-
-        --project ./utilities/generate-docs/generate-docs.csproj
+        --project ./utilities/docs/docs.csproj
         --
         validate ./docs
     displayName: Validate documentation

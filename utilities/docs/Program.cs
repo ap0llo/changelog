@@ -5,7 +5,7 @@ using System.Reflection;
 using CommandLine;
 using Spectre.Console;
 
-namespace generate_docs
+namespace docs
 {
     internal class Program
     {
