@@ -31,19 +31,22 @@ namespace schema
         private class ValidateCommandLineParameters : CommandLineParameterBase
         { }
 
+
         private static readonly IAnsiConsole StdOut = AnsiConsole.Create(new AnsiConsoleSettings()
         {
             Ansi = AnsiSupport.Detect,
             ColorSystem = ColorSystemSupport.Detect,
             Out = Console.Out
         });
-
         private static readonly IAnsiConsole StdErr = AnsiConsole.Create(new AnsiConsoleSettings()
         {
             Ansi = AnsiSupport.Detect,
             ColorSystem = ColorSystemSupport.Detect,
             Out = Console.Error
         });
+        private static readonly Style s_MessageStyle = new Style(foreground: Color.Green);
+        private static readonly Style s_ErrorStyle = new Style(foreground: Color.Red);
+
 
         private static int Main(string[] args)
         {
@@ -65,7 +68,7 @@ namespace schema
                         return 0;
                     }
 
-                    WriteError("Invalid arguments");
+                    WriteError("ERROR: Invalid arguments");
                     return 1;
                 });
 
@@ -111,7 +114,7 @@ namespace schema
 
             if (!File.Exists(schemaPath))
             {
-                WriteError($"Schema file at '{schemaPath}' does not exist");
+                WriteError($"ERROR: Schema file at '{schemaPath}' does not exist");
                 return 1;
             }
 
@@ -122,7 +125,7 @@ namespace schema
             }
             catch (JsonReaderException ex)
             {
-                WriteError("Failed to load JSON schema file");
+                WriteError("ERROR: Failed to load JSON schema file");
                 StdErr.WriteException(ex, ExceptionFormats.ShortenPaths);
                 return 1;
             }
@@ -130,7 +133,7 @@ namespace schema
             var expectedSchema = GetSchema();
             if (!JToken.DeepEquals(expectedSchema, actualSchema))
             {
-                WriteError("Schema file differs from expected schema");
+                WriteError("ERROR: Schema file differs from expected schema");
                 return 1;
             }
 
@@ -141,7 +144,7 @@ namespace schema
         {
             if (String.IsNullOrWhiteSpace(parameters.SchemaPath))
             {
-                Console.Error.WriteLine("No output path specified");
+                WriteError("ERROR: No output path specified");
                 return false;
             }
 
@@ -154,8 +157,8 @@ namespace schema
             return schemaBuilder.Schema.ToJson();
         }
 
-        private static void WriteMessage(string message) => StdOut.MarkupLine($"[green]{message}[/]");
+        private static void WriteMessage(string message) => StdOut.WriteLine(message, s_MessageStyle);
 
-        private static void WriteError(string message) => StdErr.MarkupLine($"[red]{message}[/]");
+        private static void WriteError(string message) => StdErr.WriteLine(message, s_ErrorStyle);
     }
 }
