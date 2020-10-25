@@ -10,7 +10,7 @@ namespace schema
 {
     internal class RootObject
     {
-        public ChangeLogConfiguration Changelog { get; set; } = null!;
+        public ChangeLogConfiguration changelog { get; set; } = null!;
     }
 
 
@@ -102,7 +102,6 @@ namespace schema
             return 0;
         }
 
-
         private static int ValidateSchema(ValidateCommandLineParameters parameters)
         {
             if (!ValidateParameters(parameters))
@@ -142,8 +141,7 @@ namespace schema
 
         private static string GetSchema()
         {
-            var schemaBuilder = new JsonSchemaBuilder<RootObject>();
-            return schemaBuilder.Schema.ToJson().ToString(Formatting.Indented);
+            return JsonSchemaBuilder.GetSchema<RootObject>().ToString(Formatting.Indented);
         }
 
         private static void WriteMessage(string message) => StdOut.WriteLine(message, s_MessageStyle);

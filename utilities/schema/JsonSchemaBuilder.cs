@@ -1,129 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using schema.Model;
+using Newtonsoft.Json.Linq;
 
 namespace schema
 {
-    internal class JsonSchemaBuilder<T> where T : class
+    public class JsonSchemaBuilder
     {
-        private readonly Dictionary<Type, (int index, JsonSchemaDefinition definition)> m_Definitions = new Dictionary<Type, (int, JsonSchemaDefinition)>();
-        private readonly JsonSchemaTypeReference m_RootObjectType;
-
-        public JsonSchema Schema
+        private static readonly Dictionary<Type, JObject> s_KnownTypes = new Dictionary<Type, JObject>()
         {
-            get
-            {
-                var schema = new JsonSchema(m_RootObjectType);
-                foreach (var (_, definition) in m_Definitions.Values.OrderByDescending(x => x.index))
-                {
-                    schema.AddDefinition(definition);
-                }
-                return schema;
-            }
+            { typeof(string), new JObject(new JProperty("type", "string")) },
+            { typeof(int), new JObject(new JProperty("type", "integer")) },
+            { typeof(bool), new JObject(new JProperty("type", "boolean")) },
+        };
+
+        private const string s_SchemaNamespace = "http://json-schema.org/draft-04/schema#";
+
+
+        public static JObject GetSchema<T>()
+        {
+            //TODO: Ensure T is a object
+
+            var schema = GetTypeDefinition(typeof(T));
+            schema.AddFirst(new JProperty("$schema", s_SchemaNamespace));
+            return schema;
         }
 
 
-        public JsonSchemaBuilder()
+        private static JObject GetTypeDefinition(Type runtimeType)
         {
-            var schemaType = GetSchemaType(typeof(T));
-
-            if (schemaType is JsonSchemaTypeReference reference)
+            if (s_KnownTypes.TryGetValue(runtimeType, out var knownTypeDefinition))
             {
-                m_RootObjectType = reference;
+                return knownTypeDefinition;
             }
-            else
+            else if (IsNullableEnum(runtimeType, out var valueType))
             {
-                throw new NotImplementedException();
-            }
-        }
-
-
-        private JsonSchemaType GetSchemaType(Type runtimeType)
-        {
-            if (runtimeType == typeof(string))
-            {
-                return JsonSchemaPrimitiveType.String;
-            }
-            else if (runtimeType == typeof(int) || runtimeType == typeof(int?))
-            {
-                return JsonSchemaPrimitiveType.Integer;
-            }
-            else if (runtimeType.IsGenericType && typeof(Dictionary<,>).IsAssignableFrom(runtimeType.GetGenericTypeDefinition()))
-            {
-                return GetDictionaryType(runtimeType);
+                return GetTypeDefinition(valueType);
             }
             else if (runtimeType.IsEnum)
             {
-                return GetEnumType(runtimeType);
+                var enumValues = Enum.GetValues(runtimeType).Cast<object>().Select(x => x.ToString()!).ToArray();
+                return new JObject(
+                    new JProperty("type", "string"),
+                    new JProperty("enum", new JArray(enumValues))
+                );
             }
             else if (runtimeType.IsArray)
             {
-                return GetArrayType(runtimeType);
+                return new JObject(
+                    new JProperty("type", "array"),
+                    new JProperty("items", GetTypeDefinition(runtimeType.GetElementType()!))
+                );
             }
-            else if (runtimeType.IsClass)
+            else if (IsConvertibleDictionary(runtimeType, out var elementType))
             {
-                return GetObjectType(runtimeType);
+                return new JObject(
+                    new JProperty("type", "object"),
+                    new JProperty("patternProperties", new JObject(
+                        new JProperty(".*", GetTypeDefinition(runtimeType.GetGenericArguments()[1]))
+                )));
             }
             else
             {
-                throw new NotImplementedException();
+                var objectDefinition = new JObject(new JProperty("type", "object"));
+
+                JObject? propertiesDefinition = default;
+
+                foreach (var runtimeProperty in runtimeType.GetProperties())
+                {
+                    propertiesDefinition ??= new JObject();
+                    propertiesDefinition.Add(
+                        new JProperty(
+                            ToCamelCase(runtimeProperty.Name),
+                            GetTypeDefinition(runtimeProperty.PropertyType)
+                    ));
+                }
+
+                if (propertiesDefinition != null)
+                    objectDefinition.Add(new JProperty("properties", propertiesDefinition));
+
+                return objectDefinition;
             }
+
         }
 
-        private JsonSchemaType GetObjectType(Type runtimeType)
-        {
-            if (m_Definitions.TryGetValue(runtimeType, out var existingDefinition))
-                return existingDefinition.definition.Reference;
-
-            var schemaType = new JsonSchemaObjectType();
-
-            foreach (var runtimeProperty in runtimeType.GetProperties())
-            {
-                schemaType.AddProperty(
-                    ToCamelCase(runtimeProperty.Name),
-                    GetSchemaType(runtimeProperty.PropertyType)
-                );
-            }
-
-            var definition = new JsonSchemaDefinition(ToCamelCase(runtimeType.Name), schemaType);
-            m_Definitions.Add(runtimeType, (m_Definitions.Count + 1, definition));
-
-            return definition.Reference;
-        }
-
-        private JsonSchemaType GetDictionaryType(Type runtimeType)
-        {
-            var runtimeKeyType = runtimeType.GetGenericArguments()[0];
-
-            if (runtimeKeyType != typeof(string))
-                throw new NotImplementedException();
-
-            var valueSchemaType = GetSchemaType(runtimeType.GetGenericArguments()[1]);
-
-            var schemaType = new JsonSchemaObjectType();
-            schemaType.AddPatternProperty(".*", valueSchemaType);
-
-            return schemaType;
-        }
-
-        private JsonSchemaType GetEnumType(Type runtimeTime)
-        {
-            if (!runtimeTime.IsEnum)
-                throw new InvalidOperationException();
-
-            var values = Enum.GetValues(runtimeTime).Cast<object>().Select(x => x.ToString()!);
-            return new JsonSchemaEnumType(values);
-        }
-
-        private JsonSchemaType GetArrayType(Type runtimeType)
-        {
-            if (!runtimeType.IsArray)
-                throw new InvalidOperationException();
-
-            var schemaElementType = GetSchemaType(runtimeType.GetElementType()!);
-            return new JsonSchemaArrayType(schemaElementType);
-        }
 
         private static string ToCamelCase(string name)
         {
@@ -133,6 +94,40 @@ namespace schema
                 return name;
 
             return Char.ToLower(name[0]) + name.Substring(1);
+        }
+
+
+        private static bool IsConvertibleDictionary(Type runtimeType, [NotNullWhen(true)] out Type? elementType)
+        {
+            elementType = default;
+
+            if (!runtimeType.IsGenericType)
+                return false;
+
+            if (!typeof(Dictionary<,>).IsAssignableFrom(runtimeType.GetGenericTypeDefinition()))
+                return false;
+
+            var genericArguments = runtimeType.GetGenericArguments();
+
+            if (genericArguments[0] != typeof(string))
+                return false;
+
+            elementType = runtimeType.GetGenericArguments()[1];
+            return true;
+        }
+
+        private static bool IsNullableEnum(Type runtimeType, [NotNullWhen(true)] out Type? valueType)
+        {
+            valueType = default;
+
+            if (!runtimeType.IsGenericType)
+                return false;
+
+            if (!typeof(Nullable<>).IsAssignableFrom(runtimeType.GetGenericTypeDefinition()))
+                return false;
+
+            valueType = runtimeType.GetGenericArguments()[0];
+            return true;
         }
     }
 }
