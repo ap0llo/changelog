@@ -4,7 +4,6 @@ using System.Linq;
 using CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Spectre.Console;
 
 namespace schema
@@ -99,7 +98,7 @@ namespace schema
             WriteMessage($"Saving schema to '{schemaPath}'");
 
             Directory.CreateDirectory(Path.GetDirectoryName(schemaPath));
-            File.WriteAllText(schemaPath, schema.ToString(Formatting.Indented));
+            File.WriteAllText(schemaPath, schema);
             return 0;
         }
 
@@ -118,20 +117,10 @@ namespace schema
                 return 1;
             }
 
-            JObject actualSchema;
-            try
-            {
-                actualSchema = JObject.Parse(File.ReadAllText(schemaPath));
-            }
-            catch (JsonReaderException ex)
-            {
-                WriteError("ERROR: Failed to load JSON schema file");
-                StdErr.WriteException(ex, ExceptionFormats.ShortenPaths);
-                return 1;
-            }
-
             var expectedSchema = GetSchema();
-            if (!JToken.DeepEquals(expectedSchema, actualSchema))
+            var actualSchema = File.ReadAllText(schemaPath);
+
+            if (!StringComparer.Ordinal.Equals(expectedSchema, actualSchema))
             {
                 WriteError("ERROR: Schema file differs from expected schema");
                 return 1;
@@ -151,10 +140,10 @@ namespace schema
             return true;
         }
 
-        private static JObject GetSchema()
+        private static string GetSchema()
         {
             var schemaBuilder = new JsonSchemaBuilder<RootObject>();
-            return schemaBuilder.Schema.ToJson();
+            return schemaBuilder.Schema.ToJson().ToString(Formatting.Indented);
         }
 
         private static void WriteMessage(string message) => StdOut.WriteLine(message, s_MessageStyle);
