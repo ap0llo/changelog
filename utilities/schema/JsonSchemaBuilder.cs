@@ -1,133 +1,234 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
+using Grynwald.ChangeLog.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace schema
 {
     public class JsonSchemaBuilder
     {
-        private static readonly Dictionary<Type, JObject> s_KnownTypes = new Dictionary<Type, JObject>()
-        {
-            { typeof(string), new JObject(new JProperty("type", "string")) },
-            { typeof(int), new JObject(new JProperty("type", "integer")) },
-            { typeof(bool), new JObject(new JProperty("type", "boolean")) },
-        };
-
         private const string s_SchemaNamespace = "http://json-schema.org/draft-04/schema#";
 
-
-        public static JObject GetSchema<T>()
+        private static readonly JsonSerializerSettings s_JsonSerializerSettings = new JsonSerializerSettings()
         {
-            //TODO: Ensure T is a object
+            Formatting = Formatting.Indented,
+            ContractResolver = new DefaultContractResolver()
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            },
+            Converters = new[]
+            {
+                new StringEnumConverter()
+            }
+        };
+        private static readonly Dictionary<Type, Func<JObject>> s_KnownTypes = new Dictionary<Type, Func<JObject>>()
+        {
+            { typeof(string), () => new JObject(new JProperty("type", "string"))  },
+            { typeof(int),    () => new JObject(new JProperty("type", "integer")) },
+            { typeof(bool),   () => new JObject(new JProperty("type", "boolean")) },
+        };
 
-            var schema = GetTypeDefinition(typeof(T));
+
+        public static JObject GetSchema<T>() where T : class
+        {
+            var schema = GetTypeDefinition(typeof(T), includeDefault: false, null);
+            schema.AddFirst(new JProperty("$schema", s_SchemaNamespace));
+            return schema;
+        }
+
+        public static JObject GetSchema<T>(T? defaultValue) where T : class
+        {
+            var schema = GetTypeDefinition(typeof(T), includeDefault: true, defaultValue);
             schema.AddFirst(new JProperty("$schema", s_SchemaNamespace));
             return schema;
         }
 
 
-        private static JObject GetTypeDefinition(Type runtimeType)
+        private static JObject GetTypeDefinition(Type runtimeType, bool includeDefault, object? defaultValue)
         {
-            if (s_KnownTypes.TryGetValue(runtimeType, out var knownTypeDefinition))
+            if (s_KnownTypes.TryGetValue(runtimeType, out var knownTypeProvider))
             {
-                return knownTypeDefinition;
+                return knownTypeProvider();
             }
-            else if (IsNullableEnum(runtimeType, out var valueType))
+            else if (runtimeType.IsNullableValueType(out var valueType))
             {
-                return GetTypeDefinition(valueType);
+                var typeDefinition = GetTypeDefinition(valueType, includeDefault, null);
+
+                // for nullable enum types, add "null" to the list of allowed values
+                if (valueType.IsEnum)
+                {
+                    typeDefinition
+                        .GetOrAddProperty("enum", () => new JArray())
+                        .AddFirst(SerializeValue(null));
+                }
+
+                return typeDefinition;
             }
             else if (runtimeType.IsEnum)
             {
+                // Map enum values to strings with an enumeration of valid values
                 var enumValues = Enum.GetValues(runtimeType).Cast<object>().Select(x => x.ToString()!).ToArray();
-                return new JObject(
-                    new JProperty("type", "string"),
-                    new JProperty("enum", new JArray(enumValues))
-                );
+                return new JObject()
+                    .WithProperty("type", "string")
+                    .WithProperty("enum", new JArray(enumValues));
             }
-            else if (runtimeType.IsArray)
+            else if (runtimeType.IsArrayType(out var arrayElementType))
             {
-                return new JObject(
-                    new JProperty("type", "array"),
-                    new JProperty("items", GetTypeDefinition(runtimeType.GetElementType()!))
-                );
+                return new JObject()
+                    .WithProperty("type", "array")
+                    .WithProperty("items", GetTypeDefinition(arrayElementType, false, null));
             }
-            else if (IsConvertibleDictionary(runtimeType, out var elementType))
+            else if (runtimeType.IsDictionary(out var keyType, out var elementType) && keyType == typeof(string))
             {
-                return new JObject(
-                    new JProperty("type", "object"),
-                    new JProperty("patternProperties", new JObject(
-                        new JProperty(".*", GetTypeDefinition(runtimeType.GetGenericArguments()[1]))
-                )));
+                // dictionaries are mapped as JSON objects with the keys being used as property names
+                // => use "patternProperties" to define "any" property.
+                // and get a schema definition for the dictionary values
+                return new JObject()
+                    .WithProperty("type", "object")
+                    .WithProperty(
+                        "patternProperties",
+                        new JObject().WithProperty(
+                            ".*",
+                            GetTypeDefinition(runtimeType.GetGenericArguments()[1], includeDefault, null)
+                ));
             }
             else
             {
-                var objectDefinition = new JObject(new JProperty("type", "object"));
+                // all other types are mapped to JSON object recursively
 
-                JObject? propertiesDefinition = default;
+                var objectDefinition = new JObject().WithProperty("type", "object");
 
-                foreach (var runtimeProperty in runtimeType.GetProperties())
+                foreach (var runtimeProperty in runtimeType.GetProperties().Where(p => !p.HasCustomAttribute<JsonSchemaIgnoreAttribute>()))
                 {
-                    propertiesDefinition ??= new JObject();
-                    propertiesDefinition.Add(
-                        new JProperty(
-                            ToCamelCase(runtimeProperty.Name),
-                            GetTypeDefinition(runtimeProperty.PropertyType)
-                    ));
-                }
+                    var propertyDefaultValue = defaultValue is null
+                        ? default
+                        : runtimeProperty.GetValue(defaultValue);
 
-                if (propertiesDefinition != null)
-                    objectDefinition.Add(new JProperty("properties", propertiesDefinition));
+                    var propertyDefinition = GetPropertyDefinition(runtimeProperty, includeDefault, propertyDefaultValue);
+
+                    objectDefinition
+                        .GetOrAddProperty("properties", () => new JObject())
+                        .Add(propertyDefinition);
+                }
 
                 return objectDefinition;
             }
-
         }
 
-
-        private static string ToCamelCase(string name)
+        private static JProperty GetPropertyDefinition(PropertyInfo runtimeProperty, bool includeDefault, object? defaultValue)
         {
-            //TODO: Handle edge-cases
+            var propertyName = GetPropertyName(runtimeProperty);
+            var propertyDefinition = GetTypeDefinition(runtimeProperty.PropertyType, includeDefault, defaultValue);
 
-            if (String.IsNullOrWhiteSpace(name))
-                return name;
+            if (includeDefault && runtimeProperty.HasCustomAttribute<JsonSchemaDefaultValueAttribute>())
+            {
+                // Special handling for Dictionary properties:
+                // Instead of serializing the entire dictionary as a single JSON object and include it in the schema as default value,
+                // "flatten" the dictionary into individual properties and then include the dictionary values
+                // as default values for the individual properties.
+                // This makes more sense when generating the schema for a configuration file,
+                // because in the configuration file, typically only some of the keys get overridden
+                //
+                // e.g. the following class
+                //      public class Class1
+                //      {
+                //          public Dictionary<string, string> Property1 {get;set;} = new Dictionary<string, string>()
+                //          {
+                //              { "key1", "value1" },
+                //              { "key2", "value2" },
+                //          }:
+                //      }
+                //
+                // gets mapped to this JSON schema
+                //      {
+                //        "$schema": "http://json-schema.org/draft-04/schema#",
+                //        "type": "object",
+                //        "properties": {
+                //          "property1": {
+                //            "type": "object",
+                //            "properties": {
+                //              "key1": {
+                //                "type": "string",
+                //                "default": "value1"
+                //              },
+                //              "key2": {
+                //                "type": "string",
+                //                "default": "value2"
+                //              }
+                //            },
+                //            "patternProperties": {
+                //              ".*" :{
+                //                "type" : "string"
+                //              }
+                //            }
+                //          }
+                //        }
+                //      }
 
-            return Char.ToLower(name[0]) + name.Substring(1);
+
+                if (runtimeProperty.PropertyType.IsDictionary(out var keyType, out _) && keyType == typeof(string))
+                {
+                    var defaultValueProperties = GetDictionaryDefaultValues((IDictionary)defaultValue!);
+                    if (defaultValueProperties.Any())
+                    {
+                        propertyDefinition.WithProperty(
+                            "properties",
+                            new JObject(defaultValueProperties)
+                        );
+                    }
+                }
+                else
+                {
+                    propertyDefinition.WithProperty("default", SerializeValue(defaultValue));
+                }
+            }
+
+            // Add "uniqueItems" : true if property has a JsonSchemaUniqueItems attribute
+            // (only applies to arrays)
+            if (runtimeProperty.PropertyType.IsArray &&
+                runtimeProperty.HasCustomAttribute<JsonSchemaUniqueItemsAttribute>())
+            {
+                propertyDefinition.WithProperty("uniqueItems", true);
+            }
+
+            return new JProperty(propertyName, propertyDefinition);
         }
 
-
-        private static bool IsConvertibleDictionary(Type runtimeType, [NotNullWhen(true)] out Type? elementType)
+        private static JToken SerializeValue(object? value)
         {
-            elementType = default;
+            if (value is string stringValue && String.IsNullOrEmpty(stringValue))
+            {
+                value = null;
+            }
 
-            if (!runtimeType.IsGenericType)
-                return false;
-
-            if (!typeof(Dictionary<,>).IsAssignableFrom(runtimeType.GetGenericTypeDefinition()))
-                return false;
-
-            var genericArguments = runtimeType.GetGenericArguments();
-
-            if (genericArguments[0] != typeof(string))
-                return false;
-
-            elementType = runtimeType.GetGenericArguments()[1];
-            return true;
+            var json = JsonConvert.SerializeObject(value, s_JsonSerializerSettings);
+            return JToken.Parse(json);
         }
 
-        private static bool IsNullableEnum(Type runtimeType, [NotNullWhen(true)] out Type? valueType)
+        private static IEnumerable<JProperty> GetDictionaryDefaultValues(IDictionary dictionary)
         {
-            valueType = default;
+            foreach (var key in dictionary.Keys.Cast<string>().OrderBy(x => x))
+            {
+                var value = dictionary[key!];
+                yield return new JProperty(
+                    key!,
+                    GetTypeDefinition(value!.GetType(), false, null).WithProperty("default", SerializeValue(value)));
+            }
+        }
 
-            if (!runtimeType.IsGenericType)
-                return false;
+        private static string GetPropertyName(PropertyInfo runtimeProperty)
+        {
+            var nameAttribute = runtimeProperty.GetCustomAttribute<JsonSchemaPropertyNameAttribute>();
+            if (nameAttribute != null)
+                return nameAttribute.Name;
 
-            if (!typeof(Nullable<>).IsAssignableFrom(runtimeType.GetGenericTypeDefinition()))
-                return false;
-
-            valueType = runtimeType.GetGenericArguments()[0];
-            return true;
+            return Char.ToLower(runtimeProperty.Name[0]) + runtimeProperty.Name.Substring(1);
         }
     }
 }

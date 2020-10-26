@@ -4,16 +4,11 @@ using System.Linq;
 using CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Spectre.Console;
 
 namespace schema
 {
-    internal class RootObject
-    {
-        public ChangeLogConfiguration changelog { get; set; } = null!;
-    }
-
-
     internal class Program
     {
         private class CommandLineParameterBase
@@ -55,7 +50,6 @@ namespace schema
                 config.CaseInsensitiveEnumValues = true;
                 config.HelpWriter = Console.Out;
             });
-
 
             var exitCode = parser.ParseArguments<GenerateCommandLineParameters, ValidateCommandLineParameters>(args).MapResult(
                 (GenerateCommandLineParameters generateParameters) => GenerateSchema(generateParameters),
@@ -141,7 +135,11 @@ namespace schema
 
         private static string GetSchema()
         {
-            return JsonSchemaBuilder.GetSchema<RootObject>().ToString(Formatting.Indented);
+            var rootObject = new
+            {
+                changelog = ChangeLogConfigurationLoader.GetDefaultConfiguration()
+            };
+            return JsonSchemaBuilder.GetSchema(rootObject).ToString(Formatting.Indented);
         }
 
         private static void WriteMessage(string message) => StdOut.WriteLine(message, s_MessageStyle);

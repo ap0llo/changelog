@@ -4,3 +4,4 @@
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("docs")]
 [assembly: InternalsVisibleTo("schema")]
+[assembly: InternalsVisibleTo("schema.test")]
