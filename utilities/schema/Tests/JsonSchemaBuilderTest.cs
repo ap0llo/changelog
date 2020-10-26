@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 using Xunit.Sdk;
 
-namespace schema.test
+namespace schema.Test
 {
     public class JsonSchemaBuilderTest
     {
