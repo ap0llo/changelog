@@ -9,7 +9,7 @@ using Xunit.Sdk;
 
 namespace schema.Test
 {
-    public class JsonSchemaBuilderTest
+    public class JsonSchemaGeneratorTest
     {
         private const string s_SchemaNamespace = "http://json-schema.org/draft-04/schema#";
 
@@ -43,7 +43,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class1>();
+            var schema = JsonSchemaGenerator.GetSchema<Class1>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -92,7 +92,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class2>();
+            var schema = JsonSchemaGenerator.GetSchema<Class2>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -135,7 +135,7 @@ namespace schema.Test
             };
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema(modelInstance);
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -173,7 +173,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class3>();
+            var schema = JsonSchemaGenerator.GetSchema<Class3>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -209,7 +209,7 @@ namespace schema.Test
             };
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema(modelInstance);
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -247,7 +247,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class4>();
+            var schema = JsonSchemaGenerator.GetSchema<Class4>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -284,7 +284,7 @@ namespace schema.Test
             };
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema(modelInstance);
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -328,7 +328,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class6>();
+            var schema = JsonSchemaGenerator.GetSchema<Class6>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -387,7 +387,7 @@ namespace schema.Test
             };
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema(modelInstance);
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -426,7 +426,7 @@ namespace schema.Test
             };
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema(modelInstance);
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -494,7 +494,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class7>();
+            var schema = JsonSchemaGenerator.GetSchema<Class7>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -585,7 +585,7 @@ namespace schema.Test
             };
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema(modelInstance);
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -623,7 +623,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class10>();
+            var schema = JsonSchemaGenerator.GetSchema<Class10>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -654,7 +654,7 @@ namespace schema.Test
             };
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema(modelInstance);
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -698,7 +698,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class11>();
+            var schema = JsonSchemaGenerator.GetSchema<Class11>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -740,7 +740,7 @@ namespace schema.Test
             };
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema(modelInstance);
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -798,7 +798,7 @@ namespace schema.Test
 
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class12>();
+            var schema = JsonSchemaGenerator.GetSchema<Class12>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -830,7 +830,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class13>();
+            var schema = JsonSchemaGenerator.GetSchema<Class13>();
 
             // ASSERT
             AssertEqual(expected, schema);
@@ -859,7 +859,7 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaBuilder.GetSchema<Class14>();
+            var schema = JsonSchemaGenerator.GetSchema<Class14>();
 
             // ASSERT
             AssertEqual(expected, schema);

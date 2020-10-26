@@ -11,7 +11,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace schema
 {
-    public class JsonSchemaBuilder
+    public class JsonSchemaGenerator
     {
         private const string s_SchemaNamespace = "http://json-schema.org/draft-04/schema#";
 

@@ -139,7 +139,7 @@ namespace schema
             {
                 changelog = ChangeLogConfigurationLoader.GetDefaultConfiguration()
             };
-            return JsonSchemaBuilder.GetSchema(rootObject).ToString(Formatting.Indented);
+            return JsonSchemaGenerator.GetSchema(rootObject).ToString(Formatting.Indented);
         }
 
         private static void WriteMessage(string message) => StdOut.WriteLine(message, s_MessageStyle);
