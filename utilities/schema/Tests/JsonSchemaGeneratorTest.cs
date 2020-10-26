@@ -864,5 +864,37 @@ namespace schema.Test
             // ASSERT
             AssertEqual(expected, schema);
         }
+
+
+        [JsonSchemaTitle("Class Title")]
+        private class Class15
+        {
+            [JsonSchemaTitle("Property Title")]
+            public string Property1 { get; set; } = "";
+
+        }
+
+        [Fact]
+        public void SchemaBuilder_includes_title_specified_using_a_JsonSchemaTitle_attribute()
+        {
+            // ARRANGE
+            var expected = JObject.Parse($@"{{
+                ""$schema"" : ""{s_SchemaNamespace}"",
+                ""title"" : ""Class Title"",
+                ""type"" : ""object"",
+                ""properties"" : {{
+                    ""property1"" : {{
+                        ""title"" : ""Property Title"",
+                        ""type"" : ""string""
+                    }}
+                }}
+            }}");
+
+            // ACT
+            var schema = JsonSchemaGenerator.GetSchema<Class15>();
+
+            // ASSERT
+            AssertEqual(expected, schema);
+        }
     }
 }
