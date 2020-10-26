@@ -387,7 +387,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ASSERT
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
-            Assert.Contains("'GitHub Owner Name'", error.ErrorMessage);
+            Assert.Contains("'GitHub Repository Owner'", error.ErrorMessage);
         }
 
         [Theory]

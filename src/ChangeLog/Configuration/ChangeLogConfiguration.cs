@@ -40,8 +40,8 @@ namespace Grynwald.ChangeLog.Configuration
             [ValidationDisplayName("GitHub Host")]
             public string? Host { get; set; } = null;
 
-            [ValidationDisplayName("GitHub Owner Name")]
             [JsonSchemaDefaultValue, JsonSchemaTitle("GitHub Repository Owner")]
+            [ValidationDisplayName("GitHub Repository Owner")]
             public string? Owner { get; set; } = null;
 
             [JsonSchemaDefaultValue, JsonSchemaTitle("GitHub Repository Name")]
