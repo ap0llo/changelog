@@ -104,11 +104,6 @@ namespace schema
 
                 var objectDefinition = new JObject().WithProperty("type", "object");
 
-                if (runtimeType.GetCustomAttribute<JsonSchemaTitleAttribute>() is JsonSchemaTitleAttribute titleAttribute)
-                {
-                    objectDefinition.WithProperty("title", titleAttribute.Title);
-                }
-
                 foreach (var runtimeProperty in runtimeType.GetProperties().Where(p => !p.HasCustomAttribute<JsonSchemaIgnoreAttribute>()))
                 {
                     var propertyDefaultValue = defaultValue is null
@@ -203,9 +198,9 @@ namespace schema
             }
 
             // Add "title" (if specified)
-            if (runtimeProperty.GetCustomAttribute<JsonSchemaTitleAttribute>() is JsonSchemaTitleAttribute titleAttribute)
+            if (runtimeProperty.GetCustomAttribute<SettingDisplayNameAttribute>() is SettingDisplayNameAttribute attribute)
             {
-                propertyDefinition.WithProperty("title", titleAttribute.Title);
+                propertyDefinition.WithProperty("title", attribute.DisplayName);
             }
 
             return new JProperty(propertyName, propertyDefinition);

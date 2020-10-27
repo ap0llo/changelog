@@ -9,13 +9,13 @@ namespace Grynwald.ChangeLog.Configuration
     {
         public class ScopeConfiguration
         {
-            [JsonSchemaTitle("Scope Display Name")]
+            [SettingDisplayName("Scope Display Name")]
             public string? DisplayName { get; set; }
         }
 
         public class FooterConfiguration
         {
-            [JsonSchemaTitle("Footer Display Name")]
+            [SettingDisplayName("Footer Display Name")]
             public string? DisplayName { get; set; }
         }
 
@@ -28,53 +28,54 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class GitHubIntegrationConfiguration
         {
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitHub Access Token")]
-            [ValidationDisplayName("GitHub Access Token")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitHub Access Token")]
             public string? AccessToken { get; set; } = null;
 
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitHub Remote Name")]
-            [ValidationDisplayName("GitHub Remote Name")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitHub Remote Name")]
             public string? RemoteName { get; set; } = null;
 
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitHub Host")]
-            [ValidationDisplayName("GitHub Host")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitHub Host")]
             public string? Host { get; set; } = null;
 
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitHub Repository Owner")]
-            [ValidationDisplayName("GitHub Repository Owner")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitHub Repository Owner")]
             public string? Owner { get; set; } = null;
 
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitHub Repository Name")]
-            [ValidationDisplayName("GitHub Repository Name")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitHub Repository Name")]
             public string? Repository { get; set; } = null;
         }
 
         public class GitLabIntegrationConfiguration
         {
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitLab Access Token")]
-            [ValidationDisplayName("GitLab Access Token")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitLab Access Token")]
             public string? AccessToken { get; set; } = null;
 
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitLab Remote Name")]
-            [ValidationDisplayName("GitLab Remote Name")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitLab Remote Name")]
             public string? RemoteName { get; set; } = null;
 
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitLab Host")]
-            [ValidationDisplayName("GitLab Host")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitLab Host")]
             public string? Host { get; set; } = null;
 
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitLab Namespace")]
-            [ValidationDisplayName("GitLab Namespace")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitLab Namespace")]
             public string? Namespace { get; set; } = null;
 
-            [JsonSchemaDefaultValue, JsonSchemaTitle("GitLab Project Name")]
-            [ValidationDisplayName("GitLab Project Name")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("GitLab Project Name")]
             public string? Project { get; set; } = null;
         }
 
         public class IntegrationsConfiguration
         {
-            [JsonSchemaDefaultValue, JsonSchemaTitle("Integration Provider")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("Integration Provider")]
             public IntegrationProvider Provider { get; set; }
 
             [JsonSchemaPropertyName("github")]
@@ -93,7 +94,8 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class TemplateConfiguration
         {
-            [JsonSchemaDefaultValue, JsonSchemaTitle("Template Name")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("Template Name")]
             public TemplateName Name { get; set; }
 
             public DefaultTemplateConfiguration Default { get; set; } = new DefaultTemplateConfiguration();
@@ -107,16 +109,17 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class DefaultTemplateConfiguration
         {
-            [JsonSchemaDefaultValue, JsonSchemaTitle("Default Template Markdown Preset")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("Default Template Markdown Preset")]
             public MarkdownPreset MarkdownPreset { get; set; } = MarkdownPreset.Default;
         }
 
         public class EntryTypeConfiguration
         {
-            [JsonSchemaTitle("Entry Type Display Name")]
+            [SettingDisplayName("Entry Type Display Name")]
             public string? DisplayName { get; set; }
 
-            [JsonSchemaTitle("Entry Type Priority")]
+            [SettingDisplayName("Entry Type Priority")]
             public int Priority { get; set; }
         }
 
@@ -128,28 +131,29 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class ParserConfiguration
         {
-            [JsonSchemaDefaultValue, JsonSchemaTitle("Parser Mode")]
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("Parser Mode")]
             public ParserMode Mode { get; set; }
         }
 
 
         public class FilterConfiguration
         {
-            [JsonSchemaTitle("Filter Include Expressions")]
+            [SettingDisplayName("Filter Include Expressions")]
             public FilterExpressionConfiguration[] Include { get; set; } = Array.Empty<FilterExpressionConfiguration>();
 
-            [JsonSchemaTitle("Filter Exclude Expressions")]
+            [SettingDisplayName("Filter Exclude Expressions")]
             public FilterExpressionConfiguration[] Exclude { get; set; } = Array.Empty<FilterExpressionConfiguration>();
         }
 
         public class FilterExpressionConfiguration
         {
             [JsonSchemaDefaultValue]
-            [ValidationDisplayName("Filter Type Expression")]
+            [SettingDisplayName("Filter Type Expression")]
             public string Type { get; set; } = "*";
 
             [JsonSchemaDefaultValue]
-            [ValidationDisplayName("Filter Scope Expression")]
+            [SettingDisplayName("Filter Scope Expression")]
             public string Scope { get; set; } = "*";
         }
 
@@ -157,10 +161,12 @@ namespace Grynwald.ChangeLog.Configuration
         [JsonSchemaDefaultValue]
         public Dictionary<string, ScopeConfiguration> Scopes { get; set; } = new Dictionary<string, ScopeConfiguration>();
 
-        [JsonSchemaDefaultValue, JsonSchemaUniqueItems, JsonSchemaTitle("Tag Patterns")]
+        [JsonSchemaDefaultValue, JsonSchemaUniqueItems]
+        [SettingDisplayName("Tag Patterns")]
         public string[] TagPatterns { get; set; } = Array.Empty<string>();
 
-        [JsonSchemaDefaultValue, JsonSchemaTitle("Output Path")]
+        [JsonSchemaDefaultValue]
+        [SettingDisplayName("Output Path")]
         public string OutputPath { get; set; } = "";
 
         [JsonSchemaIgnore]
@@ -171,12 +177,12 @@ namespace Grynwald.ChangeLog.Configuration
 
         public IntegrationsConfiguration Integrations { get; set; } = new IntegrationsConfiguration();
 
-        [JsonSchemaDefaultValue, JsonSchemaTitle("Version Range")]
-        [ValidationDisplayName("Version Range")]
+        [JsonSchemaDefaultValue]
+        [SettingDisplayName("Version Range")]
         public string? VersionRange { get; set; } = "";
 
-        [JsonSchemaDefaultValue, JsonSchemaTitle("Current Version")]
-        [ValidationDisplayName("Current Version")]
+        [JsonSchemaDefaultValue]
+        [SettingDisplayName("Current Version")]
         public string? CurrentVersion { get; set; }
 
         public TemplateConfiguration Template { get; set; } = new TemplateConfiguration();
@@ -186,7 +192,8 @@ namespace Grynwald.ChangeLog.Configuration
 
         public ParserConfiguration Parser { get; set; } = new ParserConfiguration();
 
-        [JsonSchemaDefaultValue, JsonSchemaTitle("Filter")]
+        [JsonSchemaDefaultValue]
+        [SettingDisplayName("Filter")]
         public FilterConfiguration Filter { get; set; } = new FilterConfiguration();
 
 

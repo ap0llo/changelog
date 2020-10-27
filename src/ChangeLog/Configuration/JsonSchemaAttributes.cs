@@ -31,15 +31,4 @@ namespace Grynwald.ChangeLog.Configuration
             Name = name;
         }
     }
-
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    internal class JsonSchemaTitleAttribute : Attribute
-    {
-        public string Title { get; }
-
-        public JsonSchemaTitleAttribute(string title)
-        {
-            Title = title;
-        }
-    }
 }

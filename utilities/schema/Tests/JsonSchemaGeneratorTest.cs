@@ -866,21 +866,19 @@ namespace schema.Test
         }
 
 
-        [JsonSchemaTitle("Class Title")]
         private class Class15
         {
-            [JsonSchemaTitle("Property Title")]
+            [SettingDisplayName("Property Title")]
             public string Property1 { get; set; } = "";
 
         }
 
         [Fact]
-        public void SchemaBuilder_includes_title_specified_using_a_JsonSchemaTitle_attribute()
+        public void SchemaBuilder_includes_title_specified_using_a_SettingDisplayName_attribute()
         {
             // ARRANGE
             var expected = JObject.Parse($@"{{
                 ""$schema"" : ""{s_SchemaNamespace}"",
-                ""title"" : ""Class Title"",
                 ""type"" : ""object"",
                 ""properties"" : {{
                     ""property1"" : {{
