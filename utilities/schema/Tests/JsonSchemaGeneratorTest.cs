@@ -80,13 +80,13 @@ namespace schema.Test
                         ""type"" : ""integer""
                     }},
                     ""property3"" : {{
-                        ""type"" : ""integer""
+                        ""type"" : [ ""integer"", ""null"" ]
                     }},
                     ""property4"" : {{
                         ""type"" : ""boolean""
                     }},
                     ""property5"" : {{
-                        ""type"" : ""boolean""
+                        ""type"" : [ ""boolean"", ""null"" ]
                     }}
                 }}
             }}");
@@ -115,14 +115,14 @@ namespace schema.Test
                         ""default"": 23
                     }},
                     ""property3"" : {{
-                        ""type"" : ""integer"",
+                        ""type"" : [""integer"", ""null"" ],
                         ""default"" : 42
                     }},
                     ""property4"" : {{
                         ""type"" : ""boolean""
                     }},
                     ""property5"" : {{
-                        ""type"" : ""boolean""
+                        ""type"" : [ ""boolean"", ""null"" ]
                     }}
                 }}
             }}");
@@ -219,7 +219,7 @@ namespace schema.Test
         private class Class4
         {
             [JsonSchemaDefaultValue]
-            public Class5? Property { get; set; }
+            public Class5 Property { get; set; } = null!;
         }
 
         private class Class5
@@ -435,7 +435,7 @@ namespace schema.Test
 
         public class Class7
         {
-            public Class8? Property1 { get; set; }
+            public Class8 Property1 { get; set; } = null!;
 
         }
         public class Class8
@@ -681,17 +681,17 @@ namespace schema.Test
                     ""property1"" : {{
                         ""type"" : ""string"",
                         ""enum"" : [
-                            null,
                             ""Value1"",
-                            ""Value2""
+                            ""Value2"",
+                            null
                         ]
                     }},
                     ""property2"" : {{
                         ""type"" : ""string"",
                         ""enum"" : [
-                            null,
                             ""Value1"",
-                            ""Value2""
+                            ""Value2"",
+                            null
                         ]
                     }}
                 }}
@@ -715,18 +715,18 @@ namespace schema.Test
                     ""property1"" : {{
                         ""type"" : ""string"",
                         ""enum"" : [
-                            null,
                             ""Value1"",
-                            ""Value2""
+                            ""Value2"",
+                            null
                         ],
                         ""default"" : null
                     }},
                     ""property2"" : {{
                         ""type"" : ""string"",
                         ""enum"" : [
-                            null,
                             ""Value1"",
-                            ""Value2""
+                            ""Value2"",
+                            null
                         ],
                         ""default"" : ""Value1""
                     }}
@@ -748,6 +748,75 @@ namespace schema.Test
 
 
         public class Class12
+        {
+            [JsonSchemaDefaultValue]
+            public int? Property1 { get; set; }
+
+            [JsonSchemaDefaultValue]
+            public int? Property2 { get; set; }
+        }
+
+        [Fact]
+        public void SchemaBuilder_returns_expected_schema_for_nullable_value_types()
+        {
+            // ARRANGE
+            var expected = JObject.Parse($@"{{
+                ""$schema"" : ""{s_SchemaNamespace}"",
+                ""type"" : ""object"",
+                ""properties"" : {{
+                    ""property1"" : {{
+                        ""type"" : [""integer"", ""null""]
+                    }},
+                    ""property2"" : {{
+                        ""type"" : [""integer"", ""null""]
+                    }}
+                }}
+            }}");
+
+            // ACT
+
+            var schema = JsonSchemaGenerator.GetSchema<Class12>();
+
+            // ASSERT
+            AssertEqual(expected, schema);
+        }
+
+        [Fact]
+        public void SchemaBuilder_includes_default_value_for_nullable_value_types()
+        {
+            // ARRANGE
+            var expected = JObject.Parse($@"{{
+                ""$schema"" : ""{s_SchemaNamespace}"",
+                ""type"" : ""object"",
+                ""properties"" : {{
+                    ""property1"" : {{
+                        ""type"" : [""integer"", ""null""],
+                        ""default"" : null
+                    }},
+                    ""property2"" : {{
+                        ""type"" : [""integer"", ""null""],
+                        ""default"" : 23
+                    }}
+                }}
+            }}");
+
+
+            var modelInstance = new Class12()
+            {
+                Property1 = null,
+                Property2 = 23
+            };
+
+            // ACT
+            var schema = JsonSchemaGenerator.GetSchema(modelInstance);
+
+            // ASSERT
+            AssertEqual(expected, schema);
+        }
+
+
+
+        public class Class13
         {
             [JsonSchemaUniqueItems]
             public string[] Property1 { get; set; } = Array.Empty<string>();
@@ -798,13 +867,13 @@ namespace schema.Test
 
 
             // ACT
-            var schema = JsonSchemaGenerator.GetSchema<Class12>();
+            var schema = JsonSchemaGenerator.GetSchema<Class13>();
 
             // ASSERT
             AssertEqual(expected, schema);
         }
 
-        private class Class13
+        private class Class14
         {
             public string Property1 { get; set; } = "";
 
@@ -830,13 +899,13 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaGenerator.GetSchema<Class13>();
+            var schema = JsonSchemaGenerator.GetSchema<Class14>();
 
             // ASSERT
             AssertEqual(expected, schema);
         }
 
-        private class Class14
+        private class Class15
         {
             public string Property1 { get; set; } = "";
 
@@ -859,14 +928,14 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaGenerator.GetSchema<Class14>();
+            var schema = JsonSchemaGenerator.GetSchema<Class15>();
 
             // ASSERT
             AssertEqual(expected, schema);
         }
 
 
-        private class Class15
+        private class Class16
         {
             [SettingDisplayName("Property Title")]
             public string Property1 { get; set; } = "";
@@ -889,7 +958,82 @@ namespace schema.Test
             }}");
 
             // ACT
-            var schema = JsonSchemaGenerator.GetSchema<Class15>();
+            var schema = JsonSchemaGenerator.GetSchema<Class16>();
+
+            // ASSERT
+            AssertEqual(expected, schema);
+        }
+
+
+        private class Class17
+        {
+            // Annotations for nullable reference types are included in the output
+            // as either a [Nullable] attribute on the individual properties
+            // or as a [NullableContext] attribute on the property's declaring type.
+            // In this case (same amount of nullable and non-nullable properties)
+            // the compiler seems to use [Nullable] attributes on the individual properties
+
+            public string? Property1 { get; set; } = "";
+
+            public string Property2 { get; set; } = "";
+        }
+
+        [Fact]
+        public void SchemaBuilder_includes_null_as_possible_value_for_nullable_reference_types_01()
+        {
+            // ARRANGE
+            var expected = JObject.Parse($@"{{
+                ""$schema"" : ""{s_SchemaNamespace}"",
+                ""type"" : ""object"",
+                ""properties"" : {{
+                    ""property1"" : {{
+                        ""type"" : [ ""string"", ""null"" ]
+                    }},
+                    ""property2"" : {{
+                        ""type"" : ""string""
+                    }}
+                }}
+            }}");
+
+            // ACT
+            var schema = JsonSchemaGenerator.GetSchema<Class17>();
+
+            // ASSERT
+            AssertEqual(expected, schema);
+        }
+
+        private class Class18
+        {
+            // Annotations for nullable reference types are included in the output
+            // as either a [Nullable] attribute on the individual properties
+            // or as a [NullableContext] attribute on the property's declaring type.
+            // In this case (same nullability for all properties) 
+            // the compiler seems to use a [NullableContext] attribute on the declaring type
+
+            public string? Property1 { get; set; } = "";
+
+            public string? Property2 { get; set; } = "";
+        }
+
+        [Fact]
+        public void SchemaBuilder_includes_null_as_possible_value_for_nullable_reference_types_02()
+        {
+            // ARRANGE
+            var expected = JObject.Parse($@"{{
+                ""$schema"" : ""{s_SchemaNamespace}"",
+                ""type"" : ""object"",
+                ""properties"" : {{
+                    ""property1"" : {{
+                        ""type"" : [ ""string"", ""null"" ]
+                    }},
+                    ""property2"" : {{
+                        ""type"" : [ ""string"", ""null"" ]
+                    }}
+                }}
+            }}");
+
+            // ACT
+            var schema = JsonSchemaGenerator.GetSchema<Class18>();
 
             // ASSERT
             AssertEqual(expected, schema);

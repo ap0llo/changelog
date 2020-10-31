@@ -63,11 +63,13 @@ namespace schema
                 // for nullable enum types, add "null" to the list of allowed values
                 if (valueType.IsEnum)
                 {
-                    typeDefinition
-                        .GetOrAddProperty("enum", () => new JArray())
-                        .AddFirst(SerializeValue(null));
+                    typeDefinition.AddPropertyValue("enum", SerializeValue(null));
                 }
-
+                // for other nullable value types, add "null" to the list of allowed types
+                else
+                {
+                    typeDefinition.AddPropertyValue("type", "null");
+                }
                 return typeDefinition;
             }
             else if (runtimeType.IsEnum)
@@ -125,6 +127,12 @@ namespace schema
         {
             var propertyName = GetPropertyName(runtimeProperty);
             var propertyDefinition = GetTypeDefinition(runtimeProperty.PropertyType, includeDefault, defaultValue);
+
+            // is property is marked as nullable, add "null" as valid type in the JSON schema
+            if (IsNullableReferenceType(runtimeProperty))
+            {
+                propertyDefinition.AddPropertyValue("type", "null");
+            }
 
             if (includeDefault && runtimeProperty.HasCustomAttribute<JsonSchemaDefaultValueAttribute>())
             {
@@ -206,6 +214,69 @@ namespace schema
             return new JProperty(propertyName, propertyDefinition);
         }
 
+
+        private static bool IsNullableReferenceType(PropertyInfo property)
+        {
+            if (!property.PropertyType.IsClass)
+                return false;
+
+            // The compiler stores the nullability of reference types in the output assembly using either
+            // - a [Nullable] attribute on the property or 
+            // - a [NullableContext] attribute on the property's declaring type
+            // (see https://github.com/dotnet/roslyn/blob/master/docs/features/nullable-metadata.md)
+            // The following code handles both these cases.
+            // If both [Nullable] and [NullableContext] attributes exist, the nullability information from the [Nullable] attribute is used
+            //
+            // The nullablilty attributes are generated dynamically by the compiler if they do not exist in the framework being targeted.
+            // Because of this, this code cannot use the attributes' types directly and instead has to detect them using their full name.
+            //
+
+            var nullable = property.GetCustomAttributes()
+                .Where(attribue => attribue.GetType().FullName == "System.Runtime.CompilerServices.NullableAttribute")
+                .SingleOrDefault();
+
+            var nullabeContext = property.DeclaringType?.GetCustomAttributes()
+                ?.Where(attribute => attribute.GetType().FullName == "System.Runtime.CompilerServices.NullableContextAttribute")
+                ?.SingleOrDefault();
+
+            // nullability is encoded as a byte:
+            // - 0: property is oblivious to nullable reference types (treat as nullable)
+            // - 1: property is *not* nullable
+            // - 2: property is nullable
+
+            var isNullable = false;
+            if (nullabeContext != null)
+            {
+                var flag = (byte)nullabeContext.GetType().GetField("Flag")!.GetValue(nullabeContext)!;
+
+                isNullable = flag switch
+                {
+                    0 => true,
+                    1 => false,
+                    2 => true,
+                    _ => false
+                };
+            }
+
+            if (nullable != null)
+            {
+                var flags = (byte[])nullable.GetType().GetField("NullableFlags")!.GetValue(nullable)!;
+                if (flags.Length == 1)
+                {
+                    var flag = flags[0];
+
+                    isNullable = flag switch
+                    {
+                        0 => true,
+                        1 => false,
+                        2 => true,
+                        _ => false
+                    };
+                }
+            }
+
+            return isNullable;
+        }
         private static JToken SerializeValue(object? value)
         {
             if (value is string stringValue && String.IsNullOrEmpty(stringValue))
