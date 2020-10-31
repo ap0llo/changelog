@@ -1,454 +1,609 @@
 {
-    "title": "ChangeLog Configuration file schema",
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "$ref": "#/definitions/rootObject",
-    "definitions": {
-        "rootObject": {
-            "type": "object",
-            "properties": {
-                "changelog": {
-                    "$ref": "#/definitions/changelogConfiguration",
-                    "description": "The 'changelog' property encapsulates all settings for the ChangeLog tool."
-                }
-            },
-            "additionalProperties": true
-        },
-        "changelogConfiguration": {
-            "type": "object",
-            "properties": {
-                "scopes": {
-                    "type": "object",
-                    "patternProperties": {
-                        ".*": {
-                            "$ref": "#/definitions/scopeConfiguration"
-                        }
-                    },
-                    "default" : { },
-                    "title": "Scopes",
-                    "description": "Sets preferences on how  Conventional Commit scopes are processed."
-                },
-                "tagPatterns": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "default": [
-                        "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
-                        "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
-                    ],
-                    "uniqueItems": true,
-                    "title": "Tag Patterns",
-                    "description": "Controls how versions are read from a git repository's tags. Defines a list of regular expressions that are used to extract the version from a tag name."
-                },
-                "outputPath": {
-                    "type": "string",
-                    "default" : "changelog.md",
-                    "title": "Output Path",
-                    "description": "Specifies the output path for the generated change log."
-                },
-                "footers": {
-                    "type": "object",
-                    "patternProperties": {
-                        ".*": {
-                            "$ref": "#/definitions/footerConfiguration"
-                        }
-                    },
-                    "properties": {
-                        "see-also": {
-                            "$ref": "#/definitions/footerConfiguration",
-                            "default": {
-                                "displayName": "See Also"
-                            }
-                        },
-                        "closes": {
-                            "$ref": "#/definitions/footerConfiguration",
-                            "default": {
-                                "displayName": "Closes"
-                            }
-                        },
-                        "fixes": {
-                            "$ref": "#/definitions/footerConfiguration",
-                            "default": {
-                                "displayName": "Fixes"
-                            }
-                        },
-                        "co-authored-by": {
-                            "$ref": "#/definitions/footerConfiguration",
-                            "default": {
-                                "displayName": "Co-authored by"
-                            }
-                        },
-                        "reviewed-by": {
-                            "$ref": "#/definitions/footerConfiguration",
-                            "default": {
-                                "displayName": "Reviewed by"
-                            }
-                        },
-                        "pull-request": {
-                            "$ref": "#/definitions/footerConfiguration",
-                            "default": {
-                                "displayName": "Pull Request"
-                            }
-                        },
-                        "merge-request": {
-                            "$ref": "#/definitions/footerConfiguration",
-                            "default": {
-                                "displayName": "Merge Request"
-                            }
-                        }
-                    },
-                    "title": "Footers",
-                    "description": "Sets preferences on how Conventional Commit footers are processed."
-                },
-                "integrations": {
-                    "$ref": "#/definitions/integrationsConfiguration",
-                    "description": "Specifies settings for integration providers."
-                },
-                "versionRange": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "title": "Version Range",
-                    "description": "Limits the range of versions to include in the change log. By default, all versions are included."
-                },
-                "currentVersion": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": null,
-                    "title": "Current Version",
-                    "description": "Specifies the version for the current commit. When specified, the current commit is included in the change log as the specified verison in addition to the versions read from the git repository's tags."
-                },
-                "template": {
-                    "$ref": "#/definitions/templateConfiguration",
-                    "description": "Specifies settings for templates."
-                },
-                "entryTypes": {
-                    "type": "object",
-                    "patternProperties": {
-                        ".*": {
-                            "$ref": "#/definitions/entryTypeConfiguration"
-                        }
-                    },
-                    "properties": {
-                        "feat": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "New Features",
-                                "priority": 100
-                            }
-                        },
-                        "fix": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Bug Fixes",
-                                "priority": 90
-                            }
-                        },
-                        "perf": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Performance Improvements",
-                                "priority": 80
-                            }
-                        },
-                        "docs": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Documentation Changes",
-                                "priority": 70
-                            }
-                        },
-                        "refactor": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Code Refactorings",
-                                "priority": 60
-                            }
-                        },
-                        "test": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Test Changes",
-                                "priority": 50
-                            }
-                        },
-                        "build": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Build System and Dependency Changes",
-                                "priority": 40
-                            }
-                        },
-                        "ci": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Continuous Integration System Changes",
-                                "priority": 30
-                            }
-                        },
-                        "style": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Style Changes",
-                                "priority": 20
-                            }
-                        },
-                        "chore": {
-                            "$ref": "#/definitions/entryTypeConfiguration",
-                            "default": {
-                                "displayName": "Chores",
-                                "priority": 10
-                            }
-                        }
-                    },
-                    "title": "Entry types",
-                    "description": "Specifies settings for Conventional Commit message types."
-                },
-                "parser": {
-                    "$ref": "#/definitions/parserConfiguration",
-                    "description": "Specifies settings on how Conventional Commit messages are parsed."
-                },
-                "filter": {
-                    "$ref": "#/definitions/filterConfiguration",
-                    "description": "Specifies which change log entries to include in the output"
-                }
-            },
-            "additionalProperties": false
-        },
-        "scopeConfiguration": {
-            "type": "object",
-            "properties": {
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "changelog": {
+      "type": "object",
+      "properties": {
+        "scopes": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "properties": {
                 "displayName": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "description": "Specifies the display name of the scope. When no display name is configured, the scope's name is used as display name."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Scope Display Name"
                 }
-            },
-            "additionalProperties": false
+              }
+            }
+          }
         },
-        "footerConfiguration": {
-            "type": "object",
-            "properties": {
+        "tagPatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
+            "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
+          ],
+          "uniqueItems": true,
+          "title": "Tag Patterns"
+        },
+        "outputPath": {
+          "type": "string",
+          "default": "changelog.md",
+          "title": "Output Path"
+        },
+        "footers": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "properties": {
                 "displayName": {
-                    "type": "string",
-                    "description": "Specifies the display name of the footer. When no display name is configured, the footer's name is used as display name."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Footer Display Name"
                 }
-            },
-            "additionalProperties": false
-        },
-        "integrationsConfiguration": {
-            "type": "object",
-            "properties": {
-                "provider": {
-                    "type": "string",
-                    "enum": [
-                        "None",
-                        "GitHub",
-                        "GitLab"
-                    ],
-                    "default": "None",
-                    "title": "Integration Provider",
-                    "description": "Specifies the integration provider to use."
-                },
-                "github": {
-                    "$ref": "#/definitions/githubIntegrationConfiguration",
-                    "description": "Specifies settings that apply to the GitHub integration provider."
-                },
-                "gitlab": {
-                    "$ref": "#/definitions/gitlabIntegrationConfiguration",
-                    "description": "Specifies settings that apply to the GitLab integration provider."
+              }
+            }
+          },
+          "properties": {
+            "closes": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Footer Display Name"
                 }
+              },
+              "default": {
+                "displayName": "Closes"
+              }
             },
-            "additionalProperties": false
+            "co-authored-by": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Footer Display Name"
+                }
+              },
+              "default": {
+                "displayName": "Co-authored by"
+              }
+            },
+            "fixes": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Footer Display Name"
+                }
+              },
+              "default": {
+                "displayName": "Fixes"
+              }
+            },
+            "merge-request": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Footer Display Name"
+                }
+              },
+              "default": {
+                "displayName": "Merge Request"
+              }
+            },
+            "pull-request": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Footer Display Name"
+                }
+              },
+              "default": {
+                "displayName": "Pull Request"
+              }
+            },
+            "reviewed-by": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Footer Display Name"
+                }
+              },
+              "default": {
+                "displayName": "Reviewed by"
+              }
+            },
+            "see-also": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Footer Display Name"
+                }
+              },
+              "default": {
+                "displayName": "See Also"
+              }
+            }
+          }
         },
-        "githubIntegrationConfiguration": {
-            "type": "object",
-            "properties": {
+        "integrations": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": [
+                "None",
+                "GitHub",
+                "GitLab"
+              ],
+              "default": "None",
+              "title": "Integration Provider"
+            },
+            "github": {
+              "type": "object",
+              "properties": {
                 "accessToken": {
-                    "type": "null",
-                    "default": null,
-                    "title": "GitHub Access Token",
-                    "description": "Specifies the access token to use for accessing the GitHub API.\r\n❌ While it is possible to set the access token in the configuration file, the command line parameter or environment variable options should be used instead."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "GitHub Access Token"
                 },
                 "remoteName": {
-                    "type": "string",
-                    "default" : "origin",
-                    "title": "GitHub Remote Name",
-                    "description": "Specifies the name of the git remote to use for determining the GitHub project information. Setting has no effect if 'host', 'owner' and 'repository' are set."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": "origin",
+                  "title": "GitHub Remote Name"
                 },
                 "host": {
-                    "type": ["string", "null"],
-                    "default": null,
-                    "title": "GitHub Host Name",
-                    "description": "Specifies the host name of the GitHub server to use. When no value is set, the host name will be read from the git repository's remote url (as specified in the 'remoteName' setting)."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "GitHub Host"
                 },
                 "owner": {
-                    "type":["string", "null"],
-                    "default" : null,
-                    "title": "GitHub Project Owner Name",
-                    "description": "Specifies the name of the owner (user or organization) of the GitHub repository to use. When no value is set, the owner name will be read from the git repository's remote url (as specified in the 'remoteName' setting)."
-
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "GitHub Repository Owner"
                 },
-                "repository" : {
-                    "type": ["string", "null"],
-                    "default": null,
-                    "title": "GitHub Repository Name",
-                    "description": "Specifies the name of the GitHub repository to use.  When no value is set, the repository name will be read from the git repository's remote url  (as specified in the 'remoteName' setting)."
+                "repository": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "GitHub Repository Name"
                 }
+              }
             },
-            "additionalProperties": false
-        },
-        "gitlabIntegrationConfiguration": {
-            "type": "object",
-            "properties": {
+            "gitlab": {
+              "type": "object",
+              "properties": {
                 "accessToken": {
-                    "type": "null",
-                    "default": null,
-                    "title": "GitLab Access Token",
-                    "description": "Specifies the access token to use for accessing the GitLab API.\r\n❌ While it is possible to set the access token in the configuration file, the command line parameter or environment variable options should be used instead."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "GitLab Access Token"
                 },
                 "remoteName": {
-                    "type": "string",
-                    "default" : "origin",
-                    "title": "GitLab Remote Name",
-                    "description": "Specifies the name of the git remote to use for determining the GitLab project information. Setting has no effect if 'host', 'namespace' and 'project' are set."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": "origin",
+                  "title": "GitLab Remote Name"
                 },
                 "host": {
-                    "type": ["string", "null"],
-                    "default": null,
-                    "title": "GitLab Host Name",
-                    "description": "Specifies the host name of the GitLab server to use. When no value is set, the host name will be read from the git repository's remote url (as specified in the 'remoteName' setting)."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "GitLab Host"
                 },
                 "namespace": {
-                    "type":["string", "null"],
-                    "default" : null,
-                    "title": "GitLab Project Namespace",
-                    "description": "Specifies the namespace (user or group/subgroup) of the repository on GitLab to use. When no value is set, the namespace will be read from the git repository's remote url (as specified in the 'remoteName' setting)."
-
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "GitLab Namespace"
                 },
-                "project" : {
-                    "type": ["string", "null"],
-                    "default": null,
-                    "title": "GitLab Project Name",
-                    "description": "Specifies the name of project on GitLab.  When no value is set, the project name name will be read from the git repository's remote url  (as specified in the 'remoteName' setting)."
+                "project": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "GitLab Project Name"
                 }
-            },
-            "additionalProperties": false
+              }
+            }
+          }
         },
-        "templateConfiguration": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "enum": [
-                        "Default",
-                        "GitHubRelease",
-                        "GitLabRelease"
-                    ],
-                    "default": "Default",
-                    "title": "Template Name",
-                    "description": "Sets the template to use for rendering the change log."
-                },
-                "default": {
-                    "$ref": "#/definitions/defaultTemplateConfiguration",
-                    "description": "Sets settings specific to the default template."
-                }
-            },
-            "additionalProperties": false
+        "versionRange": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "title": "Version Range"
         },
-        "defaultTemplateConfiguration": {
-            "type": "object",
-            "properties": {
+        "currentVersion": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null,
+          "title": "Current Version"
+        },
+        "template": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "enum": [
+                "Default",
+                "GitLabRelease",
+                "GitHubRelease"
+              ],
+              "default": "Default",
+              "title": "Template Name"
+            },
+            "default": {
+              "type": "object",
+              "properties": {
                 "markdownPreset": {
-                    "type": "string",
-                    "enum": [
-                        "Default",
-                        "MkDocs"
-                    ],
-                    "title": "Markdown Preset (Default Template)",
-                    "description": "Controls serialization of Markdown when using the default template."
+                  "type": "string",
+                  "enum": [
+                    "Default",
+                    "MkDocs"
+                  ],
+                  "default": "Default",
+                  "title": "Default Template Markdown Preset"
                 }
-            },
-            "additionalProperties": false
+              }
+            }
+          }
         },
-        "entryTypeConfiguration": {
-            "type": "object",
-            "properties": {
+        "entryTypes": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "properties": {
                 "displayName": {
-                    "type": "string",
-                    "description": "The display name for the change type, e.g. 'New Features' for 'feat'."
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
                 },
                 "priority": {
-                    "type": "integer",
-                    "description": "Configures the order with which entries of this type are shown in the changelog (entry types with higher priority shown first"
+                  "type": "integer",
+                  "title": "Entry Type Priority"
                 }
-            },
-            "additionalProperties": false
-        },
-        "parserConfiguration": {
-            "type": "object",
-            "properties": {
-                "mode": {
-                    "type": "string",
-                    "enum": [
-                        "Strict",
-                        "Loose"
-                    ],
-                    "title": "Parser Mode",
-                    "description": "Controls how lenient the commit message parser treats commit messages."
-                }
-            },
-            "additionalProperties": false
-        },
-        "filterConfiguration": {
-            "type": "object",
-            "properties": {
-                "include": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/filterExpression"
-                    },
-                    "default": [
-                        { "type": "feat" },
-                        { "type": "fix" }
-                    ],
-                    "title": "Include Expressions",
-                    "description": "Defines which change log entries to include in the output. All entries that match *any* of the specified include expressions are included. After all includes were evaluated, the 'exclude' expressions are applied to the already filtered list of change log entries."
-                },
-                "exclude": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/filterExpression"
-                    },
-                    "default": [],
-                    "title": "Exclude Expression",
-                    "description": "Defines oen or more filter expressions to remove change log entries matched by the 'include' patterns. A change log entry will be removed from the output, if *any* of the specified 'exclude' expressions match the entry."
-                }
-            },
-            "description": "Specifies one or more 'include' and 'exclude' expressions to define a filter for a change log."
-        },
-        "filterExpression": {
-            "type": "object",
-            "properties": {
-                "type": {
-                    "type": "string",
-                    "default": "*",
-                    "title": "Commit Message Type",
-                    "description": "Matches a change log entry's type. Supports wildcards."
-                },
-                "scope": {
-                    "type": "string",
-                    "default": "*",
-                    "title": "Commit Message Scope",
-                    "description": "Matches a change log entry's scope. Supports wildcards."
-                }
+              }
             }
+          },
+          "properties": {
+            "build": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Build System and Dependency Changes",
+                "priority": 40
+              }
+            },
+            "chore": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Chores",
+                "priority": 10
+              }
+            },
+            "ci": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Continuous Integration System Changes",
+                "priority": 30
+              }
+            },
+            "docs": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Documentation Changes",
+                "priority": 70
+              }
+            },
+            "feat": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "New Features",
+                "priority": 100
+              }
+            },
+            "fix": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Bug Fixes",
+                "priority": 90
+              }
+            },
+            "perf": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Performance Improvements",
+                "priority": 80
+              }
+            },
+            "refactor": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Code Refactorings",
+                "priority": 60
+              }
+            },
+            "style": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Style Changes",
+                "priority": 20
+              }
+            },
+            "test": {
+              "type": "object",
+              "properties": {
+                "displayName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "title": "Entry Type Display Name"
+                },
+                "priority": {
+                  "type": "integer",
+                  "title": "Entry Type Priority"
+                }
+              },
+              "default": {
+                "displayName": "Test Changes",
+                "priority": 50
+              }
+            }
+          }
+        },
+        "parser": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "Strict",
+                "Loose"
+              ],
+              "default": "Loose",
+              "title": "Parser Mode"
+            }
+          }
+        },
+        "filter": {
+          "type": "object",
+          "properties": {
+            "include": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "title": "Filter Type Expression"
+                  },
+                  "scope": {
+                    "type": "string",
+                    "title": "Filter Scope Expression"
+                  }
+                }
+              },
+              "title": "Filter Include Expressions"
+            },
+            "exclude": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "title": "Filter Type Expression"
+                  },
+                  "scope": {
+                    "type": "string",
+                    "title": "Filter Scope Expression"
+                  }
+                }
+              },
+              "title": "Filter Exclude Expressions"
+            }
+          },
+          "default": {
+            "include": [
+              {
+                "type": "feat",
+                "scope": "*"
+              },
+              {
+                "type": "fix",
+                "scope": "*"
+              }
+            ],
+            "exclude": []
+          },
+          "title": "Filter"
         }
+      }
     }
+  }
 }
