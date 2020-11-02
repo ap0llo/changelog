@@ -3,6 +3,7 @@ using System.Reflection;
 using CommandLine;
 using FluentValidation;
 using FluentValidation.Internal;
+using Grynwald.ChangeLog.Configuration;
 using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Validation
@@ -21,8 +22,8 @@ namespace Grynwald.ChangeLog.Validation
             {
                 if (member is PropertyInfo property)
                 {
-                    // If the property has a [ValidationDisplayName] attribute, use value defined here
-                    var displayName = property?.GetCustomAttribute<ValidationDisplayNameAttribute>()?.DisplayName;
+                    // If the property has a [SettingDisplayName] attribute, use value defined here
+                    var displayName = property?.GetCustomAttribute<SettingDisplayNameAttribute>()?.DisplayName;
                     if (!String.IsNullOrEmpty(displayName))
                     {
                         return displayName;

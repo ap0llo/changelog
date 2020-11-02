@@ -340,5 +340,6 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/fsharp,visualstudio
-src/ChangeLog/Properties/launchSettings.json
+
+launchSettings.json
 src/ChangeLog.Test/Tasks/*.received.txt
