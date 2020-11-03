@@ -84,8 +84,8 @@ namespace docs
             var success = true;
 
             var resultsTable = new Table()
-                .SetBorder(TableBorder.Square)
-                .SetBorderColor(Color.White)
+                .Border(TableBorder.Square)
+                .BorderColor(Color.White)
                 .AddColumn(new TableColumn("[u]File[/]").LeftAligned())
                 .AddColumn(new TableColumn("[u]Result[/]").LeftAligned())
                 .AddColumn(new TableColumn("[u]LineNumber[/]").LeftAligned())
