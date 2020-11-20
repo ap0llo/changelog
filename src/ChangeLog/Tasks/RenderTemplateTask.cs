@@ -32,7 +32,7 @@ namespace Grynwald.ChangeLog.Tasks
             var outputPath = m_Configuration.GetFullOutputPath();
 
             var outputDirectory = Path.GetDirectoryName(outputPath);
-            Directory.CreateDirectory(outputDirectory);
+            Directory.CreateDirectory(outputDirectory!);
 
             m_Logger.LogInformation($"Saving changelog to '{outputPath}'");
             try

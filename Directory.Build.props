@@ -17,7 +17,7 @@
 
 	<!-- Compiler settings-->
 	<PropertyGroup>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>9.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
@@ -39,7 +39,7 @@
 	</ItemGroup>
 
 	
-	<!-- Disable nullable support on .Net Core 2.1 -->
+	<!-- Disable nullable support on .NET Core 2.1 -->
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
 		<Nullable>disable</Nullable>
 		<NoWarn>8632</NoWarn>  <!-- Suppress warning about nullable annotation in the source code although nullable is disabled-->
