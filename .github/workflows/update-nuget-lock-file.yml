@@ -1,10 +1,10 @@
-name: Update NuGet lock files 
+name: Update NuGet lock files
 
 on:
   push:
     branches:
     - renovate/*
-    
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,8 +12,8 @@ jobs:
 
     - name: Set Environment Variables
       run: |-
-        echo "::set-env name=DOTNET_CLI_TELEMETRY_OPTOUT::1"
-        echo "::set-env name=DOTNET_NOLOGO::1"
+        echo "DOTNET_CLI_TELEMETRY_OPTOUT=1" >> $GITHUB_ENV
+        echo "DOTNET_NOLOGO=1" >> $GITHUB_ENV
 
     - name: Install .NET SDK
       uses: actions/setup-dotnet@v1
@@ -28,7 +28,7 @@ jobs:
     - name: Update lock files
       run: |-
         dotnet restore ./ChangeLog.sln
-      
+
     - name: Commit and push if lock file was changed
       run: |-
         git diff
