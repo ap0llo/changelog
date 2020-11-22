@@ -38,9 +38,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[3.0.0, )",
-        "resolved": "3.0.0",
-        "contentHash": "AJjPgZg6PhH7FBVu3PbPC6NCmODJaNUg2xGf+I7AM2WmrKzs7EyL0/43VyIaIsonefrSSn1iAHML9/kY+z7YmQ==",
+        "requested": "[3.0.1, )",
+        "resolved": "3.0.1",
+        "contentHash": "+V6M1DSnbs9BMhCB+6ViW+YgNp9JfYE0ViTbWpQEv7O1GPLpZtmtvrGpYNaLBy5LWu/g/bFJjWjZ9QlvTlE88A==",
         "dependencies": {
           "Microsoft.CSharp": "4.5.0",
           "System.Runtime.CompilerServices.Unsafe": "4.7.1",
