@@ -121,16 +121,16 @@
       },
       "LibGit2Sharp": {
         "type": "Transitive",
-        "resolved": "0.27.0-preview-0034",
-        "contentHash": "Lv+zCR/OlbvotWYefRwHV0FDE0z+TVXUVbab9HdG4RG8MqaMYz4kL0cjs+DaCz2o7Qr1jpDMa/W44j4eMkhBVw==",
+        "resolved": "0.27.0-preview-0096",
+        "contentHash": "ANrnLBCGLtKSA0PSN4YdBo20FzE79GecdZeo6sRSWhMkI4BbENtzLSUqL1uzmNsahoepcXplQPHyMfzkGuYV1A==",
         "dependencies": {
-          "LibGit2Sharp.NativeBinaries": "[2.0.298]"
+          "LibGit2Sharp.NativeBinaries": "[2.0.312]"
         }
       },
       "LibGit2Sharp.NativeBinaries": {
         "type": "Transitive",
-        "resolved": "2.0.298",
-        "contentHash": "xcjafpXRiv2mvSUTOVpv6SaFZi5udUtZ+DXxmBTL4aQpyrb2mwMqkVw3LYL06HLCaBV5GmC0/8R8CGvMmRx0Uw=="
+        "resolved": "2.0.312",
+        "contentHash": "sL4OLOblkrLgDW+zE0OL4h9DYVCyZTlA4CppUCgqU8Ud/+Ah+Wxc3EtGpGjmH6xjDMRRpmHUFgAgzj+hzZTHZA=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -1254,7 +1254,7 @@
           "Grynwald.Utilities": "1.6.11-pre",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
           "Grynwald.Utilities.Logging": "1.6.11-pre",
-          "LibGit2Sharp": "0.27.0-preview-0034",
+          "LibGit2Sharp": "0.27.0-preview-0096",
           "Microsoft.Extensions.Configuration": "5.0.0",
           "Microsoft.Extensions.Configuration.Binder": "5.0.0",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "5.0.0",
