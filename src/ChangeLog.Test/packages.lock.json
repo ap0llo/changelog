@@ -64,12 +64,12 @@
       },
       "Moq": {
         "type": "Direct",
-        "requested": "[4.15.1, )",
-        "resolved": "4.15.1",
-        "contentHash": "nqN2hVf28peFnkVLqtSpRgNRqoRCwK1dB94UmjUi51ksTq3bKlj7LtpmzCbb2PITrzQTrLmNya3Vu3mUK61vZw==",
+        "requested": "[4.15.2, )",
+        "resolved": "4.15.2",
+        "contentHash": "wegOsLAWslb4Qm/ER1hl7pd9M5fiolsnSVEZuNZgVl8iVGm/PRHXrLY/2YCnFmNHnMiX3X/+em404mGZi2ofQw==",
         "dependencies": {
           "Castle.Core": "4.4.0",
-          "System.Threading.Tasks.Extensions": "4.5.1"
+          "System.Threading.Tasks.Extensions": "4.5.4"
         }
       },
       "Nerdbank.GitVersioning": {
@@ -1530,12 +1530,12 @@
       },
       "Moq": {
         "type": "Direct",
-        "requested": "[4.15.1, )",
-        "resolved": "4.15.1",
-        "contentHash": "nqN2hVf28peFnkVLqtSpRgNRqoRCwK1dB94UmjUi51ksTq3bKlj7LtpmzCbb2PITrzQTrLmNya3Vu3mUK61vZw==",
+        "requested": "[4.15.2, )",
+        "resolved": "4.15.2",
+        "contentHash": "wegOsLAWslb4Qm/ER1hl7pd9M5fiolsnSVEZuNZgVl8iVGm/PRHXrLY/2YCnFmNHnMiX3X/+em404mGZi2ofQw==",
         "dependencies": {
           "Castle.Core": "4.4.0",
-          "System.Threading.Tasks.Extensions": "4.5.1"
+          "System.Threading.Tasks.Extensions": "4.5.4"
         }
       },
       "Nerdbank.GitVersioning": {
@@ -3485,12 +3485,12 @@
       },
       "Moq": {
         "type": "Direct",
-        "requested": "[4.15.1, )",
-        "resolved": "4.15.1",
-        "contentHash": "nqN2hVf28peFnkVLqtSpRgNRqoRCwK1dB94UmjUi51ksTq3bKlj7LtpmzCbb2PITrzQTrLmNya3Vu3mUK61vZw==",
+        "requested": "[4.15.2, )",
+        "resolved": "4.15.2",
+        "contentHash": "wegOsLAWslb4Qm/ER1hl7pd9M5fiolsnSVEZuNZgVl8iVGm/PRHXrLY/2YCnFmNHnMiX3X/+em404mGZi2ofQw==",
         "dependencies": {
           "Castle.Core": "4.4.0",
-          "System.Threading.Tasks.Extensions": "4.5.1"
+          "System.Threading.Tasks.Extensions": "4.5.4"
         }
       },
       "Nerdbank.GitVersioning": {
