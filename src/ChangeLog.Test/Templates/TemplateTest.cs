@@ -485,7 +485,6 @@ namespace Grynwald.ChangeLog.Test.Templates
             Approve(changeLog, config);
         }
 
-
         [Fact]
         public void ChangeLog_is_converted_to_expected_Markdown_19()
         {
@@ -535,6 +534,30 @@ namespace Grynwald.ChangeLog.Test.Templates
                         new ChangeLogEntryFooter(
                             new CommitMessageFooterName("See-Also"),
                             new CustomTextElementWithLink())
+                    });
+
+            var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
+
+            Approve(changeLog, config);
+        }
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Markdown_21()
+        {
+            // Footers which's value is a instance of CommitReferenceTextElement are rendered as code spans
+
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var entry1 = GetChangeLogEntry(type: "fix", summary: "Some bug fix", commit: TestGitIds.Id1);
+            var entry2 = GetChangeLogEntry(
+                    type: "feat",
+                    summary: "Some feature",
+                    commit: TestGitIds.Id2,
+                    footers: new[]
+                    {
+                        new ChangeLogEntryFooter(
+                            new CommitMessageFooterName("See-Also"),
+                            new CommitReferenceTextElement("some-text", TestGitIds.Id1))
                     });
 
             var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };

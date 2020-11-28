@@ -341,14 +341,19 @@ namespace Grynwald.ChangeLog.Templates
                 //  - Footers consists of a name and a value.
                 //  - By default, footers are rendered as a bullet list where each item uses the format <NAME>: <VALUE>
                 //  - Footer values are instances of TextElement but might be custom implementations.
-                //    Two special cases are handled here
+                //    Three special cases are handled here
+                //      - If the footer value is an instance of CommitReferenceTextElement,
+                //        the footer value is rendered as Markdown code span
                 //      - If the footer value implements IWebLinkTextElement (no matter what the actual type is),
                 //        the footer is rendered as a Markdown link
                 //      - If the footer is an instance of ChangeLogEntryReferenceTextElement,
                 //        the footer is rendered as an intra-page link to the referenced change log entry.
                 //        In that case, the referenced entry's summary is used instead of the footer's value in the output
 
-                MdSpan text = footer.Value.Text;
+                MdSpan text = footer.Value is CommitReferenceTextElement
+                    ? new MdCodeSpan(footer.Value.Text)
+                    : footer.Value.Text;
+
                 if (footer.Value is IWebLinkTextElement webLink)
                 {
                     text = new MdLinkSpan(text, webLink.Uri);

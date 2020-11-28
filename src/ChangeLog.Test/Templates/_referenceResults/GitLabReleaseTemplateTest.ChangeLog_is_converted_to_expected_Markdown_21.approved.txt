@@ -1,0 +1,18 @@
+﻿#### New Features
+
+- [Some feature](#some-feature)
+
+#### Bug Fixes
+
+- [Some bug fix](#some-bug-fix)
+
+#### Details
+
+##### Some feature
+
+- See Also: `some-text`
+- Commit: `efgh567`
+
+##### Some bug fix
+
+- Commit: `abcd123`
