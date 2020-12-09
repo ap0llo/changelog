@@ -48,9 +48,9 @@
       },
       "Spectre.Console": {
         "type": "Direct",
-        "requested": "[0.32.1, )",
-        "resolved": "0.32.1",
-        "contentHash": "VoLUEMK4govB2O6rgh80voFWptp8DBl0JrNVvGsRtuTYG+MYQsFlKhfk0dXuUmWdGs3aXp336jpPQ7jjgXvlrw==",
+        "requested": "[0.33.0, )",
+        "resolved": "0.33.0",
+        "contentHash": "dGHOdW9S0ZI3ltieuDkIuq0vHUZgGjYxhZxvm85/Z6rO1EvrBF4KX7k2j7X+7LVL/OLmCgYEJAdtWzcOqVtdFw==",
         "dependencies": {
           "Wcwidth": "0.2.0"
         }
