@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using Grynwald.ChangeLog.Git;
 using Grynwald.Utilities.IO;
 using Xunit;
@@ -14,16 +12,21 @@ namespace Grynwald.ChangeLog.Test.Git
     /// </summary>
     public class GitRepositoryTest : IDisposable
     {
-        private readonly TemporaryDirectory m_WorkingDirectory = new TemporaryDirectory();
-        private readonly ITestOutputHelper m_TestOutputHelper;
+        private readonly TemporaryDirectory m_WorkingDirectory;
+
+        private GitWrapper Git { get; }
 
         public GitRepositoryTest(ITestOutputHelper testOutputHelper)
         {
-            m_TestOutputHelper = testOutputHelper ?? throw new ArgumentNullException(nameof(testOutputHelper));
+            if (testOutputHelper is null)
+                throw new ArgumentNullException(nameof(testOutputHelper));
 
-            Git("init");
-            Git("config --local user.name Example");
-            Git("config --local user.email user@example.com");
+            m_WorkingDirectory = new TemporaryDirectory();
+            Git = new GitWrapper(m_WorkingDirectory, testOutputHelper);
+
+            Git.Init();
+            Git.Config("user.name", "Example");
+            Git.Config("user.email", "user@example.com");
         }
 
         public void Dispose() => m_WorkingDirectory.Dispose();
@@ -57,8 +60,8 @@ namespace Grynwald.ChangeLog.Test.Git
         public void Remotes_returns_expected_remotes_02()
         {
             // ARRANGE
-            Git("remote add origin https://example.com/origin");
-            Git("remote add upstream https://example.com/upstream");
+            Git.AddRemote("origin", "https://example.com/origin");
+            Git.AddRemote("upstream", "https://example.com/upstream");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -76,7 +79,7 @@ namespace Grynwald.ChangeLog.Test.Git
         public void Head_returns_expected_commit()
         {
             // ARRANGE            
-            var expectedHead = GitCommit("Initialize repository");
+            var expectedHead = Git.Commit("Initialize repository");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -106,13 +109,13 @@ namespace Grynwald.ChangeLog.Test.Git
         public void GetTags_returns_expected_tags_02()
         {
             // ARRANGE
-            var commit1 = GitCommit("First commit");
-            var commit2 = GitCommit("Second commit");
-            var commit3 = GitCommit("Third commit");
+            var commit1 = Git.Commit("First commit");
+            var commit2 = Git.Commit("Second commit");
+            var commit3 = Git.Commit("Third commit");
 
-            var tag1 = GitTag("tag1", commit1);
-            var tag2 = GitTag("tag2", commit2);
-            var tag3 = GitTag("tag3", commit3);
+            var tag1 = Git.Tag("tag1", commit1);
+            var tag2 = Git.Tag("tag2", commit2);
+            var tag3 = Git.Tag("tag3", commit3);
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -131,7 +134,7 @@ namespace Grynwald.ChangeLog.Test.Git
         public void GetCommits_returns_the_expected_commits_01()
         {
             // ARRANGE
-            var expectedCommit = GitCommit("commit 1");
+            var expectedCommit = Git.Commit("commit 1");
             using var sut = new GitRepository(m_WorkingDirectory);
 
             // ACT 
@@ -147,9 +150,9 @@ namespace Grynwald.ChangeLog.Test.Git
         public void GetCommits_returns_the_expected_commits_02()
         {
             // ARRANGE
-            var expectedCommit1 = GitCommit("commit 1");
-            var expectedCommit2 = GitCommit("commit 2");
-            var expectedCommit3 = GitCommit("commit 3");
+            var expectedCommit1 = Git.Commit("commit 1");
+            var expectedCommit2 = Git.Commit("commit 2");
+            var expectedCommit3 = Git.Commit("commit 3");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -168,13 +171,13 @@ namespace Grynwald.ChangeLog.Test.Git
         public void GetCommits_returns_the_expected_commits_03()
         {
             // ARRANGE
-            var expectedCommit1 = GitCommit("commit 1");
-            Git("checkout -b branch1");
-            var expectedCommit2 = GitCommit("commit 2");
-            var expectedCommit3 = GitCommit("commit 3");
-            Git("checkout -");
-            var expectedCommit4 = GitCommit("commit 4");
-            var expectedCommit5 = GitCommit("commit 5");
+            var expectedCommit1 = Git.Commit("commit 1");
+            Git.CheckoutNewBranch("branch1");
+            var expectedCommit2 = Git.Commit("commit 2");
+            var expectedCommit3 = Git.Commit("commit 3");
+            Git.Checkout("-");
+            var expectedCommit4 = Git.Commit("commit 4");
+            var expectedCommit5 = Git.Commit("commit 5");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -193,10 +196,10 @@ namespace Grynwald.ChangeLog.Test.Git
         public void GetCommits_returns_the_expected_commits_04()
         {
             // ARRANGE
-            var expectedCommit1 = GitCommit("commit 1");
-            var expectedCommit2 = GitCommit("commit 2");
-            var expectedCommit3 = GitCommit("commit 3");
-            var expectedCommit4 = GitCommit("commit 4");
+            var expectedCommit1 = Git.Commit("commit 1");
+            var expectedCommit2 = Git.Commit("commit 2");
+            var expectedCommit3 = Git.Commit("commit 3");
+            var expectedCommit4 = Git.Commit("commit 4");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -214,13 +217,13 @@ namespace Grynwald.ChangeLog.Test.Git
         public void GetCommits_returns_the_expected_commits_05()
         {
             // ARRANGE
-            var expectedCommit1 = GitCommit("commit 1");
-            Git("checkout -b branch1");
-            var expectedCommit2 = GitCommit("commit 2");
-            var expectedCommit3 = GitCommit("commit 3");
-            Git("checkout -");
-            var expectedCommit4 = GitCommit("commit 4");
-            var expectedCommit5 = GitCommit("commit 5");
+            var expectedCommit1 = Git.Commit("commit 1");
+            Git.CheckoutNewBranch("branch1");
+            var expectedCommit2 = Git.Commit("commit 2");
+            var expectedCommit3 = Git.Commit("commit 3");
+            Git.Checkout("-");
+            var expectedCommit4 = Git.Commit("commit 4");
+            var expectedCommit5 = Git.Commit("commit 5");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -260,8 +263,8 @@ namespace Grynwald.ChangeLog.Test.Git
         public void TryGetCommit_returns_the_expected_commit(int idLength)
         {
             // ARRANGE
-            var expectedCommit = GitCommit("Commit 1");
-            _ = GitCommit("Commit 2");
+            var expectedCommit = Git.Commit("Commit 1");
+            _ = Git.Commit("Commit 2");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -279,8 +282,8 @@ namespace Grynwald.ChangeLog.Test.Git
         public void TryGetCommit_returns_null_if_commit_cannot_be_found(string id)
         {
             // ARRANGE
-            _ = GitCommit("Commit 1");
-            _ = GitCommit("Commit 2");
+            _ = Git.Commit("Commit 1");
+            _ = Git.Commit("Commit 2");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -295,8 +298,8 @@ namespace Grynwald.ChangeLog.Test.Git
         public void TryGetCommit_is_case_insensitive()
         {
             // ARRANGE
-            var expectedCommit = GitCommit("Commit 1");
-            _ = GitCommit("Commit 2");
+            var expectedCommit = Git.Commit("Commit 1");
+            _ = Git.Commit("Commit 2");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -309,96 +312,6 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
 
-        private GitTag GitTag(string name, GitCommit commit)
-        {
-            Git($"tag {name} {commit.Id}");
-            return new GitTag(name, commit.Id);
-        }
 
-        private GitCommit GitCommit(string commitMessage)
-        {
-            Git($"commit --allow-empty -m \"{commitMessage}\"");
-            Git("config --local user.name", out var userName);
-            Git("config --local user.email", out var userEmail);
-            Git("rev-parse HEAD", out var commitId);
-            Git("rev-parse --short HEAD", out var abbreviatedCommitId);
-            Git("log -1 --pretty=\"format:%cI\" ", out var date);
-
-            return new GitCommit(
-                new GitId(commitId.Trim(), abbreviatedCommitId.Trim()),
-                $"{commitMessage}\n",
-                DateTime.Parse(date.Trim()),
-                new GitAuthor(userName.Trim(), userEmail.Trim())
-            );
-        }
-
-        private void Git(string command) =>
-            Git(command, out _, out _);
-
-        private void Git(string command, out string stdOut) =>
-            Git(command, out stdOut, out _);
-
-        private void Git(string command, out string stdOut, out string stdErr)
-        {
-            var startInfo = new ProcessStartInfo()
-            {
-                FileName = "git",
-                Arguments = command,
-                WorkingDirectory = m_WorkingDirectory,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
-            };
-
-            var stdOutBuilder = new StringBuilder();
-            var stdErrBuilder = new StringBuilder();
-
-            var process = Process.Start(startInfo);
-
-            if (process is null)
-                throw new InvalidOperationException("Failed to start git process. Process.Start() returned null");
-
-            process.ErrorDataReceived += (s, e) =>
-            {
-                if (e.Data is string)
-                    stdErrBuilder.AppendLine(e.Data);
-            };
-
-            process.OutputDataReceived += (s, e) =>
-            {
-                if (e.Data is string)
-                    stdOutBuilder.AppendLine(e.Data);
-            };
-
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            process.WaitForExit();
-
-            process.CancelErrorRead();
-            process.CancelOutputRead();
-
-            stdOut = stdOutBuilder.ToString();
-            stdErr = stdErrBuilder.ToString();
-
-            m_TestOutputHelper.WriteLine("--------------------------------");
-            m_TestOutputHelper.WriteLine($"Begin Command 'git {command}'");
-            m_TestOutputHelper.WriteLine("--------------------------------");
-            m_TestOutputHelper.WriteLine("StdOut:");
-            m_TestOutputHelper.WriteLine(stdOut);
-            m_TestOutputHelper.WriteLine("StdErr:");
-            m_TestOutputHelper.WriteLine(stdErr);
-            m_TestOutputHelper.WriteLine("--------------------------------");
-            m_TestOutputHelper.WriteLine($"End Command 'git {command}'");
-            m_TestOutputHelper.WriteLine("--------------------------------");
-
-
-            if (process.ExitCode != 0)
-            {
-                throw new Exception($"Command 'git {command}' completed with exit code {process.ExitCode}");
-            }
-
-        }
     }
 }
