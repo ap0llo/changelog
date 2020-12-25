@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Text;
+using System.Threading.Tasks;
+using CliWrap;
+using CliWrap.Buffered;
 using Grynwald.ChangeLog.Git;
 using Xunit.Abstractions;
 
@@ -32,19 +33,20 @@ namespace Grynwald.ChangeLog.Test.Git
         /// <summary>
         /// Initializes a new git repository in the working directory
         /// </summary>
-        public void Init() => Exec("init");
+        public Task InitAsync() => ExecAsync("init");
 
         /// <summary>
         /// Creates a new commit
         /// </summary>
-        public GitCommit Commit(string commitMessage)
+        public async Task<GitCommit> CommitAsync(string commitMessage)
         {
-            Exec($"commit --allow-empty -m \"{commitMessage}\"");
-            Exec("config --local user.name", out var userName);
-            Exec("config --local user.email", out var userEmail);
-            Exec("rev-parse HEAD", out var commitId);
-            Exec("rev-parse --short HEAD", out var abbreviatedCommitId);
-            Exec("log -1 --pretty=\"format:%cI\" ", out var date);
+            await ExecAsync($"commit --allow-empty -m \"{commitMessage}\"");
+            var userName = (await ExecAsync("config --local user.name")).StandardOutput;
+            var userEmail = (await ExecAsync("config --local user.email")).StandardOutput;
+
+            var commitId = (await ExecAsync("rev-parse HEAD")).StandardOutput;
+            var abbreviatedCommitId = (await ExecAsync("rev-parse --short HEAD")).StandardOutput;
+            var date = (await ExecAsync("log -1 --pretty=\"format:%cI\" ")).StandardOutput;
 
             return new GitCommit(
                 new GitId(commitId.Trim(), abbreviatedCommitId.Trim()),
@@ -57,101 +59,41 @@ namespace Grynwald.ChangeLog.Test.Git
         /// <summary>
         /// Creates a new git tag
         /// </summary>
-        public GitTag Tag(string name, GitCommit commit)
+        public async Task<GitTag> TagAsync(string name, GitCommit commit)
         {
-            Exec($"tag {name} {commit.Id}");
+            await ExecAsync($"tag {name} {commit.Id}");
             return new GitTag(name, commit.Id);
         }
 
         /// <summary>
         /// Sets the specified git setting to the specified value.
         /// </summary>
-        public void Config(string name, string value) => Exec($"config --local \"{name}\" \"{value}\"");
+        public Task ConfigAsync(string name, string value) => ExecAsync($"config --local \"{name}\" \"{value}\"");
 
         /// <summary>
         /// Adds the specified remote to the repository
         /// </summary>
-        public void AddRemote(string name, string url) => Exec($"remote add \"{name}\" \"{url}\"");
+        public Task AddRemoteAsync(string name, string url) => ExecAsync($"remote add \"{name}\" \"{url}\"");
 
         /// <summary>
         /// Perfoms a git checkout operation
         /// </summary>
         /// <param name="ref">The git reference to check out</param>
-        public void Checkout(string @ref) => Exec($"checkout \"{@ref}\"");
+        public Task CheckoutAsync(string @ref) => ExecAsync($"checkout \"{@ref}\"");
 
         /// <summary>
         /// Checks out a new branch created from the current HEAD commit
         /// </summary
-        public void CheckoutNewBranch(string branchName) => Exec($"checkout -b \"{branchName}\"");
+        public Task CheckoutNewBranchAsync(string branchName) => ExecAsync($"checkout -b \"{branchName}\"");
 
 
-        private void Exec(string command) =>
-            Exec(command, out _, out _);
-
-        private void Exec(string command, out string stdOut) =>
-            Exec(command, out stdOut, out _);
-
-        private void Exec(string command, out string stdOut, out string stdErr)
+        private Task<BufferedCommandResult> ExecAsync(string command)
         {
-            var startInfo = new ProcessStartInfo()
-            {
-                FileName = "git",
-                Arguments = command,
-                WorkingDirectory = m_WorkingDirectory,
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                CreateNoWindow = true
-            };
-
-            var stdOutBuilder = new StringBuilder();
-            var stdErrBuilder = new StringBuilder();
-
-            var process = Process.Start(startInfo);
-
-            if (process is null)
-                throw new InvalidOperationException("Failed to start git process. Process.Start() returned null");
-
-            process.ErrorDataReceived += (s, e) =>
-            {
-                if (e.Data is string)
-                    stdErrBuilder.AppendLine(e.Data);
-            };
-
-            process.OutputDataReceived += (s, e) =>
-            {
-                if (e.Data is string)
-                    stdOutBuilder.AppendLine(e.Data);
-            };
-
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            process.WaitForExit();
-
-            process.CancelErrorRead();
-            process.CancelOutputRead();
-
-            stdOut = stdOutBuilder.ToString();
-            stdErr = stdErrBuilder.ToString();
-
-            m_Output.WriteLine("--------------------------------");
-            m_Output.WriteLine($"Begin Command 'git {command}'");
-            m_Output.WriteLine("--------------------------------");
-            m_Output.WriteLine("StdOut:");
-            m_Output.WriteLine(stdOut);
-            m_Output.WriteLine("StdErr:");
-            m_Output.WriteLine(stdErr);
-            m_Output.WriteLine("--------------------------------");
-            m_Output.WriteLine($"End Command 'git {command}'");
-            m_Output.WriteLine("--------------------------------");
-
-
-            if (process.ExitCode != 0)
-            {
-                throw new Exception($"Command 'git {command}' completed with exit code {process.ExitCode}");
-            }
-
+            return Cli.Wrap("git")
+                .WithValidation(CommandResultValidation.ZeroExitCode)
+                .WithArguments(command)
+                .WithWorkingDirectory(m_WorkingDirectory)
+                .ExecuteBufferedWithTestOutputAsync(m_Output);
         }
     }
 }

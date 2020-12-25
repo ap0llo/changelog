@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Grynwald.ChangeLog.Git;
 using Grynwald.Utilities.IO;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Grynwald.ChangeLog.Test.Git
     /// <summary>
     /// Tests for <see cref="GitRepository"/>
     /// </summary>
-    public class GitRepositoryTest : IDisposable
+    public class GitRepositoryTest : IAsyncLifetime
     {
         private readonly TemporaryDirectory m_WorkingDirectory;
 
@@ -23,13 +24,22 @@ namespace Grynwald.ChangeLog.Test.Git
 
             m_WorkingDirectory = new TemporaryDirectory();
             Git = new GitWrapper(m_WorkingDirectory, testOutputHelper);
-
-            Git.Init();
-            Git.Config("user.name", "Example");
-            Git.Config("user.email", "user@example.com");
         }
 
-        public void Dispose() => m_WorkingDirectory.Dispose();
+
+        public async Task InitializeAsync()
+        {
+            await Git.InitAsync();
+            await Git.ConfigAsync("user.name", "Example");
+            await Git.ConfigAsync("user.email", "user@example.com");
+        }
+
+        public Task DisposeAsync()
+        {
+            m_WorkingDirectory.Dispose();
+            return Task.CompletedTask;
+        }
+
 
         [Theory]
         [InlineData(null)]
@@ -40,7 +50,6 @@ namespace Grynwald.ChangeLog.Test.Git
         {
             Assert.Throws<ArgumentException>(() => new GitRepository(repositoryPath));
         }
-
 
         [Fact]
         public void Remotes_returns_expected_remotes_01()
@@ -57,11 +66,11 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
-        public void Remotes_returns_expected_remotes_02()
+        public async Task Remotes_returns_expected_remotes_02()
         {
             // ARRANGE
-            Git.AddRemote("origin", "https://example.com/origin");
-            Git.AddRemote("upstream", "https://example.com/upstream");
+            await Git.AddRemoteAsync("origin", "https://example.com/origin");
+            await Git.AddRemoteAsync("upstream", "https://example.com/upstream");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -76,10 +85,10 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
-        public void Head_returns_expected_commit()
+        public async Task Head_returns_expected_commit()
         {
             // ARRANGE            
-            var expectedHead = Git.Commit("Initialize repository");
+            var expectedHead = await Git.CommitAsync("Initialize repository");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -106,16 +115,16 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
-        public void GetTags_returns_expected_tags_02()
+        public async Task GetTags_returns_expected_tags_02()
         {
             // ARRANGE
-            var commit1 = Git.Commit("First commit");
-            var commit2 = Git.Commit("Second commit");
-            var commit3 = Git.Commit("Third commit");
+            var commit1 = await Git.CommitAsync("First commit");
+            var commit2 = await Git.CommitAsync("Second commit");
+            var commit3 = await Git.CommitAsync("Third commit");
 
-            var tag1 = Git.Tag("tag1", commit1);
-            var tag2 = Git.Tag("tag2", commit2);
-            var tag3 = Git.Tag("tag3", commit3);
+            var tag1 = await Git.TagAsync("tag1", commit1);
+            var tag2 = await Git.TagAsync("tag2", commit2);
+            var tag3 = await Git.TagAsync("tag3", commit3);
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -129,12 +138,11 @@ namespace Grynwald.ChangeLog.Test.Git
             Assert.Contains(tags, t => t.Equals(tag3));
         }
 
-
         [Fact]
-        public void GetCommits_returns_the_expected_commits_01()
+        public async Task GetCommits_returns_the_expected_commits_01()
         {
             // ARRANGE
-            var expectedCommit = Git.Commit("commit 1");
+            var expectedCommit = await Git.CommitAsync("commit 1");
             using var sut = new GitRepository(m_WorkingDirectory);
 
             // ACT 
@@ -147,12 +155,12 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
-        public void GetCommits_returns_the_expected_commits_02()
+        public async Task GetCommits_returns_the_expected_commits_02()
         {
             // ARRANGE
-            var expectedCommit1 = Git.Commit("commit 1");
-            var expectedCommit2 = Git.Commit("commit 2");
-            var expectedCommit3 = Git.Commit("commit 3");
+            var expectedCommit1 = await Git.CommitAsync("commit 1");
+            var expectedCommit2 = await Git.CommitAsync("commit 2");
+            var expectedCommit3 = await Git.CommitAsync("commit 3");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -168,16 +176,16 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
-        public void GetCommits_returns_the_expected_commits_03()
+        public async Task GetCommits_returns_the_expected_commits_03()
         {
             // ARRANGE
-            var expectedCommit1 = Git.Commit("commit 1");
-            Git.CheckoutNewBranch("branch1");
-            var expectedCommit2 = Git.Commit("commit 2");
-            var expectedCommit3 = Git.Commit("commit 3");
-            Git.Checkout("-");
-            var expectedCommit4 = Git.Commit("commit 4");
-            var expectedCommit5 = Git.Commit("commit 5");
+            var expectedCommit1 = await Git.CommitAsync("commit 1");
+            await Git.CheckoutNewBranchAsync("branch1");
+            var expectedCommit2 = await Git.CommitAsync("commit 2");
+            var expectedCommit3 = await Git.CommitAsync("commit 3");
+            await Git.CheckoutAsync("-");
+            var expectedCommit4 = await Git.CommitAsync("commit 4");
+            var expectedCommit5 = await Git.CommitAsync("commit 5");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -193,13 +201,13 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
-        public void GetCommits_returns_the_expected_commits_04()
+        public async Task GetCommits_returns_the_expected_commits_04()
         {
             // ARRANGE
-            var expectedCommit1 = Git.Commit("commit 1");
-            var expectedCommit2 = Git.Commit("commit 2");
-            var expectedCommit3 = Git.Commit("commit 3");
-            var expectedCommit4 = Git.Commit("commit 4");
+            var expectedCommit1 = await Git.CommitAsync("commit 1");
+            var expectedCommit2 = await Git.CommitAsync("commit 2");
+            var expectedCommit3 = await Git.CommitAsync("commit 3");
+            var expectedCommit4 = await Git.CommitAsync("commit 4");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -214,16 +222,16 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
-        public void GetCommits_returns_the_expected_commits_05()
+        public async Task GetCommits_returns_the_expected_commits_05()
         {
             // ARRANGE
-            var expectedCommit1 = Git.Commit("commit 1");
-            Git.CheckoutNewBranch("branch1");
-            var expectedCommit2 = Git.Commit("commit 2");
-            var expectedCommit3 = Git.Commit("commit 3");
-            Git.Checkout("-");
-            var expectedCommit4 = Git.Commit("commit 4");
-            var expectedCommit5 = Git.Commit("commit 5");
+            var expectedCommit1 = await Git.CommitAsync("commit 1");
+            await Git.CheckoutNewBranchAsync("branch1");
+            var expectedCommit2 = await Git.CommitAsync("commit 2");
+            var expectedCommit3 = await Git.CommitAsync("commit 3");
+            await Git.CheckoutAsync("-");
+            var expectedCommit4 = await Git.CommitAsync("commit 4");
+            var expectedCommit5 = await Git.CommitAsync("commit 5");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -260,11 +268,11 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData(7)]
         [InlineData(23)]
         [InlineData(40)]
-        public void TryGetCommit_returns_the_expected_commit(int idLength)
+        public async Task TryGetCommit_returns_the_expected_commit(int idLength)
         {
             // ARRANGE
-            var expectedCommit = Git.Commit("Commit 1");
-            _ = Git.Commit("Commit 2");
+            var expectedCommit = await Git.CommitAsync("Commit 1");
+            _ = await Git.CommitAsync("Commit 2");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -279,11 +287,11 @@ namespace Grynwald.ChangeLog.Test.Git
         [Theory]
         [InlineData("not-a-commit-id")]
         [InlineData("abcd1234")]
-        public void TryGetCommit_returns_null_if_commit_cannot_be_found(string id)
+        public async Task TryGetCommit_returns_null_if_commit_cannot_be_found(string id)
         {
             // ARRANGE
-            _ = Git.Commit("Commit 1");
-            _ = Git.Commit("Commit 2");
+            _ = await Git.CommitAsync("Commit 1");
+            _ = await Git.CommitAsync("Commit 2");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -295,11 +303,11 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
-        public void TryGetCommit_is_case_insensitive()
+        public async Task TryGetCommit_is_case_insensitive()
         {
             // ARRANGE
-            var expectedCommit = Git.Commit("Commit 1");
-            _ = Git.Commit("Commit 2");
+            var expectedCommit = await Git.CommitAsync("Commit 1");
+            _ = await Git.CommitAsync("Commit 2");
 
             using var sut = new GitRepository(m_WorkingDirectory);
 
@@ -310,8 +318,5 @@ namespace Grynwald.ChangeLog.Test.Git
             Assert.NotNull(actualCommit);
             Assert.Equal(expectedCommit, actualCommit);
         }
-
-
-
     }
 }

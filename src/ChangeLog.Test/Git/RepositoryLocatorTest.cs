@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Grynwald.ChangeLog.Git;
 using Grynwald.Utilities.IO;
 using Xunit;
@@ -19,13 +20,14 @@ namespace Grynwald.ChangeLog.Test.Git
             m_TestOutputHelper = testOutputHelper ?? throw new ArgumentNullException(nameof(testOutputHelper));
         }
 
+
         [Fact]
-        public void TryGetRepositoryPath_succeeds_when_starting_path_is_a_git_repository()
+        public async Task TryGetRepositoryPath_succeeds_when_starting_path_is_a_git_repository()
         {
             // ARRANGE
             using var temporaryDirectory = new TemporaryDirectory();
             var git = new GitWrapper(temporaryDirectory, m_TestOutputHelper);
-            git.Init();
+            await git.InitAsync();
 
             var expectedRepositoryPath = Path.Combine(temporaryDirectory, ".git");
 
@@ -43,12 +45,12 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("subdir/dir2/dir3")]
         [InlineData("subdir/dir2/./dir3")]
         [InlineData("subdir/dir2/../dir3")]
-        public void TryGetRepositoryPath_succeeds_when_starting_path_is_a_subdirectory_of_git_repository(string relativePath)
+        public async Task TryGetRepositoryPath_succeeds_when_starting_path_is_a_subdirectory_of_git_repository(string relativePath)
         {
             // ARRANGE
             using var temporaryDirectory = new TemporaryDirectory();
             var git = new GitWrapper(temporaryDirectory, m_TestOutputHelper);
-            git.Init();
+            await git.InitAsync();
 
             var expectedRepositoryPath = Path.Combine(temporaryDirectory, ".git");
             var startingPath = temporaryDirectory.AddSubDirectory(relativePath);
