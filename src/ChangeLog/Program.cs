@@ -113,7 +113,7 @@ namespace Grynwald.ChangeLog
                 }
                 catch (InvalidTemplateConfigurationException ex)
                 {
-                    logger.LogCritical($"Failed to load template: {ex.Message}");
+                    logger.LogError($"Failed to load template: {ex.Message}");
                     return 1;
                 }
 
@@ -129,7 +129,7 @@ namespace Grynwald.ChangeLog
                             logger.LogError($"Invalid configuration: {error.ErrorMessage}");
                         }
 
-                        logger.LogCritical($"Validation of configuration failed");
+                        logger.LogError($"Validation of configuration failed");
                         return 1;
                     }
 
@@ -182,7 +182,7 @@ namespace Grynwald.ChangeLog
             }
             else
             {
-                logger.LogCritical($"No git repository found in '{Environment.CurrentDirectory}' or any of its parent directories");
+                logger.LogError($"No git repository found in '{Environment.CurrentDirectory}' or any of its parent directories");
                 repositoryPath = default;
                 return false;
             }
@@ -198,7 +198,7 @@ namespace Grynwald.ChangeLog
             catch (RepositoryNotFoundException ex)
             {
                 logger.LogDebug(ex, $"Failed to open repository at '{repositoryPath}'");
-                logger.LogCritical($"'{repositoryPath}' is not a git repository");
+                logger.LogError($"'{repositoryPath}' is not a git repository");
                 repository = default;
                 return false;
             }
