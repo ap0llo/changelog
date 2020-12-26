@@ -65,7 +65,7 @@ namespace Grynwald.ChangeLog.Test.E2E
         }
 
         [Fact]
-        public async Task Generate_change_log_with_default_configuration()
+        public async Task Change_log_is_generated_from_the_specified_repository()
         {
             // ARRANGE
             using var temporaryDirectory = new TemporaryDirectory();
@@ -98,11 +98,47 @@ namespace Grynwald.ChangeLog.Test.E2E
             Assert.Equal(expectedOutput, File.ReadAllText(expectedOutputPath));
         }
 
+        [Theory]
+        [InlineData("")]
+        [InlineData("dir1")]
+        [InlineData("dir1/dir2")]
+        public async Task When_no_repositoy_is_specified_the_repository_is_located_from_the_current_directory(string relativeWorkingDirectoryPath)
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();
+            var workingDirectory = temporaryDirectory.AddSubDirectory(relativeWorkingDirectoryPath);
 
+            var git = new GitWrapper(temporaryDirectory, m_TestOutputHelper);
+            await git.InitAsync();
+            await git.ConfigAsync("user.name", "Example");
+            await git.ConfigAsync("user.email", "user@example.com");
+
+            var commit = await git.CommitAsync("feat: Some New feature");
+            await git.TagAsync("v1.0.0", commit);
+
+            var expectedOutputPath = Path.Combine(temporaryDirectory, "changelog.md");
+            var expectedOutput = String.Join(Environment.NewLine,
+                "# Change Log",
+                "",
+                "## 1.0.0",
+                "",
+                $"#### <a id=\"changelog-heading-{commit.Id.Id}\"></a> Some New feature",
+                "",
+                $"- Commit: `{commit.Id.AbbreviatedId}`",
+                "");
+
+            // ACT 
+            var result = await RunApplicationAsync(args: Array.Empty<string>(), workingDirectory: workingDirectory);
+
+            // ASSERT
+            Assert.Equal(0, result.ExitCode);
+            Assert.True(File.Exists(expectedOutputPath));
+            Assert.Equal(expectedOutput, File.ReadAllText(expectedOutputPath));
+        }
         /// <summary>
         /// Runs changelog with the specified command line parameters
         /// </summary>
-        private async Task<BufferedCommandResult> RunApplicationAsync(string[] args)
+        private async Task<BufferedCommandResult> RunApplicationAsync(string[] args, string? workingDirectory = null)
         {
             var applicationAssembly = typeof(Program).Assembly;
 
@@ -130,6 +166,11 @@ namespace Grynwald.ChangeLog.Test.E2E
                     .Add(assemblyPath)
                     .Add(args))
                 .WithValidation(CommandResultValidation.None);
+
+            if (workingDirectory is not null)
+            {
+                command = command.WithWorkingDirectory(workingDirectory);
+            }
 
             var result = await command.ExecuteBufferedWithTestOutputAsync(m_TestOutputHelper);
 

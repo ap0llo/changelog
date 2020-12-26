@@ -10,23 +10,28 @@ namespace Grynwald.ChangeLog.Configuration
 {
     internal static class ChangeLogConfigurationLoader
     {
-        public static ChangeLogConfiguration GetConfiguration(string configurationFilePath, object? settingsObject = null)
+        public static ChangeLogConfiguration GetConfiguration(string configurationFilePath, params object[] settingsObjects)
         {
             using var defaultSettingsStream = GetDefaultSettingsStream();
             using var configurationFileStream = GetFileStreamOrEmpty(configurationFilePath);
 
             using var preparedStream = PrepareConfigurationFileStream(configurationFileStream);
 
-            return new ConfigurationBuilder()
+
+            var configurationBuilder = new ConfigurationBuilder()
                 .AddJsonStream(defaultSettingsStream)
                 // Use AddJsonStream() because AddJsonFile() assumes the file name
                 // is relative to the ConfigurationBuilder's base directory and does not seem to properly
                 // handle absolute paths
                 .AddJsonStream(preparedStream)
-                .AddEnvironmentVariables()
-                .AddObject(settingsObject)
-                .Load();
+                .AddEnvironmentVariables();
 
+            foreach (var settingsObject in settingsObjects)
+            {
+                configurationBuilder = configurationBuilder.AddObject(settingsObject);
+            }
+
+            return configurationBuilder.Load();
         }
 
         internal static ChangeLogConfiguration GetDefaultConfiguration()

@@ -33,7 +33,7 @@ namespace Grynwald.ChangeLog.Test.Git
         /// <summary>
         /// Initializes a new git repository in the working directory
         /// </summary>
-        public Task InitAsync() => ExecAsync("init");
+        public Task InitAsync(bool createBareRepository = false) => ExecAsync($"init {(createBareRepository ? "--bare" : "")}");
 
         /// <summary>
         /// Creates a new commit

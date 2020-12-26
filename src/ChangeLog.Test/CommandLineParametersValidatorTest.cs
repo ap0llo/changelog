@@ -9,9 +9,28 @@ namespace Grynwald.ChangeLog.Test
         [Theory]
         [InlineData("")]
         [InlineData(null)]
+        public void RepositoryPath_may_be_empty(string repositoryPath)
+        {
+            // ARRANGE
+            var parameters = new CommandLineParameters()
+            {
+                RepositoryPath = repositoryPath
+            };
+
+            var validator = new CommandLineParametersValidator();
+
+            // ACT 
+            var result = validator.Validate(parameters);
+
+            // ASSERT
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
+        }
+
+        [Theory]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void RepositoryPath_must_not_be_null_or_empty(string repositoryPath)
+        public void RepositoryPath_must__not_be_whitespace(string repositoryPath)
         {
             // ARRANGE
             var parameters = new CommandLineParameters()

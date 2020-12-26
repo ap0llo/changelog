@@ -29,14 +29,12 @@ namespace Grynwald.ChangeLog.Test.Git
             var git = new GitWrapper(temporaryDirectory, m_TestOutputHelper);
             await git.InitAsync();
 
-            var expectedRepositoryPath = Path.Combine(temporaryDirectory, ".git");
-
             // ACT 
             var success = RepositoryLocator.TryGetRepositoryPath(temporaryDirectory, out var actualRepositoryPath);
 
             // ASSERT
             Assert.True(success);
-            Assert.Equal(expectedRepositoryPath, actualRepositoryPath?.TrimEnd(Path.DirectorySeparatorChar));
+            Assert.Equal(temporaryDirectory, actualRepositoryPath?.TrimEnd(Path.DirectorySeparatorChar));
         }
 
         [Theory]
@@ -52,7 +50,6 @@ namespace Grynwald.ChangeLog.Test.Git
             var git = new GitWrapper(temporaryDirectory, m_TestOutputHelper);
             await git.InitAsync();
 
-            var expectedRepositoryPath = Path.Combine(temporaryDirectory, ".git");
             var startingPath = temporaryDirectory.AddSubDirectory(relativePath);
 
             // ACT 
@@ -60,7 +57,7 @@ namespace Grynwald.ChangeLog.Test.Git
 
             // ASSERT
             Assert.True(success);
-            Assert.Equal(expectedRepositoryPath, actualRepositoryPath?.TrimEnd(Path.DirectorySeparatorChar));
+            Assert.Equal(temporaryDirectory, actualRepositoryPath?.TrimEnd(Path.DirectorySeparatorChar));
         }
 
         [Fact]
@@ -68,6 +65,22 @@ namespace Grynwald.ChangeLog.Test.Git
         {
             // ARRANGE
             using var temporaryDirectory = new TemporaryDirectory();
+
+            // ACT 
+            var success = RepositoryLocator.TryGetRepositoryPath(temporaryDirectory, out var actualRepositoryPath);
+
+            // ASSERT
+            Assert.False(success);
+            Assert.Null(actualRepositoryPath);
+        }
+
+        [Fact]
+        public async Task TryGetRepositoryPath_fails_when_starting_path_is_a_bare_repository()
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();
+            var git = new GitWrapper(temporaryDirectory, m_TestOutputHelper);
+            await git.InitAsync(createBareRepository: true);
 
             // ACT 
             var success = RepositoryLocator.TryGetRepositoryPath(temporaryDirectory, out var actualRepositoryPath);

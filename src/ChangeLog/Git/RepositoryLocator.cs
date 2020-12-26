@@ -10,7 +10,7 @@ namespace Grynwald.ChangeLog.Git
     public sealed class RepositoryLocator
     {
         /// <summary>
-        /// Attempts to get the root directory of a git repository stating from <paramref name="startingPath"/>.
+        /// Attempts to get working directory of a git repository stating from <paramref name="startingPath"/>.
         /// </summary>
         /// <remarks>
         /// Searches <paramref name="startingPath"/> and any of its parent directories and checks if the directory is a valid git repository.
@@ -21,16 +21,21 @@ namespace Grynwald.ChangeLog.Git
         public static bool TryGetRepositoryPath(string startingPath, [NotNullWhen(true)] out string? repositoryPath)
         {
             var path = Repository.Discover(startingPath);
-            if (String.IsNullOrEmpty(path))
+
+            if (!String.IsNullOrEmpty(path))
             {
-                repositoryPath = default;
-                return false;
+                using var repo = new Repository(path);
+                var workingDirectory = repo.Info.WorkingDirectory;
+
+                if (!String.IsNullOrEmpty(workingDirectory))
+                {
+                    repositoryPath = workingDirectory;
+                    return true;
+                }
             }
-            else
-            {
-                repositoryPath = path;
-                return true;
-            }
+
+            repositoryPath = default;
+            return false;
         }
     }
 }

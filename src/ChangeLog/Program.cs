@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Grynwald.ChangeLog.Integrations;
 using Grynwald.ChangeLog.Logging;
 using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Templates;
+using Grynwald.Utilities.Configuration;
 using Grynwald.Utilities.Logging;
 using Microsoft.Extensions.Logging;
 
@@ -19,6 +21,17 @@ namespace Grynwald.ChangeLog
 {
     internal static class Program
     {
+        /// <summary>
+        /// Collects settings that are determined dynamically (in <see cref="RunAsync(CommandLineParameters)"/>
+        /// that need to be passed into the configuration system.
+        /// </summary>
+        private class DynamicallyDeterminedSettings
+        {
+            [ConfigurationValue("changelog:repositoryPath")]
+            public string RepositoryPath { get; set; } = "";
+        }
+
+
         private const string s_DefaultConfigurationFileName = "changelog.settings.json";
 
 
@@ -53,11 +66,19 @@ namespace Grynwald.ChangeLog
             if (!ValidateCommandlineParameters(commandlineParameters, logger))
                 return 1;
 
+            if (!TryGetRepositoryPath(commandlineParameters, logger, out var repositoryPath))
+                return 1;
+
             var configurationFilePath = !String.IsNullOrEmpty(commandlineParameters.ConfigurationFilePath)
                 ? commandlineParameters.ConfigurationFilePath
-                : Path.Combine(commandlineParameters.RepositoryPath, s_DefaultConfigurationFileName);
+                : Path.Combine(repositoryPath, s_DefaultConfigurationFileName);
 
-            var configuration = ChangeLogConfigurationLoader.GetConfiguration(configurationFilePath, commandlineParameters);
+            var dynamicSettings = new DynamicallyDeterminedSettings()
+            {
+                RepositoryPath = repositoryPath
+            };
+
+            var configuration = ChangeLogConfigurationLoader.GetConfiguration(configurationFilePath, commandlineParameters, dynamicSettings);
             using (var gitRepository = new GitRepository(configuration.RepositoryPath))
             {
                 var containerBuilder = new ContainerBuilder();
@@ -139,6 +160,17 @@ namespace Grynwald.ChangeLog
             }
 
             return result.IsValid;
+        }
+
+        private static bool TryGetRepositoryPath(CommandLineParameters parameters, ILogger logger, [NotNullWhen(true)] out string? repositoryPath)
+        {
+            if (!String.IsNullOrEmpty(parameters.RepositoryPath))
+            {
+                repositoryPath = Path.GetFullPath(parameters.RepositoryPath);
+                return true;
+            }
+
+            return RepositoryLocator.TryGetRepositoryPath(Environment.CurrentDirectory, out repositoryPath);
         }
     }
 }
