@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
@@ -43,7 +44,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             var projectInfo = GetProjectInfo();
             if (projectInfo != null)
             {
-                m_Logger.LogInformation($"Enabling GitHub integration with settings: " +
+                m_Logger.LogDebug($"Enabling GitHub integration with settings: " +
                     $"{nameof(projectInfo.Host)} = '{projectInfo.Host}', " +
                     $"{nameof(projectInfo.Owner)} = '{projectInfo.Owner}', " +
                     $"{nameof(projectInfo.Repository)} = '{projectInfo.Repository}'");
@@ -54,22 +55,42 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                 return ChangeLogTaskResult.Skipped;
             }
 
-            m_Logger.LogInformation("Adding GitHub links to changelog");
+            m_Logger.LogInformation("Adding GitHub links to change log");
 
             var githubClient = m_GitHubClientFactory.CreateClient(projectInfo.Host);
 
             var rateLimit = await githubClient.Miscellaneous.GetRateLimits();
             m_Logger.LogDebug($"GitHub rate limit: {rateLimit.Rate.Remaining} requests of {rateLimit.Rate.Limit} remaining");
 
-            foreach (var versionChangeLog in changeLog.ChangeLogs)
-            {
-                foreach (var entry in versionChangeLog.AllEntries)
-                {
-                    await ProcessEntryAsync(projectInfo, githubClient, entry);
-                }
-            }
 
-            return ChangeLogTaskResult.Success;
+            try
+            {
+                foreach (var versionChangeLog in changeLog.ChangeLogs)
+                {
+                    foreach (var entry in versionChangeLog.AllEntries)
+                    {
+                        await ProcessEntryAsync(projectInfo, githubClient, entry);
+                    }
+                }
+
+                return ChangeLogTaskResult.Success;
+            }
+            catch (RateLimitExceededException rateLimitExceededException)
+            {
+                var messageBuilder = new StringBuilder();
+                messageBuilder.Append($"GitHub API rate limit exceeded (limit { rateLimitExceededException.Limit}). ");
+                if (githubClient.Connection.Credentials.AuthenticationType == AuthenticationType.Anonymous)
+                {
+                    messageBuilder.Append("Consider using an Access Token for GitHub. Authenticated requests are given a higher rate limit.");
+                }
+                m_Logger.LogError(rateLimitExceededException, messageBuilder.ToString());
+                return ChangeLogTaskResult.Error;
+            }
+            catch (ApiException ex)
+            {
+                m_Logger.LogError(ex, ex.Message);
+                return ChangeLogTaskResult.Error;
+            }
         }
 
         private GitHubProjectInfo? GetProjectInfo()

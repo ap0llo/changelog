@@ -778,5 +778,34 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(hostName), Times.Once);
         }
 
+        [Fact]
+        public async Task Task_fails_if_GitHub_client_throws_an_ApiException()
+        {
+            // ARRANGE
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", $"http://github.com/owner/repo.git") });
+
+            m_GitHubCommitsClientMock
+                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ThrowsAsync(new ApiException());
+
+
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    "1.2.3",
+                    null,
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1)
+                )
+            };
+
+            // ACT 
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Error, result);
+        }
     }
 }
