@@ -24,8 +24,8 @@
         <td><b>Default value (JSON)</b></td>
         <td>
             <code>[
-  &quot;^(?&lt;version&gt;\\d+\\.\\d+\\.\\d+.*)&quot;,
-  &quot;^v(?&lt;version&gt;\\d+\\.\\d+\\.\\d+.*)&quot;
+  &quot;^(?&lt;version&gt;\\d+\\.\\d+(\\.\\d+)?.*)&quot;,
+  &quot;^v(?&lt;version&gt;\\d+\\.\\d+(\\.\\d+)?.*)&quot;
 ]</code>
         </td>
     </tr>

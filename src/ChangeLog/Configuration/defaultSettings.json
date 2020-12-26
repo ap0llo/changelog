@@ -66,8 +66,8 @@
     },
 
     "tagPatterns": [
-      "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
-      "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
+      "^(?<version>\\d+\\.\\d+(\\.\\d+)?.*)",
+      "^v(?<version>\\d+\\.\\d+(\\.\\d+)?.*)"
     ],
 
     "outputPath": "changelog.md",

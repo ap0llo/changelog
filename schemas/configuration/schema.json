@@ -28,8 +28,8 @@
             "type": "string"
           },
           "default": [
-            "^(?<version>\\d+\\.\\d+\\.\\d+.*)",
-            "^v(?<version>\\d+\\.\\d+\\.\\d+.*)"
+            "^(?<version>\\d+\\.\\d+(\\.\\d+)?.*)",
+            "^v(?<version>\\d+\\.\\d+(\\.\\d+)?.*)"
           ],
           "uniqueItems": true,
           "title": "Tag Patterns"

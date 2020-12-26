@@ -102,9 +102,21 @@ namespace Grynwald.ChangeLog.Test.Tasks
         }
 
         [Theory]
+        [InlineData("1.0", "1.0.0")]
+        [InlineData("1.0.0", "1.0.0")]
+        [InlineData("1.0-alpha", "1.0.0-alpha")]
+        [InlineData("1.0.0-beta", "1.0.0-beta")]
         [InlineData("1.2.3-alpha", "1.2.3-alpha")]
         [InlineData("1.2.3", "1.2.3")]
         // Tags may be prefixed with "v"
+        [InlineData("v1.0", "1.0.0")]
+        [InlineData("V1.0", "1.0.0")]
+        [InlineData("v1.0.0", "1.0.0")]
+        [InlineData("V1.0.0", "1.0.0")]
+        [InlineData("v1.0-alpha", "1.0.0-alpha")]
+        [InlineData("V1.0-alpha", "1.0.0-alpha")]
+        [InlineData("v1.0.0-beta", "1.0.0-beta")]
+        [InlineData("V1.0.0-beta", "1.0.0-beta")]
         [InlineData("v1.2.3-alpha", "1.2.3-alpha")]
         [InlineData("v4.5.6", "4.5.6")]
         [InlineData("V1.2.3-alpha", "1.2.3-alpha")]
@@ -120,7 +132,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
             repoMock.Setup(x => x.GetTags()).Returns(tags);
 
-            var expectedVersion = SemanticVersion.Parse(version);
+            var expectedVersion = NuGetVersion.Parse(version);
 
             var sut = new LoadVersionsFromTagsTask(m_Logger, ChangeLogConfigurationLoader.GetDefaultConfiguration(), repoMock.Object);
 

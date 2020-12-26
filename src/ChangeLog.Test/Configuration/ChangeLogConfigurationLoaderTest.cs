@@ -139,7 +139,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Tag Patterns setting
             //
             yield return TestCase(config => Assert.NotNull(config.TagPatterns));
-            yield return TestCase(config => Assert.Equal(new[] { "^(?<version>\\d+\\.\\d+\\.\\d+.*)", "^v(?<version>\\d+\\.\\d+\\.\\d+.*)" }, config.TagPatterns));
+            yield return TestCase(config => Assert.Equal(new[] { "^(?<version>\\d+\\.\\d+(\\.\\d+)?.*)", "^v(?<version>\\d+\\.\\d+(\\.\\d+)?.*)" }, config.TagPatterns));
 
             //
             // Output path setting
