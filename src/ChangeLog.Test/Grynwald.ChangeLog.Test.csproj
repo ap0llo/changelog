@@ -25,4 +25,12 @@
     <ProjectReference Include="..\ChangeLog\Grynwald.ChangeLog.csproj" />
   </ItemGroup>
 
+  <!--
+    After build, publish the application into the test's output directory.
+    This is required for running E2E tests where the application is started as a child processs
+  -->
+  <Target Name="PublishApplicationToTestDirectory" AfterTargets="AfterBuild">
+    <MSBuild Projects="..\ChangeLog\Grynwald.ChangeLog.csproj" Targets="Publish" Properties="TargetFramework=$(TargetFramework);Configuration=$(Configuration);PublishDir=$(OutputPath)/Grynwald.ChangeLog" />
+  </Target>
+
 </Project>
