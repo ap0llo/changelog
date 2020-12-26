@@ -16,7 +16,7 @@ To install ChangeLog, run:
 dotnet tool install -g Grynwald.ChangeLog
 ```
 
-## Generating a changelog
+## Generating a change log
 
 ChangeLog assumes you have a local git repository which's commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/) format.
 
@@ -26,14 +26,16 @@ Versions need to follow the [Semantic Versioning](https://semver.org/) format.
 By default all tag names that are semantic versions and tag names that are semantic versions prefixed with `v` are recognized (e.g. `1.2.3-alpha` or `v1.2`).
 Parsing of tags can be customized using the [Tag Patterns Setting](./configuration/settings/tag-patterns.md).
 
-To generate a changelog from a git repository, run Changelog and specify the path to the git repository.
-By default, the change log is saved to `changelog.md` in the repository.
+To generate a change log from a git repository, run ChangeLog and specify the path to the git repository.
 
 ```sh
 changelog --repository <LOCALPATH>
 ```
 
-You can override the output path using the `--outputPath` parameters.
+ℹ The repository path can be omitted when `changelog` is run from a directory within the git repository.
+
+By default, the change log is saved to `changelog.md` in the repository.
+You can override the output path using the `--outputPath` parameter or in the configuration file (see [Configuration](./configuration.md)).
 
 For all full list of commandline parameters, see
 [Commandline reference](./commandline-reference/index.md)
