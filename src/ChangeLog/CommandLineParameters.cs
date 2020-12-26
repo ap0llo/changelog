@@ -11,8 +11,7 @@ namespace Grynwald.ChangeLog
         private string? m_OutputPath;
 
 
-        [Option('r', "repository", Required = true, HelpText = "The local path of the git repository to generate a change log for.")]
-        [ConfigurationValue("changelog:repositoryPath")]
+        [Option('r', "repository", Required = false, HelpText = "The local path of the git repository to generate a change log for.")]
         public string RepositoryPath { get; set; } = "";
 
         [Option('c', "configurationFilePath", Required = false, HelpText =

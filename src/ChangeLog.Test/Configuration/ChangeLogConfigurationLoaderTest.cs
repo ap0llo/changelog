@@ -380,6 +380,30 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Equal("7.8.9", config.CurrentVersion);
         }
 
+        [Fact]
+        public void Values_from_settings_objects_override_values_from_earlier_settings_objects()
+        {
+            // ARRANGE
+            PrepareConfiguration("currentVersion", "1.2.3");
+
+            var settingsObject1 = new TestSettingsClass()
+            {
+                CurrentVersion = "4.5.6"
+            };
+            var settingsObject2 = new TestSettingsClass()
+            {
+                CurrentVersion = "7.8.9"
+            };
+
+            // ACT
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject1, settingsObject2);
+
+            // ASSERT
+            Assert.NotNull(config.CurrentVersion);
+            Assert.Equal("7.8.9", config.CurrentVersion);
+        }
+
+
         [Flags]
         private enum SettingsTarget
         {
@@ -731,7 +755,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var settingsObject = Activator.CreateInstance(dynamicAssembly.GetType("SettingsObject")!, new object[] { expectedValue });
 
             // ACT 
-            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject);
+            var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath, settingsObject!);
 
             // ASSERT
             if (assert is null)

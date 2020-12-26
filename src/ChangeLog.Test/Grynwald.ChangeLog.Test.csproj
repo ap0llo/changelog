@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="ApprovalTests" Version="5.4.5" />
+    <PackageReference Include="CliWrap" Version="3.2.4" />
     <PackageReference Include="coverlet.collector" Version="1.3.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     <PackageReference Include="Moq" Version="4.15.2" />
@@ -23,5 +24,13 @@
   <ItemGroup>
     <ProjectReference Include="..\ChangeLog\Grynwald.ChangeLog.csproj" />
   </ItemGroup>
+
+  <!--
+    After build, publish the application into the test's output directory.
+    This is required for running E2E tests where the application is started as a child processs
+  -->
+  <Target Name="PublishApplicationToTestDirectory" AfterTargets="AfterBuild">
+    <MSBuild Projects="..\ChangeLog\Grynwald.ChangeLog.csproj" Targets="Publish" Properties="TargetFramework=$(TargetFramework);Configuration=$(Configuration);PublishDir=$(OutputPath)/Grynwald.ChangeLog" />
+  </Target>
 
 </Project>

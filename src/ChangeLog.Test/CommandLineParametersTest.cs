@@ -15,27 +15,25 @@ namespace Grynwald.ChangeLog.Test
     /// </summary>
     public class CommandLineParametersTest
     {
-        public static IEnumerable<object[]> Properties()
-        {
-            foreach (var property in typeof(CommandLineParameters).GetProperties())
-            {
-                // the "--verbose" switch has no corresponding configuration setting
-                if (property.Name == nameof(CommandLineParameters.Verbose))
-                    continue;
-
-                // the "--configurationPath" parameter has no corresponding configuration setting
-                if (property.Name == nameof(CommandLineParameters.ConfigurationFilePath))
-                    continue;
-
-                yield return new[] { property.Name };
-            }
-        }
+        public static IEnumerable<object[]> Properties() =>
+            typeof(CommandLineParameters).GetProperties().Select(p => new[] { p.Name });
 
         [Theory]
         [MemberData(nameof(Properties))]
         public void Properties_have_a_configuration_value_attribute(string propertyName)
         {
-            // all properties inCommandLineParameters should have a ConfigurationValueAttribute
+            // the "--verbose", "--configurationPath"  and "--repositoryPath"
+            // switches haveno corresponding configuration setting and are
+            // processed before the configuration system is initialized
+
+            if (propertyName == nameof(CommandLineParameters.Verbose) ||
+                propertyName == nameof(CommandLineParameters.ConfigurationFilePath) ||
+                propertyName == nameof(CommandLineParameters.RepositoryPath))
+            {
+                return;
+            }
+
+            // All other properties in CommandLineParameters should have a ConfigurationValue attribute
             // so the value can be used in the configuration system.
 
             var property = typeof(CommandLineParameters).GetProperty(propertyName)!;

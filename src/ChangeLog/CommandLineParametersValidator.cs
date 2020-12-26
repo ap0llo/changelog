@@ -13,7 +13,7 @@ namespace Grynwald.ChangeLog
         {
             ValidatorOptions.Global.UseCustomDisplayNameResolver();
 
-            RuleFor(x => x.RepositoryPath).NotEmpty();
+            RuleFor(x => x.RepositoryPath).NotWhitespace();
             RuleFor(x => x.RepositoryPath)
                 .Must(Directory.Exists)
                 .UnlessNullOrWhiteSpace()

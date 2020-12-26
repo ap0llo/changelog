@@ -78,7 +78,7 @@ jobs:
     displayName: 'Install .NET Core 3.1 runtime'
     inputs:
       packageType: runtime
-      version: 3.1.x      
+      version: 3.1.x
 
   # Restore local .NET Core tools
   - task: DotNetCoreCLI@2
@@ -206,8 +206,8 @@ jobs:
       command: run
       arguments: >-
         --project ./src/ChangeLog/Grynwald.ChangeLog.csproj
-        --framework netcoreapp3.1
-        --repository $(Build.SourcesDirectory)
+        --framework net5.0
+        --
         --currentVersion $(NBGV_NuGetPackageVersion)
         --versionRange [$(NBGV_NuGetPackageVersion)]
         --outputpath $(Build.StagingDirectory)/changelog.md

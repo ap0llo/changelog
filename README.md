@@ -73,6 +73,7 @@ Thanks to all the people contributing to these projects:
 - [Scriban](https://github.com/lunet-io/scriban)
 - [Spectre.Console](https://spectresystems.github.io/spectre.console/)
 - [Xunit.Combinatorial](https://github.com/AArnott/Xunit.Combinatorial)
+- [CliWrap](https://github.com/Tyrrrz/CliWrap)
 
 ## Versioning and Branching
 
