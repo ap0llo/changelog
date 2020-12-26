@@ -98,6 +98,33 @@ namespace Grynwald.ChangeLog.Test.E2E
             Assert.Equal(expectedOutput, File.ReadAllText(expectedOutputPath));
         }
 
+        [Fact]
+        public async Task Repository_path_can_be_passed_as_relative_path()
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();
+            var repositoryPath = temporaryDirectory.AddSubDirectory("repo");
+
+            var git = new GitWrapper(repositoryPath, m_TestOutputHelper);
+            await git.InitAsync();
+            await git.ConfigAsync("user.name", "Example");
+            await git.ConfigAsync("user.email", "user@example.com");
+
+            var commit = await git.CommitAsync("feat: Some New feature");
+            await git.TagAsync("v1.0.0", commit);
+
+            var expectedOutputPath = Path.Combine(repositoryPath, "changelog.md");
+
+            // ACT 
+            var result = await RunApplicationAsync(
+                args: new[] { "--repository", "repo" },
+                workingDirectory: temporaryDirectory);
+
+            // ASSERT
+            Assert.Equal(0, result.ExitCode);
+            Assert.True(File.Exists(expectedOutputPath));
+        }
+
         [Theory]
         [InlineData("")]
         [InlineData("dir1")]
@@ -135,6 +162,40 @@ namespace Grynwald.ChangeLog.Test.E2E
             Assert.True(File.Exists(expectedOutputPath));
             Assert.Equal(expectedOutput, File.ReadAllText(expectedOutputPath));
         }
+
+        [Fact]
+        public async Task When_specified_repository_path_is_not_a_git_repository_an_error_is_shown()
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();
+
+            // ACT 
+            var result = await RunApplicationAsync(new[] { "--repository", temporaryDirectory });
+
+            // ASSERT
+            Assert.Equal(1, result.ExitCode);
+            Assert.Contains(temporaryDirectory.FullName, result.StandardOutput);
+            Assert.Contains("is not a git repository", result.StandardOutput, StringComparison.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public async Task When_started_outside_of_a_git_repository_and_no_repository_path_is_specified_an_error_is_shown()
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();
+
+            // ACT 
+            var result = await RunApplicationAsync(
+                args: Array.Empty<string>(),
+                workingDirectory: temporaryDirectory);
+
+            // ASSERT
+            Assert.Equal(1, result.ExitCode);
+            Assert.Contains(temporaryDirectory.FullName, result.StandardOutput);
+            Assert.Contains("no git repository found", result.StandardOutput, StringComparison.OrdinalIgnoreCase);
+        }
+
+
         /// <summary>
         /// Runs changelog with the specified command line parameters
         /// </summary>

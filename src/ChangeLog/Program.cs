@@ -69,17 +69,22 @@ namespace Grynwald.ChangeLog
             if (!TryGetRepositoryPath(commandlineParameters, logger, out var repositoryPath))
                 return 1;
 
+            if (!TryOpenRepository(repositoryPath, logger, out var gitRepository))
+                return 1;
+
             var configurationFilePath = !String.IsNullOrEmpty(commandlineParameters.ConfigurationFilePath)
                 ? commandlineParameters.ConfigurationFilePath
                 : Path.Combine(repositoryPath, s_DefaultConfigurationFileName);
 
+            // pass repository path to configuration loader to make it available
+            // through the configuration system
             var dynamicSettings = new DynamicallyDeterminedSettings()
             {
                 RepositoryPath = repositoryPath
             };
-
             var configuration = ChangeLogConfigurationLoader.GetConfiguration(configurationFilePath, commandlineParameters, dynamicSettings);
-            using (var gitRepository = new GitRepository(configuration.RepositoryPath))
+
+            using (gitRepository)
             {
                 var containerBuilder = new ContainerBuilder();
 
@@ -170,7 +175,33 @@ namespace Grynwald.ChangeLog
                 return true;
             }
 
-            return RepositoryLocator.TryGetRepositoryPath(Environment.CurrentDirectory, out repositoryPath);
+            if (RepositoryLocator.TryGetRepositoryPath(Environment.CurrentDirectory, out repositoryPath))
+            {
+                logger.LogInformation($"Found git repository at '{repositoryPath}'");
+                return true;
+            }
+            else
+            {
+                logger.LogCritical($"No git repository found in '{Environment.CurrentDirectory}' or any of its parent directories");
+                repositoryPath = default;
+                return false;
+            }
+        }
+
+        private static bool TryOpenRepository(string repositoryPath, ILogger logger, [NotNullWhen(true)] out IGitRepository? repository)
+        {
+            try
+            {
+                repository = new GitRepository(repositoryPath);
+                return true;
+            }
+            catch (RepositoryNotFoundException ex)
+            {
+                logger.LogDebug(ex, $"Failed to open repository at '{repositoryPath}'");
+                logger.LogCritical($"'{repositoryPath}' is not a git repository");
+                repository = default;
+                return false;
+            }
         }
     }
 }

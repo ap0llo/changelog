@@ -7,7 +7,7 @@ namespace Grynwald.ChangeLog.Git
 {
     public sealed class GitRepository : IGitRepository
     {
-        private readonly string m_RepositoyPath;
+        private readonly string m_RepositoryPath;
         private readonly Repository m_Repository;
 
         /// <inheritdoc />
@@ -20,14 +20,22 @@ namespace Grynwald.ChangeLog.Git
         /// <summary>
         /// Initializes a new instance of <see cref="GitRepository"/>
         /// </summary>
-        /// <param name="repositoyPath">The local path of the git repository.</param>
-        public GitRepository(string repositoyPath)
+        /// <param name="repositoryPath">The local path of the git repository.</param>
+        public GitRepository(string repositoryPath)
         {
-            if (String.IsNullOrWhiteSpace(repositoyPath))
-                throw new ArgumentException("Value must not be null or whitespace.", nameof(repositoyPath));
+            if (String.IsNullOrWhiteSpace(repositoryPath))
+                throw new ArgumentException("Value must not be null or whitespace.", nameof(repositoryPath));
 
-            m_RepositoyPath = repositoyPath;
-            m_Repository = new Repository(m_RepositoyPath);
+            m_RepositoryPath = repositoryPath;
+
+            try
+            {
+                m_Repository = new Repository(m_RepositoryPath);
+            }
+            catch (LibGit2Sharp.RepositoryNotFoundException ex)
+            {
+                throw new RepositoryNotFoundException($"Directory '{repositoryPath}' is not a git repository", ex);
+            }
         }
 
 

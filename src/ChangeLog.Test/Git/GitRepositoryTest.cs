@@ -52,6 +52,19 @@ namespace Grynwald.ChangeLog.Test.Git
         }
 
         [Fact]
+        public void Constructor_throws_RepositoryNotFoundException_when_repository_path_is_not_a_git_repository()
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();
+
+            // ACT 
+            var ex = Record.Exception(() => new GitRepository(temporaryDirectory));
+
+            // ASSERT
+            Assert.IsType<RepositoryNotFoundException>(ex);
+        }
+
+        [Fact]
         public void Remotes_returns_expected_remotes_01()
         {
             // ARRANGE            
