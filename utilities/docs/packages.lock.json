@@ -38,9 +38,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[3.2.1, )",
-        "resolved": "3.2.1",
-        "contentHash": "jRPAaEfjPiDAuRXHRu2UIljRqvPs71qZYvTNZG9960TUNfaZs3RO/Is+fMQdsp6J+UAIfwJMmC5ixZXzUvH3AQ=="
+        "requested": "[3.2.2, )",
+        "resolved": "3.2.2",
+        "contentHash": "p7qjk0ZByvf/bQVpMJBeNCqavRxvPRL6pz3cW2MWH7cb7ZOkWiDLaGzRGgtOiGhLdTOS/d0niWwrTyCr1InmHQ=="
       },
       "Spectre.Console": {
         "type": "Direct",
