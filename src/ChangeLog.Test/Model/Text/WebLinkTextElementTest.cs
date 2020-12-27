@@ -9,17 +9,21 @@ namespace Grynwald.ChangeLog.Test.Model
     /// </summary>
     public class WebLinkTextElementTest
     {
-        [Fact]
-        public void Text_must_not_be_null()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("\t")]
+        public void Text_must_not_be_null_or_whitespace(string text)
         {
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new WebLinkTextElement(null!, new Uri("https://example.com")));
+            var ex = Record.Exception(() => new WebLinkTextElement(text, new Uri("https://example.com")));
 
             // ASSERT
-            Assert.NotNull(ex);
-            Assert.IsType<ArgumentNullException>(ex);
+            var argumentException = Assert.IsType<ArgumentException>(ex);
+            Assert.Equal("text", argumentException.ParamName);
         }
 
         [Fact]

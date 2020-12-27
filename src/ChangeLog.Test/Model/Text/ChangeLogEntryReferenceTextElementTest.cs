@@ -1,14 +1,13 @@
 ﻿using System;
-using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model.Text;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test.Model
+namespace Grynwald.ChangeLog.Test.Model.Text
 {
     /// <summary>
-    /// Tests for <see cref="CommitReferenceTextElement"/>
+    /// Tests for <see cref="ChangeLogEntryReferenceTextElement"/>
     /// </summary>
-    public class CommitReferenceTextElementTest
+    public class ChangeLogEntryReferenceTextElementTest : TestBase
     {
         [Theory]
         [InlineData(null)]
@@ -18,9 +17,10 @@ namespace Grynwald.ChangeLog.Test.Model
         public void Text_must_not_be_null_or_whitespace(string text)
         {
             // ARRANGE
+            var entry = GetChangeLogEntry();
 
             // ACT 
-            var ex = Record.Exception(() => new CommitReferenceTextElement(text, TestGitIds.Id1));
+            var ex = Record.Exception(() => new ChangeLogEntryReferenceTextElement(text, entry));
 
             // ASSERT
             var argumentException = Assert.IsType<ArgumentException>(ex);
@@ -28,18 +28,16 @@ namespace Grynwald.ChangeLog.Test.Model
         }
 
         [Fact]
-        public void Commit_id_must_not_be_null()
+        public void Entry_must_not_be_null()
         {
             // ARRANGE
-            var id = default(GitId);
 
             // ACT 
-            var ex = Record.Exception(() => new CommitReferenceTextElement("some text", id));
+            var ex = Record.Exception(() => new ChangeLogEntryReferenceTextElement("some-text", null!));
 
             // ASSERT
-            Assert.NotNull(ex);
-            var argumentException = Assert.IsType<ArgumentException>(ex);
-            Assert.Equal("id", argumentException.ParamName);
+            var argumentException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("entry", argumentException.ParamName);
         }
     }
 }

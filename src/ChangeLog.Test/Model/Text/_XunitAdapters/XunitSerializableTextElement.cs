@@ -6,16 +6,16 @@ using Xunit.Abstractions;
 namespace Grynwald.ChangeLog.Test.Model.Text
 {
     /// <summary>
-    /// Wrapper class to make instances of <see cref="TextElement"/> serializable by xunit
+    /// Wrapper class to make implementations of <see cref="ITextElement"/> serializable by xunit
     /// </summary>
     internal sealed class XunitSerializableTextElement : IXunitSerializable
     {
         private const string s_Type = "Type";
 
-        internal TextElement Value { get; private set; }
+        internal ITextElement Value { get; private set; }
 
 
-        internal XunitSerializableTextElement(TextElement value) => Value = value;
+        internal XunitSerializableTextElement(ITextElement value) => Value = value;
 
 
         [Obsolete("For use by Xunit only", true)]
@@ -50,6 +50,12 @@ namespace Grynwald.ChangeLog.Test.Model.Text
                     );
                     break;
 
+                case nameof(ChangeLogEntryReferenceTextElement):
+                    var text = info.GetValue<string>(nameof(ChangeLogEntryReferenceTextElement.Text));
+                    var entry = info.GetValue<XunitSerializableChangeLogEntry>(nameof(ChangeLogEntryReferenceTextElement.Entry));
+                    Value = new ChangeLogEntryReferenceTextElement(text, entry.Value);
+                    break;
+
                 default:
                     throw new NotImplementedException();
             }
@@ -74,6 +80,12 @@ namespace Grynwald.ChangeLog.Test.Model.Text
                     info.AddValue(s_Type, nameof(CommitReferenceTextElement));
                     info.AddValue(nameof(CommitReferenceTextElement.CommitId.Id), commitReference.CommitId.Id);
                     info.AddValue(nameof(CommitReferenceTextElement.CommitId.AbbreviatedId), commitReference.CommitId.AbbreviatedId);
+                    break;
+
+                case ChangeLogEntryReferenceTextElement changeLogEntryReference:
+                    info.AddValue(s_Type, nameof(ChangeLogEntryReferenceTextElement));
+                    info.AddValue(nameof(ChangeLogEntryReferenceTextElement.Text), changeLogEntryReference.Text);
+                    info.AddValue(nameof(ChangeLogEntryReferenceTextElement.Entry), new XunitSerializableChangeLogEntry(changeLogEntryReference.Entry));
                     break;
 
                 default:

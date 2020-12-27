@@ -509,11 +509,13 @@ namespace Grynwald.ChangeLog.Test.Templates
             Approve(changeLog, config);
         }
 
-        private class CustomTextElementWithLink : TextElement, IWebLinkTextElement
+        private class CustomTextElementWithLink : IWebLinkTextElement
         {
+            public string Text => "Example";
+
             public Uri Uri { get; } = new Uri("https://example.com");
 
-            public CustomTextElementWithLink() : base("Example")
+            public CustomTextElementWithLink()
             { }
         }
 

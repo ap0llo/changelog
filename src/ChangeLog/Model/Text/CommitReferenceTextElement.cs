@@ -6,8 +6,11 @@ namespace Grynwald.ChangeLog.Model.Text
     /// <summary>
     /// Represents a link to a git commit
     /// </summary>
-    public sealed class CommitReferenceTextElement : TextElement
+    public sealed class CommitReferenceTextElement : ITextElement
     {
+        /// <inheritdoc />
+        public string Text { get; }
+
         /// <summary>
         /// Gets the commit's id
         /// </summary>
@@ -19,11 +22,15 @@ namespace Grynwald.ChangeLog.Model.Text
         /// </summary>
         /// <param name="text">The text element's text</param>
         /// <param name="id">The commit's id</param>
-        public CommitReferenceTextElement(string text, GitId id) : base(text)
+        public CommitReferenceTextElement(string text, GitId id)
         {
+            if (String.IsNullOrWhiteSpace(text))
+                throw new ArgumentException("Value must not be null or whitespace", nameof(text));
+
             if (id.IsNull)
                 throw new ArgumentException("Commit id must not be empty", nameof(id));
 
+            Text = text;
             CommitId = id;
         }
     }

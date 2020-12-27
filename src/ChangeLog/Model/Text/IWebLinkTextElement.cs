@@ -2,7 +2,7 @@
 
 namespace Grynwald.ChangeLog.Model.Text
 {
-    public interface IWebLinkTextElement
+    public interface IWebLinkTextElement : ITextElement
     {
         Uri Uri { get; }
     }
