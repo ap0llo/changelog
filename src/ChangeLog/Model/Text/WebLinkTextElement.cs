@@ -7,6 +7,9 @@ namespace Grynwald.ChangeLog.Model.Text
         /// <inheritdoc />
         public string Text { get; }
 
+        /// <inheritdoc />  
+        public TextStyle Style => TextStyle.None;
+
         /// <summary>
         /// The link's uri.
         /// </summary>

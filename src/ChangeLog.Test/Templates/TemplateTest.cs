@@ -513,6 +513,8 @@ namespace Grynwald.ChangeLog.Test.Templates
         {
             public string Text => "Example";
 
+            public TextStyle Style => TextStyle.None;
+
             public Uri Uri { get; } = new Uri("https://example.com");
 
             public CustomTextElementWithLink()

@@ -7,6 +7,8 @@ namespace Grynwald.ChangeLog.Model.Text
         /// <inheritdoc />
         public string Text { get; }
 
+        /// <inheritdoc />  
+        public TextStyle Style => TextStyle.None;
 
         public PlainTextElement(string text)
         {

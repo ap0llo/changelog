@@ -11,6 +11,10 @@ namespace Grynwald.ChangeLog.Model.Text
         /// <inheritdoc />
         public string Text { get; }
 
+
+        /// <inheritdoc />  
+        public TextStyle Style => TextStyle.Code;
+
         /// <summary>
         /// Gets the commit's id
         /// </summary>
