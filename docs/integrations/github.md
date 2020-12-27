@@ -3,6 +3,7 @@
 The GitHub integration provides the following features:
 
 - Add GitHub web link for a change log entry's commit.
+- Add web links for commit references that are detected in footers (see [Automatic References](../auto-references.md#commit-references))
 - Recognize GitHub Issue and Pull Request references (see also [Automatic References](../auto-references.md)) in footers and generate GitHub web links.<br>
   The following types of references are recognized:
   - `#<id>`: Reference to an issue or pull request in the same project, e.g. `#123`

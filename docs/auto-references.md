@@ -10,6 +10,7 @@ ChangeLog will recognize references to commits, issues and Pull Requests in comm
 
 The following references are supported:
 
+- [Commit references](#commit-references)
 - [Change Log Entry References](#change-log-entry-references)
 - GitHub References (when [GitHub Integration](./integrations/github.md) is enabled)
   - Pull Request and Issue references (e.g. `#42`)
@@ -17,6 +18,17 @@ The following references are supported:
   - Issue References (e.g. `#23`)
   - Merge Request References (e.g. `!42`)
   - Milestone References (e.g. `%123`)
+
+## Commit References
+
+When a footer's value is a git commit id and the commit can be found in the repository, the footer is treated as *commit reference*.
+
+Commit references are rendered as code spans in the generated change log.
+
+If the [GitHub Integration](./integrations/github.md) is enabled, commit references will be rendered as links to the referenced commit on GitHub.
+
+Note that a if the reference refers to a commit that corresponds to a different change log entry, the reference will be converted to a [Change Log Entry Reference](#change-log-entry-references).
+
 
 ## Change Log Entry References
 
@@ -74,7 +86,7 @@ This is the description of the second feature.
 See Also: [Implemented a new feature](implemented-a-new-feature)
 ```
 
-If no change log entry that matches a commit hash can be found, the footer will be included in the output unchanged.
+If no change log entry that matches a commit hash can be found, the footer vaöue is treated as [commit reference](#commit-references).
 
 ## See Also
 

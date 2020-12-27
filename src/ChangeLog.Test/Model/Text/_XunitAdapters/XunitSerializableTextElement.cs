@@ -42,12 +42,27 @@ namespace Grynwald.ChangeLog.Test.Model.Text
                     break;
 
                 case nameof(CommitReferenceTextElement):
-                    var id = info.GetValue<string>(nameof(CommitReferenceTextElement.CommitId.Id));
-                    var abbreviatedId = info.GetValue<string>(nameof(CommitReferenceTextElement.CommitId.AbbreviatedId));
-                    Value = new CommitReferenceTextElement(
-                        info.GetValue<string>(nameof(CommitReferenceTextElement.Text)),
-                        new GitId(id, abbreviatedId)
-                    );
+                    {
+                        var id = info.GetValue<string>(nameof(CommitReferenceTextElement.CommitId.Id));
+                        var abbreviatedId = info.GetValue<string>(nameof(CommitReferenceTextElement.CommitId.AbbreviatedId));
+                        Value = new CommitReferenceTextElement(
+                            info.GetValue<string>(nameof(CommitReferenceTextElement.Text)),
+                            new GitId(id, abbreviatedId)
+                        );
+                    }
+                    break;
+
+                case nameof(CommitReferenceTextElementWithWebLink):
+                    {
+                        var id = info.GetValue<string>(nameof(CommitReferenceTextElementWithWebLink.CommitId.Id));
+                        var abbreviatedId = info.GetValue<string>(nameof(CommitReferenceTextElementWithWebLink.CommitId.AbbreviatedId));
+                        var uri = new Uri(info.GetValue<string>(nameof(CommitReferenceTextElementWithWebLink.Uri)));
+                        Value = new CommitReferenceTextElementWithWebLink(
+                            info.GetValue<string>(nameof(CommitReferenceTextElementWithWebLink.Text)),
+                            new GitId(id, abbreviatedId),
+                            uri
+                        );
+                    }
                     break;
 
                 case nameof(ChangeLogEntryReferenceTextElement):
@@ -76,8 +91,17 @@ namespace Grynwald.ChangeLog.Test.Model.Text
                     info.AddValue(nameof(WebLinkTextElement.Uri), webLink.Uri.ToString());
                     break;
 
+                case CommitReferenceTextElementWithWebLink commitReferenceWithWebLink:
+                    info.AddValue(s_Type, nameof(CommitReferenceTextElementWithWebLink));
+                    info.AddValue(nameof(CommitReferenceTextElementWithWebLink.Text), commitReferenceWithWebLink.Text);
+                    info.AddValue(nameof(CommitReferenceTextElementWithWebLink.CommitId.Id), commitReferenceWithWebLink.CommitId.Id);
+                    info.AddValue(nameof(CommitReferenceTextElementWithWebLink.CommitId.AbbreviatedId), commitReferenceWithWebLink.CommitId.AbbreviatedId);
+                    info.AddValue(nameof(CommitReferenceTextElementWithWebLink.Uri), commitReferenceWithWebLink.Uri.ToString());
+                    break;
+
                 case CommitReferenceTextElement commitReference:
                     info.AddValue(s_Type, nameof(CommitReferenceTextElement));
+                    info.AddValue(nameof(CommitReferenceTextElement.Text), commitReference.Text);
                     info.AddValue(nameof(CommitReferenceTextElement.CommitId.Id), commitReference.CommitId.Id);
                     info.AddValue(nameof(CommitReferenceTextElement.CommitId.AbbreviatedId), commitReference.CommitId.AbbreviatedId);
                     break;

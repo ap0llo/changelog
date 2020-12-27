@@ -6,7 +6,7 @@ namespace Grynwald.ChangeLog.Model.Text
     /// <summary>
     /// Represents a link to a git commit
     /// </summary>
-    public sealed class CommitReferenceTextElement : ITextElement
+    public class CommitReferenceTextElement : ITextElement
     {
         /// <inheritdoc />
         public string Text { get; }

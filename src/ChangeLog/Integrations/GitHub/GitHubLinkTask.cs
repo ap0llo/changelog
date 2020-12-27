@@ -165,7 +165,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
             var webUri = await TryGetWebUriAsync(projectInfo, githubClient, entry.Commit);
 
-            if (webUri != null)
+            if (webUri is not null)
             {
                 entry.CommitWebUri = webUri;
             }
@@ -176,7 +176,19 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
             foreach (var footer in entry.Footers)
             {
-                if (TryParseReference(projectInfo, footer.Value.Text, out var owner, out var repo, out var id))
+                if (footer.Value is CommitReferenceTextElement commitReference)
+                {
+                    var referenceWebUri = await TryGetWebUriAsync(projectInfo, githubClient, commitReference.CommitId);
+                    if (referenceWebUri is not null)
+                    {
+                        footer.Value = CommitReferenceTextElementWithWebLink.FromCommitReference(commitReference, referenceWebUri);
+                    }
+                    else
+                    {
+                        m_Logger.LogWarning($"Failed to determine web uri for commit '{entry.Commit}'");
+                    }
+                }
+                else if (footer.Value is PlainTextElement && TryParseReference(projectInfo, footer.Value.Text, out var owner, out var repo, out var id))
                 {
                     var uri = await TryGetWebUriAsync(githubClient, owner, repo, id);
                     if (uri != null)
