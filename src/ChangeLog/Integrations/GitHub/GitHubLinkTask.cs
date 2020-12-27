@@ -15,6 +15,9 @@ using Octokit;
 
 namespace Grynwald.ChangeLog.Integrations.GitHub
 {
+    /// <summary>
+    /// Detects and inserts links to GitHub for pull requests, issues and commits
+    /// </summary>
     internal class GitHubLinkTask : IChangeLogTask
     {
         private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;

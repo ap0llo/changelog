@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
@@ -21,36 +20,12 @@ using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 {
+
     /// <summary>
     /// Unit tests for <see cref="GitHubLinkTask"/>
     /// </summary>
     public class GitHubLinkTaskTest : TestBase
     {
-        private class TestGitHubCommit : GitHubCommit
-        {
-            public TestGitHubCommit(string htmlUrl)
-            {
-                HtmlUrl = htmlUrl;
-            }
-        }
-
-        private class TestGitHubIssue : Issue
-        {
-            public TestGitHubIssue(string htmlUrl)
-            {
-                HtmlUrl = htmlUrl;
-            }
-        }
-
-        private class TestGitHubPullRequest : PullRequest
-        {
-            public TestGitHubPullRequest(string htmlUrl)
-            {
-                HtmlUrl = htmlUrl;
-            }
-        }
-
-
         public class GitHubProjectInfoTestCase : IXunitSerializable
         {
             public string Description { get; private set; }
@@ -107,63 +82,70 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
         private readonly ILogger<GitHubLinkTask> m_Logger = NullLogger<GitHubLinkTask>.Instance;
         private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-        private readonly Mock<IGitHubClient> m_GithubClientMock;
-        private readonly Mock<IRepositoryCommitsClient> m_GitHubCommitsClientMock;
-        private readonly Mock<IRepositoriesClient> m_GitHubRepositoriesClientMock;
-        private readonly Mock<IIssuesClient> m_GitHubIssuesClientMock;
-        private readonly Mock<IPullRequestsClient> m_GitHubPullRequestsClient;
-        private readonly Mock<IMiscellaneousClient> m_GitHubMiscellaneousClientMock;
+        private readonly GitHubClientMock m_GithubClientMock;
         private readonly Mock<IGitHubClientFactory> m_GitHubClientFactoryMock;
 
         public GitHubLinkTaskTest()
         {
-            m_GitHubCommitsClientMock = new Mock<IRepositoryCommitsClient>(MockBehavior.Strict);
+            m_GithubClientMock = new();
 
-            m_GitHubRepositoriesClientMock = new Mock<IRepositoriesClient>(MockBehavior.Strict);
-            m_GitHubRepositoriesClientMock.Setup(x => x.Commit).Returns(m_GitHubCommitsClientMock.Object);
-
-            m_GitHubIssuesClientMock = new Mock<IIssuesClient>(MockBehavior.Strict);
-
-            m_GitHubPullRequestsClient = new Mock<IPullRequestsClient>(MockBehavior.Strict);
-
-            m_GitHubMiscellaneousClientMock = new Mock<IMiscellaneousClient>(MockBehavior.Strict);
-            m_GitHubMiscellaneousClientMock
-                .Setup(x => x.GetRateLimits())
-                .Returns(Task.FromResult(new MiscellaneousRateLimit(new ResourceRateLimit(), new RateLimit())));
-
-            m_GithubClientMock = new Mock<IGitHubClient>(MockBehavior.Strict);
-            m_GithubClientMock.Setup(x => x.Repository).Returns(m_GitHubRepositoriesClientMock.Object);
-            m_GithubClientMock.Setup(x => x.Issue).Returns(m_GitHubIssuesClientMock.Object);
-            m_GithubClientMock.Setup(x => x.PullRequest).Returns(m_GitHubPullRequestsClient.Object);
-            m_GithubClientMock.Setup(x => x.Miscellaneous).Returns(m_GitHubMiscellaneousClientMock.Object);
-
-            m_GitHubClientFactoryMock = new Mock<IGitHubClientFactory>(MockBehavior.Strict);
-            m_GitHubClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(m_GithubClientMock.Object);
+            m_GitHubClientFactoryMock = new(MockBehavior.Strict);
+            m_GitHubClientFactoryMock
+                .Setup(x => x.CreateClient(It.IsAny<string>()))
+                .Returns(m_GithubClientMock.Object);
         }
 
 
         [Fact]
         public void Logger_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(null!, m_DefaultConfiguration, Mock.Of<IGitRepository>(MockBehavior.Strict), Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+            // ARRANGE
+
+            // ACT
+            var ex = Record.Exception(() => new GitHubLinkTask(null!, m_DefaultConfiguration, Mock.Of<IGitRepository>(MockBehavior.Strict), Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("logger", argumentNullException.ParamName);
         }
 
         [Fact]
         public void Configuration_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, null!, Mock.Of<IGitRepository>(MockBehavior.Strict), Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+            // ARRANGE
+
+            // ACT
+            var ex = Record.Exception(() => new GitHubLinkTask(m_Logger, null!, Mock.Of<IGitRepository>(MockBehavior.Strict), Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("configuration", argumentNullException.ParamName);
         }
 
         [Fact]
         public void GitRepository_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, m_DefaultConfiguration, null!, Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+            // ARRANGE
+
+            // ACT
+            var ex = Record.Exception(() => new GitHubLinkTask(m_Logger, m_DefaultConfiguration, null!, Mock.Of<IGitHubClientFactory>(MockBehavior.Strict)));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("repository", argumentNullException.ParamName);
         }
 
         [Fact]
         public void GitHubClientFactoty_must_not_be_null()
         {
-            Assert.Throws<ArgumentNullException>(() => new GitHubLinkTask(m_Logger, m_DefaultConfiguration, Mock.Of<IGitRepository>(MockBehavior.Strict), null!));
+            // ARRANGE
+
+            // ACT
+            var ex = Record.Exception(() => new GitHubLinkTask(m_Logger, m_DefaultConfiguration, Mock.Of<IGitRepository>(MockBehavior.Strict), null!));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("gitHubClientFactory", argumentNullException.ParamName);
         }
 
         [Fact]
@@ -171,7 +153,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(Enumerable.Empty<GitRemote>());
+            repoMock.SetupEmptyRemotes();
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
@@ -196,7 +178,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             configuration.Integrations.GitHub.RemoteName = remoteName;
 
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote(remoteName, url) });
+            repoMock.SetupRemotes(remoteName, url);
 
             var sut = new GitHubLinkTask(m_Logger, configuration, repoMock.Object, m_GitHubClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
@@ -416,15 +398,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             //
 
             // Prepare GitHub client
-            m_GitHubCommitsClientMock
-                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(
-                    (string owner, string repo, string sha) => new TestGitHubCommit($"https://example.com/{sha}")
-                );
+            m_GithubClientMock.Repository.Commit
+                .SetupGet()
+                .ReturnsTestCommit();
 
             // Prepare Git Repository
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(testCase.Remotes);
+            repoMock.SetupRemotes(testCase.Remotes);
 
             // Configure remote name to use
             var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -454,8 +434,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
             // Ensure the web link was requested from the expected server and repository
             m_GitHubClientFactoryMock.Verify(x => x.CreateClient(testCase.ExpectedHost), Times.Once);
-            m_GitHubCommitsClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            m_GitHubCommitsClientMock.Verify(x => x.Get(testCase.ExpectedOwner, testCase.ExpectedRepository, TestGitIds.Id1.Id), Times.Once);
+            m_GithubClientMock.Repository.Commit.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            m_GithubClientMock.Repository.Commit.Verify(x => x.Get(testCase.ExpectedOwner, testCase.ExpectedRepository, TestGitIds.Id1.Id), Times.Once);
         }
 
 
@@ -464,13 +444,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
+            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
 
-            m_GitHubCommitsClientMock
+            m_GithubClientMock.Repository.Commit
                 .Setup(x => x.Get("owner", "repo", It.IsAny<string>()))
-                .Returns(
-                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
-                );
+                .ReturnsTestCommit();
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
@@ -499,13 +477,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             Assert.All(entries, entry =>
             {
                 Assert.NotNull(entry.CommitWebUri);
-                var expectedUri = new Uri($"https://example.com/{entry.Commit.Id}");
+                var expectedUri = TestGitHubCommit.FromCommitSha(entry.Commit.Id).HtmlUri;
                 Assert.Equal(expectedUri, entry.CommitWebUri);
 
-                m_GitHubCommitsClientMock.Verify(x => x.Get("owner", "repo", entry.Commit.Id), Times.Once);
+                m_GithubClientMock.Repository.Commit.Verify(x => x.Get("owner", "repo", entry.Commit.Id), Times.Once);
             });
 
-            m_GitHubCommitsClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(entries.Length));
+            m_GithubClientMock.Repository.Commit.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(entries.Length));
         }
 
         //TODO: Run does not add a commit link if commit cannot be found
@@ -521,18 +499,15 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
+            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
 
-            m_GitHubCommitsClientMock
-                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(
-                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
-                );
-            m_GitHubIssuesClientMock
+            m_GithubClientMock.Repository.Commit
+                .SetupGet()
+                .ReturnsTestCommit();
+
+            m_GithubClientMock.Issue
                 .Setup(x => x.Get(owner, repo, issueNumber))
-                .Returns(
-                    Task.FromResult<Issue>(new TestGitHubIssue($"https://example.com/issue/{issueNumber}"))
-                );
+                .ReturnsTestIssue();
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
@@ -559,16 +534,15 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    var expectedUri = new Uri($"https://example.com/issue/{issueNumber}");
+                    var expectedUri = TestGitHubIssue.FromIssueNumber(issueNumber).HtmlUri;
 
                     var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
                     Assert.Equal(expectedUri, webLink.Uri);
                     Assert.Equal(footerText, webLink.Text);
                 });
-
             });
 
-            m_GitHubIssuesClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            m_GithubClientMock.Issue.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
         }
 
         [Theory]
@@ -589,22 +563,19 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
+            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
 
-            m_GitHubCommitsClientMock
-                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(
-                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
-                );
-            m_GitHubIssuesClientMock
-                .Setup(x => x.Get(owner, repo, prNumber))
-                .ThrowsAsync(new NotFoundException("Message", HttpStatusCode.NotFound));
+            m_GithubClientMock.Repository.Commit
+                .SetupGet()
+                .ReturnsTestCommit();
 
-            m_GitHubPullRequestsClient
+            m_GithubClientMock.Issue
                 .Setup(x => x.Get(owner, repo, prNumber))
-                .Returns(
-                    Task.FromResult<PullRequest>(new TestGitHubPullRequest($"https://example.com/pr/{prNumber}"))
-                );
+                .ThrowsNotFound();
+
+            m_GithubClientMock.PullRequest
+                .Setup(x => x.Get(owner, repo, prNumber))
+                .ReturnsTestPullRequest();
 
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
@@ -632,7 +603,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             {
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
                 {
-                    var expectedUri = new Uri($"https://example.com/pr/{prNumber}");
+                    var expectedUri = TestGitHubPullRequest.FromPullRequestNumber(prNumber).HtmlUri;
 
                     var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
                     Assert.Equal(expectedUri, webLink.Uri);
@@ -641,8 +612,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
             });
 
-            m_GitHubPullRequestsClient.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
-            m_GitHubIssuesClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            m_GithubClientMock.PullRequest.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
+            m_GithubClientMock.Issue.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Once);
         }
 
         [Theory]
@@ -657,13 +628,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
+            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
 
-            m_GitHubCommitsClientMock
-                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(
-                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
-                );
+            m_GithubClientMock.Repository.Commit
+                .SetupGet()
+                .ReturnsTestCommit();
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
@@ -695,8 +664,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
             });
 
-            m_GitHubIssuesClientMock.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Never);
-            m_GitHubPullRequestsClient.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Never);
+            m_GithubClientMock.Issue.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Never);
+            m_GithubClientMock.PullRequest.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()), Times.Never);
         }
 
         [Theory]
@@ -707,20 +676,19 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", "http://github.com/owner/repo.git") });
+            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
 
-            m_GitHubCommitsClientMock
-                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(
-                    (string owner, string repo, string sha) => Task.FromResult<GitHubCommit>(new TestGitHubCommit($"https://example.com/{sha}"))
-                );
-            m_GitHubIssuesClientMock
-                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .ThrowsAsync(new NotFoundException("Not found", HttpStatusCode.NotFound));
+            m_GithubClientMock.Repository.Commit
+                .SetupGet()
+                .ReturnsTestCommit();
 
-            m_GitHubPullRequestsClient
-                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()))
-                .ThrowsAsync(new NotFoundException("Not found", HttpStatusCode.NotFound));
+            m_GithubClientMock.Issue
+                .SetupGet()
+                .ThrowsNotFound();
+
+            m_GithubClientMock.PullRequest
+                .SetupGet()
+                .ThrowsNotFound();
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
@@ -749,11 +717,10 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 {
                     Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
-
             });
 
-            m_GitHubIssuesClientMock.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
-            m_GitHubPullRequestsClient.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
+            m_GithubClientMock.Issue.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
+            m_GithubClientMock.PullRequest.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
         }
 
         [Theory]
@@ -764,7 +731,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", $"http://{hostName}/owner/repo.git") });
+            repoMock.SetupRemotes("origin", $"http://{hostName}/owner/repo.git");
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
@@ -783,12 +750,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         {
             // ARRANGE
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.Setup(x => x.Remotes).Returns(new[] { new GitRemote("origin", $"http://github.com/owner/repo.git") });
+            repoMock.SetupRemotes("origin", $"http://github.com/owner/repo.git");
 
-            m_GitHubCommitsClientMock
-                .Setup(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            m_GithubClientMock.Repository.Commit
+                .SetupGet()
                 .ThrowsAsync(new ApiException());
-
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
