@@ -1,0 +1,7 @@
+# Change Log
+
+## 1.2.3
+
+#### <a id="changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3"></a> Example Summary
+
+- Name: NormalizedText

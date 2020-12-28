@@ -12,6 +12,9 @@ namespace Grynwald.ChangeLog.Templates.Default
         /// <inheritdoc />
         protected override MdSerializationOptions SerializationOptions { get; }
 
+        /// <inheritdoc />
+        protected override bool EnableNormalization => m_Configuration.Template.Default.NormalizeReferences;
+
 
         public DefaultTemplate(ChangeLogConfiguration configuration) : base(configuration)
         {

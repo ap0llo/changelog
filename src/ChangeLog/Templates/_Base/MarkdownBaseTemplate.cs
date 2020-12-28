@@ -23,10 +23,19 @@ namespace Grynwald.ChangeLog.Templates
         /// </summary>
         protected abstract MdSerializationOptions SerializationOptions { get; }
 
+        /// <summary>
+        /// Gets wheter to enabled normalization of text elements
+        /// </summary>
+        /// <remarks>
+        /// When enabled, the normalized text will be uder for <see cref="ITextElement"/> objects
+        /// that also implement <see cref="INormalizedTextElement"/>.
+        /// </remarks>
+        protected abstract bool EnableNormalization { get; }
+
 
         public MarkdownBaseTemplate(ChangeLogConfiguration configuration)
         {
-            m_Configuration = configuration ?? throw new System.ArgumentNullException(nameof(configuration));
+            m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
 
@@ -349,22 +358,35 @@ namespace Grynwald.ChangeLog.Templates
                 //        the footer is rendered as an intra-page link to the referenced change log entry.
                 //        In that case, the referenced entry's summary is used instead of the footer's value in the output
 
-                MdSpan text = footer.Value.Style == TextStyle.Code
-                    ? new MdCodeSpan(footer.Value.Text)
-                    : footer.Value.Text;
+                string text;
+                TextStyle style;
+                if (EnableNormalization && footer.Value is INormalizedTextElement normalizedText)
+                {
+                    text = normalizedText.NormalizedText;
+                    style = normalizedText.NormalizedStyle;
+                }
+                else
+                {
+                    text = footer.Value.Text;
+                    style = footer.Value.Style;
+                }
+
+                MdSpan textSpan = style == TextStyle.Code
+                    ? new MdCodeSpan(text)
+                    : text;
 
                 if (footer.Value is IWebLinkTextElement webLink)
                 {
-                    text = new MdLinkSpan(text, webLink.Uri);
+                    textSpan = new MdLinkSpan(textSpan, webLink.Uri);
                 }
                 else if (footer.Value is ChangeLogEntryReferenceTextElement entryReference)
                 {
                     var id = GetHtmlHeadingId(entryReference.Entry);
-                    text = new MdLinkSpan(GetSummaryText(entryReference.Entry), $"#{id}");
+                    textSpan = new MdLinkSpan(GetSummaryText(entryReference.Entry), $"#{id}");
                 }
 
                 footerList.Add(
-                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", text)
+                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", textSpan)
                 );
             }
 

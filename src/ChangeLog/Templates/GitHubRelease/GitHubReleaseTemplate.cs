@@ -11,6 +11,9 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
         /// <inheritdoc />
         protected override MdSerializationOptions SerializationOptions { get; }
 
+        /// <inheritdoc />
+        protected override bool EnableNormalization => m_Configuration.Template.GitHubRelease.NormalizeReferences;
+
 
         public GitHubReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
         {
