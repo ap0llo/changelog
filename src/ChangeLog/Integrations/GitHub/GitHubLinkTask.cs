@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
@@ -20,13 +17,6 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
     /// </summary>
     internal class GitHubLinkTask : IChangeLogTask
     {
-        private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;
-        private static readonly IReadOnlyList<Regex> s_GitHubReferencePatterns = new[]
-        {
-            new Regex("^((?<owner>[A-Z0-9-_.]+)/(?<repo>[A-Z0-9-_.]+))?#(?<id>\\d+)$", s_RegexOptions),
-            new Regex("^GH-(?<id>\\d+)$", s_RegexOptions),
-        };
-
         private readonly ILogger<GitHubLinkTask> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;
         private readonly IGitRepository m_Repository;
@@ -95,6 +85,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                 return ChangeLogTaskResult.Error;
             }
         }
+
 
         private GitHubProjectInfo? GetProjectInfo()
         {
@@ -167,7 +158,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             {
                 if (footer.Value is CommitReferenceTextElement commitReference)
                 {
-                    var uri = await TryGetWebUriAsync(projectInfo, githubClient, commitReference.CommitId);
+                    var uri = await TryGetWebUriAsync(githubClient, projectInfo, commitReference.CommitId);
                     if (uri is not null)
                     {
                         footer.Value = CommitReferenceTextElementWithWebLink.FromCommitReference(commitReference, uri);
@@ -177,22 +168,22 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                         m_Logger.LogWarning($"Failed to determine web uri for commit '{commitReference.CommitId}'");
                     }
                 }
-                else if (footer.Value is PlainTextElement && TryParseReference(projectInfo, footer.Value.Text, out var owner, out var repo, out var id))
+                else if (footer.Value is PlainTextElement && GitHubReference.TryParse(footer.Value.Text, projectInfo, out var reference))
                 {
-                    var uri = await TryGetWebUriAsync(githubClient, owner, repo, id);
-                    if (uri != null)
+                    var uri = await TryGetWebUriAsync(githubClient, reference);
+                    if (uri is not null)
                     {
-                        footer.Value = new WebLinkTextElement(footer.Value.Text, uri);
+                        footer.Value = new GitHubReferenceTextElement(footer.Value.Text, uri, projectInfo, reference);
                     }
                     else
                     {
-                        m_Logger.LogWarning($"Failed to determine web uri for reference '{owner}/{repo}#{id}'");
+                        m_Logger.LogWarning($"Failed to determine web uri for reference '{reference}'");
                     }
                 }
             }
         }
 
-        private async Task<Uri?> TryGetWebUriAsync(GitHubProjectInfo projectInfo, IGitHubClient githubClient, GitId commitId)
+        private async Task<Uri?> TryGetWebUriAsync(IGitHubClient githubClient, GitHubProjectInfo projectInfo, GitId commitId)
         {
             m_Logger.LogDebug($"Getting web uri for commit '{commitId}'");
 
@@ -207,61 +198,27 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             }
         }
 
-        private bool TryParseReference(GitHubProjectInfo projectInfo, string input, [NotNullWhen(true)] out string? owner, [NotNullWhen(true)] out string? repo, out int id)
+        private async Task<Uri?> TryGetWebUriAsync(IGitHubClient githubClient, GitHubReference reference)
         {
-            input = input.Trim();
-
-            // using every pattern, try to get a issue/PR id from the input text
-            foreach (var pattern in s_GitHubReferencePatterns)
-            {
-                var match = pattern.Match(input);
-
-                if (match.Success)
-                {
-                    var idString = match.Groups["id"].ToString();
-                    if (Int32.TryParse(idString, out id))
-                    {
-                        owner = match.Groups["owner"].Value;
-                        repo = match.Groups["repo"].Value;
-
-                        if (String.IsNullOrEmpty(owner))
-                            owner = projectInfo.Owner;
-
-                        if (String.IsNullOrEmpty(repo))
-                            repo = projectInfo.Repository;
-
-                        return true;
-                    }
-                }
-            }
-
-            id = -1;
-            owner = null;
-            repo = null;
-            return false;
-        }
-
-        private async Task<Uri?> TryGetWebUriAsync(IGitHubClient githubClient, string owner, string repo, int id)
-        {
-            m_Logger.LogDebug($"Getting web uri for reference '{owner}/{repo}#{id}'");
+            m_Logger.LogDebug($"Getting web uri for reference '{reference}'");
 
             // check if the id is an issue
-            var uri = await TryGetIssueWebUriAsync(githubClient, owner, repo, id);
+            var uri = await TryGetIssueWebUriAsync(githubClient, reference);
 
             // if it is not an issue, check if it is a Pull Request Id
             if (uri == null)
             {
-                uri = await TryGetPullRequestWebUriAsync(githubClient, owner, repo, id);
+                uri = await TryGetPullRequestWebUriAsync(githubClient, reference);
             }
 
             return uri;
         }
 
-        private async Task<Uri?> TryGetIssueWebUriAsync(IGitHubClient githubClient, string owner, string repo, int id)
+        private async Task<Uri?> TryGetIssueWebUriAsync(IGitHubClient githubClient, GitHubReference reference)
         {
             try
             {
-                var issue = await githubClient.Issue.Get(owner, repo, id);
+                var issue = await githubClient.Issue.Get(reference.Project.Owner, reference.Project.Repository, reference.Id);
                 return new Uri(issue.HtmlUrl);
             }
             catch (NotFoundException)
@@ -270,11 +227,11 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             }
         }
 
-        private async Task<Uri?> TryGetPullRequestWebUriAsync(IGitHubClient githubClient, string owner, string repo, int id)
+        private async Task<Uri?> TryGetPullRequestWebUriAsync(IGitHubClient githubClient, GitHubReference reference)
         {
             try
             {
-                var pr = await githubClient.PullRequest.Get(owner, repo, id);
+                var pr = await githubClient.PullRequest.Get(reference.Project.Owner, reference.Project.Repository, reference.Id);
                 return new Uri(pr.HtmlUrl);
             }
             catch (NotFoundException)

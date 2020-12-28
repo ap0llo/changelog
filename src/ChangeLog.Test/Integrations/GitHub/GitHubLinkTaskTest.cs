@@ -452,9 +452,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("#23", 23, "owner", "repo")]
         [InlineData("GH-23", 23, "owner", "repo")]
         [InlineData("anotherOwner/anotherRepo#42", 42, "anotherOwner", "anotherRepo")]
-        [InlineData("another-Owner/another-Repo#42", 42, "another-Owner", "another-Repo")]
-        [InlineData("another.Owner/another.Repo#42", 42, "another.Owner", "another.Repo")]
-        [InlineData("another_Owner/another_Repo#42", 42, "another_Owner", "another_Repo")]
         public async Task Run_adds_issue_links_to_footers(string footerText, int issueNumber, string owner, string repo)
         {
             // ARRANGE
@@ -496,9 +493,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 {
                     var expectedUri = TestGitHubIssue.FromIssueNumber(issueNumber).HtmlUri;
 
-                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
-                    Assert.Equal(expectedUri, webLink.Uri);
-                    Assert.Equal(footerText, webLink.Text);
+                    var referenceElement = Assert.IsType<GitHubReferenceTextElement>(footer.Value);
+                    Assert.Equal(expectedUri, referenceElement.Uri);
+                    Assert.Equal(footerText, referenceElement.Text);
+                    Assert.Equal(owner, referenceElement.Reference.Project.Owner);
+                    Assert.Equal(repo, referenceElement.Reference.Project.Repository);
+                    Assert.Equal(issueNumber, referenceElement.Reference.Id);
                 });
             });
 
@@ -509,16 +509,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("#23", 23, "owner", "repo")]
         [InlineData("GH-23", 23, "owner", "repo")]
         [InlineData("anotherOwner/anotherRepo#42", 42, "anotherOwner", "anotherRepo")]
-        [InlineData("another-Owner/another-Repo#42", 42, "another-Owner", "another-Repo")]
-        [InlineData("another.Owner/another.Repo#42", 42, "another.Owner", "another.Repo")]
-        [InlineData("another_Owner/another_Repo#42", 42, "another_Owner", "another_Repo")]
-        // Linking must ignore trailing and leading whitespace
-        [InlineData(" #23", 23, "owner", "repo")]
-        [InlineData("#23 ", 23, "owner", "repo")]
-        [InlineData(" GH-23", 23, "owner", "repo")]
-        [InlineData("GH-23 ", 23, "owner", "repo")]
-        [InlineData(" anotherOwner/anotherRepo#42", 42, "anotherOwner", "anotherRepo")]
-        [InlineData("anotherOwner/anotherRepo#42  ", 42, "anotherOwner", "anotherRepo")]
         public async Task Run_adds_pull_request_links_to_footers(string footerText, int prNumber, string owner, string repo)
         {
             // ARRANGE
@@ -565,9 +555,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 {
                     var expectedUri = TestGitHubPullRequest.FromPullRequestNumber(prNumber).HtmlUri;
 
-                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
-                    Assert.Equal(expectedUri, webLink.Uri);
-                    Assert.Equal(footerText, webLink.Text);
+                    var referenceElement = Assert.IsType<GitHubReferenceTextElement>(footer.Value);
+                    Assert.Equal(footerText, referenceElement.Text);
+                    Assert.Equal(owner, referenceElement.Reference.Project.Owner);
+                    Assert.Equal(repo, referenceElement.Reference.Project.Repository);
+                    Assert.Equal(prNumber, referenceElement.Reference.Id);
                 });
 
             });
@@ -578,12 +570,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
         [Theory]
         [InlineData("not-a-reference")]
-        [InlineData("Not a/reference#0")]
-        [InlineData("Not a/reference#xyz")]
         [InlineData("#xyz")]
         [InlineData("GH-xyz")]
-        [InlineData("#1 2 3")]
-        [InlineData("GH-1 2 3")]
         public async Task Run_ignores_footers_which_cannot_be_parsed(string footerText)
         {
             // ARRANGE
@@ -788,7 +776,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 });
         }
 
-
         [Fact]
         public async Task Run_ignores_commit_references_that_cannot_be_found()
         {
@@ -822,7 +809,5 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             var entry = Assert.Single(changeLog.ChangeLogs.SelectMany(x => x.AllEntries));
             Assert.Collection(entry.Footers, x => Assert.IsType<CommitReferenceTextElement>(x.Value));
         }
-
-
     }
 }
