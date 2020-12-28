@@ -63,13 +63,15 @@ namespace Grynwald.ChangeLog.Test.Git
         [Theory]
         [InlineData("abcd1234abcd1234abcd1234abcd1234abcd1234", "abcd123", true, "abcd123")]
         [InlineData("abcd1234abcd1234abcd1234abcd1234abcd1234", "abcd123", false, "abcd1234abcd1234abcd1234abcd1234abcd1234")]
+        [InlineData("ABCD1234ABCD1234ABCD1234ABCD1234ABCD1234", "ABCD123", true, "abcd123")]
+        [InlineData("ABCD1234ABCD1234ABCD1234ABCD1234ABCD1234", "ABCD123", false, "abcd1234abcd1234abcd1234abcd1234abcd1234")]
         public void ToString_returns_expected_value(string id, string abbreviatedId, bool abbreviate, string expected)
         {
             // ARRANGE
             var sut = new GitId(id, abbreviatedId);
 
             // ACT / ASSERT 
-            Assert.Equal(id, sut.ToString());
+            Assert.Equal(id.ToLower(), sut.ToString());
             Assert.Equal(expected, sut.ToString(abbreviate));
         }
 
