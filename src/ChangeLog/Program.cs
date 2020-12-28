@@ -103,6 +103,7 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<FilterVersionsTask>();
                 containerBuilder.RegisterType<FilterEntriesTask>();
                 containerBuilder.RegisterType<ResolveEntryReferencesTask>();
+                containerBuilder.RegisterType<AddCommitFooterTask>();
                 containerBuilder.RegisterType<RenderTemplateTask>();
 
                 containerBuilder.RegisterIntegrations();
@@ -142,8 +143,13 @@ namespace Grynwald.ChangeLog
                         .AddTask<ParseCommitReferencesTask>()
                         .AddTask<FilterVersionsTask>()
                         .AddTask<FilterEntriesTask>()
-                        // ResolveEntryReferencesTask must run *after* filtering in order to avoid resolving references to entries being filtered out
+                        // ResolveEntryReferencesTask must run *after* filtering
+                        // in order to avoid resolving references to entries being filtered out
                         .AddTask<ResolveEntryReferencesTask>()
+                        // AddCommitFooterTask must run before the interation provider tasks
+                        // because the GitHub and GitLab integrations are supposed to add a web link
+                        // to the "Commit" footer
+                        .AddTask<AddCommitFooterTask>()
                         .AddIntegrationTasks()
                         .AddTask<RenderTemplateTask>()
                         .Build();

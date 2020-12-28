@@ -8,6 +8,9 @@ namespace Grynwald.ChangeLog.Model
 {
     public class ChangeLogEntry
     {
+        private readonly List<ChangeLogEntryFooter> m_Footers;
+
+
         public DateTime Date { get; }
 
         public CommitType Type { get; }
@@ -27,12 +30,10 @@ namespace Grynwald.ChangeLog.Model
 
         public GitId Commit { get; }
 
-        public Uri? CommitWebUri { get; set; }
-
         /// <summary>
         /// Gets all footers (excluding "breaking change" footers)
         /// </summary>
-        public IReadOnlyList<ChangeLogEntryFooter> Footers { get; }
+        public IReadOnlyList<ChangeLogEntryFooter> Footers => m_Footers;
 
         /// <summary>
         /// Gets the description of breaking changes of this changelog entry.        
@@ -52,7 +53,7 @@ namespace Grynwald.ChangeLog.Model
             bool isBreakingChange,
             string summary,
             IReadOnlyList<string> body,
-            IReadOnlyList<ChangeLogEntryFooter> footers,
+            IEnumerable<ChangeLogEntryFooter> footers,
             IReadOnlyList<string> breakingChangeDescriptions,
             GitId commit)
         {
@@ -68,7 +69,7 @@ namespace Grynwald.ChangeLog.Model
             ContainsBreakingChanges = isBreakingChange || breakingChangeDescriptions.Count > 0;
             Summary = summary ?? throw new ArgumentNullException(nameof(summary));
             Body = body ?? throw new ArgumentNullException(nameof(body));
-            Footers = footers;
+            m_Footers = footers.ToList();
             BreakingChangeDescriptions = breakingChangeDescriptions;
             Commit = commit;
         }
@@ -82,8 +83,7 @@ namespace Grynwald.ChangeLog.Model
 
             var footers = commitMessage.Footers
                 .Where(x => !x.Name.IsBreakingChange)
-                .Select(ChangeLogEntryFooter.FromCommitMessageFooter)
-                .ToArray();
+                .Select(ChangeLogEntryFooter.FromCommitMessageFooter);
 
             return new ChangeLogEntry(
                 date: commit.Date,
@@ -96,6 +96,12 @@ namespace Grynwald.ChangeLog.Model
                 breakingChangeDescriptions: breakingChangeDescriptions,
                 commit: commit.Id
             );
+        }
+
+
+        public void Add(ChangeLogEntryFooter footer)
+        {
+            m_Footers.Add(footer ?? throw new ArgumentNullException(nameof(footer)));
         }
 
 

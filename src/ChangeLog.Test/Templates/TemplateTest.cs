@@ -430,10 +430,21 @@ namespace Grynwald.ChangeLog.Test.Templates
         [Fact]
         public void ChangeLog_is_converted_to_expected_Markdown_16()
         {
-            // if an entry's CommitWebUri is set, the link must be included in the output
-
-            var entry = GetChangeLogEntry(scope: "scope1", type: "feat", summary: "Some change");
-            entry.CommitWebUri = new Uri("http://example.com/some-link");
+            // if an entry's "Commit" footer contains a web link, it must be included in the outout
+            var entry = GetChangeLogEntry(
+                scope: "scope1",
+                type: "feat",
+                summary: "Some change",
+                commit: TestGitIds.Id1,
+                footers: new[]
+                {
+                    new ChangeLogEntryFooter(
+                        new("Commit"),
+                        new CommitReferenceTextElementWithWebLink(
+                            TestGitIds.Id1.ToString(),
+                            TestGitIds.Id1,
+                            new("http://example.com/some-link")))
+                });
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", null, entry);
 

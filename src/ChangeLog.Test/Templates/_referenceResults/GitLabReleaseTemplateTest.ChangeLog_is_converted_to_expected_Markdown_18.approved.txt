@@ -14,12 +14,6 @@
 
 ##### Some feature
 
-- Commit: `05e1587`
-
 ##### Some bug fix
 
-- Commit: `fecc81a`
-
 ##### A documentation change
-
-- Commit: `0398ff2`

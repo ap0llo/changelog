@@ -144,26 +144,14 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         {
             m_Logger.LogDebug($"Adding links to entry {entry.Commit}");
 
-            var webUri = await TryGetWebUriAsync(projectInfo, gitlabClient, entry.Commit);
-
-            if (webUri is not null)
-            {
-                entry.CommitWebUri = webUri;
-            }
-            else
-            {
-                m_Logger.LogWarning($"Failed to determine web uri for commit '{entry.Commit}'");
-            }
-
-
             foreach (var footer in entry.Footers)
             {
                 if (footer.Value is CommitReferenceTextElement commitReference)
                 {
-                    var referenceWebUri = await TryGetWebUriAsync(projectInfo, gitlabClient, commitReference.CommitId);
-                    if (referenceWebUri is not null)
+                    var uri = await TryGetWebUriAsync(projectInfo, gitlabClient, commitReference.CommitId);
+                    if (uri is not null)
                     {
-                        footer.Value = CommitReferenceTextElementWithWebLink.FromCommitReference(commitReference, referenceWebUri);
+                        footer.Value = CommitReferenceTextElementWithWebLink.FromCommitReference(commitReference, uri);
                     }
                     else
                     {

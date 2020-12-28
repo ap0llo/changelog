@@ -11,8 +11,5 @@
 ### <a id="changelog-heading-efgh5678efgh5678efgh5678efgh5678efgh5678"></a> Some feature
 
 - See Also: [Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
-- Commit: `efgh567`
 
 ### <a id="changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234"></a> Some bug fix
-
-- Commit: `abcd123`

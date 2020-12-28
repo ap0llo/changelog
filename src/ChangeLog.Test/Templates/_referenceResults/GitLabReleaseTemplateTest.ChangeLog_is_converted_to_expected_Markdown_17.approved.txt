@@ -1,4 +1,3 @@
 ﻿##### **scope1:** Some change
 
 - See Also: [Link](http://example.com/)
-- Commit: `0398ff2`

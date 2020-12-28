@@ -10,8 +10,4 @@
 
 ##### **Scope 1 Display Name:** Some change
 
-- Commit: `0398ff2`
-
 ##### **scope2:** A bug was fixed
-
-- Commit: `fecc81a`

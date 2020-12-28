@@ -416,7 +416,17 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 GetSingleVersionChangeLog(
                     version: "1.2.3",
                     commitId: TestGitIds.Id1,
-                    entries: new []{ GetChangeLogEntry(commit: TestGitIds.Id1) })
+                    entries: new []
+                    {
+                        GetChangeLogEntry(
+                            commit: TestGitIds.Id1,
+                            footers: new []
+                            {
+                                new ChangeLogEntryFooter(
+                                    new("Commit"),
+                                    new CommitReferenceTextElement(TestGitIds.Id1.ToString(), TestGitIds.Id1))
+                            })
+                    })
             };
 
             var sut = new GitHubLinkTask(m_Logger, configuration, repoMock.Object, m_GitHubClientFactoryMock.Object);
@@ -437,56 +447,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             m_GithubClientMock.Repository.Commit.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             m_GithubClientMock.Repository.Commit.Verify(x => x.Get(testCase.ExpectedOwner, testCase.ExpectedRepository, TestGitIds.Id1.Id), Times.Once);
         }
-
-
-        [Fact]
-        public async Task Run_adds_a_link_to_all_commits_if_url_can_be_parsed()
-        {
-            // ARRANGE
-            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
-
-            m_GithubClientMock.Repository.Commit
-                .Setup(x => x.Get("owner", "repo", It.IsAny<string>()))
-                .ReturnsTestCommit();
-
-            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
-
-            var changeLog = new ApplicationChangeLog()
-            {
-                GetSingleVersionChangeLog(
-                    "1.2.3",
-                    null,
-                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1),
-                    GetChangeLogEntry(summary: "Entry2", commit: TestGitIds.Id2)
-                ),
-                GetSingleVersionChangeLog(
-                    "4.5.6",
-                    null,
-                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id3),
-                    GetChangeLogEntry(summary: "Entry2", commit: TestGitIds.Id4)
-                )
-            };
-
-            // ACT 
-            var result = await sut.RunAsync(changeLog);
-
-            // ASSERT
-            Assert.Equal(ChangeLogTaskResult.Success, result);
-            var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
-            Assert.All(entries, entry =>
-            {
-                Assert.NotNull(entry.CommitWebUri);
-                var expectedUri = TestGitHubCommit.FromCommitSha(entry.Commit.Id).HtmlUri;
-                Assert.Equal(expectedUri, entry.CommitWebUri);
-
-                m_GithubClientMock.Repository.Commit.Verify(x => x.Get("owner", "repo", entry.Commit.Id), Times.Once);
-            });
-
-            m_GithubClientMock.Repository.Commit.Verify(x => x.Get(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Exactly(entries.Length));
-        }
-
-        //TODO: Run does not add a commit link if commit cannot be found
 
         [Theory]
         [InlineData("#23", 23, "owner", "repo")]
@@ -763,8 +723,15 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 GetSingleVersionChangeLog(
                     "1.2.3",
                     null,
-                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1)
-                )
+                    GetChangeLogEntry(
+                        summary: "Entry1",
+                        commit: TestGitIds.Id1,
+                        footers: new[]
+                        {
+                            new ChangeLogEntryFooter(
+                                    new("Commit"),
+                                    new CommitReferenceTextElement(TestGitIds.Id1.ToString(), TestGitIds.Id1))
+                        }))
             };
 
             // ACT 
@@ -782,7 +749,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
 
             m_GithubClientMock.Repository.Commit
-                .SetupGet()
+                .Setup(x => x.Get("owner", "repo", It.IsAny<string>()))
                 .ReturnsTestCommit();
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
@@ -830,7 +797,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
 
             m_GithubClientMock.Repository.Commit
-                .SetupGet()
+                .Setup(x => x.Get("owner", "repo", It.IsAny<string>()))
                 .ThrowsNotFound();
 
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);

@@ -11,8 +11,5 @@
 ##### Some feature
 
 - See Also: [Example](https://example.com/)
-- Commit: `efgh567`
 
 ##### Some bug fix
-
-- Commit: `abcd123`

@@ -14,12 +14,6 @@
 
 ### <a id="changelog-heading-05e15876bbf34b760498c7acb366ef371652750c"></a> Some feature
 
-- Commit: `05e1587`
-
 ### <a id="changelog-heading-fecc81adb3c0389ded66e848b1cfd904fd7d7e5b"></a> Some bug fix
 
-- Commit: `fecc81a`
-
 ### <a id="changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3"></a> A documentation change
-
-- Commit: `0398ff2`

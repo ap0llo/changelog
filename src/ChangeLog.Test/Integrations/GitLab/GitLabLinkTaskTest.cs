@@ -179,53 +179,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             m_ClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
         }
 
-        [Fact]
-        public async Task Run_adds_a_link_to_all_commits_if_url_can_be_parsed()
-        {
-            // ARRANGE
-            m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/user/repo.git");
-
-            m_ClientMock.Commits
-                .Setup(x => x.GetAsync(MatchProjectId("user/repo"), It.IsAny<string>()))
-                .ReturnsTestCommit(sha => $"https://example.com/{sha}");
-
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
-
-            var changeLog = new ApplicationChangeLog()
-            {
-                GetSingleVersionChangeLog(
-                    "1.2.3",
-                    null,
-                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1),
-                    GetChangeLogEntry(summary: "Entry2", commit: TestGitIds.Id2)
-                ),
-                GetSingleVersionChangeLog(
-                    "4.5.6",
-                    null,
-                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id3),
-                    GetChangeLogEntry(summary: "Entry2", commit: TestGitIds.Id4)
-                )
-            };
-
-            // ACT 
-            var result = await sut.RunAsync(changeLog);
-
-            // ASSERT
-            Assert.Equal(ChangeLogTaskResult.Success, result);
-
-            var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
-            Assert.All(entries, entry =>
-            {
-                Assert.NotNull(entry.CommitWebUri);
-                var expectedUri = new Uri($"https://example.com/{entry.Commit.Id}");
-                Assert.Equal(expectedUri, entry.CommitWebUri);
-
-                m_ClientMock.Commits.Verify(x => x.GetAsync(MatchProjectId("user/repo"), entry.Commit.Id), Times.Once);
-            });
-
-            m_ClientMock.Commits.Verify(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<string>()), Times.Exactly(entries.Length));
-        }
-
         [Theory]
         [InlineData("gitlab.com")]
         [InlineData("example.com")]
@@ -870,7 +823,17 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 GetSingleVersionChangeLog(
                     version: "1.2.3",
                     commitId: TestGitIds.Id1,
-                    entries: new []{ GetChangeLogEntry(commit: TestGitIds.Id1) })
+                    entries: new []
+                    {
+                        GetChangeLogEntry(
+                            commit: TestGitIds.Id1,
+                            footers: new[]
+                            {
+                                new ChangeLogEntryFooter(
+                                    new("Commit"),
+                                    new CommitReferenceTextElement(TestGitIds.Id1.ToString(), TestGitIds.Id1))
+                            })
+                    })
             };
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Integrations.GitLab = testCase.Configuration;
@@ -898,10 +861,10 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         public async Task Run_adds_web_links_to_commit_references()
         {
             // ARRANGE
-            m_RepositoryMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
+            m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/user/repo.git");
 
             m_ClientMock.Commits
-                .SetupGetAsync()
+                .Setup(x => x.GetAsync(MatchProjectId("user/repo"), It.IsAny<string>()))
                 .ReturnsTestCommit(sha => $"https://example.com/commit/{sha}");
 
             var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
@@ -940,15 +903,14 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 });
         }
 
-
         [Fact]
         public async Task Run_ignores_commit_references_that_cannot_be_found()
         {
             // ARRANGE
-            m_RepositoryMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
+            m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/user/repo.git");
 
             m_ClientMock.Commits
-                .SetupGetAsync()
+                .Setup(x => x.GetAsync(MatchProjectId("user/repo"), It.IsAny<string>()))
                 .ThrowsNotFound();
 
             var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);

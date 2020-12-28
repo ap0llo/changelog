@@ -368,17 +368,6 @@ namespace Grynwald.ChangeLog.Templates
                 );
             }
 
-            //TODO: Move this to the model class (an "implicit footer")
-            MdSpan commitText = new MdCodeSpan(entry.Commit.ToString(abbreviate: true));
-            if (entry.CommitWebUri != null)
-            {
-                commitText = new MdLinkSpan(commitText, entry.CommitWebUri);
-            }
-
-            footerList.Add(
-                new MdListItem("Commit: ", commitText)
-            );
-
             return block;
         }
 
