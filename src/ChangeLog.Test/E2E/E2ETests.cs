@@ -78,6 +78,8 @@ namespace Grynwald.ChangeLog.Test.E2E
             var commit = await git.CommitAsync("feat: Some New feature");
             await git.TagAsync("v1.0.0", commit);
 
+            await Task.Delay(500);
+
             var expectedOutputPath = Path.Combine(temporaryDirectory, "changelog.md");
             var expectedOutput = String.Join(Environment.NewLine,
                 "# Change Log",
@@ -113,6 +115,8 @@ namespace Grynwald.ChangeLog.Test.E2E
             var commit = await git.CommitAsync("feat: Some New feature");
             await git.TagAsync("v1.0.0", commit);
 
+            await Task.Delay(500);
+
             var expectedOutputPath = Path.Combine(repositoryPath, "changelog.md");
 
             // ACT 
@@ -129,7 +133,7 @@ namespace Grynwald.ChangeLog.Test.E2E
         [InlineData("")]
         [InlineData("dir1")]
         [InlineData("dir1/dir2")]
-        public async Task When_no_repositoy_is_specified_the_repository_is_located_from_the_current_directory(string relativeWorkingDirectoryPath)
+        public async Task When_no_repository_is_specified_the_repository_is_located_from_the_current_directory(string relativeWorkingDirectoryPath)
         {
             // ARRANGE
             using var temporaryDirectory = new TemporaryDirectory();
@@ -142,6 +146,8 @@ namespace Grynwald.ChangeLog.Test.E2E
 
             var commit = await git.CommitAsync("feat: Some New feature");
             await git.TagAsync("v1.0.0", commit);
+
+            await Task.Delay(500);
 
             var expectedOutputPath = Path.Combine(temporaryDirectory, "changelog.md");
             var expectedOutput = String.Join(Environment.NewLine,
