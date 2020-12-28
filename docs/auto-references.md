@@ -10,6 +10,7 @@ ChangeLog will recognize references to commits, issues and Pull Requests in comm
 
 The following references are supported:
 
+- [Web Urls](#web-urls)
 - [Commit references](#commit-references)
 - [Change Log Entry References](#change-log-entry-references)
 - GitHub References (when [GitHub Integration](./integrations/github.md) is enabled)
@@ -18,6 +19,10 @@ The following references are supported:
   - Issue References (e.g. `#23`)
   - Merge Request References (e.g. `!42`)
   - Milestone References (e.g. `%123`)
+
+## Web Urls
+
+If a footer's value is va valid `http` or `https` url, the footer will be included in the generated change log as link.
 
 ## Commit References
 

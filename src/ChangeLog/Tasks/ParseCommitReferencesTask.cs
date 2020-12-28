@@ -10,7 +10,7 @@ namespace Grynwald.ChangeLog.Tasks
 {
     /// <summary>
     /// Detects footer values that are references to git commits.
-    /// When a valid reference to a git commit is found, replaces sets the footer's value (see <see cref="ChangeLogEntryFooter.Value"/>) with a <see cref="CommitReferenceTextElement"/>.
+    /// When a valid reference to a git commit is found, replaces the footer's value (see <see cref="ChangeLogEntryFooter.Value"/>) with a <see cref="CommitReferenceTextElement"/>.
     /// </summary>
     internal sealed class ParseCommitReferencesTask : SynchronousChangeLogTask
     {
