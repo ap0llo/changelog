@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Grynwald.ChangeLog.Validation;
 
 namespace Grynwald.ChangeLog.Configuration
 {
@@ -98,7 +97,11 @@ namespace Grynwald.ChangeLog.Configuration
             [SettingDisplayName("Template Name")]
             public TemplateName Name { get; set; }
 
-            public DefaultTemplateConfiguration Default { get; set; } = new DefaultTemplateConfiguration();
+            public DefaultTemplateConfiguration Default { get; set; } = new();
+
+            public GitHubReleaseTemplateConfiguration GitHubRelease { get; set; } = new();
+
+            public GitLabReleaseTemplateConfiguration GitLabRelease { get; set; } = new();
         }
 
         public enum MarkdownPreset
@@ -112,6 +115,21 @@ namespace Grynwald.ChangeLog.Configuration
             [JsonSchemaDefaultValue]
             [SettingDisplayName("Default Template Markdown Preset")]
             public MarkdownPreset MarkdownPreset { get; set; } = MarkdownPreset.Default;
+
+            [JsonSchemaDefaultValue]
+            public bool NormalizeReferences { get; set; } = true;
+        }
+
+        public class GitHubReleaseTemplateConfiguration
+        {
+            [JsonSchemaDefaultValue]
+            public bool NormalizeReferences { get; set; } = true;
+        }
+
+        public class GitLabReleaseTemplateConfiguration
+        {
+            [JsonSchemaDefaultValue]
+            public bool NormalizeReferences { get; set; } = true;
         }
 
         public class EntryTypeConfiguration

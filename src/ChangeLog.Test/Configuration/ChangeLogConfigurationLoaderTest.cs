@@ -470,6 +470,20 @@ namespace Grynwald.ChangeLog.Test.Configuration
             {
                 yield return TestCase("template:default:markdownpreset", config => config.Template.Default.MarkdownPreset, value);
             }
+            yield return TestCase("template:default:normalizeReferences", config => config.Template.Default.NormalizeReferences, true);
+            yield return TestCase("template:default:normalizeReferences", config => config.Template.Default.NormalizeReferences, false);
+
+            //
+            // GitHubRelease Template settings
+            //
+            yield return TestCase("template:gitHubRelease:normalizeReferences", config => config.Template.GitHubRelease.NormalizeReferences, true);
+            yield return TestCase("template:gitHubRelease:normalizeReferences", config => config.Template.GitHubRelease.NormalizeReferences, false);
+
+            //
+            // GitLabRelease Template settings
+            //
+            yield return TestCase("template:gitLabRelease:normalizeReferences", config => config.Template.GitLabRelease.NormalizeReferences, true);
+            yield return TestCase("template:gitLabRelease:normalizeReferences", config => config.Template.GitLabRelease.NormalizeReferences, false);
 
             //
             // Integration provider setting

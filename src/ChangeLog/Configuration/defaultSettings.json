@@ -101,7 +101,16 @@
       "name": "Default",
 
       "default": {
-        "markdownPreset": "Default"
+        "markdownPreset": "Default",
+        "normalizeReferences": true
+      },
+
+      "gitHubRelease": {
+        "normalizeReferences": true
+      },
+
+      "gitLabRelease": {
+        "normalizeReferences": true
       }
     },
 
