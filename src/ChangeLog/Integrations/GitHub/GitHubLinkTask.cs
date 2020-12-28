@@ -185,7 +185,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                     }
                     else
                     {
-                        m_Logger.LogWarning($"Failed to determine web uri for commit '{entry.Commit}'");
+                        m_Logger.LogWarning($"Failed to determine web uri for commit '{commitReference.CommitId}'");
                     }
                 }
                 else if (footer.Value is PlainTextElement && TryParseReference(projectInfo, footer.Value.Text, out var owner, out var repo, out var id))

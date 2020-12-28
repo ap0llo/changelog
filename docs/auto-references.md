@@ -25,7 +25,7 @@ When a footer's value is a git commit id and the commit can be found in the repo
 
 Commit references are rendered as code spans in the generated change log.
 
-If the [GitHub Integration](./integrations/github.md) is enabled, commit references will be rendered as links to the referenced commit on GitHub.
+If the [GitHub](./integrations/github.md) or [GitLab](./integrations/gitlab.md) integration is enabled, commit references will be rendered as links to the referenced commit on GitHub respectively GitLab.
 
 Note that a if the reference refers to a commit that corresponds to a different change log entry, the reference will be converted to a [Change Log Entry Reference](#change-log-entry-references).
 

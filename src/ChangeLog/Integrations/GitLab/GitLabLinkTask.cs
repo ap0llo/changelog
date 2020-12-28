@@ -50,7 +50,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             var projectInfo = GetProjectInfo();
             if (projectInfo != null)
             {
-                m_Logger.LogInformation($"Enabling GitLab integration with settings: " +
+                m_Logger.LogDebug($"Enabling GitLab integration with settings: " +
                     $"{nameof(projectInfo.Host)} = '{projectInfo.Host}', " +
                     $"{nameof(projectInfo.Namespace)} = '{projectInfo.Namespace}', " +
                     $"{nameof(projectInfo.Project)} = '{projectInfo.Project}'");
@@ -61,7 +61,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                 return ChangeLogTaskResult.Skipped;
             }
 
-            m_Logger.LogInformation("Adding GitLab links to changelog");
+            m_Logger.LogInformation("Adding GitLab links to change log");
 
             var gitlabClient = m_ClientFactory.CreateClient(projectInfo.Host);
 
@@ -146,7 +146,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
             var webUri = await TryGetWebUriAsync(projectInfo, gitlabClient, entry.Commit);
 
-            if (webUri != null)
+            if (webUri is not null)
             {
                 entry.CommitWebUri = webUri;
             }
@@ -158,10 +158,22 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
             foreach (var footer in entry.Footers)
             {
-                if (TryParseReference(projectInfo, footer.Value.Text, out var type, out var projectPath, out var id))
+                if (footer.Value is CommitReferenceTextElement commitReference)
+                {
+                    var referenceWebUri = await TryGetWebUriAsync(projectInfo, gitlabClient, commitReference.CommitId);
+                    if (referenceWebUri is not null)
+                    {
+                        footer.Value = CommitReferenceTextElementWithWebLink.FromCommitReference(commitReference, referenceWebUri);
+                    }
+                    else
+                    {
+                        m_Logger.LogWarning($"Failed to determine web uri for commit '{entry.Commit}'");
+                    }
+                }
+                else if (footer.Value is PlainTextElement && TryParseReference(projectInfo, footer.Value.Text, out var type, out var projectPath, out var id))
                 {
                     var uri = await TryGetWebUriAsync(gitlabClient, type.Value, projectPath, id);
-                    if (uri != null)
+                    if (uri is not null)
                     {
                         footer.Value = new WebLinkTextElement(footer.Value.Text, uri);
                     }

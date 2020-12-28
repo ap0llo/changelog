@@ -893,5 +893,85 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             m_ClientMock.Commits.Verify(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<string>()), Times.Once);
             m_ClientMock.Commits.Verify(x => x.GetAsync(MatchProjectId($"{testCase.ExpectedNamespace}/{testCase.ExpectedProject}"), TestGitIds.Id1.Id), Times.Once);
         }
+
+        [Fact]
+        public async Task Run_adds_web_links_to_commit_references()
+        {
+            // ARRANGE
+            m_RepositoryMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
+
+            m_ClientMock.Commits
+                .SetupGetAsync()
+                .ReturnsTestCommit(sha => $"https://example.com/commit/{sha}");
+
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    "1.2.3",
+                    null,
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new ChangeLogEntryFooter[]
+                    {
+                        new (new ("Footer1"), new CommitReferenceTextElement("id1", TestGitIds.Id1)),
+                        new (new ("Footer1"), new CommitReferenceTextElement("id2", TestGitIds.Id2))
+                    })
+                )
+            };
+
+            // ACT
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+            var entry = Assert.Single(changeLog.ChangeLogs.SelectMany(x => x.AllEntries));
+            Assert.Collection(entry.Footers,
+                x =>
+                {
+                    var expectedUri = new Uri($"https://example.com/commit/{TestGitIds.Id1.Id}");
+                    var webLink = Assert.IsType<CommitReferenceTextElementWithWebLink>(x.Value);
+                    Assert.Equal(expectedUri, webLink.Uri);
+                },
+                x =>
+                {
+                    var expectedUri = new Uri($"https://example.com/commit/{TestGitIds.Id2.Id}");
+                    var webLink = Assert.IsType<CommitReferenceTextElementWithWebLink>(x.Value);
+                    Assert.Equal(expectedUri, webLink.Uri);
+                });
+        }
+
+
+        [Fact]
+        public async Task Run_ignores_commit_references_that_cannot_be_found()
+        {
+            // ARRANGE
+            m_RepositoryMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
+
+            m_ClientMock.Commits
+                .SetupGetAsync()
+                .ThrowsNotFound();
+
+            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    "1.2.3",
+                    null,
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new ChangeLogEntryFooter[]
+                    {
+                        new (new ("Footer1"), new CommitReferenceTextElement("id1", TestGitIds.Id1)),
+                    })
+                )
+            };
+
+            // ACT
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+            var entry = Assert.Single(changeLog.ChangeLogs.SelectMany(x => x.AllEntries));
+            Assert.Collection(entry.Footers, x => Assert.IsType<CommitReferenceTextElement>(x.Value));
+        }
     }
 }

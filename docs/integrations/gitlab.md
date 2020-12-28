@@ -3,6 +3,7 @@
 The GitLab integration provides the following features:
 
 - Add link to the GitLab web site to the commit for every change log entry
+- Add web links for commit references that are detected in footers (see [Automatic References](../auto-references.md#commit-references))
 - Recognize GitLab-specific references (see also [Automatic References](../auto-references.md)) in footers and add GitLab web links.<br>
   The following types of references are recognized:
   - Issues
