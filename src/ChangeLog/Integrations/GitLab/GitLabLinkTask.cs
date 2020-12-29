@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitLabApiClient;
 using GitLabApiClient.Models.MergeRequests.Requests;
@@ -18,17 +16,6 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 {
     internal sealed class GitLabLinkTask : IChangeLogTask
     {
-        private enum GitLabReferenceType
-        {
-            Issue,
-            MergeRequest,
-            Milestone
-        }
-
-        private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;
-        private static readonly Regex s_GitLabReferencePattern = new Regex("^((?<namespace>[A-Z0-9-_./]+)/)?(?<project>[A-Z0-9-_.]+)?(?<type>(#|!|%))(?<id>\\d+)$", s_RegexOptions);
-
-
         private readonly ILogger<GitLabLinkTask> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;
         private readonly IGitRepository m_Repository;
@@ -69,7 +56,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             {
                 foreach (var entry in versionChangeLog.AllEntries)
                 {
-                    await ProcessEntryAsync(projectInfo, gitlabClient, entry);
+                    await ProcessEntryAsync(gitlabClient, projectInfo, entry);
                 }
             }
 
@@ -140,7 +127,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             return null;
         }
 
-        private async Task ProcessEntryAsync(GitLabProjectInfo projectInfo, IGitLabClient gitlabClient, ChangeLogEntry entry)
+        private async Task ProcessEntryAsync(IGitLabClient gitlabClient, GitLabProjectInfo projectInfo, ChangeLogEntry entry)
         {
             m_Logger.LogDebug($"Adding links to entry {entry.Commit}");
 
@@ -148,7 +135,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             {
                 if (footer.Value is CommitReferenceTextElement commitReference)
                 {
-                    var uri = await TryGetWebUriAsync(projectInfo, gitlabClient, commitReference.CommitId);
+                    var uri = await TryGetWebUriAsync(gitlabClient, projectInfo, commitReference.CommitId);
                     if (uri is not null)
                     {
                         footer.Value = CommitReferenceTextElementWithWebLink.FromCommitReference(commitReference, uri);
@@ -158,22 +145,22 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                         m_Logger.LogWarning($"Failed to determine web uri for commit '{entry.Commit}'");
                     }
                 }
-                else if (footer.Value is PlainTextElement && TryParseReference(projectInfo, footer.Value.Text, out var type, out var projectPath, out var id))
+                else if (footer.Value is PlainTextElement && GitLabReference.TryParse(footer.Value.Text, projectInfo, out var reference))
                 {
-                    var uri = await TryGetWebUriAsync(gitlabClient, type.Value, projectPath, id);
+                    var uri = await TryGetWebUriAsync(gitlabClient, reference);
                     if (uri is not null)
                     {
-                        footer.Value = new WebLinkTextElement(footer.Value.Text, uri);
+                        footer.Value = new GitLabReferenceTextElement(footer.Value.Text, uri, projectInfo, reference);
                     }
                     else
                     {
-                        m_Logger.LogWarning($"Failed to determine web uri for GitLab {type} reference '{footer.Value}'");
+                        m_Logger.LogWarning($"Failed to determine web uri for GitLab reference '{reference}'");
                     }
                 }
             }
         }
 
-        private async Task<Uri?> TryGetWebUriAsync(GitLabProjectInfo projectInfo, IGitLabClient gitlabClient, GitId commitId)
+        private async Task<Uri?> TryGetWebUriAsync(IGitLabClient gitlabClient, GitLabProjectInfo projectInfo, GitId commitId)
         {
             m_Logger.LogDebug($"Getting web uri for commit '{commitId}'");
 
@@ -188,92 +175,31 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             }
         }
 
-        private bool TryParseReference(GitLabProjectInfo projectInfo, string input, [NotNullWhen(true)] out GitLabReferenceType? type, [NotNullWhen(true)] out string? projectPath, out int id)
+        private Task<Uri?> TryGetWebUriAsync(IGitLabClient gitlabClient, GitLabReference reference)
         {
-            input = input.Trim();
-
-            var match = s_GitLabReferencePattern.Match(input);
-
-            if (match.Success)
-            {
-                var idString = match.Groups["id"].ToString();
-                if (Int32.TryParse(idString, out id))
-                {
-                    var projectNamespace = match.Groups["namespace"].Value;
-                    var projectName = match.Groups["project"].Value;
-                    var typeString = match.Groups["type"].Value;
-
-                    switch (typeString)
-                    {
-                        case "#":
-                            type = GitLabReferenceType.Issue;
-                            break;
-                        case "!":
-                            type = GitLabReferenceType.MergeRequest;
-                            break;
-                        case "%":
-                            type = GitLabReferenceType.Milestone;
-                            break;
-
-                        default:
-                            type = null;
-                            projectPath = null;
-                            id = -1;
-                            return false;
-                    }
-
-                    // no project name or namespace => reference within the current project
-                    if (String.IsNullOrEmpty(projectNamespace) && String.IsNullOrEmpty(projectName))
-                    {
-                        projectPath = projectInfo.ProjectPath;
-                        return true;
-                    }
-                    // project name without namespace => reference to another project within the same namespace
-                    else if (String.IsNullOrEmpty(projectNamespace) && !String.IsNullOrEmpty(projectName))
-                    {
-                        projectPath = $"{projectInfo.Namespace}/{projectName}";
-                        return true;
-                    }
-                    // namespace and project name found => full reference
-                    else if (!String.IsNullOrEmpty(projectNamespace) && !String.IsNullOrEmpty(projectName))
-                    {
-                        projectPath = $"{projectNamespace}/{projectName}";
-                        return true;
-                    }
-                }
-            }
-
-            type = null;
-            projectPath = null;
-            id = -1;
-            return false;
-        }
-
-        private Task<Uri?> TryGetWebUriAsync(IGitLabClient gitlabClient, GitLabReferenceType type, string projectPath, int id)
-        {
-            switch (type)
+            switch (reference.Type)
             {
                 case GitLabReferenceType.Issue:
-                    return TryGetIssueWebUriAsync(gitlabClient, projectPath, id);
+                    return TryGetIssueWebUriAsync(gitlabClient, reference);
 
                 case GitLabReferenceType.MergeRequest:
-                    return TryGetMergeRequestWebUriAsync(gitlabClient, projectPath, id);
+                    return TryGetMergeRequestWebUriAsync(gitlabClient, reference);
 
                 case GitLabReferenceType.Milestone:
-                    return TryGetMilestoneWebUriAsync(gitlabClient, projectPath, id);
+                    return TryGetMilestoneWebUriAsync(gitlabClient, reference);
 
                 default:
                     throw new InvalidOperationException();
             }
         }
 
-        private async Task<Uri?> TryGetIssueWebUriAsync(IGitLabClient gitlabClient, string projectPath, int id)
+        private async Task<Uri?> TryGetIssueWebUriAsync(IGitLabClient gitlabClient, GitLabReference reference)
         {
-            m_Logger.LogDebug($"Getting web uri for issue {id}");
+            m_Logger.LogDebug($"Getting web uri for issue {reference.Id}");
 
             try
             {
-                var issue = await gitlabClient.Issues.GetAsync(projectPath, id);
+                var issue = await gitlabClient.Issues.GetAsync(reference.Project.ProjectPath, reference.Id);
                 return new Uri(issue.WebUrl);
             }
             catch (Exception ex) when (ex is GitLabException gitlabException && gitlabException.HttpStatusCode == HttpStatusCode.NotFound)
@@ -282,15 +208,15 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             }
         }
 
-        private async Task<Uri?> TryGetMergeRequestWebUriAsync(IGitLabClient gitlabClient, string projectPath, int id)
+        private async Task<Uri?> TryGetMergeRequestWebUriAsync(IGitLabClient gitlabClient, GitLabReference reference)
         {
-            m_Logger.LogDebug($"Getting web uri for Merge Request {id}");
+            m_Logger.LogDebug($"Getting web uri for Merge Request {reference.Id}");
 
             try
             {
-                var mergeRequests = await gitlabClient.MergeRequests.GetAsync(projectPath, queryOptions =>
+                var mergeRequests = await gitlabClient.MergeRequests.GetAsync(reference.Project.ProjectPath, queryOptions =>
                     {
-                        queryOptions.MergeRequestsIds = new[] { id };
+                        queryOptions.MergeRequestsIds = new[] { reference.Id };
                         queryOptions.State = QueryMergeRequestState.All;
                     });
 
@@ -310,9 +236,9 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
             }
         }
 
-        private async Task<Uri?> TryGetMilestoneWebUriAsync(IGitLabClient gitlabClient, string projectPath, int id)
+        private async Task<Uri?> TryGetMilestoneWebUriAsync(IGitLabClient gitlabClient, GitLabReference reference)
         {
-            m_Logger.LogDebug($"Getting web uri for Milestone {id}");
+            m_Logger.LogDebug($"Getting web uri for Milestone {reference.Id}");
 
             try
             {
@@ -321,9 +247,9 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                 // within the project, but some other id.
                 // Instead, use GetMilestonesAsync() and query for a single milestone id
                 // for which we can use the id in the reference.
-                var milestones = await gitlabClient.Projects.GetMilestonesAsync(projectPath, queryOptions =>
+                var milestones = await gitlabClient.Projects.GetMilestonesAsync(reference.Project.ProjectPath, queryOptions =>
                 {
-                    queryOptions.MilestoneIds = new[] { id };
+                    queryOptions.MilestoneIds = new[] { reference.Id };
                     queryOptions.State = MilestoneState.All;
                 });
 

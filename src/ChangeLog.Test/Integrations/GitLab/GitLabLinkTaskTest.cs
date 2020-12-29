@@ -200,22 +200,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         }
 
         [Theory]
-        // reference within the same repository
         [InlineData("#23", 23, "owner/repo")]
-        // reference to another project in the same namespace
         [InlineData("anotherRepo#42", 42, "owner/anotherRepo")]
-        // reference to another project (including project namespace)
         [InlineData("anotherOwner/anotherRepo#42", 42, "anotherOwner/anotherRepo")]
-        [InlineData("another-Owner/another-Repo#42", 42, "another-Owner/another-Repo")]
-        [InlineData("another.Owner/another.Repo#42", 42, "another.Owner/another.Repo")]
-        [InlineData("another_Owner/another_Repo#42", 42, "another_Owner/another_Repo")]
-        // Linking must ignore trailing and leading whitespace
-        [InlineData(" #23", 23, "owner/repo")]
-        [InlineData("#23 ", 23, "owner/repo")]
-        [InlineData(" anotherRepo#42", 42, "owner/anotherRepo")]
-        [InlineData("anotherRepo#42 ", 42, "owner/anotherRepo")]
-        [InlineData(" anotherOwner/anotherRepo#42", 42, "anotherOwner/anotherRepo")]
-        [InlineData("anotherOwner/anotherRepo#42 ", 42, "anotherOwner/anotherRepo")]
         public async Task Run_adds_issue_links_to_footers(string footerText, int id, string projectPath)
         {
             // ARRANGE            
@@ -258,9 +245,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 {
                     var expectedUri = new Uri($"https://example.com/{projectPath}/issues/{id}");
 
-                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
-                    Assert.Equal(expectedUri, webLink.Uri);
-                    Assert.Equal(footerText, webLink.Text);
+                    var referenceTextElement = Assert.IsType<GitLabReferenceTextElement>(footer.Value);
+                    Assert.Equal(expectedUri, referenceTextElement.Uri);
+                    Assert.Equal(footerText, referenceTextElement.Text);
+                    Assert.Equal(GitLabReferenceType.Issue, referenceTextElement.Reference.Type);
+                    Assert.Equal(projectPath, referenceTextElement.Reference.Project.ProjectPath);
+                    Assert.Equal(id, referenceTextElement.Reference.Id);
                 });
 
             });
@@ -271,11 +261,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
 
         [Theory]
-        // reference within the same repository
         [InlineData("#23", 23, "owner/repo")]
-        // reference to another project in the same namespace
         [InlineData("anotherRepo#42", 42, "owner/anotherRepo")]
-        // reference to another project (including project namespace)
         [InlineData("anotherOwner/anotherRepo#42", 42, "anotherOwner/anotherRepo")]
         public async Task Run_does_not_add_link_if_issue_cannot_be_found(string footerText, int id, string projectPath)
         {
@@ -326,15 +313,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
 
         [Theory]
-        // reference within the same repository
         [InlineData("!23", 23, "owner/repo")]
-        // reference to another project in the same namespace
         [InlineData("anotherRepo!42", 42, "owner/anotherRepo")]
-        // reference to another project (including project namespace)
         [InlineData("anotherOwner/anotherRepo!42", 42, "anotherOwner/anotherRepo")]
-        [InlineData("another-Owner/another-Repo!42", 42, "another-Owner/another-Repo")]
-        [InlineData("another.Owner/another.Repo!42", 42, "another.Owner/another.Repo")]
-        [InlineData("another_Owner/another_Repo!42", 42, "another_Owner/another_Repo")]
         public async Task Run_adds_merge_request_links_to_footers(string footerText, int id, string projectPath)
         {
             // ARRANGE            
@@ -373,13 +354,16 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
-                Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
+                Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Merge-Request")), footer =>
                 {
-                    var expectedUri = new Uri($"https://example.com/{projectPath}/issues/{id}");
+                    var expectedUri = new Uri($"https://example.com/{projectPath}/merge_requests/{id}");
 
-                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
-                    Assert.Equal(expectedUri, webLink.Uri);
-                    Assert.Equal(footerText, webLink.Text);
+                    var referenceTextElement = Assert.IsType<GitLabReferenceTextElement>(footer.Value);
+                    Assert.Equal(expectedUri, referenceTextElement.Uri);
+                    Assert.Equal(footerText, referenceTextElement.Text);
+                    Assert.Equal(GitLabReferenceType.MergeRequest, referenceTextElement.Reference.Type);
+                    Assert.Equal(projectPath, referenceTextElement.Reference.Project.ProjectPath);
+                    Assert.Equal(id, referenceTextElement.Reference.Id);
                 });
 
             });
@@ -402,11 +386,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         }
 
         [Theory]
-        // reference within the same repository
         [InlineData("!23", "owner/repo")]
-        // reference to another project in the same namespace
         [InlineData("anotherRepo!42", "owner/anotherRepo")]
-        // reference to another project (including project namespace)
         [InlineData("anotherOwner/anotherRepo!42", "anotherOwner/anotherRepo")]
         public async Task Run_does_not_add_link_if_merge_request_cannot_be_found(string footerText, string projectPath)
         {
@@ -444,7 +425,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
             Assert.All(entries, entry =>
             {
-                Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Issue")), footer =>
+                Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("Merge-Request")), footer =>
                 {
                     Assert.False(footer.Value is IWebLinkTextElement, "Footer value should not contain a link");
                 });
@@ -457,15 +438,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
 
         [Theory]
-        // reference within the same repository
         [InlineData("%23", 23, "owner/repo")]
-        // reference to another project in the same namespace
         [InlineData("anotherRepo%42", 42, "owner/anotherRepo")]
-        // reference to another project (including project namespace)
         [InlineData("anotherOwner/anotherRepo%42", 42, "anotherOwner/anotherRepo")]
-        [InlineData("another-Owner/another-Repo%42", 42, "another-Owner/another-Repo")]
-        [InlineData("another.Owner/another.Repo%42", 42, "another.Owner/another.Repo")]
-        [InlineData("another_Owner/another_Repo%42", 42, "another_Owner/another_Repo")]
         public async Task Run_adds_milestone_links_to_footers(string footerText, int id, string projectPath)
         {
             // ARRANGE            
@@ -490,7 +465,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), new PlainTextElement(footerText))
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Milestone"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -508,9 +483,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 {
                     var expectedUri = new Uri($"https://example.com/{projectPath}/milestones/{id}");
 
-                    var webLink = Assert.IsType<WebLinkTextElement>(footer.Value);
-                    Assert.Equal(expectedUri, webLink.Uri);
-                    Assert.Equal(footerText, webLink.Text);
+                    var referenceTextElement = Assert.IsType<GitLabReferenceTextElement>(footer.Value);
+                    Assert.Equal(expectedUri, referenceTextElement.Uri);
+                    Assert.Equal(footerText, referenceTextElement.Text);
+                    Assert.Equal(GitLabReferenceType.Milestone, referenceTextElement.Reference.Type);
+                    Assert.Equal(projectPath, referenceTextElement.Reference.Project.ProjectPath);
+                    Assert.Equal(id, referenceTextElement.Reference.Id);
                 });
 
             });
@@ -532,11 +510,8 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         }
 
         [Theory]
-        // reference within the same repository
         [InlineData("%23", "owner/repo")]
-        // reference to another project in the same namespace
         [InlineData("anotherRepo%42", "owner/anotherRepo")]
-        // reference to another project (including project namespace)
         [InlineData("anotherOwner/anotherRepo%42", "anotherOwner/anotherRepo")]
         public async Task Run_does_not_add_link_if_milestone_cannot_be_found(string footerText, string projectPath)
         {
@@ -560,7 +535,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     null,
                     GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
                     {
-                        new ChangeLogEntryFooter(new CommitMessageFooterName("Merge-Request"), new PlainTextElement(footerText))
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("Milestone"), new PlainTextElement(footerText))
                     })
                 )
             };
@@ -584,7 +559,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             m_ClientMock.Projects.Verify(x => x.GetMilestonesAsync(MatchProjectId(projectPath), It.IsAny<Action<MilestonesQueryOptions>>()), Times.Once);
         }
 
-        //TODO: Run does not add a commit link if commit cannot be found
 
         public static IEnumerable<object[]> GitLabProjectInfoTestCases()
         {
