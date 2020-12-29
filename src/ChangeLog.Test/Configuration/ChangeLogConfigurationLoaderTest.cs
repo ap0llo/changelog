@@ -233,6 +233,17 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // 
             yield return TestCase(config => Assert.NotNull(config.Template.Default));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Template.Default.MarkdownPreset));
+            yield return TestCase(config => Assert.True(config.Template.Default.NormalizeReferences));
+
+            //
+            // GitHubRelease Template settings
+            // 
+            yield return TestCase(config => Assert.True(config.Template.GitHubRelease.NormalizeReferences));
+
+            //
+            // GitLabRelease Template settings
+            // 
+            yield return TestCase(config => Assert.True(config.Template.GitLabRelease.NormalizeReferences));
 
             //
             // Entry Types settings
