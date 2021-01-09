@@ -4,14 +4,10 @@ The GitHub integration provides the following features:
 
 - Add GitHub web link for a change log entry's commit.
 - Add web links for commit references that are detected in footers (see [Automatic References](../auto-references.md#commit-references))
-- Recognize GitHub Issue and Pull Request references (see also [Automatic References](../auto-references.md)) in footers and generate GitHub web links.<br>
-  The following types of references are recognized:
-  - `#<id>`: Reference to an issue or pull request in the same project, e.g. `#123`
-  - `<user>/<project>#<id>`: Reference to an issue or pull request in a different project, e.g. `ap0llo/changelog#123`
-  - `GH-<id>`: Reference to an issue or pull request in the same project, e.g.`GH-123`
+- Recognize [GitHub Issue and Pull Request References](#references)
 
-The GitHub integration should work with both github.com and GitHub Enterprise
-installations. However, it was not yet tested with GitHub Enterprise.
+The GitHub integration should work with both github.com and GitHub Enterprise installations.
+However, it was not yet tested with GitHub Enterprise.
 
 ## Project information
 
@@ -54,6 +50,22 @@ To access private repositories, an access token must be specified.
 This can be achieved using either commandline parameters or environment variables. See [Configuration - GitHub Access token](../configuration/settings/github-integration.md#github-access-token) for details.
 
 Because GitHub has a quite low rate limit for unauthenticated API requests, it is recommended to use a access token even if you only access public repositories.
+
+## References
+
+ChangeLog will recognize references to GitHub Issues and Pull Requests in commit message footers (see also [Automatic References](../auto-references.md)).
+
+The following types of references are recognized:
+
+- `#<id>`: Reference to an issue or pull request in the same project, e.g. `#123`
+- `<user>/<repository>#<id>`: Reference to an issue or pull request in a different project, e.g. `ap0llo/changelog#123`
+- `GH-<id>`: Reference to an issue or pull request in the same project, e.g.`GH-123`
+
+When [Reference Normalization](../auto-references.md#normalization) is enabled, references are converted to their minimal form:
+
+- When an Issue or Pull Request in the same repository is referenced, the reference is converted to the `#<id>` format. <br>
+  For example, a reference `user/repo#23` is replaced with `#23` when generating the change log for the `user/repo` repository.
+- References to Issues or Pull Requests in other repository will use the full format `<user>/<repository>#<id>`
 
 ## See Also
 

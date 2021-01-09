@@ -8,23 +8,21 @@ ChangeLog will recognize references to commits, issues and Pull Requests in comm
 
 ---
 
-The following references are supported:
+## Supported References
+
+The following types of references are supported:
 
 - [Web Urls](#web-urls)
 - [Commit references](#commit-references)
 - [Change Log Entry References](#change-log-entry-references)
-- GitHub References (when [GitHub Integration](./integrations/github.md) is enabled)
-  - Pull Request and Issue references (e.g. `#42`)
-- GitLab References (when [GitLab Integration](./integrations/gitlab.md) is enabled)
-  - Issue References (e.g. `#23`)
-  - Merge Request References (e.g. `!42`)
-  - Milestone References (e.g. `%123`)
+- [GitHub References](./integrations/github.md#references)
+- [GitLab References](./integrations/gitlab.md#references)
 
-## Web Urls
+### Web Urls
 
 If a footer's value is va valid `http` or `https` url, the footer will be included in the generated change log as link.
 
-## Commit References
+### Commit References
 
 When a footer's value is a git commit id and the commit can be found in the repository, the footer is treated as *commit reference*.
 
@@ -34,8 +32,7 @@ If the [GitHub](./integrations/github.md) or [GitLab](./integrations/gitlab.md) 
 
 Note that a if the reference refers to a commit that corresponds to a different change log entry, the reference will be converted to a [Change Log Entry Reference](#change-log-entry-references).
 
-
-## Change Log Entry References
+### Change Log Entry References
 
 Entries in the change log can reference other change log entries using the entry's commit hash.
 
@@ -92,6 +89,28 @@ See Also: [Implemented a new feature](implemented-a-new-feature)
 ```
 
 If no change log entry that matches a commit hash can be found, the footer vaöue is treated as [commit reference](#commit-references).
+
+## Normalization
+
+In addition to converting references into links, changelog will also try to normalize references to a common format.
+
+Normalization is supported for the following types of references:
+
+- [Commit references](#commit-reference-normalization)
+- [GitHub References](./integrations/github.md#references)
+- [GitLab References](./integrations/gitlab.md#references)
+
+Normalization of references is enabled by default, but can be disabled in the template settings for the configured template:
+
+- [Default Template](./configuration/settings/default-template.md#normalize-references)
+- [GitHubRelease Template](./configuration/settings/githubrelease-template.md#normalize-references)
+- [GitLabRelease Template](./configuration/settings/gitlabrelease-template.md#normalize-references)
+
+### Commit Reference Normalization
+
+When normalization is enabled, the commit's git id is replaced with the abbreviated/short commit id.
+
+For example, a footer `See-Also: cd73d01418587529acbae4233580b7ea0cc01819` will be normalized to `See-Also: cd73d01`
 
 ## See Also
 

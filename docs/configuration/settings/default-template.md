@@ -68,6 +68,38 @@ For details on the differences between the presets, see also [Markdown Generator
 }
 ```
 
+## Normalize References
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:template:default:normalizeReferences</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__TEMPLATE__DEFAULT__NORMALIZEREFERENCES</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>
+            <code>true</code>
+        </td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.3+</td>
+    </tr>
+</table>
+
+The *Normalize References* settings controls whether references in the change log are normalized when using the default template.
+
+See [Reference Normalization](../../auto-references.md#normalization) for details.
+
 ## See Also
 
 - [Configuration Overview](../../configuration.md)
+- [Template Name Setting](./template-name.md)

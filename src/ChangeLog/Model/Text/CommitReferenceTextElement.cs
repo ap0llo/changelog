@@ -6,14 +6,20 @@ namespace Grynwald.ChangeLog.Model.Text
     /// <summary>
     /// Represents a link to a git commit
     /// </summary>
-    public class CommitReferenceTextElement : ITextElement
+    public class CommitReferenceTextElement : ITextElement, INormalizedTextElement
     {
         /// <inheritdoc />
         public string Text { get; }
 
-
         /// <inheritdoc />  
         public TextStyle Style => TextStyle.Code;
+
+        /// <inheritdoc />
+        public string NormalizedText => CommitId.ToString(abbreviate: true);
+
+        /// <inheritdoc />  
+        public TextStyle NormalizedStyle => TextStyle.Code;
+
 
         /// <summary>
         /// Gets the commit's id

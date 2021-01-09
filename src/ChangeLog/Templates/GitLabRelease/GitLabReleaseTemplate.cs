@@ -14,6 +14,9 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
         /// <inheritdoc />
         protected override MdSerializationOptions SerializationOptions => MdSerializationOptions.Default;
 
+        /// <inheritdoc />
+        protected override bool EnableNormalization => m_Configuration.Template.GitLabRelease.NormalizeReferences;
+
 
         public GitLabReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
         { }

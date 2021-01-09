@@ -10,6 +10,6 @@
 
 ##### Some feature
 
-- See Also: `some-text`
+- See Also: `abcd123`
 
 ##### Some bug fix

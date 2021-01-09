@@ -35,7 +35,7 @@ namespace Grynwald.ChangeLog.Git
                 throw new ArgumentException($"'{abbreviatedId}' is not a valid git object id", nameof(abbreviatedId));
 
             if (!id.StartsWith(abbreviatedId, StringComparison.OrdinalIgnoreCase))
-                throw new ArgumentException($"Mismtach between abbreviated id '{abbreviatedId}' and full id '{id}'");
+                throw new ArgumentException($"Mismatch between abbreviated id '{abbreviatedId}' and full id '{id}'");
 
             Id = id;
             AbbreviatedId = abbreviatedId;
@@ -50,7 +50,7 @@ namespace Grynwald.ChangeLog.Git
 
         public override string ToString() => Id.ToLower();
 
-        public string ToString(bool abbreviate) => abbreviate ? AbbreviatedId : Id;
+        public string ToString(bool abbreviate) => abbreviate ? AbbreviatedId.ToLower() : Id.ToLower();
 
         public static bool operator ==(GitId left, GitId right) => left.Equals(right);
 

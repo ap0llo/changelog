@@ -308,6 +308,28 @@
                   ],
                   "default": "Default",
                   "title": "Default Template Markdown Preset"
+                },
+                "normalizeReferences": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "gitHubRelease": {
+              "type": "object",
+              "properties": {
+                "normalizeReferences": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "gitLabRelease": {
+              "type": "object",
+              "properties": {
+                "normalizeReferences": {
+                  "type": "boolean",
+                  "default": true
                 }
               }
             }

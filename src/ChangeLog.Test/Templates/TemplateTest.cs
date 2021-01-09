@@ -572,7 +572,7 @@ namespace Grynwald.ChangeLog.Test.Templates
                     {
                         new ChangeLogEntryFooter(
                             new CommitMessageFooterName("See-Also"),
-                            new CommitReferenceTextElement("some-text", TestGitIds.Id1))
+                            new CommitReferenceTextElement(TestGitIds.Id1.ToString(), TestGitIds.Id1))
                     });
 
             var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
