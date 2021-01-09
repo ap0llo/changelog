@@ -17,9 +17,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.2.4, )",
-        "resolved": "3.2.4",
-        "contentHash": "VjAl2kL7lBdm1+KI3uq+Uu98bayf3y3naoSkXoMalbDgyO7xneEdns2G2uQH1Vbxb8MKNg6D4VaC6GDXqJ27MQ==",
+        "requested": "[3.3.0, )",
+        "resolved": "3.3.0",
+        "contentHash": "imhOhs2fLrIva3coUXCh4L5lUSN6XCGF4+20qmPW2ncDlqQphk8kKxKwkoC3FNNPd9wW+RnXjlxBMlN21dQiHg==",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
           "System.Buffers": "4.5.1",
@@ -1526,9 +1526,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.2.4, )",
-        "resolved": "3.2.4",
-        "contentHash": "VjAl2kL7lBdm1+KI3uq+Uu98bayf3y3naoSkXoMalbDgyO7xneEdns2G2uQH1Vbxb8MKNg6D4VaC6GDXqJ27MQ=="
+        "requested": "[3.3.0, )",
+        "resolved": "3.3.0",
+        "contentHash": "imhOhs2fLrIva3coUXCh4L5lUSN6XCGF4+20qmPW2ncDlqQphk8kKxKwkoC3FNNPd9wW+RnXjlxBMlN21dQiHg=="
       },
       "coverlet.collector": {
         "type": "Direct",
@@ -3489,9 +3489,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.2.4, )",
-        "resolved": "3.2.4",
-        "contentHash": "VjAl2kL7lBdm1+KI3uq+Uu98bayf3y3naoSkXoMalbDgyO7xneEdns2G2uQH1Vbxb8MKNg6D4VaC6GDXqJ27MQ=="
+        "requested": "[3.3.0, )",
+        "resolved": "3.3.0",
+        "contentHash": "imhOhs2fLrIva3coUXCh4L5lUSN6XCGF4+20qmPW2ncDlqQphk8kKxKwkoC3FNNPd9wW+RnXjlxBMlN21dQiHg=="
       },
       "coverlet.collector": {
         "type": "Direct",
