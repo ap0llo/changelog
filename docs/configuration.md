@@ -57,6 +57,12 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 - [Template Name](./configuration/settings/template-name.md)
 - [Default Template](./configuration/settings/default-template.md)
   - [Markdown Preset](./configuration/settings/default-template.md#markdown-preset)
+  - [Normalize References](./configuration/settings/default-template.md#normalize-references)
+- [GitHubRelease Template](./configuration/settings/githubrelease-template.md)
+  - [Normalize References](./configuration/settings/githubrelease-template.md#normalize-references)
+- [GitLabRelease Template](./configuration/settings/gitlabrelease-template.md)
+  - [Normalize References](./configuration/settings/gitlabrelease-template.md#normalize-references)
+
 
 ## See Also
 
