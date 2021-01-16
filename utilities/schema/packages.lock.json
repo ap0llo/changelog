@@ -367,8 +367,8 @@
       },
       "NuGet.Versioning": {
         "type": "Transitive",
-        "resolved": "5.8.0",
-        "contentHash": "0JqM9Tbpg3+CwXBXzLv64BMUru//UZVxfVy48ng7CQ5rNuI/4xI43jxXWkqM8MfLs6RibhadzQeNWB82gW7JDw=="
+        "resolved": "5.8.1",
+        "contentHash": "CzGmyf5XKgvuYnglxrsjdV4ohQP/tk4mfpzdd22TLz5/4/DM9ZzdZd/eoDb3QtndOTzOHtjQPFmLIE2xGNLOkg=="
       },
       "Octokit": {
         "type": "Transitive",
@@ -1267,7 +1267,7 @@
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "5.0.0",
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
-          "NuGet.Versioning": "5.8.0",
+          "NuGet.Versioning": "5.8.1",
           "Octokit": "0.48.0"
         }
       }
