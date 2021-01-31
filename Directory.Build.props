@@ -10,7 +10,7 @@
 		<VSTestResultsDirectory>$(BaseOutputPath)TestResults/</VSTestResultsDirectory>
 	</PropertyGroup>
 
-	<!-- Nerdbank.GitVersioning -->	
+	<!-- Nerdbank.GitVersioning -->
 	<ItemGroup>
 		<PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="all" />
 	</ItemGroup>
@@ -30,7 +30,7 @@
 
 	<!-- SourceLink  (https://github.com/dotnet/sourcelink) -->
 	<PropertyGroup>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>    
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
@@ -38,7 +38,7 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
-	
+
 	<!-- Disable nullable support on .NET Core 2.1 -->
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
 		<Nullable>disable</Nullable>
@@ -48,10 +48,10 @@
 	<!--NuGet package properties -->
 	<PropertyGroup>
 		<Authors>Andreas Gruenwald</Authors>
-		<PackageProjectUrl>https://github.com/ap0llo/changelog</PackageProjectUrl>		
+		<PackageProjectUrl>https://github.com/ap0llo/changelog</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Description>A tool to generate a change log from a project's git history using Conventional Commits.</Description>
-		<Copyright>Copyright (c) 2020, Andreas Gruenwald</Copyright>
+		<Copyright>Copyright (c) 2020-2021, Andreas Gruenwald</Copyright>
 	</PropertyGroup>
 
 
