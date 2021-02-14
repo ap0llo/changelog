@@ -372,8 +372,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "0.48.0",
-        "contentHash": "WitpE+15EL9+vwxPg92O3uTfMJsAdN+wTZfU3dgr7KPItAfoWgsoLudzfEisHHKAROTJsPi/9mV9yGTA34hYAQ=="
+        "resolved": "0.49.0",
+        "contentHash": "VKsLHOZ19BsT2viRF72zHJHa+zJX+fNJENgR3Q+Ii76ZpXHyO0CGskigW0XUHHmZMkX0hheAq0n+Evv3X3y/5g=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -1268,7 +1268,7 @@
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.8.1",
-          "Octokit": "0.48.0"
+          "Octokit": "0.49.0"
         }
       }
     }
