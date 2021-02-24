@@ -555,8 +555,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "0.49.0",
-        "contentHash": "VKsLHOZ19BsT2viRF72zHJHa+zJX+fNJENgR3Q+Ii76ZpXHyO0CGskigW0XUHHmZMkX0hheAq0n+Evv3X3y/5g=="
+        "resolved": "0.50.0",
+        "contentHash": "J5vqespSvjxIAAtjG1Tc6ghBqyfRgDJtKnk/ifi4N0hD/f3JbPwyEDRT+Eelu/bS4C4M6mu5gt1WJqar+fByzg=="
       },
       "runtime.linux-arm.runtime.native.System.IO.Ports": {
         "type": "Transitive",
@@ -1491,7 +1491,7 @@
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.8.1",
-          "Octokit": "0.49.0"
+          "Octokit": "0.50.0"
         }
       }
     },
@@ -2056,8 +2056,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "0.49.0",
-        "contentHash": "VKsLHOZ19BsT2viRF72zHJHa+zJX+fNJENgR3Q+Ii76ZpXHyO0CGskigW0XUHHmZMkX0hheAq0n+Evv3X3y/5g=="
+        "resolved": "0.50.0",
+        "contentHash": "J5vqespSvjxIAAtjG1Tc6ghBqyfRgDJtKnk/ifi4N0hD/f3JbPwyEDRT+Eelu/bS4C4M6mu5gt1WJqar+fByzg=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -3453,7 +3453,7 @@
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.8.1",
-          "Octokit": "0.49.0"
+          "Octokit": "0.50.0"
         }
       }
     },
@@ -4016,8 +4016,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "0.49.0",
-        "contentHash": "VKsLHOZ19BsT2viRF72zHJHa+zJX+fNJENgR3Q+Ii76ZpXHyO0CGskigW0XUHHmZMkX0hheAq0n+Evv3X3y/5g=="
+        "resolved": "0.50.0",
+        "contentHash": "J5vqespSvjxIAAtjG1Tc6ghBqyfRgDJtKnk/ifi4N0hD/f3JbPwyEDRT+Eelu/bS4C4M6mu5gt1WJqar+fByzg=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -5403,7 +5403,7 @@
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.8.1",
-          "Octokit": "0.49.0"
+          "Octokit": "0.50.0"
         }
       }
     }
