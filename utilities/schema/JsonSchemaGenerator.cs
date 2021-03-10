@@ -227,7 +227,7 @@ namespace schema
             // The following code handles both these cases.
             // If both [Nullable] and [NullableContext] attributes exist, the nullability information from the [Nullable] attribute is used
             //
-            // The nullablilty attributes are generated dynamically by the compiler if they do not exist in the framework being targeted.
+            // The nullability attributes are generated dynamically by the compiler if they do not exist in the framework being targeted.
             // Because of this, this code cannot use the attributes' types directly and instead has to detect them using their full name.
             //
 

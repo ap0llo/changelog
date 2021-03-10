@@ -430,7 +430,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         [Fact]
         public void ChangeLog_is_converted_to_expected_Markdown_16()
         {
-            // if an entry's "Commit" footer contains a web link, it must be included in the outout
+            // if an entry's "Commit" footer contains a web link, it must be included in the output
             var entry = GetChangeLogEntry(
                 scope: "scope1",
                 type: "feat",

@@ -148,7 +148,7 @@ namespace Grynwald.ChangeLog
                         // ResolveEntryReferencesTask must run *after* filtering
                         // in order to avoid resolving references to entries being filtered out
                         .AddTask<ResolveEntryReferencesTask>()
-                        // AddCommitFooterTask must run before the interation provider tasks
+                        // AddCommitFooterTask must run before the integration provider tasks
                         // because the GitHub and GitLab integrations are supposed to add a web link
                         // to the "Commit" footer
                         .AddTask<AddCommitFooterTask>()

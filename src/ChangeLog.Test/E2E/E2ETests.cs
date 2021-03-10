@@ -222,10 +222,10 @@ namespace Grynwald.ChangeLog.Test.E2E
             // When running the instrumented assembly (even in a child process),
             // the covered lines will be included in the computed coverage.
             //
-            // If the test ran the changelog.dll copied to the publsih directory
+            // If the test ran the changelog.dll copied to the publish directory
             // the test would still work but would not be included in the computed code coverage.
             //
-            // To resolve that, replace the changelog assembly in the publish directory with the instrumened assembly
+            // To resolve that, replace the changelog assembly in the publish directory with the instrumented assembly
             File.Copy(applicationAssembly.Location, assemblyPath, true);
 
             var command = Cli.Wrap("dotnet")

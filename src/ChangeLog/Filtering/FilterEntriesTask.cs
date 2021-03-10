@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace Grynwald.ChangeLog.Filtering
 {
     /// <summary>
-    /// Tasks that removed ignored entries from the change log based on their type
+    /// Tasks that removes ignored entries from the change log based on the configured filter
     /// </summary>
     /// <remarks>
     /// Removes all entries that are of a type not configured to be included in the change log.

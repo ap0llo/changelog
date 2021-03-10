@@ -76,7 +76,7 @@ namespace Grynwald.ChangeLog.Test.Git
         public Task AddRemoteAsync(string name, string url) => ExecAsync($"remote add \"{name}\" \"{url}\"");
 
         /// <summary>
-        /// Perfoms a git checkout operation
+        /// Performs a git checkout operation
         /// </summary>
         /// <param name="ref">The git reference to check out</param>
         public Task CheckoutAsync(string @ref) => ExecAsync($"checkout \"{@ref}\"");

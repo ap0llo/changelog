@@ -42,7 +42,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         /// The current project influences the text returned by <see cref="NormalizedText"/>.
         /// For referenced items in the same project, only the item type and id are returned (e.g. <c>#23</c> for issue 23).
         /// When the referenced item is in a different project within the same namespace, the project name is returned as well (e.g. <c>project#23</c>).
-        /// When the referenced item is in a different namesapce, the full reference is returned (e.g. <c>namespace/project#23</c>).
+        /// When the referenced item is in a different namespace, the full reference is returned (e.g. <c>namespace/project#23</c>).
         /// </remarks>
         public GitLabProjectInfo CurrentProject { get; }
 

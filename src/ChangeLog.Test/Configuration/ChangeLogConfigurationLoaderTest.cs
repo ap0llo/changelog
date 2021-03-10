@@ -93,7 +93,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Asserts the specified list of entry type configs contains a instance matching the expected values.
             // This is a method instead of an inline lambda-expression, because a multi-line lambda
             // cannot be converted to an expression-tree.
-            // However, expression trees are preferrable over lambdas because they make the actual assertion
+            // However, expression trees are preferable over lambdas because they make the actual assertion
             // visible in the test output.
             // (See https://twitter.com/bradwilson/status/1282374907670654976)
 
@@ -800,7 +800,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ARRANGE
 
             // Before v0.3, the "footers" property was expected to be a array of configuration objects, but
-            // was changed to a object (de-serialized into a dictionary).
+            // was changed to a object (deserialized into a dictionary).
             // There is no migration for configuration files intended for earlier versions.
             // Configuration values that are not in the expected format must be ignored.
 
@@ -827,7 +827,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ARRANGE
 
             // Before v0.3, the "scopes" property was expected to be a array of configuration objects, but
-            // was changed to a object (de-serialized into a dictionary).
+            // was changed to a object (deserialized into a dictionary).
             // There is no migration for configuration files intended for earlier versions.
             // Configuration values that are not in the expected format must be ignored.
 
@@ -854,7 +854,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ARRANGE
 
             // Before v0.3, the "entryTypes" property was expected to be a array of configuration objects, but
-            // was changed to a object (de-serialized into a dictionary).
+            // was changed to a object (deserialized into a dictionary).
             // There is no migration for configuration files intended for earlier versions.
             // Configuration values that are not in the expected format must be ignored.
 

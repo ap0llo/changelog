@@ -4,7 +4,6 @@ using System.Linq;
 using CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Spectre.Console;
 
 namespace schema

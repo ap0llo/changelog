@@ -23,7 +23,7 @@ namespace Grynwald.ChangeLog.Test
         public void Properties_have_a_configuration_value_attribute(string propertyName)
         {
             // the "--verbose", "--configurationPath"  and "--repositoryPath"
-            // switches haveno corresponding configuration setting and are
+            // switches have no corresponding configuration setting and are
             // processed before the configuration system is initialized
 
             if (propertyName == nameof(CommandLineParameters.Verbose) ||

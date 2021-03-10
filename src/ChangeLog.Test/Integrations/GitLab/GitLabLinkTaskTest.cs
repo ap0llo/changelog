@@ -719,7 +719,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
 
             yield return new[]
             {
-                new GitLabProjectInfoTestCase("Host and namespace from config, proejct from remote url")
+                new GitLabProjectInfoTestCase("Host and namespace from config, project from remote url")
                 {
                     Remotes = new[]
                     {

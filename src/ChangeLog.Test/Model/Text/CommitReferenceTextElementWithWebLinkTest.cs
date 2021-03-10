@@ -50,7 +50,7 @@ namespace Grynwald.ChangeLog.Test.Model.Text
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new CommitReferenceTextElementWithWebLink("some-tex", TestGitIds.Id1, null!));
+            var ex = Record.Exception(() => new CommitReferenceTextElementWithWebLink("some-text", TestGitIds.Id1, null!));
 
             // ASSERT
             var argumentException = Assert.IsType<ArgumentNullException>(ex);

@@ -52,7 +52,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 new GitLabProjectInfo("example.com", "group/SUBGROUP", "repo")
             );
 
-            // Leading and trailing slahes in namespace and project are ignored
+            // Leading and trailing slashes in namespace and project are ignored
             yield return (
                 new GitLabProjectInfo("example.com", "user", "repo"),
                 new GitLabProjectInfo("example.com", "/user", "repo")

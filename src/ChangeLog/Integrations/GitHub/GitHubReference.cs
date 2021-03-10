@@ -8,7 +8,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
     /// <summary>
     /// Represents a reference to a GitHub Pull Request or Issue
     /// </summary>
-    /// <see href="https://docs.github.com/en/free-pro-team@latest/github/writing-on-github/autolinked-references-and-urls#issues-and-pull-requests">Autolinked references and URLs (GitHub Docs)</see>
+    /// <see href="https://docs.github.com/en/free-pro-team@latest/github/writing-on-github/autolinked-references-and-urls#issues-and-pull-requests">Auto-linked references and URLs (GitHub Docs)</see>
     public sealed class GitHubReference : IEquatable<GitHubReference>
     {
         private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;

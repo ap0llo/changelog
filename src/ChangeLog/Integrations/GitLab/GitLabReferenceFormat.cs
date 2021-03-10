@@ -7,7 +7,7 @@
     public enum GitLabReferenceFormat
     {
         /// <summary>
-        /// Include project namespace, project name, item tyoe and id
+        /// Include project namespace, project name, item type and id
         /// </summary>
         /// <example>
         /// <c>namespace/project#23</c>

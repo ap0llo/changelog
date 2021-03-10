@@ -24,10 +24,10 @@ namespace Grynwald.ChangeLog.Templates
         protected abstract MdSerializationOptions SerializationOptions { get; }
 
         /// <summary>
-        /// Gets wheter to enabled normalization of text elements
+        /// Gets whether to enabled normalization of text elements
         /// </summary>
         /// <remarks>
-        /// When enabled, the normalized text will be uder for <see cref="ITextElement"/> objects
+        /// When enabled, the normalized text will be used for <see cref="ITextElement"/> objects
         /// that also implement <see cref="INormalizedTextElement"/>.
         /// </remarks>
         protected abstract bool EnableNormalization { get; }

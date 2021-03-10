@@ -39,7 +39,7 @@ namespace Grynwald.ChangeLog.Git
         IReadOnlyList<GitCommit> GetCommits(GitId? fromCommit, GitId toCommit);
 
         /// <summary>
-        /// Attempts to find a commit with the speicifed id
+        /// Attempts to find a commit with the specified id
         /// </summary>
         /// <param name="id">The id to search a commit for. Value can be an abbreviated commit SHA.</param>
         GitCommit? TryGetCommit(string id);

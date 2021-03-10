@@ -83,7 +83,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         {
 
             [Theory]
-            // User or Group Namesapce
+            // User or Group Namespace
             [InlineData("user", "project", GitLabReferenceType.Issue, 23, "user/project#23")]
             [InlineData("user", "project", GitLabReferenceType.MergeRequest, 23, "user/project!23")]
             [InlineData("user", "project", GitLabReferenceType.Milestone, 23, "user/project%23")]
