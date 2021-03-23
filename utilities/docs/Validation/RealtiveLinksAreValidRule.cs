@@ -46,7 +46,10 @@ namespace docs.Validation
             var lineNumber = link.Line + 1;
 
             if (link.Url is null)
+            {
+                result.AddError(s_RuleId, $"Invalid link: Url is null", lineNumber);
                 return;
+            }
 
             var (relativeTargetPath, targetAnchor) = ParseLink(link.Url);
 
