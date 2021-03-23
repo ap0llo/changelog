@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="9.5.1" />
+    <PackageReference Include="FluentValidation" Version="9.5.2" />
     <PackageReference Include="Grynwald.Utilities" Version="1.6.11-pre" />
     <PackageReference Include="Grynwald.Utilities.Configuration" Version="1.6.11-pre" />
     <PackageReference Include="Grynwald.Utilities.Logging" Version="1.6.11-pre" />
