@@ -45,6 +45,12 @@ namespace docs.Validation
             // To make the output more understandable, adjust it for that difference and output line numbers as used by editors.
             var lineNumber = link.Line + 1;
 
+            if (link.Url is null)
+            {
+                result.AddError(s_RuleId, $"Invalid link: Url is null", lineNumber);
+                return;
+            }
+
             var (relativeTargetPath, targetAnchor) = ParseLink(link.Url);
 
             // check same-page link
@@ -100,6 +106,8 @@ namespace docs.Validation
             return ParseMarkdown(path)
                 .Descendants<HeadingBlock>()
                 .Select(x => x.GetAttributes().Id)
+                .Where(x => x is not null)
+                .Select(x => x!)
                 .ToHashSet();
         }
     }
