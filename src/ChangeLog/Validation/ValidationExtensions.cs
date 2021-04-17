@@ -2,7 +2,6 @@
 using System.Reflection;
 using CommandLine;
 using FluentValidation;
-using FluentValidation.Internal;
 using Grynwald.ChangeLog.Configuration;
 using NuGet.Versioning;
 
@@ -57,32 +56,22 @@ namespace Grynwald.ChangeLog.Validation
         /// <summary>
         /// Disables the rule if the value is <c>null</c> or empty.
         /// </summary>
-        public static IRuleBuilderOptions<T, string?> UnlessNullOrEmpty<T>(this IRuleBuilderOptions<T, string?> builder)
+        public static IRuleBuilderOptions<T, string?> UnlessNullOrEmpty<T>(this IRuleBuilderOptions<T, string?> rule)
         {
-            // cast to internal type of FluentValidation to get access to the property being validated
-            // (probably not a good idea)
-            var internalBuilder = (RuleBuilder<T, string>)builder;
-
-            return builder.When(x =>
+            return rule.Configure(config =>
             {
-                var value = (string)internalBuilder.Rule.PropertyFunc(x);
-                return !String.IsNullOrEmpty(value);
+                config.ApplyCondition(context => !String.IsNullOrEmpty(config.GetPropertyValue(context.InstanceToValidate) as string));
             });
         }
 
         /// <summary>
         /// Disables the rule if the value is <c>null</c> or whitespace.
         /// </summary>
-        public static IRuleBuilderOptions<T, string?> UnlessNullOrWhiteSpace<T>(this IRuleBuilderOptions<T, string?> builder)
+        public static IRuleBuilderOptions<T, string?> UnlessNullOrWhiteSpace<T>(this IRuleBuilderOptions<T, string?> rule)
         {
-            // cast to internal type of FluentValidation to get access to the property being validated
-            // (probably not a good idea)
-            var internalBuilder = (RuleBuilder<T, string>)builder;
-
-            return builder.When(x =>
+            return rule.Configure(config =>
             {
-                var value = (string)internalBuilder.Rule.PropertyFunc(x);
-                return !String.IsNullOrWhiteSpace(value);
+                config.ApplyCondition(context => !String.IsNullOrWhiteSpace(config.GetPropertyValue(context.InstanceToValidate) as string));
             });
         }
 
