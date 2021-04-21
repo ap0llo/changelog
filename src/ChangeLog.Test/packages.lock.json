@@ -144,8 +144,8 @@
       },
       "Autofac": {
         "type": "Transitive",
-        "resolved": "6.1.0",
-        "contentHash": "22aXncFDye08TsXHobcxAoZFBeaJ9nrAxGzk9YHLLaIkYO7aeAA0Sz7Mii9qsfB76S1gdhebqMv8QsnknJMT/w==",
+        "resolved": "6.2.0",
+        "contentHash": "BX8IM0GANE38uSr4QwXL4PgA8vWWYt2P5cZzipn/vDnf0fDbPSGKSHEroJ09rB7ANxdyf7MdEgVs+pvL8kwYCg==",
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "1.1.0",
           "System.Diagnostics.DiagnosticSource": "4.7.1"
@@ -1492,7 +1492,7 @@
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
-          "Autofac": "6.1.0",
+          "Autofac": "6.2.0",
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.0.4",
           "GitLabApiClient": "1.7.0",
@@ -1637,8 +1637,8 @@
       },
       "Autofac": {
         "type": "Transitive",
-        "resolved": "6.1.0",
-        "contentHash": "22aXncFDye08TsXHobcxAoZFBeaJ9nrAxGzk9YHLLaIkYO7aeAA0Sz7Mii9qsfB76S1gdhebqMv8QsnknJMT/w==",
+        "resolved": "6.2.0",
+        "contentHash": "BX8IM0GANE38uSr4QwXL4PgA8vWWYt2P5cZzipn/vDnf0fDbPSGKSHEroJ09rB7ANxdyf7MdEgVs+pvL8kwYCg==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "4.7.1"
         }
@@ -3470,7 +3470,7 @@
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
-          "Autofac": "6.1.0",
+          "Autofac": "6.2.0",
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.0.4",
           "GitLabApiClient": "1.7.0",
@@ -3615,8 +3615,8 @@
       },
       "Autofac": {
         "type": "Transitive",
-        "resolved": "6.1.0",
-        "contentHash": "22aXncFDye08TsXHobcxAoZFBeaJ9nrAxGzk9YHLLaIkYO7aeAA0Sz7Mii9qsfB76S1gdhebqMv8QsnknJMT/w==",
+        "resolved": "6.2.0",
+        "contentHash": "BX8IM0GANE38uSr4QwXL4PgA8vWWYt2P5cZzipn/vDnf0fDbPSGKSHEroJ09rB7ANxdyf7MdEgVs+pvL8kwYCg==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "4.7.1"
         }
@@ -5436,7 +5436,7 @@
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
-          "Autofac": "6.1.0",
+          "Autofac": "6.2.0",
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.0.4",
           "GitLabApiClient": "1.7.0",
