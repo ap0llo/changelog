@@ -29,13 +29,13 @@ namespace schema
         {
             Ansi = AnsiSupport.Detect,
             ColorSystem = ColorSystemSupport.Detect,
-            Out = Console.Out
+            Out = new AnsiConsoleOutput(Console.Out)
         });
         private static readonly IAnsiConsole StdErr = AnsiConsole.Create(new AnsiConsoleSettings()
         {
             Ansi = AnsiSupport.Detect,
             ColorSystem = ColorSystemSupport.Detect,
-            Out = Console.Error
+            Out = new AnsiConsoleOutput(Console.Error)
         });
         private static readonly Style s_MessageStyle = new Style(foreground: Color.Green);
         private static readonly Style s_ErrorStyle = new Style(foreground: Color.Red);
