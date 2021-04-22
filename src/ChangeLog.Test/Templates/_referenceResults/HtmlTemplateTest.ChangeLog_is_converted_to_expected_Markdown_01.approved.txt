@@ -1,4 +1,3 @@
-﻿ @@ -0,0 +1,165 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +8,13 @@
 </head>
 <body>
     <div class="changelog">
+
         <div class="changelog-header">
             <h1>Change Log</h1>
-        </div>    
+        </div>
+
+        <div class="changelog-content">
+        </div>
     </div>
 </body>
 </html>

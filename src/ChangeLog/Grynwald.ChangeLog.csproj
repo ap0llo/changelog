@@ -11,12 +11,11 @@
 
   <ItemGroup>
     <None Remove="Configuration\defaultSettings.json" />
-    <EmbeddedResource Include="Configuration\defaultSettings.json" /> 
-  </ItemGroup>
-    
-  <ItemGroup>
-    <None Remove="Templates\Html\HtmlTemplate.html.scriban" /> 
+    <None Remove="Templates\Html\HtmlTemplate.html.scriban" />
+    <None Remove="Templates\Html\partial_entry.html.scriban" />
+    <EmbeddedResource Include="Configuration\defaultSettings.json" />   
     <EmbeddedResource Include="Templates\Html\HtmlTemplate.html.scriban" />
+    <EmbeddedResource Include="Templates\Html\partial_entry.html.scriban" /> 
   </ItemGroup>
 
   <ItemGroup>

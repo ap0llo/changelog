@@ -2,22 +2,24 @@
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates.ViewModel;
 using Scriban;
+using Scriban.Parsing;
 using Scriban.Runtime;
 
 namespace Grynwald.ChangeLog.Templates
 {
-    internal abstract class ScribanBaseTemplate : ITemplate
+    internal abstract class ScribanBaseTemplate : ITemplate, ITemplateLoader
     {
         private class EnumerableFunctions : ScriptObject
         {
             public static bool Any(IEnumerable enumerable) => enumerable.Cast<object>().Any();
 
-            public static int CountItems(IEnumerable enumerable) => enumerable.Cast<object>().Count();
+            public new static int Count(IEnumerable enumerable) => enumerable.Cast<object>().Count();
         }
 
         private class TextElementFunctions : ScriptObject
@@ -43,7 +45,10 @@ namespace Grynwald.ChangeLog.Templates
 
             var template = GetTemplate();
 
-            var templateContext = new TemplateContext();
+            var templateContext = new TemplateContext()
+            {
+                TemplateLoader = this
+            };
             var rootScriptObject = new ScriptObject()
             {
                 { "model", viewModel },
@@ -52,11 +57,23 @@ namespace Grynwald.ChangeLog.Templates
             };
             templateContext.PushGlobal(rootScriptObject);
 
+            
+
             var rendered = template.Render(templateContext);
             File.WriteAllText(outputPath, rendered);
         }
 
 
         protected abstract Template GetTemplate();
+
+        public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName) => templateName;
+
+        public abstract string Load(TemplateContext context, SourceSpan callerSpan, string templatePath);
+
+        public ValueTask<string> LoadAsync(TemplateContext context, SourceSpan callerSpan, string templatePath)
+        {
+            var template = Load(context, callerSpan, templatePath);
+            return new ValueTask<string>(template);
+        }
     }
 }
