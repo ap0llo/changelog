@@ -273,6 +273,11 @@
         "resolved": "16.9.4",
         "contentHash": "N/RYB07gJkPZ1nJiq0QGxFIL+X5vVl4GI99PiTYXpbfI30NTZMRJgZ+4jYLFYLDQqj9o1Juhv+3iiymd7lozrA=="
       },
+      "Microsoft.CSharp": {
+        "type": "Transitive",
+        "resolved": "4.5.0",
+        "contentHash": "kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ=="
+      },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
         "resolved": "5.0.0",
@@ -623,6 +628,15 @@
         "type": "Transitive",
         "resolved": "4.4.0",
         "contentHash": "YhEdSQUsTx+C8m8Bw7ar5/VesXvCFMItyZF7G1AUY+OM0VPZUOeAVpJ4Wl6fydBGUYZxojTDR3I6Bj/+BPkJNA=="
+      },
+      "Scriban": {
+        "type": "Transitive",
+        "resolved": "3.7.0",
+        "contentHash": "BYdciKDcm195IfpFUIOM/JlI327kxs/N2z8BozDbbKCzoeQ9uRkjDlnpx3MBu5yhTLxcyxfg5GzTU09gjkpyEg==",
+        "dependencies": {
+          "Microsoft.CSharp": "4.5.0",
+          "System.Threading.Tasks.Extensions": "4.5.0"
+        }
       },
       "System.Buffers": {
         "type": "Transitive",
@@ -1507,7 +1521,8 @@
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
-          "Octokit": "0.50.0"
+          "Octokit": "0.50.0",
+          "Scriban": "3.7.0"
         }
       }
     },
@@ -1759,6 +1774,11 @@
         "type": "Transitive",
         "resolved": "16.9.4",
         "contentHash": "N/RYB07gJkPZ1nJiq0QGxFIL+X5vVl4GI99PiTYXpbfI30NTZMRJgZ+4jYLFYLDQqj9o1Juhv+3iiymd7lozrA=="
+      },
+      "Microsoft.CSharp": {
+        "type": "Transitive",
+        "resolved": "4.5.0",
+        "contentHash": "kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ=="
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
@@ -2238,6 +2258,15 @@
         "type": "Transitive",
         "resolved": "4.4.0",
         "contentHash": "YhEdSQUsTx+C8m8Bw7ar5/VesXvCFMItyZF7G1AUY+OM0VPZUOeAVpJ4Wl6fydBGUYZxojTDR3I6Bj/+BPkJNA=="
+      },
+      "Scriban": {
+        "type": "Transitive",
+        "resolved": "3.7.0",
+        "contentHash": "BYdciKDcm195IfpFUIOM/JlI327kxs/N2z8BozDbbKCzoeQ9uRkjDlnpx3MBu5yhTLxcyxfg5GzTU09gjkpyEg==",
+        "dependencies": {
+          "Microsoft.CSharp": "4.5.0",
+          "System.Threading.Tasks.Extensions": "4.5.0"
+        }
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -3485,7 +3514,8 @@
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
-          "Octokit": "0.50.0"
+          "Octokit": "0.50.0",
+          "Scriban": "3.7.0"
         }
       }
     },
@@ -4214,6 +4244,11 @@
         "type": "Transitive",
         "resolved": "4.4.0",
         "contentHash": "YhEdSQUsTx+C8m8Bw7ar5/VesXvCFMItyZF7G1AUY+OM0VPZUOeAVpJ4Wl6fydBGUYZxojTDR3I6Bj/+BPkJNA=="
+      },
+      "Scriban": {
+        "type": "Transitive",
+        "resolved": "3.7.0",
+        "contentHash": "BYdciKDcm195IfpFUIOM/JlI327kxs/N2z8BozDbbKCzoeQ9uRkjDlnpx3MBu5yhTLxcyxfg5GzTU09gjkpyEg=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -5451,7 +5486,8 @@
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
-          "Octokit": "0.50.0"
+          "Octokit": "0.50.0",
+          "Scriban": "3.7.0"
         }
       }
     }

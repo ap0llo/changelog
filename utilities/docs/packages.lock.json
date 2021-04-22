@@ -282,7 +282,8 @@
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
-          "Octokit": "0.50.0"
+          "Octokit": "0.50.0",
+          "Scriban": "3.7.0"
         }
       }
     }
