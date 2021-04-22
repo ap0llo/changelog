@@ -14,7 +14,6 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         private readonly Dictionary<CommitType, ChangeLogConfiguration.EntryTypeConfiguration> m_EntryTypeConfiguration;
 
 
-
         public string VersionDisplayName => m_Model.Version.Version.ToNormalizedString();
 
         public IEnumerable<ChangeLogEntryGroupViewModel> EntryGroups

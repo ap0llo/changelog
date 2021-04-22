@@ -42,7 +42,8 @@ namespace Grynwald.ChangeLog.Templates
         /// <inheritdoc />
         public virtual void SaveChangeLog(ApplicationChangeLog changeLog, string outputPath)
         {
-            var document = GetChangeLogDocument(changeLog);
+            var viewModel = new ApplicationChangeLogViewModel(m_Configuration, changeLog);
+            var document = GetChangeLogDocument(viewModel);
             document.Save(outputPath, SerializationOptions);
         }
 
@@ -55,18 +56,18 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Generates a Markdown document from the specified change log
         /// </summary>
-        protected virtual MdDocument GetChangeLogDocument(ApplicationChangeLog model)
+        protected virtual MdDocument GetChangeLogDocument(ApplicationChangeLogViewModel viewModel)
         {
             return new MdDocument(
-                GetChangeLogHeaderBlock(model),
-                GetChangeLogContentBlock(model)
+                GetChangeLogHeaderBlock(viewModel),
+                GetChangeLogContentBlock(viewModel)
             );
         }
 
         /// <summary>
         /// Gets the change log's head block
         /// </summary>
-        protected virtual MdBlock GetChangeLogHeaderBlock(ApplicationChangeLog model)
+        protected virtual MdBlock GetChangeLogHeaderBlock(ApplicationChangeLogViewModel viewModel)
         {
             return new MdHeading(1, "Change Log");
         }
@@ -74,14 +75,14 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the change log's content block
         /// </summary>
-        protected virtual MdBlock GetChangeLogContentBlock(ApplicationChangeLog model)
+        protected virtual MdBlock GetChangeLogContentBlock(ApplicationChangeLogViewModel viewModel)
         {
             var container = new MdContainerBlock();
 
             // for each version, add the changes to the document
             // (changeLog.ChangeLogs is ordered by version)
             var firstElement = true;
-            foreach (var versionChangeLog in model.ChangeLogs)
+            foreach (var versionChangeLog in viewModel.ChangeLogs)
             {
                 if (!firstElement)
                     container.Add(new MdThematicBreak());
@@ -96,10 +97,8 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the Markdown block for the specified version change log
         /// </summary>
-        protected virtual MdBlock GetVersionBlock(SingleVersionChangeLog model)
+        protected virtual MdBlock GetVersionBlock(SingleVersionChangeLogViewModel viewModel)
         {
-            var viewModel = new SingleVersionChangeLogViewModel(m_Configuration, model);
-
             return new MdContainerBlock(
                 GetVersionHeaderBlock(viewModel),
                 GetVersionContentBlock(viewModel)

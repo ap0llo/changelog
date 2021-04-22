@@ -23,18 +23,17 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
 
 
         /// <inheritdoc />
-        protected override MdDocument GetChangeLogDocument(ApplicationChangeLog changeLog)
+        protected override MdDocument GetChangeLogDocument(ApplicationChangeLogViewModel viewModel)
         {
-            if (changeLog.ChangeLogs.Count() > 1)
+            if (viewModel.ChangeLogs.Count() > 1)
                 throw new TemplateExecutionException("The GitHub Release template cannot render change logs that contain multiple versions");
 
-            if (!changeLog.ChangeLogs.Any())
+            if (!viewModel.ChangeLogs.Any())
                 return new MdDocument(GetEmptyBlock());
 
             // Return changes for only a single change, omit surrounding headers
-            var viewModel = new SingleVersionChangeLogViewModel(m_Configuration, changeLog.Single());
             return new MdDocument(
-                GetVersionContentBlock(viewModel)
+                GetVersionContentBlock(viewModel.ChangeLogs.Single())
             );
         }
 
