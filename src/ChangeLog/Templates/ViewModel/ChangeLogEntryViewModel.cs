@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
 
@@ -29,14 +30,15 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
 
         public IEnumerable<string> Body => m_Model.Body;
 
-        //TODO: Add ChangeLogEntryFooterViewModel
-        public IReadOnlyList<ChangeLogEntryFooter> Footers => m_Model.Footers;
+        public IReadOnlyList<ChangeLogEntryFooterViewModel> Footers { get; }
 
 
         public ChangeLogEntryViewModel(ChangeLogConfiguration configuration, ChangeLogEntry model)
         {
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             m_Model = model ?? throw new ArgumentNullException(nameof(model));
+
+            Footers = m_Model.Footers.Select(x => new ChangeLogEntryFooterViewModel(m_Configuration, x)).ToArray();
         }
 
     }

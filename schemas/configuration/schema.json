@@ -335,7 +335,13 @@
               }
             },
             "html": {
-              "type": "object"
+              "type": "object",
+              "properties": {
+                "normalizeReferences": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
             }
           }
         },

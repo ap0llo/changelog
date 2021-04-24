@@ -137,6 +137,8 @@ namespace Grynwald.ChangeLog.Configuration
 
         public class HtmlTemplateConfiguration
         {
+            [JsonSchemaDefaultValue]
+            public bool NormalizeReferences { get; set; } = true;
         }
 
         public class EntryTypeConfiguration

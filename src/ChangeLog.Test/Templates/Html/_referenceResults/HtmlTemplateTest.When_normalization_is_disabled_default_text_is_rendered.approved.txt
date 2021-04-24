@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -25,13 +25,13 @@
                             <div class="changelog-entry">
     <div class="changelog-entry-header">
         
-        <h4><b>scope1:</b>Some change</h4>
+        <h4>Example Summary</h4>
     </div>
     <div class="changelog-entry-content">
 
 
         <ul>
-                        <li>See Also: Link</li>
+                        <li>Name: <code>Text</code></li>
         </ul>
     </div>
 </div>

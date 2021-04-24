@@ -359,33 +359,33 @@ namespace Grynwald.ChangeLog.Templates
 
                 string text;
                 TextStyle style;
-                if (EnableNormalization && footer.Value is INormalizedTextElement normalizedText)
+                if (EnableNormalization)
                 {
-                    text = normalizedText.NormalizedText;
-                    style = normalizedText.NormalizedStyle;
+                    text = footer.NormalizedValue;
+                    style = footer.NormalizedStyle;
                 }
                 else
                 {
-                    text = footer.Value.Text;
-                    style = footer.Value.Style;
+                    text = footer.Value;
+                    style = footer.Style;
                 }
 
                 MdSpan textSpan = style == TextStyle.Code
                     ? new MdCodeSpan(text)
                     : text;
 
-                if (footer.Value is IWebLinkTextElement webLink)
+                if (footer.Model.Value is IWebLinkTextElement webLink)
                 {
                     textSpan = new MdLinkSpan(textSpan, webLink.Uri);
                 }
-                else if (footer.Value is ChangeLogEntryReferenceTextElement entryReference)
+                else if (footer.Model.Value is ChangeLogEntryReferenceTextElement entryReference)
                 {
                     var id = GetHtmlHeadingId(entryReference.Entry);
                     textSpan = new MdLinkSpan(GetSummaryText(entryReference.Entry), $"#{id}");
                 }
 
                 footerList.Add(
-                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", textSpan)
+                    new MdListItem($"{footer.DisplayName}: ", textSpan)
                 );
             }
 

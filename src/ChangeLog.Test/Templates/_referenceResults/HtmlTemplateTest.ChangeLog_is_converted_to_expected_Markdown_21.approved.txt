@@ -61,7 +61,7 @@
 
 
         <ul>
-                    <li>See-Also: <code>abcd1234abcd1234abcd1234abcd1234abcd1234</code></li>
+                        <li>See Also: <code>abcd123</code></li>
         </ul>
     </div>
 </div>

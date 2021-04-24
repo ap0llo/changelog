@@ -31,8 +31,10 @@ namespace Grynwald.ChangeLog.Templates
             public static bool IsChangeLogEntryReference(ITextElement element) => element is ChangeLogEntryReferenceTextElement;
         }
 
+
         private readonly ChangeLogConfiguration m_Configuration;
 
+        protected abstract object TemplateSettings { get; }
 
         public ScribanBaseTemplate(ChangeLogConfiguration configuration)
         {
@@ -55,7 +57,8 @@ namespace Grynwald.ChangeLog.Templates
             {
                 { "model", viewModel },
                 { "enumerable", new EnumerableFunctions() },
-                { "textelement", new TextElementFunctions() }
+                { "textelement", new TextElementFunctions() },
+                { "template_settings", TemplateSettings }
             };
             templateContext.PushGlobal(rootScriptObject);
 
