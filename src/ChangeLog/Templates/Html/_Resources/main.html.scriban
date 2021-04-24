@@ -30,7 +30,7 @@
                         {{~ if entryCount == 0 ~}}
                             <i>No changes found.</i>
                         {{~ else if entryCount == 1 ~}}
-                           {{ include 'entry' }}
+                           {{ include 'entry.html.scriban' }}
                         {{~ else ~}}
                             <div class="changelog-version-summary">
                                 {{ # TODO }}
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="changelog-version-details-content">
                                     {{~ for entry in version_change_log.all_entries ~}}
-                                        {{ include 'entry' }}
+                                        {{ include 'entry.html.scriban' }}
                                     {{~ end ~}}
                                 </div>
                             </div>

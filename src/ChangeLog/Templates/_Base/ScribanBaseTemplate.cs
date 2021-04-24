@@ -2,24 +2,22 @@
 using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates.ViewModel;
 using Scriban;
-using Scriban.Parsing;
 using Scriban.Runtime;
 
 namespace Grynwald.ChangeLog.Templates
 {
-    internal abstract class ScribanBaseTemplate : ITemplate, ITemplateLoader
+    internal abstract class ScribanBaseTemplate : ITemplate
     {
         private class EnumerableFunctions : ScriptObject
         {
             public static bool Any(IEnumerable enumerable) => enumerable.Cast<object>().Any();
 
-            public new static int Count(IEnumerable enumerable) => enumerable.Cast<object>().Count();
+            public static new int Count(IEnumerable enumerable) => enumerable.Cast<object>().Count();
         }
 
         private class TextElementFunctions : ScriptObject
@@ -43,11 +41,12 @@ namespace Grynwald.ChangeLog.Templates
         {
             var viewModel = new ApplicationChangeLogViewModel(m_Configuration, changeLog);
 
-            var template = GetTemplate();
+            var templateLoader = CreateTemplateLoader();
+
 
             var templateContext = new TemplateContext()
             {
-                TemplateLoader = this
+                TemplateLoader = templateLoader
             };
             var rootScriptObject = new ScriptObject()
             {
@@ -57,23 +56,12 @@ namespace Grynwald.ChangeLog.Templates
             };
             templateContext.PushGlobal(rootScriptObject);
 
-            
-
-            var rendered = template.Render(templateContext);
+            var entryTemplate = Template.Parse(templateLoader.LoadEntryTemplate());
+            var rendered = entryTemplate.Render(templateContext);
             File.WriteAllText(outputPath, rendered);
         }
 
 
-        protected abstract Template GetTemplate();
-
-        public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName) => templateName;
-
-        public abstract string Load(TemplateContext context, SourceSpan callerSpan, string templatePath);
-
-        public ValueTask<string> LoadAsync(TemplateContext context, SourceSpan callerSpan, string templatePath)
-        {
-            var template = Load(context, callerSpan, templatePath);
-            return new ValueTask<string>(template);
-        }
+        protected abstract ScribanTemplateLoader CreateTemplateLoader();
     }
 }
