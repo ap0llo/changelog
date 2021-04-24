@@ -7,15 +7,15 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
 {
     internal class ChangeLogEntryGroupViewModel
     {
-        private readonly IReadOnlyList<ChangeLogEntry> m_Entries;
+        private readonly IReadOnlyList<ChangeLogEntryViewModel> m_Entries;
 
 
         public string DisplayName { get; }
 
-        public IEnumerable<ChangeLogEntry> Entries => m_Entries;
+        public IEnumerable<ChangeLogEntryViewModel> Entries => m_Entries;
 
 
-        public ChangeLogEntryGroupViewModel(string displayName, IEnumerable<ChangeLogEntry> entries)
+        public ChangeLogEntryGroupViewModel(string displayName, IEnumerable<ChangeLogEntryViewModel> entries)
         {
             if (String.IsNullOrWhiteSpace(displayName))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(displayName));

@@ -145,11 +145,11 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             var sut = new SingleVersionChangeLogViewModel(config, changelog);
 
             // ACT / ASSERT
-            var assertions = expectedOrder.Select<ChangeLogEntry, Action<ChangeLogEntry>>(
+            var assertions = expectedOrder.Select<ChangeLogEntry, Action<ChangeLogEntryViewModel>>(
                 expected => actual =>
                 {
-                    Assert.Equal(expected.Type, actual.Type);
-                    Assert.Same(expected, actual);
+                    Assert.Equal(expected.Type, actual.Model.Type);
+                    Assert.Same(expected, actual.Model);
                 }
             ).ToArray();
 

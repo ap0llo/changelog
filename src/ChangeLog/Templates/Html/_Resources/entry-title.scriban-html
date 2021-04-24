@@ -1,6 +1,5 @@
-﻿{{~ if changelogentry.has_scope(entry) ~}}
-{{~ #TODO: Scope display name ~}}
-<b>{{~ entry.scope ~}}:</b> {{~ entry.summary ~}}
+﻿{{~ if entry.has_scope ~}}
+<b>{{~ entry.scope_display_name ~}}:</b> {{~ entry.summary ~}}
 {{~ else ~}}
 {{~ entry.summary ~}}
 {{~ end ~}}

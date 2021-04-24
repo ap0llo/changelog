@@ -253,7 +253,7 @@ namespace Grynwald.ChangeLog.Templates
 
                 if (entry.BreakingChangeDescriptions.Any())
                 {
-                    var link = $"#{GetHtmlHeadingId(entry)}";
+                    var link = $"#{GetHtmlHeadingId(entry.Model)}";
 
                     foreach (var description in entry.BreakingChangeDescriptions)
                     {
@@ -276,7 +276,7 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets a detail block for the specified change log entry
         /// </summary>
-        protected virtual MdBlock GetEntryDetailBlock(ChangeLogEntry entry)
+        protected virtual MdBlock GetEntryDetailBlock(ChangeLogEntryViewModel entry)
         {
             return new MdContainerBlock(
                 GetEntryDetailHeaderBlock(entry),
@@ -287,15 +287,15 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the header block of the details block for the specified entry
         /// </summary>
-        protected virtual MdBlock GetEntryDetailHeaderBlock(ChangeLogEntry entry)
+        protected virtual MdBlock GetEntryDetailHeaderBlock(ChangeLogEntryViewModel entry)
         {
-            return new MdHeading(4, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) };
+            return new MdHeading(4, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry.Model) };
         }
 
         /// <summary>
         /// Gets the content block of the details block for the specified entry
         /// </summary>
-        protected virtual MdBlock GetEntryDetailContentBlock(ChangeLogEntry entry)
+        protected virtual MdBlock GetEntryDetailContentBlock(ChangeLogEntryViewModel entry)
         {
             var block = new MdContainerBlock();
 
@@ -395,10 +395,10 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets a list item for the specified changelog entry
         /// </summary>
-        private MdListItem GetSummaryListItem(ChangeLogEntry entry)
+        private MdListItem GetSummaryListItem(ChangeLogEntryViewModel entry)
         {
             var text = GetSummaryText(entry);
-            var id = GetHtmlHeadingId(entry);
+            var id = GetHtmlHeadingId(entry.Model);
 
             // make the list item a link to the details for this changelog entry
             return new MdListItem(
@@ -406,6 +406,16 @@ namespace Grynwald.ChangeLog.Templates
             );
         }
 
+        protected MdSpan GetSummaryText(ChangeLogEntryViewModel entry)
+        {
+            return entry.HasScope
+                ? new MdCompositeSpan(
+                    new MdStrongEmphasisSpan($"{entry.ScopeDisplayName}:"),
+                    new MdTextSpan($" {entry.Summary}"))
+                : new MdTextSpan(entry.Summary);
+        }
+
+        //TODO: Remove once template uses ViewModel everywhere
         protected MdSpan GetSummaryText(ChangeLogEntry entry)
         {
             var scope = entry.GetScopeDisplayName(m_Configuration);
@@ -420,7 +430,6 @@ namespace Grynwald.ChangeLog.Templates
                 _ => new MdTextSpan(entry.Summary),
             };
         }
-
 
     }
 }

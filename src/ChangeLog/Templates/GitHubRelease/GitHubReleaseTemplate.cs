@@ -59,11 +59,11 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetEntryDetailHeaderBlock(ChangeLogEntry entry)
+        protected override MdBlock GetEntryDetailHeaderBlock(ChangeLogEntryViewModel entry)
         {
             // in GitHub releases, the top heading is <h2> because higher,
             // => the header for individual entries is the level of the "details" header + 1 => 3
-            return new MdHeading(3, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) };
+            return new MdHeading(3, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry.Model) };
         }
 
         /// <inheritdoc />

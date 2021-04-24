@@ -62,7 +62,7 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetEntryDetailHeaderBlock(ChangeLogEntry entry)
+        protected override MdBlock GetEntryDetailHeaderBlock(ChangeLogEntryViewModel entry)
         {
             // in GitLab releases, the top heading is <h4> because higher
             // levels are used by the surrounding GitLab Web UI

@@ -31,7 +31,7 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
             }
         }
 
-        public IEnumerable<ChangeLogEntry> AllEntries
+        public IEnumerable<ChangeLogEntryViewModel> AllEntries
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
             }
         }
 
-        public IEnumerable<ChangeLogEntry> BreakingChanges => m_Model.BreakingChanges;
+        public IEnumerable<ChangeLogEntryViewModel> BreakingChanges => m_Model.BreakingChanges.Select(x => new ChangeLogEntryViewModel(m_Configuration, x));
 
 
         public SingleVersionChangeLogViewModel(ChangeLogConfiguration configuration, SingleVersionChangeLog model)
@@ -57,10 +57,11 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         }
 
 
-        private IEnumerable<IGrouping<CommitType, ChangeLogEntry>> GetGroupedEntries()
+        private IEnumerable<IGrouping<CommitType, ChangeLogEntryViewModel>> GetGroupedEntries()
         {
             return m_Model.AllEntries
-               .GroupBy(x => x.Type)
+               .Select(x => new ChangeLogEntryViewModel(m_Configuration, x))
+               .GroupBy(x => x.Model.Type)
                .OrderByDescending(group => m_EntryTypeConfiguration.GetValueOrDefault(group.Key)?.Priority ?? 0);
         }
     }
