@@ -15,8 +15,8 @@
   </ItemGroup>
     
   <ItemGroup>
-    <None Remove="Templates\Html\_Resources\*.scriban" />
-    <EmbeddedResource Include="Templates\Html\_Resources\*.scriban">
+    <None Remove="Templates\Html\_Resources\*.scriban-html" />
+    <EmbeddedResource Include="Templates\Html\_Resources\*.scriban-html">
       <LogicalName>templates/Html/%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>    
   </ItemGroup>

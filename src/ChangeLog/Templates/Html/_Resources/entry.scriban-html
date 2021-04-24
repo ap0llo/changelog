@@ -1,7 +1,7 @@
 ﻿<div class="changelog-entry">
     <div class="changelog-entry-header">
         {{ # TODO: Add id to allow linking }}
-        <h4>{{~ include "entry-title.html.scriban" ~}}</h4>
+        <h4>{{~ include "entry-title.scriban-html" ~}}</h4>
     </div>
     <div class="changelog-entry-content">
         {{~ if entry.contains_breaking_changes ~}}
@@ -21,11 +21,11 @@
             <p><b>Breaking Change</b></p>
             {{~ end ~}}
         {{~ end ~}}
-        
+
         {{~ for paragraph in entry.body ~}}
         <p>{{ paragraph }}</p>
         {{~ end ~}}
-        
+
         {{~ if enumerable.any(entry.footers) ~}}
         <ul>
             {{~ for footer in entry.footers ~}}

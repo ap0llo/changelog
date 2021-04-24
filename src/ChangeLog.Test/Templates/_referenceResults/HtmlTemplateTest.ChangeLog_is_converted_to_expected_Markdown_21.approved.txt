@@ -23,7 +23,7 @@
 
                     <div class="changelog-version-content">
                             <div class="changelog-version-summary">
-    
+
     <div class="changelog-version-summary-list">
         <div class="changelog-version-summary-list-header">
             <h3>New Features</h3>
@@ -58,8 +58,8 @@
         <h4>Some feature</h4>
     </div>
     <div class="changelog-entry-content">
-        
-        
+
+
         <ul>
                     <li>See-Also: <code>abcd1234abcd1234abcd1234abcd1234abcd1234</code></li>
         </ul>
@@ -71,8 +71,8 @@
         <h4>Some bug fix</h4>
     </div>
     <div class="changelog-entry-content">
-        
-        
+
+
     </div>
 </div>
     </div>

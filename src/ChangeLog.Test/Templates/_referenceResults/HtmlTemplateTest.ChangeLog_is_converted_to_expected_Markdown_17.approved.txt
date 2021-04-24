@@ -28,8 +28,8 @@
         <h4><b>scope1:</b>Some change</h4>
     </div>
     <div class="changelog-entry-content">
-        
-        
+
+
         <ul>
                     <li>see-also: Link</li>
         </ul>

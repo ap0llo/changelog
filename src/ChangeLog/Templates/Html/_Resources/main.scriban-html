@@ -31,10 +31,10 @@
                             <i>No changes found.</i>
                         {{~ else if entryCount == 1 ~}}
                             {{~ entry = enumerable.single(version_change_log.all_entries) ~}}
-                            {{ include "entry.html.scriban" }}
+                            {{ include "entry.scriban-html" }}
                         {{~ else ~}}
-                            {{ include "summary.html.scriban" }}
-                            {{ include "details.html.scriban" }}
+                            {{ include "summary.scriban-html" }}
+                            {{ include "details.scriban-html" }}
                         {{~ end ~}}
                     </div>
                 </div>

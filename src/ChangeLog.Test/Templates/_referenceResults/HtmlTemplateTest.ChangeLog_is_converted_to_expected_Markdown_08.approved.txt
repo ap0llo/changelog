@@ -29,12 +29,12 @@
     </div>
     <div class="changelog-entry-content">
             <p><b>Breaking Change</b></p>
-        
+
         <p>Changelog entry body Line1
 Line2</p>
         <p>Changelog entry body Line3
 Line4</p>
-        
+
     </div>
 </div>
                     </div>

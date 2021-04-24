@@ -23,7 +23,7 @@
 
                     <div class="changelog-version-content">
                             <div class="changelog-version-summary">
-    
+
     <div class="changelog-version-summary-list">
         <div class="changelog-version-summary-list-header">
             <h3>New Features</h3>
@@ -57,7 +57,7 @@
     </div>
 
     <div class="changelog-version-breakingchanges-list">
-    
+
     <div class="changelog-version-breakingchanges-list-header">
         <h3>Breaking Changes</h3>
     </div>
@@ -84,12 +84,12 @@
         <h4><b>api:</b>Some change</h4>
     </div>
     <div class="changelog-entry-content">
-        
+
         <p>Changelog entry body Line1
 Line2</p>
         <p>Changelog entry body Line3
 Line4</p>
-        
+
     </div>
 </div>
         <div class="changelog-entry">
@@ -98,8 +98,8 @@ Line4</p>
         <h4><b>cli:</b>A bug was fixed</h4>
     </div>
     <div class="changelog-entry-content">
-        
-        
+
+
     </div>
 </div>
         <div class="changelog-entry">
@@ -109,8 +109,8 @@ Line4</p>
     </div>
     <div class="changelog-entry-content">
             <p><b>Breaking Change</b></p>
-        
-        
+
+
     </div>
 </div>
         <div class="changelog-entry">
@@ -120,8 +120,8 @@ Line4</p>
     </div>
     <div class="changelog-entry-content">
             <p><b>Breaking Change</b></p>
-        
-        
+
+
     </div>
 </div>
     </div>

@@ -36,12 +36,12 @@
                             <b>Breaking Change:</b> Another breaking change
                         </li>
                     </ul>
-        
+
         <p>Changelog entry body Line1
 Line2</p>
         <p>Changelog entry body Line3
 Line4</p>
-        
+
     </div>
 </div>
                     </div>

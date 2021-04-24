@@ -4,7 +4,7 @@
     </div>
     <div class="changelog-version-details-content">
         {{~ for entry in version_change_log.all_entries ~}}
-        {{ include 'entry.html.scriban' }}
+        {{ include "entry.scriban-html" }}
         {{~ end ~}}
     </div>
 </div>
