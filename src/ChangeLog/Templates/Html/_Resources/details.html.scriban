@@ -1,0 +1,10 @@
+﻿<div class="changelog-version-details">
+    <div class="changelog-version-details-header">
+        <h3>Details</h3>
+    </div>
+    <div class="changelog-version-details-content">
+        {{~ for entry in version_change_log.all_entries ~}}
+        {{ include 'entry.html.scriban' }}
+        {{~ end ~}}
+    </div>
+</div>

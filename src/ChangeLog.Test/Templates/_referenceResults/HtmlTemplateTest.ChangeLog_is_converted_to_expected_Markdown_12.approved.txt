@@ -22,11 +22,25 @@
                     </div>
 
                     <div class="changelog-version-content">
-                           <div class="changelog-entry">
+                            <div class="changelog-entry">
     <div class="changelog-entry-header">
         
+        <h4><b>api:</b>Some change</h4>
     </div>
     <div class="changelog-entry-content">
+                    <ul>
+                        <li>
+                            <b>Breaking Change:</b> Description of breaking change
+                        </li>
+                        <li>
+                            <b>Breaking Change:</b> Another breaking change
+                        </li>
+                    </ul>
+        
+        <p>Changelog entry body Line1
+Line2</p>
+        <p>Changelog entry body Line3
+Line4</p>
         
     </div>
 </div>

@@ -18,6 +18,10 @@ namespace Grynwald.ChangeLog.Templates
             public static bool Any(IEnumerable enumerable) => enumerable.Cast<object>().Any();
 
             public static new int Count(IEnumerable enumerable) => enumerable.Cast<object>().Count();
+
+            public static object First(IEnumerable enumerable) => enumerable.Cast<object>().First();
+
+            public static object Single(IEnumerable enumerable) => enumerable.Cast<object>().Single();
         }
 
         private class TextElementFunctions : ScriptObject
@@ -27,6 +31,11 @@ namespace Grynwald.ChangeLog.Templates
             public static bool IsChangeLogEntryReference(ITextElement element) => element is ChangeLogEntryReferenceTextElement;
         }
 
+        private class ChangeLogEntryFunctions : ScriptObject
+        {
+            //TODO: This should be handled in the view model
+            public static bool HasScope(ChangeLogEntry entry) => !String.IsNullOrEmpty(entry.Scope);
+        }
 
         private readonly ChangeLogConfiguration m_Configuration;
 
@@ -53,6 +62,7 @@ namespace Grynwald.ChangeLog.Templates
                 { "model", viewModel },
                 { "enumerable", new EnumerableFunctions() },
                 { "textelement", new TextElementFunctions() },
+                { "changelogentry", new ChangeLogEntryFunctions() },
             };
             templateContext.PushGlobal(rootScriptObject);
 

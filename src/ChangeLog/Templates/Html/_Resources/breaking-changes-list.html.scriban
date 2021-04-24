@@ -1,0 +1,25 @@
+﻿{{~ if enumerable.any(version_change_log.breaking_changes) ~}}
+<div class="changelog-version-breakingchanges-list">
+    
+    <div class="changelog-version-breakingchanges-list-header">
+        <h3>Breaking Changes</h3>
+    </div>
+
+    <div class="changelog-version-breakingchanges-list-content">
+        <ul>
+            {{~ for entry in version_change_log.breaking_changes ~}}
+
+            {{~ if enumerable.any(entry.breaking_change_descriptions) ~}}
+                {{~ for description in entry.breaking_change_descriptions ~}}
+                {{~ # TODO: Add link to entry details ~}}
+                <li>{{~ description ~}}</li>
+                {{~ end ~}}
+            {{~ else ~}}
+                {{~ # TODO: Add link to entry details ~}}
+                <li>{{ include "entry-title.html.scriban" }}</li>
+            {{~ end ~}}
+        {{~ end ~}}
+        </ul>
+    </div>
+</div>
+{{~ end ~}}

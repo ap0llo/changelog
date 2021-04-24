@@ -22,12 +22,17 @@
                     </div>
 
                     <div class="changelog-version-content">
-                           <div class="changelog-entry">
+                            <div class="changelog-entry">
     <div class="changelog-entry-header">
         
+        <h4><b>scope1:</b>Some change</h4>
     </div>
     <div class="changelog-entry-content">
         
+        
+        <ul>
+                    <li>Commit: <code>abcd1234abcd1234abcd1234abcd1234abcd1234</code></li>
+        </ul>
     </div>
 </div>
                     </div>

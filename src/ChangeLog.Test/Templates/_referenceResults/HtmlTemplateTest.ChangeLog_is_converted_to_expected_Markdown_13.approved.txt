@@ -23,31 +23,57 @@
 
                     <div class="changelog-version-content">
                             <div class="changelog-version-summary">
-                                
-                            </div>
+    
+    <div class="changelog-version-summary-list">
+        <div class="changelog-version-summary-list-header">
+            <h3>New Features</h3>
+        </div>
+        <div class="changelog-version-summary-list-content">
+            <ul>
+                    <li><b>scope1:</b>Some change</li>
+            </ul>
+        </div>
+    </div>
+    <div class="changelog-version-summary-list">
+        <div class="changelog-version-summary-list-header">
+            <h3>Bug Fixes</h3>
+        </div>
+        <div class="changelog-version-summary-list-content">
+            <ul>
+                    <li><b>scope2:</b>A bug was fixed</li>
+            </ul>
+        </div>
+    </div>
+
+    
+</div>
                             <div class="changelog-version-details">
-                                <div class="changelog-version-details-header">
-                                    <h3>Details</h3>
-                                </div>
-                                <div class="changelog-version-details-content">
-                                        <div class="changelog-entry">
+    <div class="changelog-version-details-header">
+        <h3>Details</h3>
+    </div>
+    <div class="changelog-version-details-content">
+        <div class="changelog-entry">
     <div class="changelog-entry-header">
         
+        <h4><b>scope1:</b>Some change</h4>
     </div>
     <div class="changelog-entry-content">
         
+        
     </div>
 </div>
-                                        <div class="changelog-entry">
+        <div class="changelog-entry">
     <div class="changelog-entry-header">
         
+        <h4><b>scope2:</b>A bug was fixed</h4>
     </div>
     <div class="changelog-entry-content">
         
+        
     </div>
 </div>
-                                </div>
-                            </div>
+    </div>
+</div>
                     </div>
                 </div>
 
