@@ -1,6 +1,6 @@
 ﻿<div class="changelog-version-summary">
 
-    {{~ for entry_group in version_change_log.entry_groups~}}
+    {{~ for entry_group in $.version_change_log.entry_groups ~}}
     <div class="changelog-version-summary-list">
         <div class="changelog-version-summary-list-header">
             <h3>{{entry_group.display_name}}</h3>
@@ -9,12 +9,12 @@
             <ul>
                 {{~ for entry in entry_group.entries ~}}
                     {{~ # TODO: Add link to entry details ~}}
-                    <li>{{ include "entry-title.scriban-html" }}</li>
+                    <li>{{~ include "entry-title.scriban-html" entry: entry ~}}</li>
                 {{~ end ~}}
             </ul>
         </div>
     </div>
     {{~ end ~}}
 
-    {{ include "breaking-changes-list.scriban-html" }}
+    {{ include "breaking-changes-list.scriban-html" version_change_log: version_change_log }}
 </div>

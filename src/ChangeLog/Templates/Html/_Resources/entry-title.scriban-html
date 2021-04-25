@@ -1,5 +1,5 @@
-﻿{{~ if entry.has_scope ~}}
-<b>{{~ entry.scope_display_name ~}}:</b> {{~ entry.summary ~}}
+﻿{{~ if $.entry.has_scope ~}}
+    {{~ ~}}<b>{{~ $.entry.scope_display_name ~}}:</b> {{~ $.entry.summary ~}}
 {{~ else ~}}
-{{~ entry.summary ~}}
+    {{~ $.entry.summary ~}}
 {{~ end ~}}

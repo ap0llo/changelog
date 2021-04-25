@@ -1,4 +1,4 @@
-﻿{{~ if enumerable.any(version_change_log.breaking_changes) ~}}
+﻿{{~ if enumerable.any($.version_change_log.breaking_changes) ~}}
 <div class="changelog-version-breakingchanges-list">
 
     <div class="changelog-version-breakingchanges-list-header">
@@ -7,7 +7,7 @@
 
     <div class="changelog-version-breakingchanges-list-content">
         <ul>
-            {{~ for entry in version_change_log.breaking_changes ~}}
+            {{~ for entry in $.version_change_log.breaking_changes ~}}
 
             {{~ if enumerable.any(entry.breaking_change_descriptions) ~}}
                 {{~ for description in entry.breaking_change_descriptions ~}}
@@ -16,7 +16,7 @@
                 {{~ end ~}}
             {{~ else ~}}
                 {{~ # TODO: Add link to entry details ~}}
-                <li>{{ include "entry-title.scriban-html" }}</li>
+                <li>{{ include "entry-title.scriban-html" entry: entry }}</li>
             {{~ end ~}}
         {{~ end ~}}
         </ul>
