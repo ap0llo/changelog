@@ -31,7 +31,9 @@
 
 
         <ul>
-                        <li>Commit: <code>abcd123</code></li>
+                <li>
+                    Commit: <code>abcd123</code>
+                </li>
         </ul>
     </div>
 </div>

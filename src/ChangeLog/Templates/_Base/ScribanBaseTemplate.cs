@@ -26,6 +26,8 @@ namespace Grynwald.ChangeLog.Templates
 
         private class TextElementFunctions : ScriptObject
         {
+            public static bool IsNormalizable(ITextElement element) => element is INormalizedTextElement; 
+
             public static bool IsLink(ITextElement element) => element is IWebLinkTextElement;
 
             public static bool IsChangeLogEntryReference(ITextElement element) => element is ChangeLogEntryReferenceTextElement;

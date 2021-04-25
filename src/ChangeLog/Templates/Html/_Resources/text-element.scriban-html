@@ -1,0 +1,13 @@
+﻿{{~ if template_settings.enable_normalization && textelement.is_normalizable($.element) ~}}
+    {{~ if $.element.normalized_style == "Code" ~}}
+    {{~ ~}}<code>{{~ $.element.normalized_text ~}}</code> {{~ ~}}
+    {{~ else ~}}
+        {{~ $.element.normalized_text ~}}
+    {{~ end ~}}
+{{~ else ~}}
+    {{~ if $.element.style == "Code" ~}}
+       {{~ ~}} <code>{{~ $.element.text ~}}</code> {{~ ~}}
+    {{~ else ~}}
+        {{~ $.element.text ~}}
+    {{~ end ~}}
+{{~ end ~}}

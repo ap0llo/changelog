@@ -61,7 +61,9 @@
 
 
         <ul>
-                        <li>See Also: Issue #5</li>
+                <li>
+                    See Also: Issue #5
+                </li>
         </ul>
     </div>
 </div>
@@ -74,7 +76,9 @@
 
 
         <ul>
-                        <li>Reviewed by: someone@example.com</li>
+                <li>
+                    Reviewed by: someone@example.com
+                </li>
         </ul>
     </div>
 </div>

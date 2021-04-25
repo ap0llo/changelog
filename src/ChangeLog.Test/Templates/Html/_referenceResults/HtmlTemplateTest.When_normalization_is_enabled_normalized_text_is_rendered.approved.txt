@@ -31,7 +31,9 @@
 
 
         <ul>
-                        <li>Name: NormalizedText</li>
+                <li>
+                    Name: NormalizedText
+                </li>
         </ul>
     </div>
 </div>

@@ -31,7 +31,9 @@
 
 
         <ul>
-                        <li>See Also: Link</li>
+                <li>
+                    See Also: Link
+                </li>
         </ul>
     </div>
 </div>

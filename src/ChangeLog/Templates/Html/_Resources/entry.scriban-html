@@ -30,19 +30,9 @@
         <ul>
             {{~ for footer in entry.footers ~}}
                 {{~ # TODO:Links ~}}
-                {{~ if template_settings.enable_normalization  ~}}
-                    {{~ if footer.normalized_style == "Code" ~}}
-                        <li>{{footer.display_name}}: <code>{{footer.normalized_value}}</code></li>
-                    {{~ else ~}}
-                        <li>{{footer.display_name}}: {{footer.normalized_value}}</li>
-                    {{~ end ~}}
-                {{~ else ~}}
-                    {{~ if footer.style == "Code" ~}}
-                        <li>{{footer.display_name}}: <code>{{footer.value}}</code></li>
-                    {{~ else ~}}
-                        <li>{{footer.display_name}}: {{footer.value}}</li>
-                    {{~ end ~}}
-                {{~ end ~}}
+                <li>
+                    {{ footer.display_name }}: {{ include "text-element.scriban-html" element: footer.model.value }}
+                </li>
             {{~ end ~}}
         </ul>
         {{~ end ~}}
