@@ -30,7 +30,7 @@
         <ul>
             {{~ for footer in $.entry.footers ~}}
                 <li>
-                    {{ footer.display_name }}: {{ include "text-element.scriban-html" element: footer.model.value }}
+                    {{ footer.display_name }}: {{ include "text-element.scriban-html" element: footer.value }}
                 </li>
             {{~ end ~}}
         </ul>

@@ -374,11 +374,11 @@ namespace Grynwald.ChangeLog.Templates
                     ? new MdCodeSpan(text)
                     : text;
 
-                if (footer.Model.Value is IWebLinkTextElement webLink)
+                if (footer.Value is IWebLinkTextElement webLink)
                 {
                     textSpan = new MdLinkSpan(textSpan, webLink.Uri);
                 }
-                else if (footer.Model.Value is ChangeLogEntryReferenceTextElement entryReference)
+                else if (footer.Value is ChangeLogEntryReferenceTextElement entryReference)
                 {
                     var id = GetHtmlHeadingId(entryReference.Entry);
                     textSpan = new MdLinkSpan(GetSummaryText(entryReference.Entry), $"#{id}");
