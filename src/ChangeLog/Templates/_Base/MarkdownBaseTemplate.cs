@@ -359,15 +359,15 @@ namespace Grynwald.ChangeLog.Templates
 
                 string text;
                 TextStyle style;
-                if (EnableNormalization)
+                if (EnableNormalization && footer.Value is INormalizedTextElement normalizedTextElement)
                 {
-                    text = footer.NormalizedValue;
-                    style = footer.NormalizedStyle;
+                    text = normalizedTextElement.NormalizedText;
+                    style = normalizedTextElement.NormalizedStyle;
                 }
                 else
                 {
-                    text = footer.Value;
-                    style = footer.Style;
+                    text = footer.Value.Text;
+                    style = footer.Value.Style;
                 }
 
                 MdSpan textSpan = style == TextStyle.Code

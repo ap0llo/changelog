@@ -19,14 +19,8 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
 
         public string DisplayName => m_Model.GetFooterDisplayName(m_Configuration);
 
-        public TextStyle Style => m_Model.Value.Style;
-
-        public string Value => m_Model.Value.Text;
-
-        public string NormalizedValue => (m_Model.Value is INormalizedTextElement normalizedText) ? normalizedText.NormalizedText : Value;
-
-        public TextStyle NormalizedStyle => (m_Model.Value is INormalizedTextElement normalizedText) ? normalizedText.NormalizedStyle : Style;
-
+        public ITextElement Value => m_Model.Value;
+        
 
         public ChangeLogEntryFooterViewModel(ChangeLogConfiguration configuration, ChangeLogEntryFooter model)
         {
