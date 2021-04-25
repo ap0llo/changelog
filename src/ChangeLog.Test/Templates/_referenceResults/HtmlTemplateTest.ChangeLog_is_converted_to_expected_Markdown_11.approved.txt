@@ -30,7 +30,7 @@
         </div>
         <div class="changelog-version-summary-list-content">
             <ul>
-                    <li><b>api:</b>Some change</li>
+                    <li><a href="#0398ff2"><b>api:</b>Some change</a></li>
             </ul>
         </div>
     </div>
@@ -40,8 +40,8 @@
         </div>
         <div class="changelog-version-summary-list-content">
             <ul>
-                    <li><b>cli:</b>A bug was fixed</li>
-                    <li>A breaking bugfix</li>
+                    <li><a href="#fecc81a"><b>cli:</b>A bug was fixed</a></li>
+                    <li><a href="#473a330">A breaking bugfix</a></li>
             </ul>
         </div>
     </div>
@@ -51,7 +51,7 @@
         </div>
         <div class="changelog-version-summary-list-content">
             <ul>
-                    <li>Some breaking change</li>
+                    <li><a href="#05e1587">Some breaking change</a></li>
             </ul>
         </div>
     </div>
@@ -64,11 +64,9 @@
 
     <div class="changelog-version-breakingchanges-list-content">
         <ul>
-
-                <li>Some breaking change</li>
-
-                <li>Description of breaking change</li>
-                <li>Another breaking change</li>
+                    <li><a href="#05e1587">Some breaking change</a></li>
+                    <li><a href="#473a330">Description of breaking change</a></li>
+                    <li><a href="#473a330">Another breaking change</a></li>
         </ul>
     </div>
 </div>
@@ -81,8 +79,7 @@
     <div class="changelog-version-details-content">
         <div class="changelog-entry">
     <div class="changelog-entry-header">
-        
-        <h4><b>api:</b>Some change</h4>
+        <h4 id="0398ff2"><b>api:</b>Some change</h4>
     </div>
     <div class="changelog-entry-content">
 
@@ -95,8 +92,7 @@ Line4</p>
 </div>
         <div class="changelog-entry">
     <div class="changelog-entry-header">
-        
-        <h4><b>cli:</b>A bug was fixed</h4>
+        <h4 id="fecc81a"><b>cli:</b>A bug was fixed</h4>
     </div>
     <div class="changelog-entry-content">
 
@@ -105,8 +101,7 @@ Line4</p>
 </div>
         <div class="changelog-entry">
     <div class="changelog-entry-header">
-        
-        <h4>A breaking bugfix</h4>
+        <h4 id="473a330">A breaking bugfix</h4>
     </div>
     <div class="changelog-entry-content">
                     <ul>
@@ -123,8 +118,7 @@ Line4</p>
 </div>
         <div class="changelog-entry">
     <div class="changelog-entry-header">
-        
-        <h4>Some breaking change</h4>
+        <h4 id="05e1587">Some breaking change</h4>
     </div>
     <div class="changelog-entry-content">
             <p><b>Breaking Change</b></p>

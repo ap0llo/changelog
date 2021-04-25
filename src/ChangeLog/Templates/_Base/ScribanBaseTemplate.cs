@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates.ViewModel;
@@ -34,6 +35,15 @@ namespace Grynwald.ChangeLog.Templates
         }
 
 
+        private class ChangeLogFunctions : ScriptObject
+        {
+            public static ChangeLogEntryViewModel? FindEntry(ApplicationChangeLogViewModel model, GitId commit)
+            {
+                return model.ChangeLogs.SelectMany(x => x.AllEntries).SingleOrDefault(x => x.Commit == commit);
+            }
+        }
+
+
         private readonly ChangeLogConfiguration m_Configuration;
 
         protected abstract object TemplateSettings { get; }
@@ -60,6 +70,7 @@ namespace Grynwald.ChangeLog.Templates
                 { "model", viewModel },
                 { "enumerable", new EnumerableFunctions() },
                 { "textelement", new TextElementFunctions() },
+                { "changelog", new ChangeLogFunctions() },
                 { "template_settings", TemplateSettings }
             };
             templateContext.PushGlobal(rootScriptObject);

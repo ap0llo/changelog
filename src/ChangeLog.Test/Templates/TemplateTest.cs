@@ -503,7 +503,7 @@ namespace Grynwald.ChangeLog.Test.Templates
 
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
 
-            var entry1 = GetChangeLogEntry(type: "fix", summary: "Some bug fix", commit: TestGitIds.Id1);
+            var entry1 = GetChangeLogEntry(type: "fix", scope: "scope", summary: "Some bug fix", commit: TestGitIds.Id1);
             var entry2 = GetChangeLogEntry(
                     type: "feat",
                     summary: "Some feature",

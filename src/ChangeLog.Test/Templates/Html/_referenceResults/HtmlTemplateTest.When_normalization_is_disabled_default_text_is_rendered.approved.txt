@@ -24,8 +24,7 @@
                     <div class="changelog-version-content">
                             <div class="changelog-entry">
     <div class="changelog-entry-header">
-        
-        <h4>Example Summary</h4>
+        <h4 id="0398ff2">Example Summary</h4>
     </div>
     <div class="changelog-entry-content">
 

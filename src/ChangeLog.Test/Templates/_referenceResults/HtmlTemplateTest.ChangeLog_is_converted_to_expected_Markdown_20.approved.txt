@@ -30,7 +30,7 @@
         </div>
         <div class="changelog-version-summary-list-content">
             <ul>
-                    <li>Some feature</li>
+                    <li><a href="#efgh567">Some feature</a></li>
             </ul>
         </div>
     </div>
@@ -40,7 +40,7 @@
         </div>
         <div class="changelog-version-summary-list-content">
             <ul>
-                    <li>Some bug fix</li>
+                    <li><a href="#abcd123">Some bug fix</a></li>
             </ul>
         </div>
     </div>
@@ -54,8 +54,7 @@
     <div class="changelog-version-details-content">
         <div class="changelog-entry">
     <div class="changelog-entry-header">
-        
-        <h4>Some feature</h4>
+        <h4 id="efgh567">Some feature</h4>
     </div>
     <div class="changelog-entry-content">
 
@@ -69,8 +68,7 @@
 </div>
         <div class="changelog-entry">
     <div class="changelog-entry-header">
-        
-        <h4>Some bug fix</h4>
+        <h4 id="abcd123">Some bug fix</h4>
     </div>
     <div class="changelog-entry-content">
 

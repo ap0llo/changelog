@@ -8,8 +8,7 @@
         <div class="changelog-version-summary-list-content">
             <ul>
                 {{~ for entry in entry_group.entries ~}}
-                    {{~ # TODO: Add link to entry details ~}}
-                    <li>{{~ include "entry-title.scriban-html" entry: entry ~}}</li>
+                    <li><a href="#{{~entry.commit.abbreviated_id~}}">{{~ include "entry-title.scriban-html" entry: entry ~}}</a></li>
                 {{~ end ~}}
             </ul>
         </div>

@@ -350,39 +350,42 @@ namespace Grynwald.ChangeLog.Templates
                 //  - By default, footers are rendered as a bullet list where each item uses the format <NAME>: <VALUE>
                 //  - Footer values are implementations of ITextElement but might be custom implementations.
                 //    Three special cases are handled here
+                //      - If the footer value is a reference to another change log entry, omit a link to the entry,
+                //        using the entry's summary as link text
                 //      - If the footer value's style is "Code" the footer value is rendered as Markdown code span
                 //      - If the footer value implements IWebLinkTextElement (no matter what the actual type is),
                 //        the footer is rendered as a Markdown link
-                //      - If the footer is an instance of ChangeLogEntryReferenceTextElement,
-                //        the footer is rendered as an intra-page link to the referenced change log entry.
-                //        In that case, the referenced entry's summary is used instead of the footer's value in the output
 
-                string text;
-                TextStyle style;
-                if (EnableNormalization && footer.Value is INormalizedTextElement normalizedTextElement)
-                {
-                    text = normalizedTextElement.NormalizedText;
-                    style = normalizedTextElement.NormalizedStyle;
-                }
-                else
-                {
-                    text = footer.Value.Text;
-                    style = footer.Value.Style;
-                }
-
-                MdSpan textSpan = style == TextStyle.Code
-                    ? new MdCodeSpan(text)
-                    : text;
-
-                if (footer.Value is IWebLinkTextElement webLink)
-                {
-                    textSpan = new MdLinkSpan(textSpan, webLink.Uri);
-                }
-                else if (footer.Value is ChangeLogEntryReferenceTextElement entryReference)
+                MdSpan textSpan;
+                if (footer.Value is ChangeLogEntryReferenceTextElement entryReference)
                 {
                     var referencedEntryViewModel = new ChangeLogEntryViewModel(m_Configuration, entryReference.Entry);
                     var id = GetHtmlHeadingId(referencedEntryViewModel);
                     textSpan = new MdLinkSpan(GetSummaryText(referencedEntryViewModel), $"#{id}");
+                }
+                else
+                {
+                    string text;
+                    TextStyle style;
+                    if (EnableNormalization && footer.Value is INormalizedTextElement normalizedTextElement)
+                    {
+                        text = normalizedTextElement.NormalizedText;
+                        style = normalizedTextElement.NormalizedStyle;
+                    }
+                    else
+                    {
+                        text = footer.Value.Text;
+                        style = footer.Value.Style;
+                    }
+
+                    textSpan = style == TextStyle.Code
+                        ? new MdCodeSpan(text)
+                        : text;
+
+                    if (footer.Value is IWebLinkTextElement webLink)
+                    {
+                        textSpan = new MdLinkSpan(textSpan, webLink.Uri);
+                    }
                 }
 
                 footerList.Add(

@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿{{-
+    # TODO: Escape changelog content using html.escape()
+    # TODO: Review naming of all partials, use the same naming as the Markdown template
+    # TODO: Review structure of template/partials
+-}}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">

@@ -4,12 +4,12 @@
 
 #### Bug Fixes
 
-- [Some bug fix](#some-bug-fix)
+- [**scope:** Some bug fix](#scope-some-bug-fix)
 
 #### Details
 
 ##### Some feature
 
-- See Also: [Some bug fix](#some-bug-fix)
+- See Also: [**scope:** Some bug fix](#scope-some-bug-fix)
 
-##### Some bug fix
+##### **scope:** Some bug fix

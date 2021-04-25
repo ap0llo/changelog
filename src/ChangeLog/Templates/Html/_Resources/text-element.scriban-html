@@ -1,20 +1,24 @@
-﻿{{~ # TODO: Linking to other change log entries ~}}
-{{~ if textelement.is_link($.element) ~}}
-    {{~ ~}}<a href="{{~ $.element.uri ~}}">{{~ ~}}
-{{~ end ~}}
-{{~ if template_settings.enable_normalization && textelement.is_normalizable($.element) ~}}
-    {{~ if $.element.normalized_style == "Code" ~}}
-    {{~ ~}}<code>{{~ $.element.normalized_text ~}}</code> {{~ ~}}
-    {{~ else ~}}
-        {{~ $.element.normalized_text ~}}
-    {{~ end ~}}
+﻿{{~ if textelement.is_change_log_entry_reference($.element) ~}}
+    {{~ referencedEntry = changelog.find_entry(model, $.element.entry.commit) ~}}
+    {{~ ~}}<a href="#{{~ referencedEntry.commit.abbreviated_id ~}}">{{~ include "entry-title.scriban-html" entry: referencedEntry ~}}</a>{{~ ~}}
 {{~ else ~}}
-    {{~ if $.element.style == "Code" ~}}
-       {{~ ~}} <code>{{~ $.element.text ~}}</code> {{~ ~}}
-    {{~ else ~}}
-        {{~ $.element.text ~}}
+    {{~ if textelement.is_link($.element) ~}}
+        {{~ ~}}<a href="{{~ $.element.uri ~}}">{{~ ~}}
     {{~ end ~}}
-{{~ end ~}}
-{{~ if textelement.is_link($.element) ~}}
-    {{~ ~}}</a>{{~ ~}}
+    {{~ if template_settings.enable_normalization && textelement.is_normalizable($.element) ~}}
+        {{~ if $.element.normalized_style == "Code" ~}}
+        {{~ ~}}<code>{{~ $.element.normalized_text ~}}</code> {{~ ~}}
+        {{~ else ~}}
+            {{~ $.element.normalized_text ~}}
+        {{~ end ~}}
+    {{~ else ~}}
+        {{~ if $.element.style == "Code" ~}}
+        {{~ ~}} <code>{{~ $.element.text ~}}</code> {{~ ~}}
+        {{~ else ~}}
+            {{~ $.element.text ~}}
+        {{~ end ~}}
+    {{~ end ~}}
+    {{~ if textelement.is_link($.element) ~}}
+        {{~ ~}}</a>{{~ ~}}
+    {{~ end ~}}
 {{~ end ~}}

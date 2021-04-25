@@ -4,12 +4,12 @@
 
 ## Bug Fixes
 
-- [Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
+- [**scope:** Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
 
 ## Details
 
 ### <a id="changelog-heading-efgh5678efgh5678efgh5678efgh5678efgh5678"></a> Some feature
 
-- See Also: [Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
+- See Also: [**scope:** Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
 
-### <a id="changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234"></a> Some bug fix
+### <a id="changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234"></a> **scope:** Some bug fix
