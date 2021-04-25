@@ -148,8 +148,8 @@ namespace Grynwald.ChangeLog.Test.Templates.ViewModel
             var assertions = expectedOrder.Select<ChangeLogEntry, Action<ChangeLogEntryViewModel>>(
                 expected => actual =>
                 {
-                    Assert.Equal(expected.Type, actual.Model.Type);
-                    Assert.Same(expected, actual.Model);
+                    Assert.Equal(expected.Type, actual.Type);
+                    Assert.Equal(expected.Commit, actual.Commit);
                 }
             ).ToArray();
 

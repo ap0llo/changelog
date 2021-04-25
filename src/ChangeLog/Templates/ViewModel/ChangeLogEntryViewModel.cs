@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.ChangeLog.ConventionalCommits;
+using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 
 namespace Grynwald.ChangeLog.Templates.ViewModel
@@ -12,9 +14,9 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         private readonly ChangeLogEntry m_Model;
 
 
-        // TODO: Remove public property once all templates only access viewmodel properties
-        public ChangeLogEntry Model => m_Model;
+        public GitId Commit => m_Model.Commit;
 
+        public CommitType Type => m_Model.Type;
 
         public bool HasScope => !String.IsNullOrEmpty(Scope);
 

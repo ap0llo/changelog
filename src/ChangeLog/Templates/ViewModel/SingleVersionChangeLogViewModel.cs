@@ -61,7 +61,7 @@ namespace Grynwald.ChangeLog.Templates.ViewModel
         {
             return m_Model.AllEntries
                .Select(x => new ChangeLogEntryViewModel(m_Configuration, x))
-               .GroupBy(x => x.Model.Type)
+               .GroupBy(x => x.Type)
                .OrderByDescending(group => m_EntryTypeConfiguration.GetValueOrDefault(group.Key)?.Priority ?? 0);
         }
     }

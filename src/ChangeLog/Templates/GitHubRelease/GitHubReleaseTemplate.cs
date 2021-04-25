@@ -63,10 +63,10 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
         {
             // in GitHub releases, the top heading is <h2> because higher,
             // => the header for individual entries is the level of the "details" header + 1 => 3
-            return new MdHeading(3, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry.Model) };
+            return new MdHeading(3, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) };
         }
 
         /// <inheritdoc />
-        protected override string GetHtmlHeadingId(ChangeLogEntry entry) => $"changelog-heading-{entry.Commit}".ToLower();
+        protected override string GetHtmlHeadingId(ChangeLogEntryViewModel entry) => $"changelog-heading-{entry.Commit}".ToLower();
     }
 }
