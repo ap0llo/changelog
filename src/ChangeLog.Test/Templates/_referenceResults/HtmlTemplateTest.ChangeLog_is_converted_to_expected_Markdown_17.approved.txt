@@ -32,7 +32,7 @@
 
         <ul>
                 <li>
-                    See Also: Link
+                    See Also: <a href="http://example.com/">Link</a>
                 </li>
         </ul>
     </div>

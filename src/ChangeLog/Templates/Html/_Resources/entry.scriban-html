@@ -29,7 +29,6 @@
         {{~ if enumerable.any($.entry.footers) ~}}
         <ul>
             {{~ for footer in $.entry.footers ~}}
-                {{~ # TODO:Links ~}}
                 <li>
                     {{ footer.display_name }}: {{ include "text-element.scriban-html" element: footer.model.value }}
                 </li>

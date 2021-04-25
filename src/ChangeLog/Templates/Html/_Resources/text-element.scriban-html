@@ -1,4 +1,8 @@
-﻿{{~ if template_settings.enable_normalization && textelement.is_normalizable($.element) ~}}
+﻿{{~ # TODO: Linking to other change log entries ~}}
+{{~ if textelement.is_link($.element) ~}}
+    {{~ ~}}<a href="{{~ $.element.uri ~}}">{{~ ~}}
+{{~ end ~}}
+{{~ if template_settings.enable_normalization && textelement.is_normalizable($.element) ~}}
     {{~ if $.element.normalized_style == "Code" ~}}
     {{~ ~}}<code>{{~ $.element.normalized_text ~}}</code> {{~ ~}}
     {{~ else ~}}
@@ -10,4 +14,7 @@
     {{~ else ~}}
         {{~ $.element.text ~}}
     {{~ end ~}}
+{{~ end ~}}
+{{~ if textelement.is_link($.element) ~}}
+    {{~ ~}}</a>{{~ ~}}
 {{~ end ~}}

@@ -62,7 +62,7 @@
 
         <ul>
                 <li>
-                    See Also: Example
+                    See Also: <a href="https://example.com/">Example</a>
                 </li>
         </ul>
     </div>

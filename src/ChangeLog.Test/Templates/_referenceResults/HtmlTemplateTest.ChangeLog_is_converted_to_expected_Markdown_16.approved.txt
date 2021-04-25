@@ -32,7 +32,7 @@
 
         <ul>
                 <li>
-                    Commit: <code>abcd123</code>
+                    Commit: <a href="http://example.com/some-link"><code>abcd123</code></a>
                 </li>
         </ul>
     </div>
