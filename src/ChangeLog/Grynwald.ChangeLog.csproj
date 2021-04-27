@@ -11,16 +11,16 @@
 
   <ItemGroup>
     <None Remove="Configuration\defaultSettings.json" />
-    <EmbeddedResource Include="Configuration\defaultSettings.json" />   
+    <EmbeddedResource Include="Configuration\defaultSettings.json" />
   </ItemGroup>
-    
+
   <ItemGroup>
-    <None Remove="Templates\Html\_Resources\*.scriban-html" />
-    <EmbeddedResource Include="Templates\Html\_Resources\*.scriban-html">
+    <None Remove="Templates\Html\_Resources\*.*" />
+    <EmbeddedResource Include="Templates\Html\_Resources\*.*">
       <LogicalName>templates/Html/%(FileName)%(Extension)</LogicalName>
-    </EmbeddedResource>    
+    </EmbeddedResource>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="10.1.0" />
     <PackageReference Include="Grynwald.Utilities" Version="1.6.11-pre" />
@@ -50,6 +50,6 @@
     <!-- Generate docs only for netcoreapp3.1, otherwise there would be race-conditions between the buidls for the different target frameworks-->
     <GenerateCommandLineDocumentationOnBuild Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">true</GenerateCommandLineDocumentationOnBuild>
   </PropertyGroup>
-  
+
 
 </Project>
