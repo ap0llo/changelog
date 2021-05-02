@@ -33,10 +33,6 @@ ul li {
     margin: 2px;
 }
 
-hr {
-    display: none;
-}
-
 a {
     color: #0190df;
 }
@@ -140,8 +136,8 @@ p {
     margin: 16px 0 0 0;
 }
 
-.changelog-version-summary-list,
-.changelog-version-breakingchanges-list{
+.changelog-entry-list,
+.changelog-breakingchanges-list{
     margin-top: 20px;
 }
 .changelog-version-details {

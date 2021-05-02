@@ -41,10 +41,6 @@ ul li {
     margin: 2px;
 }
 
-hr {
-    display: none;
-}
-
 a {
     color: #0190df;
 }
@@ -148,8 +144,8 @@ p {
     margin: 16px 0 0 0;
 }
 
-.changelog-version-summary-list,
-.changelog-version-breakingchanges-list{
+.changelog-entry-list,
+.changelog-breakingchanges-list{
     margin-top: 20px;
 }
 .changelog-version-details {
@@ -162,39 +158,44 @@ p {
 <body>
     <div class="changelog">
 
-        <div class="changelog-header">
-            <h1>Change Log</h1>
-        </div>
+    <div class="changelog-header">
+    <h1>Change Log</h1>
+</div>
 
+    
 
+    <main class="changelog-content">
 
-        <main class="changelog-content">
+        <div class="changelog-version">
 
+    <div class="changelog-version-header">
+        <h2 id="1.2.3">1.2.3</h2>
+    </div>
 
-                <div class="changelog-version">
-                    <div class="changelog-version-header">
-                        <h2 id="1.2.3">1.2.3</h2>
-                    </div>
+    <div class="changelog-version-content">
+            <div class="changelog-entry">
 
-                    <div class="changelog-version-content">
-                            <div class="changelog-entry">
     <div class="changelog-entry-header">
         <h4 id="0398ff2"><b>api:</b> Some change</h4>
     </div>
+
     <div class="changelog-entry-content">
+
 
         <p>Changelog entry body Line1
 Line2</p>
         <p>Changelog entry body Line3
 Line4</p>
 
+
     </div>
 </div>
-                    </div>
-                </div>
-
-        </main>
     </div>
 
+</div>
+
+</main>
+
+</div>
 </body>
 </html>

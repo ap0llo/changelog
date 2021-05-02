@@ -1,8 +1,11 @@
 ﻿<div class="changelog-entry">
+
     <div class="changelog-entry-header">
         <h4 id="{{~entry.commit.abbreviated_id~}}">{{~ include "entry-title.scriban-html" entry: $.entry ~}}</h4>
     </div>
+
     <div class="changelog-entry-content">
+
         {{~ if $.entry.contains_breaking_changes ~}}
             {{~ if enumerable.any($.entry.breaking_change_descriptions) ~}}
                 {{~ if enumerable.count($.entry.breaking_change_descriptions) == 1 ~}}
@@ -17,7 +20,7 @@
                     </ul>
                 {{~ end ~}}
             {{~ else ~}}
-            <p><b>Breaking Change</b></p>
+                <p><b>Breaking Change</b></p>
             {{~ end ~}}
         {{~ end ~}}
 
@@ -34,5 +37,6 @@
             {{~ end ~}}
         </ul>
         {{~ end ~}}
+
     </div>
 </div>

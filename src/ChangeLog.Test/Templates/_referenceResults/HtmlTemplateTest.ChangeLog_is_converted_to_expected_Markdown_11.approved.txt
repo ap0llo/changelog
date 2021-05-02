@@ -41,10 +41,6 @@ ul li {
     margin: 2px;
 }
 
-hr {
-    display: none;
-}
-
 a {
     color: #0190df;
 }
@@ -148,8 +144,8 @@ p {
     margin: 16px 0 0 0;
 }
 
-.changelog-version-summary-list,
-.changelog-version-breakingchanges-list{
+.changelog-entry-list,
+.changelog-breakingchanges-list{
     margin-top: 20px;
 }
 .changelog-version-details {
@@ -162,62 +158,71 @@ p {
 <body>
     <div class="changelog">
 
-        <div class="changelog-header">
-            <h1>Change Log</h1>
-        </div>
+    <div class="changelog-header">
+    <h1>Change Log</h1>
+</div>
 
+    
 
+    <main class="changelog-content">
 
-        <main class="changelog-content">
+        <div class="changelog-version">
 
-
-                <div class="changelog-version">
-                    <div class="changelog-version-header">
-                        <h2 id="1.2.3">1.2.3</h2>
-                    </div>
-
-                    <div class="changelog-version-content">
-                            <div class="changelog-version-summary">
-
-    <div class="changelog-version-summary-list">
-        <div class="changelog-version-summary-list-header">
-            <h3>New Features</h3>
-        </div>
-        <div class="changelog-version-summary-list-content">
-            <ul>
-                    <li><a href="#0398ff2"><b>api:</b> Some change</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="changelog-version-summary-list">
-        <div class="changelog-version-summary-list-header">
-            <h3>Bug Fixes</h3>
-        </div>
-        <div class="changelog-version-summary-list-content">
-            <ul>
-                    <li><a href="#fecc81a"><b>cli:</b> A bug was fixed</a></li>
-                    <li><a href="#473a330">A breaking bugfix</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="changelog-version-summary-list">
-        <div class="changelog-version-summary-list-header">
-            <h3>Code Refactorings</h3>
-        </div>
-        <div class="changelog-version-summary-list-content">
-            <ul>
-                    <li><a href="#05e1587">Some breaking change</a></li>
-            </ul>
-        </div>
+    <div class="changelog-version-header">
+        <h2 id="1.2.3">1.2.3</h2>
     </div>
 
-    <div class="changelog-version-breakingchanges-list">
+    <div class="changelog-version-content">
+            <div class="changelog-version-summary">
 
-    <div class="changelog-version-breakingchanges-list-header">
+        <div class="changelog-entry-list">
+
+    <div class="changelog-entry-list-header">
+        <h3>New Features</h3>
+    </div>
+
+    <div class="changelog-entry-list-content">
+        <ul>
+                <li><a href="#0398ff2"><b>api:</b> Some change</a></li>
+        </ul>
+    </div>
+
+</div>
+        <div class="changelog-entry-list">
+
+    <div class="changelog-entry-list-header">
+        <h3>Bug Fixes</h3>
+    </div>
+
+    <div class="changelog-entry-list-content">
+        <ul>
+                <li><a href="#fecc81a"><b>cli:</b> A bug was fixed</a></li>
+                <li><a href="#473a330">A breaking bugfix</a></li>
+        </ul>
+    </div>
+
+</div>
+        <div class="changelog-entry-list">
+
+    <div class="changelog-entry-list-header">
+        <h3>Code Refactorings</h3>
+    </div>
+
+    <div class="changelog-entry-list-content">
+        <ul>
+                <li><a href="#05e1587">Some breaking change</a></li>
+        </ul>
+    </div>
+
+</div>
+
+    <div class="changelog-breakingchanges-list">
+
+    <div class="changelog-breakingchanges-list-header">
         <h3>Breaking Changes</h3>
     </div>
 
-    <div class="changelog-version-breakingchanges-list-content">
+    <div class="changelog-breakingchanges-list-content">
         <ul>
                     <li><a href="#05e1587">Some breaking change</a></li>
                     <li><a href="#473a330">Description of breaking change</a></li>
@@ -226,39 +231,53 @@ p {
     </div>
 </div>
 
+
 </div>
-                            <div class="changelog-version-details">
+            <div class="changelog-version-details">
+
     <div class="changelog-version-details-header">
         <h3>Details</h3>
     </div>
+
     <div class="changelog-version-details-content">
-        <div class="changelog-entry">
+            <div class="changelog-entry">
+
     <div class="changelog-entry-header">
         <h4 id="0398ff2"><b>api:</b> Some change</h4>
     </div>
+
     <div class="changelog-entry-content">
+
 
         <p>Changelog entry body Line1
 Line2</p>
         <p>Changelog entry body Line3
 Line4</p>
 
+
     </div>
 </div>
-        <div class="changelog-entry">
+            <div class="changelog-entry">
+
     <div class="changelog-entry-header">
         <h4 id="fecc81a"><b>cli:</b> A bug was fixed</h4>
     </div>
+
     <div class="changelog-entry-content">
+
+
 
 
     </div>
 </div>
-        <div class="changelog-entry">
+            <div class="changelog-entry">
+
     <div class="changelog-entry-header">
         <h4 id="473a330">A breaking bugfix</h4>
     </div>
+
     <div class="changelog-entry-content">
+
                     <ul>
                         <li>
                             <b>Breaking Change:</b> Description of breaking change
@@ -269,25 +288,32 @@ Line4</p>
                     </ul>
 
 
+
     </div>
 </div>
-        <div class="changelog-entry">
+            <div class="changelog-entry">
+
     <div class="changelog-entry-header">
         <h4 id="05e1587">Some breaking change</h4>
     </div>
+
     <div class="changelog-entry-content">
-            <p><b>Breaking Change</b></p>
+
+                <p><b>Breaking Change</b></p>
+
 
 
     </div>
 </div>
     </div>
-</div>
-                    </div>
-                </div>
 
-        </main>
+</div>
     </div>
 
+</div>
+
+</main>
+
+</div>
 </body>
 </html>

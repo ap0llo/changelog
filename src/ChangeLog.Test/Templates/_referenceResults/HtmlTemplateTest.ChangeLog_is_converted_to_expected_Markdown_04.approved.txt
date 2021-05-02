@@ -41,10 +41,6 @@ ul li {
     margin: 2px;
 }
 
-hr {
-    display: none;
-}
-
 a {
     color: #0190df;
 }
@@ -148,8 +144,8 @@ p {
     margin: 16px 0 0 0;
 }
 
-.changelog-version-summary-list,
-.changelog-version-breakingchanges-list{
+.changelog-entry-list,
+.changelog-breakingchanges-list{
     margin-top: 20px;
 }
 .changelog-version-details {
@@ -162,86 +158,109 @@ p {
 <body>
     <div class="changelog">
 
-        <div class="changelog-header">
-            <h1>Change Log</h1>
-        </div>
-
-
-
-        <main class="changelog-content">
-
-
-                <div class="changelog-version">
-                    <div class="changelog-version-header">
-                        <h2 id="1.2.3">1.2.3</h2>
-                    </div>
-
-                    <div class="changelog-version-content">
-                            <div class="changelog-version-summary">
-
-    <div class="changelog-version-summary-list">
-        <div class="changelog-version-summary-list-header">
-            <h3>New Features</h3>
-        </div>
-        <div class="changelog-version-summary-list-content">
-            <ul>
-                    <li><a href="#0398ff2"><b>api:</b> Some change</a></li>
-                    <li><a href="#05e1587">Some other change</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="changelog-version-summary-list">
-        <div class="changelog-version-summary-list-header">
-            <h3>Bug Fixes</h3>
-        </div>
-        <div class="changelog-version-summary-list-content">
-            <ul>
-                    <li><a href="#fecc81a"><b>cli:</b> A bug was fixed</a></li>
-            </ul>
-        </div>
-    </div>
+    <div class="changelog-header">
+    <h1>Change Log</h1>
+</div>
 
     
+
+    <main class="changelog-content">
+
+        <div class="changelog-version">
+
+    <div class="changelog-version-header">
+        <h2 id="1.2.3">1.2.3</h2>
+    </div>
+
+    <div class="changelog-version-content">
+            <div class="changelog-version-summary">
+
+        <div class="changelog-entry-list">
+
+    <div class="changelog-entry-list-header">
+        <h3>New Features</h3>
+    </div>
+
+    <div class="changelog-entry-list-content">
+        <ul>
+                <li><a href="#0398ff2"><b>api:</b> Some change</a></li>
+                <li><a href="#05e1587">Some other change</a></li>
+        </ul>
+    </div>
+
 </div>
-                            <div class="changelog-version-details">
+        <div class="changelog-entry-list">
+
+    <div class="changelog-entry-list-header">
+        <h3>Bug Fixes</h3>
+    </div>
+
+    <div class="changelog-entry-list-content">
+        <ul>
+                <li><a href="#fecc81a"><b>cli:</b> A bug was fixed</a></li>
+        </ul>
+    </div>
+
+</div>
+
+    
+
+</div>
+            <div class="changelog-version-details">
+
     <div class="changelog-version-details-header">
         <h3>Details</h3>
     </div>
+
     <div class="changelog-version-details-content">
-        <div class="changelog-entry">
+            <div class="changelog-entry">
+
     <div class="changelog-entry-header">
         <h4 id="0398ff2"><b>api:</b> Some change</h4>
     </div>
+
     <div class="changelog-entry-content">
+
+
 
 
     </div>
 </div>
-        <div class="changelog-entry">
+            <div class="changelog-entry">
+
     <div class="changelog-entry-header">
         <h4 id="05e1587">Some other change</h4>
     </div>
+
     <div class="changelog-entry-content">
+
+
 
 
     </div>
 </div>
-        <div class="changelog-entry">
+            <div class="changelog-entry">
+
     <div class="changelog-entry-header">
         <h4 id="fecc81a"><b>cli:</b> A bug was fixed</h4>
     </div>
+
     <div class="changelog-entry-content">
 
 
+
+
     </div>
 </div>
     </div>
-</div>
-                    </div>
-                </div>
 
-        </main>
+</div>
     </div>
 
+</div>
+
+</main>
+
+</div>
 </body>
 </html>
