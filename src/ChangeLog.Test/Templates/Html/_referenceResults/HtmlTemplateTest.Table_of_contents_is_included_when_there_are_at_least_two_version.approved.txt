@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -166,6 +166,17 @@ p {
             <h1>Change Log</h1>
         </div>
 
+        <aside class="changelog-toc">
+            <div class="changelog-toc-header">
+                <h2>Versions</h2>
+            </div>
+            <div class="changelog-toc-content">
+                <ul>
+                    <li><a href="#4.5.6">4.5.6</a></li>
+                    <li><a href="#1.2.3">1.2.3</a></li>
+                </ul>
+            </div>
+        </aside>
 
 
         <main class="changelog-content">
@@ -173,63 +184,38 @@ p {
 
                 <div class="changelog-version">
                     <div class="changelog-version-header">
+                        <h2 id="4.5.6">4.5.6</h2>
+                    </div>
+
+                    <div class="changelog-version-content">
+                            <div class="changelog-entry">
+    <div class="changelog-entry-header">
+        <h4 id="0398ff2">Some feature</h4>
+    </div>
+    <div class="changelog-entry-content">
+
+
+    </div>
+</div>
+                    </div>
+                </div>
+
+
+                <hr />
+
+                <div class="changelog-version">
+                    <div class="changelog-version-header">
                         <h2 id="1.2.3">1.2.3</h2>
                     </div>
 
                     <div class="changelog-version-content">
-                            <div class="changelog-version-summary">
-
-    <div class="changelog-version-summary-list">
-        <div class="changelog-version-summary-list-header">
-            <h3>New Features</h3>
-        </div>
-        <div class="changelog-version-summary-list-content">
-            <ul>
-                    <li><a href="#efgh567">Some feature</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="changelog-version-summary-list">
-        <div class="changelog-version-summary-list-header">
-            <h3>Bug Fixes</h3>
-        </div>
-        <div class="changelog-version-summary-list-content">
-            <ul>
-                    <li><a href="#abcd123">Some bug fix</a></li>
-            </ul>
-        </div>
-    </div>
-
-    
-</div>
-                            <div class="changelog-version-details">
-    <div class="changelog-version-details-header">
-        <h3>Details</h3>
-    </div>
-    <div class="changelog-version-details-content">
-        <div class="changelog-entry">
+                            <div class="changelog-entry">
     <div class="changelog-entry-header">
-        <h4 id="efgh567">Some feature</h4>
+        <h4 id="05e1587">Some other feature</h4>
     </div>
     <div class="changelog-entry-content">
 
 
-        <ul>
-                <li>
-                    See Also: <code>abcd123</code>
-                </li>
-        </ul>
-    </div>
-</div>
-        <div class="changelog-entry">
-    <div class="changelog-entry-header">
-        <h4 id="abcd123">Some bug fix</h4>
-    </div>
-    <div class="changelog-entry-content">
-
-
-    </div>
-</div>
     </div>
 </div>
                     </div>

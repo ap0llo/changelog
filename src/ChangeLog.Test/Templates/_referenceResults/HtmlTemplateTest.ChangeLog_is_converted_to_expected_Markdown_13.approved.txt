@@ -77,12 +77,31 @@ p {
   }
 }
 
+.changelog-toc {
+    margin-top: 8px;
+    padding: 8px;
+}
+
+.changelog-toc-header h2 {
+    font-size: 22px;
+    margin: 0
+}
+
+.changelog-toc-content {
+    margin: 8px
+}
+
+
 .changelog-version {
     margin-top: 36px;
     background-color: white;
     border: 1px solid gray;
     border-radius: 2px;
     box-shadow:  0 .5em 1em -.125em #0a0a0a1a,0 0 0 1px #0a0a0a05;;
+}
+
+.changelog-version:first-child {
+    margin-top: 18px;
 }
 
 .changelog-header {
@@ -136,6 +155,8 @@ p {
 .changelog-version-details {
     margin-top: 32px;
 }
+
+
     </style>
 </head>
 <body>
@@ -145,12 +166,14 @@ p {
             <h1>Change Log</h1>
         </div>
 
-        <div class="changelog-content">
+
+
+        <main class="changelog-content">
 
 
                 <div class="changelog-version">
                     <div class="changelog-version-header">
-                        <h2>1.2.3</h2>
+                        <h2 id="1.2.3">1.2.3</h2>
                     </div>
 
                     <div class="changelog-version-content">
@@ -207,7 +230,8 @@ p {
                     </div>
                 </div>
 
-        </div>
+        </main>
     </div>
+
 </body>
 </html>

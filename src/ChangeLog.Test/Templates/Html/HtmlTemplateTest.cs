@@ -90,5 +90,47 @@ namespace Grynwald.ChangeLog.Test.Templates.Html
             // ACT / ASSERT
             Approve(changeLog, configuration);
         }
+
+
+        [Fact]
+        public void Table_of_contents_is_included_when_there_are_at_least_two_version()
+        {
+            // ARRANGE
+            var testData = new TestDataFactory();
+        
+            var changeLog = new ApplicationChangeLog()
+            {
+                testData.GetSingleVersionChangeLog("4.5.6", entries: new[]
+                {
+                    testData.GetChangeLogEntry(type: "feat", summary: "Some feature")
+                }),
+                testData.GetSingleVersionChangeLog("1.2.3", entries: new[]
+                {
+                    testData.GetChangeLogEntry(type: "feat", summary: "Some other feature")
+                })
+            };
+
+            // ACT / ASSERT
+            Approve(changeLog);
+        }
+
+        [Fact]
+        public void Table_of_contents_is_not_included_when_there_is_only_a_single_version()
+        {
+            // ARRANGE
+            var testData = new TestDataFactory();
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                testData.GetSingleVersionChangeLog("1.2.3", entries: new[]
+                {
+                    testData.GetChangeLogEntry(type: "feat", summary: "Some other feature")
+                })
+            };
+
+            // ACT / ASSERT
+            Approve(changeLog);
+        }
+
     }
 }
