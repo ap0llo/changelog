@@ -16,7 +16,7 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
 
 
         [Fact]
-        public void ChangeLog_with_multiple_versions_is_converted_to_expected_Markdown_01()
+        public void ChangeLog_with_multiple_versions_is_converted_to_expected_Output()
         {
             // Changelog with two versions.
             // All versions are empty (no entries)

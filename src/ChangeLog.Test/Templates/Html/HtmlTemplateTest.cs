@@ -97,7 +97,7 @@ namespace Grynwald.ChangeLog.Test.Templates.Html
         {
             // ARRANGE
             var testData = new TestDataFactory();
-        
+
             var changeLog = new ApplicationChangeLog()
             {
                 testData.GetSingleVersionChangeLog("4.5.6", entries: new[]
