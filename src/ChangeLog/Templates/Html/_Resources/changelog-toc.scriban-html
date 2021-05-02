@@ -8,7 +8,7 @@
     <div class="changelog-toc-content">
         <ul>
             {{~ for version_change_log in $.model.change_logs ~}}
-            <li><a href="#{{~ version_change_log.version_display_name ~}}">{{~ version_change_log.version_display_name ~}}</a></li>
+            <li><a href="#{{~ version_change_log.version_display_name ~}}">{{~ html.escape(version_change_log.version_display_name) ~}}</a></li>
             {{~ end ~}}
         </ul>
     </div>

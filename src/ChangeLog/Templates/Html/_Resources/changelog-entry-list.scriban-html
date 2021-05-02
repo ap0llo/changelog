@@ -1,7 +1,7 @@
 <div class="changelog-entry-list">
 
     <div class="changelog-entry-list-header">
-        <h3>{{~ $.entry_group.display_name ~}}</h3>
+        <h3>{{~ html.escape($.entry_group.display_name) ~}}</h3>
     </div>
 
     <div class="changelog-entry-list-content">

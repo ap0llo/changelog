@@ -7,15 +7,15 @@
     {{~ end ~}}
     {{~ if template_settings.enable_normalization && textelement.is_normalizable($.element) ~}}
         {{~ if $.element.normalized_style == "Code" ~}}
-        {{~ ~}}<code>{{~ $.element.normalized_text ~}}</code> {{~ ~}}
+        {{~ ~}}<code>{{~ html.escape($.element.normalized_text) ~}}</code> {{~ ~}}
         {{~ else ~}}
-            {{~ $.element.normalized_text ~}}
+            {{~ html.escape($.element.normalized_text) ~}}
         {{~ end ~}}
     {{~ else ~}}
         {{~ if $.element.style == "Code" ~}}
-        {{~ ~}} <code>{{~ $.element.text ~}}</code> {{~ ~}}
+        {{~ ~}} <code>{{~ html.escape($.element.text) ~}}</code> {{~ ~}}
         {{~ else ~}}
-            {{~ $.element.text ~}}
+            {{~ html.escape($.element.text) ~}}
         {{~ end ~}}
     {{~ end ~}}
     {{~ if textelement.is_link($.element) ~}}

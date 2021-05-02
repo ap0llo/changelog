@@ -1,7 +1,7 @@
 <div class="changelog-version">
 
     <div class="changelog-version-header">
-        <h2 id="{{~ $.version_change_log.version_display_name ~}}">{{ $.version_change_log.version_display_name }}</h2>
+        <h2 id="{{~ $.version_change_log.version_display_name ~}}">{{ html.escape($.version_change_log.version_display_name) }}</h2>
     </div>
 
     <div class="changelog-version-content">

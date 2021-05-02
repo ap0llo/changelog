@@ -1,5 +1,5 @@
 ﻿{{~ if $.entry.has_scope ~}}
-    {{~ ~}}<b>{{~ $.entry.scope_display_name ~}}:</b> {{ $.entry.summary ~}}
+    {{~ ~}}<b>{{~ html.escape($.entry.scope_display_name) ~}}:</b> {{ html.escape($.entry.summary) ~}}
 {{~ else ~}}
     {{~ $.entry.summary ~}}
 {{~ end ~}}

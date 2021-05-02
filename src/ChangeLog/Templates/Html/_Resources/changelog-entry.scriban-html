@@ -9,12 +9,12 @@
         {{~ if $.entry.contains_breaking_changes ~}}
             {{~ if enumerable.any($.entry.breaking_change_descriptions) ~}}
                 {{~ if enumerable.count($.entry.breaking_change_descriptions) == 1 ~}}
-                    <p><b>Breaking Change:</b> {{enumerable.single($.entry.breaking_change_descriptions) ~}}</p>
+                    <p><b>Breaking Change:</b> {{ html.escape(enumerable.single($.entry.breaking_change_descriptions)) ~}}</p>
                 {{~ else ~}}
                     <ul>
                         {{~ for description in $.entry.breaking_change_descriptions ~}}
                         <li>
-                            <b>Breaking Change:</b> {{ description }}
+                            <b>Breaking Change:</b> {{ html.escape(description) }}
                         </li>
                         {{~ end ~}}
                     </ul>
@@ -25,14 +25,14 @@
         {{~ end ~}}
 
         {{~ for paragraph in $.entry.body ~}}
-        <p>{{ paragraph }}</p>
+        <p>{{ html.escape(paragraph) }}</p>
         {{~ end ~}}
 
         {{~ if enumerable.any($.entry.footers) ~}}
         <ul>
             {{~ for footer in $.entry.footers ~}}
                 <li>
-                    {{ footer.display_name }}: {{ include "text-element.scriban-html" element: footer.value }}
+                    {{ html.escape(footer.display_name) }}: {{ include "text-element.scriban-html" element: footer.value }}
                 </li>
             {{~ end ~}}
         </ul>

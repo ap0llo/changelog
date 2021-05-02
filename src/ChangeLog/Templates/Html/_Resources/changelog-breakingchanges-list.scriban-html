@@ -10,7 +10,7 @@
             {{~ for entry in $.version_change_log.breaking_changes ~}}
                 {{~ if enumerable.any(entry.breaking_change_descriptions) ~}}
                     {{~ for description in entry.breaking_change_descriptions ~}}
-                    <li><a href="#{{~ entry.commit.abbreviated_id ~}}">{{~ description ~}}</a></li>
+                    <li><a href="#{{~ entry.commit.abbreviated_id ~}}">{{~ html.escape(description) ~}}</a></li>
                     {{~ end ~}}
                 {{~ else ~}}
                     <li><a href="#{{~ entry.commit.abbreviated_id ~}}">{{~ include "entry-title.scriban-html" entry: entry ~}}</a></li>
