@@ -1,6 +1,5 @@
 ﻿{{-
     # TODO: Escape changelog content using html.escape()
-    # TODO: Review naming of all blocks, use the same naming as the Markdown template
 -}}
 <!DOCTYPE html>
 <html lang="en">

@@ -38,7 +38,7 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetSummaryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
+        protected override MdBlock GetEntryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
         {
             // in GitHub releases, the top heading is <h2> because higher,            
             return new MdHeading(2, viewModel.DisplayName);
@@ -52,18 +52,18 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetDetailSectionHeaderBlock(SingleVersionChangeLogViewModel viewModel)
+        protected override MdBlock GetVersionDetailsHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             // in GitHub releases, the top heading is <h2> because higher,
             return new MdHeading(2, "Details");
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetEntryDetailHeaderBlock(ChangeLogEntryViewModel entry)
+        protected override MdBlock GetEntryHeaderBlock(ChangeLogEntryViewModel entry)
         {
             // in GitHub releases, the top heading is <h2> because higher,
             // => the header for individual entries is the level of the "details" header + 1 => 3
-            return new MdHeading(3, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) };
+            return new MdHeading(3, GetEntryTitle(entry)) { Anchor = GetHtmlHeadingId(entry) };
         }
 
         /// <inheritdoc />
