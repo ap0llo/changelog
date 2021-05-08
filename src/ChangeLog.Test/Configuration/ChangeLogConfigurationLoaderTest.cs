@@ -497,6 +497,12 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase("template:gitLabRelease:normalizeReferences", config => config.Template.GitLabRelease.NormalizeReferences, false);
 
             //
+            // Html template settings
+            //
+            yield return TestCase("template:html:normalizeReferences", config => config.Template.Html.NormalizeReferences, true);
+            yield return TestCase("template:html:normalizeReferences", config => config.Template.Html.NormalizeReferences, false);
+
+            //
             // Integration provider setting
             //
             foreach (var value in GetEnumValues<ChangeLogConfiguration.IntegrationProvider>())

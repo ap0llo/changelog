@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Log</title>
+    <style type="text/css">
+    * {
+    margin: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #F9FAFB;
+}
+
+code {
+    font-family: Consolas, 'Courier New', Courier, monospace;
+}
+
+
+h1 {
+    font-size: 36px;
+    font-weight: 500;
+
+}
+h2 {
+    font-size: 28px;
+    font-weight: 500;
+}
+h3 {
+    font-size: 20px;
+    font-weight: 500;
+}
+h4 {
+    font-size: 18px;
+    font-weight: 500;
+}
+ul li {
+    margin: 2px;
+}
+
+a {
+    color: #0190df;
+}
+
+a:hover {
+    color:#015f93
+}
+
+p {
+    margin-top: 4px;
+    margin-bottom: 6px;
+}
+
+.changelog {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 64px;
+    width: 95%;
+}
+
+@media only screen and (min-width: 768px) {
+  .changelog {
+    width: 80%;
+  }
+}
+
+@media only screen and (min-width: 1700px) {
+  .changelog {
+    width: 70%;
+  }
+}
+
+.changelog-toc {
+    margin-top: 8px;
+    padding: 8px;
+}
+
+.changelog-toc-header h2 {
+    font-size: 22px;
+    margin: 0
+}
+
+.changelog-toc-content {
+    margin: 8px
+}
+
+
+.changelog-version {
+    margin-top: 36px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 2px;
+    box-shadow:  0 .5em 1em -.125em #0a0a0a1a,0 0 0 1px #0a0a0a05;;
+}
+
+.changelog-version:first-child {
+    margin-top: 18px;
+}
+
+.changelog-header {
+    padding-top: 20px;
+}
+
+.changelog-version-content {
+    padding: 16px;
+}
+
+.changelog-version-content h2,
+.changelog-version-content h3,
+.changelog-version-content h4 {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+.changelog-version-header {
+    padding: 8px 16px 8px 16px;
+    border-bottom: 1px solid gray;
+    background-color: #F1F3F5;
+}
+.changelog-version-header h2 {
+    font-weight: 550;
+}
+
+
+.changelog-entry {
+    padding: 8px;
+    border-bottom: 1px solid gray;
+}
+
+.changelog-entry:last-child {
+    padding: 8px;
+    border-bottom: none;
+}
+
+.changelog-entry-content {
+    font-size: 15.5px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.changelog-entry-content ul {
+    margin: 16px 0 0 0;
+}
+
+.changelog-entry-list,
+.changelog-breakingchanges-list{
+    margin-top: 20px;
+}
+.changelog-version-details {
+    margin-top: 32px;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="changelog">
+
+    <div class="changelog-header">
+    <h1>Change Log</h1>
+</div>
+
+    
+
+    <main class="changelog-content">
+
+        <div class="changelog-version">
+
+    <div class="changelog-version-header">
+        <h2 id="1.2.3">1.2.3</h2>
+    </div>
+
+    <div class="changelog-version-content">
+            <div class="changelog-version-summary">
+
+        <div class="changelog-entry-list">
+
+    <div class="changelog-entry-list-header">
+        <h3>New Features</h3>
+    </div>
+
+    <div class="changelog-entry-list-content">
+        <ul>
+                <li><a href="#0398ff2"><b>api:</b> Some change</a></li>
+        </ul>
+    </div>
+
+</div>
+        <div class="changelog-entry-list">
+
+    <div class="changelog-entry-list-header">
+        <h3>Bug Fixes</h3>
+    </div>
+
+    <div class="changelog-entry-list-content">
+        <ul>
+                <li><a href="#fecc81a"><b>cli:</b> A bug was fixed</a></li>
+                <li><a href="#473a330">A breaking bugfix</a></li>
+        </ul>
+    </div>
+
+</div>
+        <div class="changelog-entry-list">
+
+    <div class="changelog-entry-list-header">
+        <h3>Code Refactorings</h3>
+    </div>
+
+    <div class="changelog-entry-list-content">
+        <ul>
+                <li><a href="#05e1587">Some breaking change</a></li>
+        </ul>
+    </div>
+
+</div>
+
+    <div class="changelog-breakingchanges-list">
+
+    <div class="changelog-breakingchanges-list-header">
+        <h3>Breaking Changes</h3>
+    </div>
+
+    <div class="changelog-breakingchanges-list-content">
+        <ul>
+                    <li><a href="#05e1587">Some breaking change</a></li>
+                    <li><a href="#473a330">Description of breaking change</a></li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+            <div class="changelog-version-details">
+
+    <div class="changelog-version-details-header">
+        <h3>Details</h3>
+    </div>
+
+    <div class="changelog-version-details-content">
+            <div class="changelog-entry">
+
+    <div class="changelog-entry-header">
+        <h4 id="0398ff2"><b>api:</b> Some change</h4>
+    </div>
+
+    <div class="changelog-entry-content">
+
+
+        <p>Changelog entry body Line1
+Line2</p>
+        <p>Changelog entry body Line3
+Line4</p>
+
+
+    </div>
+</div>
+            <div class="changelog-entry">
+
+    <div class="changelog-entry-header">
+        <h4 id="fecc81a"><b>cli:</b> A bug was fixed</h4>
+    </div>
+
+    <div class="changelog-entry-content">
+
+
+
+
+    </div>
+</div>
+            <div class="changelog-entry">
+
+    <div class="changelog-entry-header">
+        <h4 id="473a330">A breaking bugfix</h4>
+    </div>
+
+    <div class="changelog-entry-content">
+
+                    <p><b>Breaking Change:</b> Description of breaking change</p>
+
+
+
+    </div>
+</div>
+            <div class="changelog-entry">
+
+    <div class="changelog-entry-header">
+        <h4 id="05e1587">Some breaking change</h4>
+    </div>
+
+    <div class="changelog-entry-content">
+
+                <p><b>Breaking Change</b></p>
+
+
+
+    </div>
+</div>
+    </div>
+
+</div>
+    </div>
+
+</div>
+
+</main>
+
+</div>
+</body>
+</html>

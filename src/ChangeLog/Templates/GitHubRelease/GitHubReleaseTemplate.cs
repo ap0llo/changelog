@@ -23,23 +23,22 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
 
 
         /// <inheritdoc />
-        protected override MdDocument GetChangeLogDocument(ApplicationChangeLog changeLog)
+        protected override MdDocument GetChangeLogDocument(ApplicationChangeLogViewModel viewModel)
         {
-            if (changeLog.ChangeLogs.Count() > 1)
+            if (viewModel.ChangeLogs.Count() > 1)
                 throw new TemplateExecutionException("The GitHub Release template cannot render change logs that contain multiple versions");
 
-            if (!changeLog.ChangeLogs.Any())
+            if (!viewModel.ChangeLogs.Any())
                 return new MdDocument(GetEmptyBlock());
 
             // Return changes for only a single change, omit surrounding headers
-            var viewModel = new SingleVersionChangeLogViewModel(m_Configuration, changeLog.Single());
             return new MdDocument(
-                GetVersionContentBlock(viewModel)
+                GetVersionContentBlock(viewModel.ChangeLogs.Single())
             );
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetSummaryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
+        protected override MdBlock GetEntryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
         {
             // in GitHub releases, the top heading is <h2> because higher,            
             return new MdHeading(2, viewModel.DisplayName);
@@ -53,21 +52,21 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetDetailSectionHeaderBlock(SingleVersionChangeLogViewModel viewModel)
+        protected override MdBlock GetVersionDetailsHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             // in GitHub releases, the top heading is <h2> because higher,
             return new MdHeading(2, "Details");
         }
 
         /// <inheritdoc />
-        protected override MdBlock GetEntryDetailHeaderBlock(ChangeLogEntry entry)
+        protected override MdBlock GetEntryHeaderBlock(ChangeLogEntryViewModel entry)
         {
             // in GitHub releases, the top heading is <h2> because higher,
             // => the header for individual entries is the level of the "details" header + 1 => 3
-            return new MdHeading(3, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) };
+            return new MdHeading(3, GetEntryTitle(entry)) { Anchor = GetHtmlHeadingId(entry) };
         }
 
         /// <inheritdoc />
-        protected override string GetHtmlHeadingId(ChangeLogEntry entry) => $"changelog-heading-{entry.Commit}".ToLower();
+        protected override string GetHtmlHeadingId(ChangeLogEntryViewModel entry) => $"changelog-heading-{entry.Commit}".ToLower();
     }
 }

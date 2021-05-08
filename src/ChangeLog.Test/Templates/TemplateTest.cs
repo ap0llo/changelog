@@ -40,14 +40,14 @@ namespace Grynwald.ChangeLog.Test.Templates
 
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_01()
+        public void ChangeLog_is_converted_to_expected_Output_01()
         {
             // Empty changelog
             Approve(new ApplicationChangeLog());
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_02()
+        public void ChangeLog_is_converted_to_expected_Output_02()
         {
             // Empty changelog
             var changelog = new ApplicationChangeLog()
@@ -59,7 +59,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_03()
+        public void ChangeLog_is_converted_to_expected_Output_03()
         {
             // Changelog with a single versions and multiple entries
 
@@ -77,7 +77,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_04()
+        public void ChangeLog_is_converted_to_expected_Output_04()
         {
             // Changelog with a single versions and multiple entries (including entries with scope)
 
@@ -95,7 +95,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_05()
+        public void ChangeLog_is_converted_to_expected_Output_05()
         {
             // Changelog that contains entry with a body
 
@@ -122,7 +122,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_06()
+        public void ChangeLog_is_converted_to_expected_Output_06()
         {
             // Changelog with only a single entry 
             // (Changelog uses simpler format if there is only a single entry for a version)
@@ -148,7 +148,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_07()
+        public void ChangeLog_is_converted_to_expected_Output_07()
         {
             // Changelog that includes breaking changes
             // Breaking changes must be included regardless of the change type
@@ -181,7 +181,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_08()
+        public void ChangeLog_is_converted_to_expected_Output_08()
         {
             // Changelog uses simpler format if there is only a single entry for a version
             // When a entry is a feature AND a breaking change, it must not count as two entries
@@ -208,7 +208,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_09()
+        public void ChangeLog_is_converted_to_expected_Output_09()
         {
             // Breaking changes must be included regardless of the change type
 
@@ -245,7 +245,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_10()
+        public void ChangeLog_is_converted_to_expected_Output_10()
         {
             // Changelog uses simpler format if there is only a single entry for a version
             // When a entry is a feature AND a breaking change, it must not count as two entries
@@ -275,7 +275,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_11()
+        public void ChangeLog_is_converted_to_expected_Output_11()
         {
             // Breaking changes must be included regardless of the change type
 
@@ -313,7 +313,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_12()
+        public void ChangeLog_is_converted_to_expected_Output_12()
         {
             // Changelog uses simpler format if there is only a single entry for a version
             // When a entry is a feature AND a breaking change, it must not count as two entries
@@ -343,7 +343,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_13()
+        public void ChangeLog_is_converted_to_expected_Output_13()
         {
             // if a display name is configured for a scope,
             // it must be used in the output instead of the actual scope
@@ -370,7 +370,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_14()
+        public void ChangeLog_is_converted_to_expected_Output_14()
         {
             // Footers must be included in the output
 
@@ -395,7 +395,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_15()
+        public void ChangeLog_is_converted_to_expected_Output_15()
         {
             // if a display name is configured for a footer,
             // the output must use the display name instead of the footer name
@@ -428,7 +428,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_16()
+        public void ChangeLog_is_converted_to_expected_Output_16()
         {
             // if an entry's "Commit" footer contains a web link, it must be included in the output
             var entry = GetChangeLogEntry(
@@ -454,7 +454,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_17()
+        public void ChangeLog_is_converted_to_expected_Output_17()
         {
             // if an footer's WebUri is set, the link must be included in the output
 
@@ -474,7 +474,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_18()
+        public void ChangeLog_is_converted_to_expected_Output_18()
         {
             // all configured types are included in the output, in the configured order
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -497,13 +497,13 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_19()
+        public void ChangeLog_is_converted_to_expected_Output_19()
         {
             // Footers which's value is a ChangeLogEntryReferenceTextElement are rendered as links to the referenced entries
 
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
 
-            var entry1 = GetChangeLogEntry(type: "fix", summary: "Some bug fix", commit: TestGitIds.Id1);
+            var entry1 = GetChangeLogEntry(type: "fix", scope: "scope", summary: "Some bug fix", commit: TestGitIds.Id1);
             var entry2 = GetChangeLogEntry(
                     type: "feat",
                     summary: "Some feature",
@@ -533,7 +533,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_20()
+        public void ChangeLog_is_converted_to_expected_Output_20()
         {
             // Footers which's value is a instance of IWebLinkTextElement are rendered as links
 
@@ -557,7 +557,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         }
 
         [Fact]
-        public void ChangeLog_is_converted_to_expected_Markdown_21()
+        public void ChangeLog_is_converted_to_expected_Output_21()
         {
             // Footers which's value is a instance of CommitReferenceTextElement are rendered as code spans
 

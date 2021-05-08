@@ -1,0 +1,20 @@
+<div class="changelog-version">
+
+    <div class="changelog-version-header">
+        <h2 id="{{~ $.version_change_log.version_display_name ~}}">{{ html.escape($.version_change_log.version_display_name) }}</h2>
+    </div>
+
+    <div class="changelog-version-content">
+        {{~ entryCount = enumerable.count($.version_change_log.all_entries) ~}}
+        {{~ if entryCount == 0 ~}}
+            <i>No changes found.</i>
+        {{~ else if entryCount == 1 ~}}
+            {{~ entry = enumerable.single($.version_change_log.all_entries) ~}}
+            {{ include "changelog-entry.scriban-html" entry: entry }}
+        {{~ else ~}}
+            {{ include "changelog-version-summary.scriban-html" version_change_log: $.version_change_log }}
+            {{ include "changelog-version-details.scriban-html" version_change_log: $.version_change_log }}
+        {{~ end ~}}
+    </div>
+
+</div>

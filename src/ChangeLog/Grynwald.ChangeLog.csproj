@@ -10,8 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Configuration\defaultSettings.json" /> 
+    <None Remove="Configuration\defaultSettings.json" />
     <EmbeddedResource Include="Configuration\defaultSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Templates\Html\_Resources\*.*" />
+    <EmbeddedResource Include="Templates\Html\_Resources\*.*">
+      <LogicalName>templates/Html/%(FileName)%(Extension)</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +38,7 @@
     <PackageReference Include="Octokit" Version="0.50.0" />
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="GitLabApiClient" Version="1.7.0" />
+    <PackageReference Include="Scriban" Version="3.7.0" />  
   </ItemGroup>
 
   <!-- Auto-Generated command line help -->
@@ -42,6 +50,6 @@
     <!-- Generate docs only for netcoreapp3.1, otherwise there would be race-conditions between the buidls for the different target frameworks-->
     <GenerateCommandLineDocumentationOnBuild Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">true</GenerateCommandLineDocumentationOnBuild>
   </PropertyGroup>
-  
+
 
 </Project>

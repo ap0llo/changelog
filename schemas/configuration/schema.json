@@ -292,7 +292,8 @@
               "enum": [
                 "Default",
                 "GitLabRelease",
-                "GitHubRelease"
+                "GitHubRelease",
+                "Html"
               ],
               "default": "Default",
               "title": "Template Name"
@@ -325,6 +326,15 @@
               }
             },
             "gitLabRelease": {
+              "type": "object",
+              "properties": {
+                "normalizeReferences": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "html": {
               "type": "object",
               "properties": {
                 "normalizeReferences": {

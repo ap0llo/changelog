@@ -1,0 +1,15 @@
+﻿#### New Features
+
+- [Some feature](#some-feature)
+
+#### Bug Fixes
+
+- [**scope:** Some bug fix](#scope-some-bug-fix)
+
+#### Details
+
+##### Some feature
+
+- See Also: [**scope:** Some bug fix](#scope-some-bug-fix)
+
+##### **scope:** Some bug fix

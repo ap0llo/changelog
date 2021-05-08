@@ -1,0 +1,17 @@
+{{~ if enumerable.count($.model.change_logs) > 1 ~}}
+<aside class="changelog-toc">
+
+    <div class="changelog-toc-header">
+        <h2>Versions</h2>
+    </div>
+
+    <div class="changelog-toc-content">
+        <ul>
+            {{~ for version_change_log in $.model.change_logs ~}}
+            <li><a href="#{{~ version_change_log.version_display_name ~}}">{{~ html.escape(version_change_log.version_display_name) ~}}</a></li>
+            {{~ end ~}}
+        </ul>
+    </div>
+
+</aside>
+{{~ end ~}}

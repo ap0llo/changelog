@@ -1,0 +1,19 @@
+﻿# Change Log
+
+## 1.2.3
+
+### New Features
+
+- [Some feature](#changelog-heading-efgh5678efgh5678efgh5678efgh5678efgh5678)
+
+### Bug Fixes
+
+- [**scope:** Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
+
+### Details
+
+#### <a id="changelog-heading-efgh5678efgh5678efgh5678efgh5678efgh5678"></a> Some feature
+
+- See Also: [**scope:** Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
+
+#### <a id="changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234"></a> **scope:** Some bug fix

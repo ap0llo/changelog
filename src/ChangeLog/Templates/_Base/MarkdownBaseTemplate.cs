@@ -42,31 +42,32 @@ namespace Grynwald.ChangeLog.Templates
         /// <inheritdoc />
         public virtual void SaveChangeLog(ApplicationChangeLog changeLog, string outputPath)
         {
-            var document = GetChangeLogDocument(changeLog);
+            var viewModel = new ApplicationChangeLogViewModel(m_Configuration, changeLog);
+            var document = GetChangeLogDocument(viewModel);
             document.Save(outputPath, SerializationOptions);
         }
 
         /// <summary>
         /// Gets the HTML id for the details section of the specified entry
         /// </summary>
-        protected abstract string GetHtmlHeadingId(ChangeLogEntry entry);
+        protected abstract string GetHtmlHeadingId(ChangeLogEntryViewModel entry);
 
 
         /// <summary>
         /// Generates a Markdown document from the specified change log
         /// </summary>
-        protected virtual MdDocument GetChangeLogDocument(ApplicationChangeLog model)
+        protected virtual MdDocument GetChangeLogDocument(ApplicationChangeLogViewModel viewModel)
         {
             return new MdDocument(
-                GetChangeLogHeaderBlock(model),
-                GetChangeLogContentBlock(model)
+                GetChangeLogHeaderBlock(viewModel),
+                GetChangeLogContentBlock(viewModel)
             );
         }
 
         /// <summary>
         /// Gets the change log's head block
         /// </summary>
-        protected virtual MdBlock GetChangeLogHeaderBlock(ApplicationChangeLog model)
+        protected virtual MdBlock GetChangeLogHeaderBlock(ApplicationChangeLogViewModel viewModel)
         {
             return new MdHeading(1, "Change Log");
         }
@@ -74,14 +75,14 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the change log's content block
         /// </summary>
-        protected virtual MdBlock GetChangeLogContentBlock(ApplicationChangeLog model)
+        protected virtual MdBlock GetChangeLogContentBlock(ApplicationChangeLogViewModel viewModel)
         {
             var container = new MdContainerBlock();
 
             // for each version, add the changes to the document
             // (changeLog.ChangeLogs is ordered by version)
             var firstElement = true;
-            foreach (var versionChangeLog in model.ChangeLogs)
+            foreach (var versionChangeLog in viewModel.ChangeLogs)
             {
                 if (!firstElement)
                     container.Add(new MdThematicBreak());
@@ -96,10 +97,8 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the Markdown block for the specified version change log
         /// </summary>
-        protected virtual MdBlock GetVersionBlock(SingleVersionChangeLog model)
+        protected virtual MdBlock GetVersionBlock(SingleVersionChangeLogViewModel viewModel)
         {
-            var viewModel = new SingleVersionChangeLogViewModel(m_Configuration, model);
-
             return new MdContainerBlock(
                 GetVersionHeaderBlock(viewModel),
                 GetVersionContentBlock(viewModel)
@@ -124,10 +123,10 @@ namespace Grynwald.ChangeLog.Templates
             return entryCount switch
             {
                 0 => GetEmptyBlock(),
-                1 => GetEntryDetailBlock(viewModel.AllEntries.Single()),
+                1 => GetEntryBlock(viewModel.AllEntries.Single()),
                 _ => new MdContainerBlock(
-                    GetSummarySectionBlock(viewModel),
-                    GetDetailSectionBlock(viewModel)
+                    GetVersionSummaryBlock(viewModel),
+                    GetVersionDetailsBlock(viewModel)
                 )
             };
         }
@@ -140,13 +139,13 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the summary section for a version change log
         /// </summary>
-        protected virtual MdBlock GetSummarySectionBlock(SingleVersionChangeLogViewModel viewModel)
+        protected virtual MdBlock GetVersionSummaryBlock(SingleVersionChangeLogViewModel viewModel)
         {
             IEnumerable<MdBlock> EnumerateBlocks()
             {
                 foreach (var group in viewModel.EntryGroups)
                 {
-                    yield return GetSummaryListBlock(group);
+                    yield return GetEntryListBlock(group);
 
                 }
                 yield return GetBreakingChangesListBlock(viewModel);
@@ -158,18 +157,18 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the details section for a version changelog
         /// </summary>
-        protected virtual MdBlock GetDetailSectionBlock(SingleVersionChangeLogViewModel viewModel)
+        protected virtual MdBlock GetVersionDetailsBlock(SingleVersionChangeLogViewModel viewModel)
         {
             return new MdContainerBlock(
-                GetDetailSectionHeaderBlock(viewModel),
-                GetDetailSectionContentBlock(viewModel)
+                GetVersionDetailsHeaderBlock(viewModel),
+                GetVersionDetailsContentBlock(viewModel)
             );
         }
 
         /// <summary>
         /// Gets the header block of the version change log's details section
         /// </summary>
-        protected virtual MdBlock GetDetailSectionHeaderBlock(SingleVersionChangeLogViewModel viewModel)
+        protected virtual MdBlock GetVersionDetailsHeaderBlock(SingleVersionChangeLogViewModel viewModel)
         {
             return new MdHeading(3, "Details");
         }
@@ -177,21 +176,21 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the content block of the version change log's details section
         /// </summary>
-        protected virtual MdBlock GetDetailSectionContentBlock(SingleVersionChangeLogViewModel viewModel)
+        protected virtual MdBlock GetVersionDetailsContentBlock(SingleVersionChangeLogViewModel viewModel)
         {
             return new MdContainerBlock(
-                viewModel.AllEntries.Select(GetEntryDetailBlock)
+                viewModel.AllEntries.Select(GetEntryBlock)
             );
         }
 
         /// <summary>
         /// Gets a summary list block for the specified changelog entries
         /// </summary>
-        protected virtual MdBlock GetSummaryListBlock(ChangeLogEntryGroupViewModel viewModel)
+        protected virtual MdBlock GetEntryListBlock(ChangeLogEntryGroupViewModel viewModel)
         {
             return new MdContainerBlock(
-                GetSummaryListHeaderBlock(viewModel),
-                GetSummaryListContentBlock(viewModel)
+                GetEntryListHeaderBlock(viewModel),
+                GetEntryListContentBlock(viewModel)
             );
 
         }
@@ -199,7 +198,7 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the header for a summary list block
         /// </summary>
-        protected virtual MdBlock GetSummaryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
+        protected virtual MdBlock GetEntryListHeaderBlock(ChangeLogEntryGroupViewModel viewModel)
         {
             return new MdHeading(3, viewModel.DisplayName);
         }
@@ -207,9 +206,9 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets the content for a summary list block
         /// </summary>
-        protected virtual MdBlock GetSummaryListContentBlock(ChangeLogEntryGroupViewModel viewModel)
+        protected virtual MdBlock GetEntryListContentBlock(ChangeLogEntryGroupViewModel viewModel)
         {
-            return new MdBulletList(viewModel.Entries.Select(GetSummaryListItem));
+            return new MdBulletList(viewModel.Entries.Select(GetEntryListItem));
         }
 
         /// <summary>
@@ -267,7 +266,7 @@ namespace Grynwald.ChangeLog.Templates
                 {
                     // no breaking changes description provided
                     // => add "normal" summary of changelog entry to list of breaking changes
-                    breakingChangesList.Add(GetSummaryListItem(entry));
+                    breakingChangesList.Add(GetEntryListItem(entry));
                 }
             }
 
@@ -277,26 +276,26 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets a detail block for the specified change log entry
         /// </summary>
-        protected virtual MdBlock GetEntryDetailBlock(ChangeLogEntry entry)
+        protected virtual MdBlock GetEntryBlock(ChangeLogEntryViewModel entry)
         {
             return new MdContainerBlock(
-                GetEntryDetailHeaderBlock(entry),
-                GetEntryDetailContentBlock(entry)
+                GetEntryHeaderBlock(entry),
+                GetEntryContentBlock(entry)
             );
         }
 
         /// <summary>
         /// Gets the header block of the details block for the specified entry
         /// </summary>
-        protected virtual MdBlock GetEntryDetailHeaderBlock(ChangeLogEntry entry)
+        protected virtual MdBlock GetEntryHeaderBlock(ChangeLogEntryViewModel entry)
         {
-            return new MdHeading(4, GetSummaryText(entry)) { Anchor = GetHtmlHeadingId(entry) };
+            return new MdHeading(4, GetEntryTitle(entry)) { Anchor = GetHtmlHeadingId(entry) };
         }
 
         /// <summary>
         /// Gets the content block of the details block for the specified entry
         /// </summary>
-        protected virtual MdBlock GetEntryDetailContentBlock(ChangeLogEntry entry)
+        protected virtual MdBlock GetEntryContentBlock(ChangeLogEntryViewModel entry)
         {
             var block = new MdContainerBlock();
 
@@ -351,42 +350,46 @@ namespace Grynwald.ChangeLog.Templates
                 //  - By default, footers are rendered as a bullet list where each item uses the format <NAME>: <VALUE>
                 //  - Footer values are implementations of ITextElement but might be custom implementations.
                 //    Three special cases are handled here
+                //      - If the footer value is a reference to another change log entry, omit a link to the entry,
+                //        using the entry's summary as link text
                 //      - If the footer value's style is "Code" the footer value is rendered as Markdown code span
                 //      - If the footer value implements IWebLinkTextElement (no matter what the actual type is),
                 //        the footer is rendered as a Markdown link
-                //      - If the footer is an instance of ChangeLogEntryReferenceTextElement,
-                //        the footer is rendered as an intra-page link to the referenced change log entry.
-                //        In that case, the referenced entry's summary is used instead of the footer's value in the output
 
-                string text;
-                TextStyle style;
-                if (EnableNormalization && footer.Value is INormalizedTextElement normalizedText)
+                MdSpan textSpan;
+                if (footer.Value is ChangeLogEntryReferenceTextElement entryReference)
                 {
-                    text = normalizedText.NormalizedText;
-                    style = normalizedText.NormalizedStyle;
+                    var referencedEntryViewModel = new ChangeLogEntryViewModel(m_Configuration, entryReference.Entry);
+                    var id = GetHtmlHeadingId(referencedEntryViewModel);
+                    textSpan = new MdLinkSpan(GetEntryTitle(referencedEntryViewModel), $"#{id}");
                 }
                 else
                 {
-                    text = footer.Value.Text;
-                    style = footer.Value.Style;
-                }
+                    string text;
+                    TextStyle style;
+                    if (EnableNormalization && footer.Value is INormalizedTextElement normalizedTextElement)
+                    {
+                        text = normalizedTextElement.NormalizedText;
+                        style = normalizedTextElement.NormalizedStyle;
+                    }
+                    else
+                    {
+                        text = footer.Value.Text;
+                        style = footer.Value.Style;
+                    }
 
-                MdSpan textSpan = style == TextStyle.Code
-                    ? new MdCodeSpan(text)
-                    : text;
+                    textSpan = style == TextStyle.Code
+                        ? new MdCodeSpan(text)
+                        : text;
 
-                if (footer.Value is IWebLinkTextElement webLink)
-                {
-                    textSpan = new MdLinkSpan(textSpan, webLink.Uri);
-                }
-                else if (footer.Value is ChangeLogEntryReferenceTextElement entryReference)
-                {
-                    var id = GetHtmlHeadingId(entryReference.Entry);
-                    textSpan = new MdLinkSpan(GetSummaryText(entryReference.Entry), $"#{id}");
+                    if (footer.Value is IWebLinkTextElement webLink)
+                    {
+                        textSpan = new MdLinkSpan(textSpan, webLink.Uri);
+                    }
                 }
 
                 footerList.Add(
-                    new MdListItem($"{footer.GetFooterDisplayName(m_Configuration)}: ", textSpan)
+                    new MdListItem($"{footer.DisplayName}: ", textSpan)
                 );
             }
 
@@ -396,9 +399,9 @@ namespace Grynwald.ChangeLog.Templates
         /// <summary>
         /// Gets a list item for the specified changelog entry
         /// </summary>
-        private MdListItem GetSummaryListItem(ChangeLogEntry entry)
+        private MdListItem GetEntryListItem(ChangeLogEntryViewModel entry)
         {
-            var text = GetSummaryText(entry);
+            var text = GetEntryTitle(entry);
             var id = GetHtmlHeadingId(entry);
 
             // make the list item a link to the details for this changelog entry
@@ -407,21 +410,13 @@ namespace Grynwald.ChangeLog.Templates
             );
         }
 
-        protected MdSpan GetSummaryText(ChangeLogEntry entry)
+        protected MdSpan GetEntryTitle(ChangeLogEntryViewModel entry)
         {
-            var scope = entry.GetScopeDisplayName(m_Configuration);
-
-            return scope switch
-            {
-                string s when !String.IsNullOrEmpty(s) =>
-                    new MdCompositeSpan(
-                        new MdStrongEmphasisSpan($"{scope}:"),
-                        new MdTextSpan($" {entry.Summary}")),
-
-                _ => new MdTextSpan(entry.Summary),
-            };
+            return entry.HasScope
+                ? new MdCompositeSpan(
+                    new MdStrongEmphasisSpan($"{entry.ScopeDisplayName}:"),
+                    new MdTextSpan($" {entry.Summary}"))
+                : new MdTextSpan(entry.Summary);
         }
-
-
     }
 }

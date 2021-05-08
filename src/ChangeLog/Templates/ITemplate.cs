@@ -12,6 +12,7 @@ namespace Grynwald.ChangeLog.Templates
         /// </summary>
         /// <param name="changeLog">The changelog to save to disk.</param>
         /// <param name="outputPath">The path to write the changelog to.</param>
+        /// <exception cref="TemplateExecutionException">Thrown if an error occurred while rendering the change log using the current template.</exception>
         void SaveChangeLog(ApplicationChangeLog changeLog, string outputPath);
     }
 }

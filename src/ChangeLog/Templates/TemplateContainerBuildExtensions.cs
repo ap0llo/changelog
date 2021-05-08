@@ -3,6 +3,7 @@ using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Templates.Default;
 using Grynwald.ChangeLog.Templates.GitHubRelease;
 using Grynwald.ChangeLog.Templates.GitLabRelease;
+using Grynwald.ChangeLog.Templates.Html;
 
 namespace Grynwald.ChangeLog.Templates
 {
@@ -22,6 +23,10 @@ namespace Grynwald.ChangeLog.Templates
 
                 case ChangeLogConfiguration.TemplateName.GitHubRelease:
                     containerBuilder.RegisterType<GitHubReleaseTemplate>().As<ITemplate>();
+                    break;
+
+                case ChangeLogConfiguration.TemplateName.Html:
+                    containerBuilder.RegisterType<HtmlTemplate>().As<ITemplate>();
                     break;
 
                 default:

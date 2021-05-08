@@ -1,0 +1,24 @@
+﻿{{~ if textelement.is_change_log_entry_reference($.element) ~}}
+    {{~ referencedEntry = changelog.find_entry(model, $.element.entry.commit) ~}}
+    {{~ ~}}<a href="#{{~ referencedEntry.commit.abbreviated_id ~}}">{{~ include "entry-title.scriban-html" entry: referencedEntry ~}}</a>{{~ ~}}
+{{~ else ~}}
+    {{~ if textelement.is_link($.element) ~}}
+        {{~ ~}}<a href="{{~ $.element.uri ~}}">{{~ ~}}
+    {{~ end ~}}
+    {{~ if template_settings.enable_normalization && textelement.is_normalizable($.element) ~}}
+        {{~ if $.element.normalized_style == "Code" ~}}
+        {{~ ~}}<code>{{~ html.escape($.element.normalized_text) ~}}</code> {{~ ~}}
+        {{~ else ~}}
+            {{~ html.escape($.element.normalized_text) ~}}
+        {{~ end ~}}
+    {{~ else ~}}
+        {{~ if $.element.style == "Code" ~}}
+        {{~ ~}} <code>{{~ html.escape($.element.text) ~}}</code> {{~ ~}}
+        {{~ else ~}}
+            {{~ html.escape($.element.text) ~}}
+        {{~ end ~}}
+    {{~ end ~}}
+    {{~ if textelement.is_link($.element) ~}}
+        {{~ ~}}</a>{{~ ~}}
+    {{~ end ~}}
+{{~ end ~}}

@@ -1,0 +1,9 @@
+<div class="changelog">
+
+    {{ include "changelog-header.scriban-html" model: $.model}}
+
+    {{ include "changelog-toc.scriban-html" model: $.model}}
+
+    {{ include "changelog-content.scriban-html" model: $.model}}
+
+</div>
