@@ -1,12 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using Scriban;
 using Scriban.Parsing;
-using Scriban.Runtime;
 
-namespace Grynwald.ChangeLog.Templates.Html
+namespace Grynwald.ChangeLog.Templates
 {
     internal class EmbeddedResourceTemplateLoader : ScribanTemplateLoader
     {

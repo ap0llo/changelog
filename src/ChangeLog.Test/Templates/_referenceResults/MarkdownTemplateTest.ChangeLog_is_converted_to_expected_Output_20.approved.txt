@@ -1,0 +1,37 @@
+﻿# Change Log
+
+
+
+
+## 1.2.3
+
+### New Features
+
+- [Some feature](#efgh567)
+
+### Bug Fixes
+
+- [Some bug fix](#abcd123)
+
+
+
+
+### Details
+
+
+#### Some feature
+
+
+
+- See Also: [Example](https://example.com/)
+
+
+#### Some bug fix
+
+
+
+
+
+
+
+

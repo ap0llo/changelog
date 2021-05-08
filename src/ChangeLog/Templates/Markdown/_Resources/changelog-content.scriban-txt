@@ -1,0 +1,8 @@
+{{~ for version_change_log in $.model.change_logs ~}}
+
+    {{~ if !for.first ~}}
+        {{~ ~}}___
+    {{~ end ~}}
+
+    {{~ include "changelog-version.scriban-txt" version_change_log: version_change_log ~}}
+{{~ end ~}}

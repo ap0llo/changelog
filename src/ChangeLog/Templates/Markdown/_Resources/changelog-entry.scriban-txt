@@ -1,0 +1,28 @@
+﻿
+#### {{ include "entry-title.scriban-txt" entry: $.entry }}
+
+{{~ if $.entry.contains_breaking_changes ~}}
+    {{~ if enumerable.any($.entry.breaking_change_descriptions) ~}}
+        {{~ if enumerable.count($.entry.breaking_change_descriptions) == 1 ~}}
+            {{~ ~}}**Breaking Change:** {{ html.escape(enumerable.single($.entry.breaking_change_descriptions)) ~}}
+
+        {{~ else ~}}
+            {{~ for description in $.entry.breaking_change_descriptions ~}}
+            {{~ ~}} - **Breaking Change:** {{ html.escape(description) }}
+            {{~ end ~}}
+        {{~ end ~}}
+    {{~ else ~}}
+        {{~ }}**Breaking Change**
+    {{~ end ~}}
+{{~ end ~}}
+
+{{~ for paragraph in $.entry.body ~}}
+    {{~ html.escape(paragraph) }}
+
+{{~ end ~}}
+
+{{~ if enumerable.any($.entry.footers) ~}}
+    {{~ for footer in $.entry.footers ~}}
+{{~ ~}} - {{ html.escape(footer.display_name) }}: {{ include "text-element.scriban-txt" element: footer.value }}
+    {{~ end ~}}
+{{~ end ~}}

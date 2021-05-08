@@ -4,6 +4,7 @@ using Grynwald.ChangeLog.Templates.Default;
 using Grynwald.ChangeLog.Templates.GitHubRelease;
 using Grynwald.ChangeLog.Templates.GitLabRelease;
 using Grynwald.ChangeLog.Templates.Html;
+using Grynwald.ChangeLog.Templates.Markdown;
 
 namespace Grynwald.ChangeLog.Templates
 {
@@ -27,6 +28,10 @@ namespace Grynwald.ChangeLog.Templates
 
                 case ChangeLogConfiguration.TemplateName.Html:
                     containerBuilder.RegisterType<HtmlTemplate>().As<ITemplate>();
+                    break;
+
+                case ChangeLogConfiguration.TemplateName.Markdown:
+                    containerBuilder.RegisterType<MarkdownTemplate>().As<ITemplate>();
                     break;
 
                 default:

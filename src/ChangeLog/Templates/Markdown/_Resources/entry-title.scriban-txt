@@ -1,0 +1,5 @@
+﻿{{~ if $.entry.has_scope ~}}
+    {{~ ~}}**{{~ html.escape($.entry.scope_display_name) ~}}:** {{ html.escape($.entry.summary) ~}}
+{{~ else ~}}
+    {{~ $.entry.summary ~}}
+{{~ end ~}}

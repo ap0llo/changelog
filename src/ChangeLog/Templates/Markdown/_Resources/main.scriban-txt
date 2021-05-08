@@ -1,0 +1,1 @@
+{{ include "changelog.scriban-txt" model: model}}

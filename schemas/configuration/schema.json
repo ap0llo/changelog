@@ -293,7 +293,8 @@
                 "Default",
                 "GitLabRelease",
                 "GitHubRelease",
-                "Html"
+                "Html",
+                "Markdown"
               ],
               "default": "Default",
               "title": "Template Name"
@@ -335,6 +336,15 @@
               }
             },
             "html": {
+              "type": "object",
+              "properties": {
+                "normalizeReferences": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            },
+            "markdown": {
               "type": "object",
               "properties": {
                 "normalizeReferences": {

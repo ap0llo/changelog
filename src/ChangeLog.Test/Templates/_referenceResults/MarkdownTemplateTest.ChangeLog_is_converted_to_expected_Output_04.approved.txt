@@ -1,0 +1,43 @@
+﻿# Change Log
+
+
+
+
+## 1.2.3
+
+### New Features
+
+- [**api:** Some change](#0398ff2)
+- [Some other change](#05e1587)
+
+### Bug Fixes
+
+- [**cli:** A bug was fixed](#fecc81a)
+
+
+
+
+### Details
+
+
+#### **api:** Some change
+
+
+
+
+
+#### Some other change
+
+
+
+
+
+#### **cli:** A bug was fixed
+
+
+
+
+
+
+
+

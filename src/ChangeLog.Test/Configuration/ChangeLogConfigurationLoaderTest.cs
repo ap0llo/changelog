@@ -503,6 +503,12 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase("template:html:normalizeReferences", config => config.Template.Html.NormalizeReferences, false);
 
             //
+            // Markdown template settings
+            //
+            yield return TestCase("template:markdown:normalizeReferences", config => config.Template.Markdown.NormalizeReferences, true);
+            yield return TestCase("template:markdown:normalizeReferences", config => config.Template.Markdown.NormalizeReferences, false);
+
+            //
             // Integration provider setting
             //
             foreach (var value in GetEnumValues<ChangeLogConfiguration.IntegrationProvider>())

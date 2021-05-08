@@ -1,0 +1,36 @@
+﻿# Change Log
+
+
+
+
+## 1.2.3
+
+### New Features
+
+- [**Scope 1 Display Name:** Some change](#0398ff2)
+
+### Bug Fixes
+
+- [**scope2:** A bug was fixed](#fecc81a)
+
+
+
+
+### Details
+
+
+#### **Scope 1 Display Name:** Some change
+
+
+
+
+
+#### **scope2:** A bug was fixed
+
+
+
+
+
+
+
+

@@ -1,0 +1,16 @@
+# Change Log
+
+
+
+
+## 1.2.3
+
+    
+#### Example Summary
+
+
+
+- Name: NormalizedText
+
+
+

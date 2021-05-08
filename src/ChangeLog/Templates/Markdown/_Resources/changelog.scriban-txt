@@ -1,0 +1,3 @@
+{{ include "changelog-header.scriban-txt" model: $.model}}
+
+{{ include "changelog-content.scriban-txt" model: $.model}}

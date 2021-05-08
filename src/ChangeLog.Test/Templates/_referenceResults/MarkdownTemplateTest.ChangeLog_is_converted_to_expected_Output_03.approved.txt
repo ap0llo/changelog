@@ -1,0 +1,43 @@
+﻿# Change Log
+
+
+
+
+## 1.2.3
+
+### New Features
+
+- [Some change](#0398ff2)
+- [Some other change](#05e1587)
+
+### Bug Fixes
+
+- [A bug was fixed](#fecc81a)
+
+
+
+
+### Details
+
+
+#### Some change
+
+
+
+
+
+#### Some other change
+
+
+
+
+
+#### A bug was fixed
+
+
+
+
+
+
+
+

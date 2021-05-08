@@ -1,0 +1,38 @@
+﻿# Change Log
+
+
+
+
+## 1.2.3
+
+### New Features
+
+- [**scope1:** Some change](#0398ff2)
+
+### Bug Fixes
+
+- [**scope2:** A bug was fixed](#fecc81a)
+
+
+
+
+### Details
+
+
+#### **scope1:** Some change
+
+
+
+- See Also: Issue #5
+
+
+#### **scope2:** A bug was fixed
+
+
+
+- Reviewed by: someone@example.com
+
+
+
+
+

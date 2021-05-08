@@ -1,0 +1,13 @@
+﻿{{~ if enumerable.any($.version_change_log.breaking_changes) ~}}
+### Breaking Changes
+
+    {{~ for entry in $.version_change_log.breaking_changes ~}}
+        {{~ if enumerable.any(entry.breaking_change_descriptions) ~}}
+            {{~ for description in entry.breaking_change_descriptions ~}}
+                {{~ }}- [{{~ html.escape(description) ~}}](#{{~ entry.commit.abbreviated_id ~}})
+            {{~ end ~}}
+        {{~ else ~}}
+            {{~ }}- [{{~ include "entry-title.scriban-txt" entry: entry ~}}](#{{~ entry.commit.abbreviated_id ~}})
+        {{~ end ~}}
+    {{~ end ~}}
+{{~ end ~}}

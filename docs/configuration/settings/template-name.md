@@ -34,6 +34,7 @@
                 <li><code>GitLabRelease</code></li>
                 <li><code>GitHubRelease</code></li>
                 <li><code>Html</code></li>
+                <li><code>Markdown</code></li>
             </ul>
         </td>
     </tr>
