@@ -103,6 +103,7 @@ Normalization is supported for the following types of references:
 Normalization of references is enabled by default, but can be disabled in the template settings for the configured template:
 
 - [Default Template](./configuration/settings/default-template.md#normalize-references)
+- [Html Template](./configuration/settings/html-template.md#normalize-references)
 - [GitHubRelease Template](./configuration/settings/githubrelease-template.md#normalize-references)
 - [GitLabRelease Template](./configuration/settings/gitlabrelease-template.md#normalize-references)
 
