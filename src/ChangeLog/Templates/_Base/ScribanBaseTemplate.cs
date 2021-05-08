@@ -9,6 +9,7 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates.ViewModel;
 using Scriban;
 using Scriban.Runtime;
+using Scriban.Syntax;
 
 namespace Grynwald.ChangeLog.Templates
 {
@@ -75,9 +76,17 @@ namespace Grynwald.ChangeLog.Templates
             };
             templateContext.PushGlobal(rootScriptObject);
 
-            var entryTemplate = Template.Parse(templateLoader.LoadEntryTemplate());
-            var rendered = entryTemplate.Render(templateContext);
-            File.WriteAllText(outputPath, rendered);
+            try
+            {
+
+                var entryTemplate = Template.Parse(templateLoader.LoadEntryTemplate());
+                var rendered = entryTemplate.Render(templateContext);
+                File.WriteAllText(outputPath, rendered);
+            }
+            catch (ScriptRuntimeException ex)
+            {
+                throw new TemplateExecutionException(ex.Message, ex);
+            }
         }
 
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Grynwald.ChangeLog.Templates
 {
@@ -7,6 +6,9 @@ namespace Grynwald.ChangeLog.Templates
     internal class TemplateExecutionException : Exception
     {
         public TemplateExecutionException(string message) : base(message)
+        { }
+
+        public TemplateExecutionException(string message, Exception innerException) : base(message, innerException)
         { }
     }
 }
