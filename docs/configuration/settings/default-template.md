@@ -11,6 +11,8 @@ This pages describes the configuration options of the [Default Template](../../t
 
 ## Markdown Preset
 
+⚠ **The *Markdown Preset* settings has been removed in version 0.4**
+
 <table>
     <tr>
         <td><b>Setting</b></td>
@@ -41,7 +43,7 @@ This pages describes the configuration options of the [Default Template](../../t
     </tr>
     <tr>
         <td><b>Version Support</b></td>
-        <td>0.2+</td>
+        <td>0.2, 0.3</td>
     </tr>
 </table>
 

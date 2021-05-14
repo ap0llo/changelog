@@ -19,9 +19,9 @@
     <EmbeddedResource Include="Templates\Html\_Resources\*.*">
       <LogicalName>templates/Html/%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <None Remove="Templates\Markdown\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\Markdown\_Resources\*.*">
-      <LogicalName>templates/Markdown/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\Default\_Resources\*.*" />
+    <EmbeddedResource Include="Templates\Default\_Resources\*.*">
+      <LogicalName>templates/Default/%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 

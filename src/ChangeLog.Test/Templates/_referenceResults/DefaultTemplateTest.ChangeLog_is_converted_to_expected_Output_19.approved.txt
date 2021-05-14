@@ -17,3 +17,4 @@
 - See Also: [**scope:** Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
 
 #### <a id="changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234"></a> **scope:** Some bug fix
+

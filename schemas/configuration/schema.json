@@ -293,8 +293,7 @@
                 "Default",
                 "GitLabRelease",
                 "GitHubRelease",
-                "Html",
-                "Markdown"
+                "Html"
               ],
               "default": "Default",
               "title": "Template Name"
@@ -302,15 +301,6 @@
             "default": {
               "type": "object",
               "properties": {
-                "markdownPreset": {
-                  "type": "string",
-                  "enum": [
-                    "Default",
-                    "MkDocs"
-                  ],
-                  "default": "Default",
-                  "title": "Default Template Markdown Preset"
-                },
                 "normalizeReferences": {
                   "type": "boolean",
                   "default": true
@@ -336,15 +326,6 @@
               }
             },
             "html": {
-              "type": "object",
-              "properties": {
-                "normalizeReferences": {
-                  "type": "boolean",
-                  "default": true
-                }
-              }
-            },
-            "markdown": {
               "type": "object",
               "properties": {
                 "normalizeReferences": {

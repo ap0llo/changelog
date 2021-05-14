@@ -7,6 +7,8 @@ This pages describes the configuration options of the [Default Template](../../t
     settingskey = "changelog:template:default:markdownPreset"
 ~}}
 
+⚠ **The *Markdown Preset* settings has been removed in version 0.4**
+
 <table>
     <tr>
         <td><b>Setting</b></td>
@@ -23,26 +25,21 @@ This pages describes the configuration options of the [Default Template](../../t
     <tr>
         <td><b>Default value</b></td>
         <td>
-            {{~ if configuration.get_scalar settingskey ~}}
-            <code>{{configuration.get_scalar settingskey | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
+            <code>Default</code>
         </td>
     </tr>
     <tr>
         <td><b>Allowed values</b></td>
         <td>
             <ul>
-                {{~ for item in (configuration.get_allowed_values settingskey) ~}}
-                <li><code>{{item}}</code></li>
-                {{~ end ~}}
+                <li><code>Default</code></li>
+                <li><code>MkDocs</code></li>
             </ul>
         </td>
     </tr>
     <tr>
         <td><b>Version Support</b></td>
-        <td>0.2+</td>
+        <td>0.2, 0.3</td>
     </tr>
 </table>
 

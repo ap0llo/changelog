@@ -1,7 +1,0 @@
-﻿# Change Log
-
-## 1.2.3
-
-#### <a id="changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234"></a> **scope1:** Some change
-
-- Commit: [`abcd123`](http://example.com/some-link)

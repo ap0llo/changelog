@@ -7,8 +7,8 @@
 - **Breaking Change:** Description of breaking change
 - **Breaking Change:** Another breaking change
 
-Changelog entry body Line1  
+Changelog entry body Line1
 Line2
 
-Changelog entry body Line3  
+Changelog entry body Line3
 Line4
