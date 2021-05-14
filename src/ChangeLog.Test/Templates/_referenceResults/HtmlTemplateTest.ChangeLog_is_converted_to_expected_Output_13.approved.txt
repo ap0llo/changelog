@@ -214,10 +214,9 @@ p {
     <div class="changelog-version-details-content">
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="0398ff2"><b>Scope 1 Display Name:</b> Some change</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="0398ff2"><b>Scope 1 Display Name:</b> Some change</h4>
+</div>
     <div class="changelog-entry-content">
 
 
@@ -227,10 +226,9 @@ p {
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="fecc81a"><b>scope2:</b> A bug was fixed</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="fecc81a"><b>scope2:</b> A bug was fixed</h4>
+</div>
     <div class="changelog-entry-content">
 
 

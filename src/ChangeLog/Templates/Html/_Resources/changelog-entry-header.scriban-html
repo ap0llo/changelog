@@ -1,0 +1,4 @@
+﻿<div class="changelog-entry-header">
+    {{~ id = include "entry-id.scriban-html" entry: $.entry ~}}
+    <h4 id="{{~ id ~}}">{{~ include "entry-title.scriban-html" entry: $.entry ~}}</h4>
+</div>

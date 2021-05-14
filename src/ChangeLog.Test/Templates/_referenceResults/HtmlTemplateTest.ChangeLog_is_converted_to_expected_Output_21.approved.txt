@@ -214,10 +214,9 @@ p {
     <div class="changelog-version-details-content">
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="efgh567">Some feature</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="efgh567">Some feature</h4>
+</div>
     <div class="changelog-entry-content">
 
 
@@ -232,10 +231,9 @@ p {
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="abcd123">Some bug fix</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="abcd123">Some bug fix</h4>
+</div>
     <div class="changelog-entry-content">
 
 

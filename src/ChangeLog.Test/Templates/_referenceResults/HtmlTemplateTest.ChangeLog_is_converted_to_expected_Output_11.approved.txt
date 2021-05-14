@@ -242,10 +242,9 @@ p {
     <div class="changelog-version-details-content">
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="0398ff2"><b>api:</b> Some change</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="0398ff2"><b>api:</b> Some change</h4>
+</div>
     <div class="changelog-entry-content">
 
 
@@ -259,10 +258,9 @@ Line4</p>
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="fecc81a"><b>cli:</b> A bug was fixed</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="fecc81a"><b>cli:</b> A bug was fixed</h4>
+</div>
     <div class="changelog-entry-content">
 
 
@@ -272,10 +270,9 @@ Line4</p>
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="473a330">A breaking bugfix</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="473a330">A breaking bugfix</h4>
+</div>
     <div class="changelog-entry-content">
 
                     <ul>
@@ -293,10 +290,9 @@ Line4</p>
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="05e1587">Some breaking change</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="05e1587">Some breaking change</h4>
+</div>
     <div class="changelog-entry-content">
 
                 <p><b>Breaking Change</b></p>

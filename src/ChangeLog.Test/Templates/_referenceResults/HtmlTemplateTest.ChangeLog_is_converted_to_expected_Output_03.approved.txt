@@ -215,10 +215,9 @@ p {
     <div class="changelog-version-details-content">
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="0398ff2">Some change</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="0398ff2">Some change</h4>
+</div>
     <div class="changelog-entry-content">
 
 
@@ -228,10 +227,9 @@ p {
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="05e1587">Some other change</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="05e1587">Some other change</h4>
+</div>
     <div class="changelog-entry-content">
 
 
@@ -241,10 +239,9 @@ p {
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="fecc81a">A bug was fixed</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="fecc81a">A bug was fixed</h4>
+</div>
     <div class="changelog-entry-content">
 
 

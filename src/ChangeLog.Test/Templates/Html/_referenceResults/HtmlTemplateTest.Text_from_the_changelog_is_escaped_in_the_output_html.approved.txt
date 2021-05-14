@@ -218,10 +218,9 @@ p {
     <div class="changelog-version-details-content">
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="0398ff2"><b>My &amp; Scope:</b> Some special characters &amp; &lt; &gt;</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="0398ff2"><b>My &amp; Scope:</b> Some special characters &amp; &lt; &gt;</h4>
+</div>
     <div class="changelog-entry-content">
 
                 <p><b>Breaking Change</b></p>
@@ -247,10 +246,9 @@ p {
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="fecc81a">Some other feature</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="fecc81a">Some other feature</h4>
+</div>
     <div class="changelog-entry-content">
 
                     <ul>
@@ -268,10 +266,9 @@ p {
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="05e1587">Yet another feature</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="05e1587">Yet another feature</h4>
+</div>
     <div class="changelog-entry-content">
 
                     <p><b>Breaking Change:</b> Breaking Change &lt;3&gt;</p>
