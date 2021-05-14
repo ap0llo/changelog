@@ -230,10 +230,9 @@ p {
 </div>
             <div class="changelog-version-details">
 
-    <div class="changelog-version-details-header">
-        <h3>Details</h3>
-    </div>
-
+<div class="changelog-version-details-header">
+    <h3>Details</h3>
+</div>
     <div class="changelog-version-details-content">
             <div class="changelog-entry">
 
