@@ -4,18 +4,18 @@
 
 ### New Features
 
-- [Some feature](#efgh567)
+- [Some feature](#changelog-heading-efgh5678efgh5678efgh5678efgh5678efgh5678)
 
 ### Bug Fixes
 
-- [Some bug fix](#abcd123)
+- [Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
 
 ### Details
 
-#### Some feature
+#### <a id="changelog-heading-efgh5678efgh5678efgh5678efgh5678efgh5678"></a> Some feature
 
 - See Also: [Example](https://example.com/)
 
-#### Some bug fix
+#### <a id="changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234"></a> Some bug fix
 
 
