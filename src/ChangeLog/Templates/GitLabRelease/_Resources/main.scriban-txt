@@ -1,0 +1,7 @@
+{{~ if enumerable.any(model.change_logs) ~}}
+{{~ version_change_log = enumerable.single(model.change_logs) ~}}
+{{~ include "changelog-version.scriban-txt" version_change_log: version_change_log ~}}
+{{~ else ~}}
+*No changes found.*
+
+{{~ end ~}}

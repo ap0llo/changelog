@@ -18,6 +18,6 @@ namespace Grynwald.ChangeLog.Templates.Default
         }
 
         protected override ScribanTemplateLoader CreateTemplateLoader() =>
-            new EmbeddedResourceTemplateLoader("templates/Default/", "main.scriban-txt");
+            new EmbeddedResourceTemplateLoader(new[] { "templates/Default/" }, "main.scriban-txt");
     }
 }

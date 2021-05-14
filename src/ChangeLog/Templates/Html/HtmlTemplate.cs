@@ -16,6 +16,7 @@ namespace Grynwald.ChangeLog.Templates.Html
         }
 
 
-        protected override ScribanTemplateLoader CreateTemplateLoader() => new EmbeddedResourceTemplateLoader("templates/Html", "main.scriban-html");
+        protected override ScribanTemplateLoader CreateTemplateLoader() =>
+            new EmbeddedResourceTemplateLoader(new[] { "templates/Html" }, "main.scriban-html");
     }
 }
