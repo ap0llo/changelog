@@ -1,8 +1,6 @@
 <div class="changelog-version">
 
-    <div class="changelog-version-header">
-        <h2 id="{{~ $.version_change_log.version_display_name ~}}">{{ html.escape($.version_change_log.version_display_name) }}</h2>
-    </div>
+    {{~ include "changelog-version-header.scriban-html" version_change_log: $.version_change_log~}}
 
     <div class="changelog-version-content">
         {{~ entryCount = enumerable.count($.version_change_log.all_entries) ~}}

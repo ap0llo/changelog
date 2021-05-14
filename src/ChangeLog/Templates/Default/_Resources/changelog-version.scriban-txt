@@ -1,6 +1,8 @@
+{{~ header = include "changelog-version-header.scriban-txt" version_change_log: $.version_change_log ~}}
+{{~ if !string.whitespace(header) ~}}
+{{ header }}
 
-## {{ html.escape($.version_change_log.version_display_name) }}
-
+{{~ end ~}}
 {{~ entryCount = enumerable.count($.version_change_log.all_entries) ~}}
 {{~ if entryCount == 0 ~}}
 *No changes found.*
