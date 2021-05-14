@@ -7,6 +7,8 @@
 -->
 # Html Template Settings
 
+This pages describes the configuration options of the [Html Template](../../templates.md#html-template).
+
 ## Normalize References
 
 <table>
@@ -40,5 +42,6 @@ See [Reference Normalization](../../auto-references.md#normalization) for detail
 
 ## See Also
 
+- [Templates Overview](../../templates.md)
 - [Configuration Overview](../../configuration.md)
 - [Template Name Setting](./template-name.md)

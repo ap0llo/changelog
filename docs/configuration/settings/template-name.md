@@ -61,6 +61,9 @@ For details see [Templates](../../templates.md).
 ## See Also
 
 - [Configuration Overview](../../configuration.md)
-- [Default Template Settings](./default-template.md)
-- [GitHubRelease Template Settings](./githubrelease-template.md)
-- [GitLabRelease Template Settings](./gitlabrelease-template.md)
+- [Templates Overview](../../templates.md)
+- Template settings
+    - [Default Template Settings](./default-template.md)
+    - [GitHubRelease Template Settings](./githubrelease-template.md)
+    - [GitLabRelease Template Settings](./gitlabrelease-template.md)
+    - [Html Template Settings](./html-template.md)
