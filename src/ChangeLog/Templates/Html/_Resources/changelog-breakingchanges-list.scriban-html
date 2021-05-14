@@ -1,9 +1,7 @@
 ﻿{{~ if enumerable.any($.version_change_log.breaking_changes) ~}}
 <div class="changelog-breakingchanges-list">
 
-    <div class="changelog-breakingchanges-list-header">
-        <h3>Breaking Changes</h3>
-    </div>
+    {{~ include "changelog-breakingchanges-list-header.scriban-html" version_change_log: $.version_change_log ~}}
 
     <div class="changelog-breakingchanges-list-content">
         <ul>

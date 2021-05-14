@@ -1,4 +1,4 @@
-### {{ html.escape($.entry_group.display_name) }}
+{{ include "changelog-entry-list-header.scriban-txt" entry_group: $.entry_group }}
 
 {{~ for entry in $.entry_group.entries ~}}
     {{~ id = include "entry-id.scriban-txt" entry: entry ~}}    

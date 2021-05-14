@@ -1,5 +1,5 @@
 ﻿{{~ if enumerable.any($.version_change_log.breaking_changes) ~}}
-### Breaking Changes
+{{ include "changelog-breakingchanges-list-header.scriban-txt" version_change_log: $.version_change_log}}
 
     {{~ for entry in $.version_change_log.breaking_changes ~}}
         {{~ id = include "entry-id.scriban-txt" entry: entry ~}}

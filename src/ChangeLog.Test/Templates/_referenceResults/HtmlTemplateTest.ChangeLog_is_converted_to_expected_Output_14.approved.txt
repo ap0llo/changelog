@@ -177,10 +177,9 @@ p {
 
         <div class="changelog-entry-list">
 
-    <div class="changelog-entry-list-header">
-        <h3>New Features</h3>
-    </div>
-
+<div class="changelog-entry-list-header">
+    <h3>New Features</h3>
+</div>
     <div class="changelog-entry-list-content">
         <ul>
                 <li><a href="#0398ff2"><b>scope1:</b> Some change</a></li>
@@ -190,10 +189,9 @@ p {
 </div>
         <div class="changelog-entry-list">
 
-    <div class="changelog-entry-list-header">
-        <h3>Bug Fixes</h3>
-    </div>
-
+<div class="changelog-entry-list-header">
+    <h3>Bug Fixes</h3>
+</div>
     <div class="changelog-entry-list-content">
         <ul>
                 <li><a href="#fecc81a"><b>scope2:</b> A bug was fixed</a></li>
