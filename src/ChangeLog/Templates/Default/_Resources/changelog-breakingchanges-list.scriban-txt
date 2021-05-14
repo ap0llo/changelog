@@ -2,12 +2,13 @@
 ### Breaking Changes
 
     {{~ for entry in $.version_change_log.breaking_changes ~}}
+        {{~ id = include "entry-id.scriban-txt" entry: entry ~}}
         {{~ if enumerable.any(entry.breaking_change_descriptions) ~}}
             {{~ for description in entry.breaking_change_descriptions ~}}
-                {{~ }}- [{{~ html.escape(description) ~}}](#changelog-heading-{{~ entry.commit.id ~}})
+                {{~ }}- [{{~ html.escape(description) ~}}](#{{~ id ~}})
             {{~ end ~}}
         {{~ else ~}}
-            {{~ }}- [{{~ include "entry-title.scriban-txt" entry: entry ~}}](#changelog-heading-{{~ entry.commit.id ~}})
+            {{~ }}- [{{~ include "entry-title.scriban-txt" entry: entry ~}}](#{{~ id ~}})
         {{~ end ~}}
     {{~ end ~}}
 {{~ end ~}}

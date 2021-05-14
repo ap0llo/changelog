@@ -1,4 +1,5 @@
-﻿#### <a id="changelog-heading-{{$.entry.commit.id}}"></a> {{ include "entry-title.scriban-txt" entry: $.entry }}
+﻿{{~ id = include "entry-id.scriban-txt" entry: $.entry ~}}
+#### <a id="{{~ id ~}}"></a> {{ include "entry-title.scriban-txt" entry: $.entry }}
 {{~ if $.entry.contains_breaking_changes || enumerable.any($.entry.body) || enumerable.any($.entry.footers)~}}
 
 {{~ end ~}}

@@ -7,7 +7,8 @@
     <div class="changelog-entry-list-content">
         <ul>
             {{~ for entry in $.entry_group.entries ~}}
-                <li><a href="#{{~entry.commit.abbreviated_id~}}">{{~ include "entry-title.scriban-html" entry: entry ~}}</a></li>
+                {{~ id = include "entry-id.scriban-html" entry: entry ~}}
+                <li><a href="#{{~ id ~}}">{{~ include "entry-title.scriban-html" entry: entry ~}}</a></li>
             {{~ end ~}}
         </ul>
     </div>

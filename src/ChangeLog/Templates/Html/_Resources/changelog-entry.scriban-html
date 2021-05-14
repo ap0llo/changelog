@@ -1,7 +1,8 @@
 ﻿<div class="changelog-entry">
 
     <div class="changelog-entry-header">
-        <h4 id="{{~entry.commit.abbreviated_id~}}">{{~ include "entry-title.scriban-html" entry: $.entry ~}}</h4>
+        {{~ id = include "entry-id.scriban-html" entry: entry ~}}
+        <h4 id="{{~ id ~}}">{{~ include "entry-title.scriban-html" entry: $.entry ~}}</h4>
     </div>
 
     <div class="changelog-entry-content">
