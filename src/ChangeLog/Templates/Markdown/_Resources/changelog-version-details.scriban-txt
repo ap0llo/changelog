@@ -1,6 +1,8 @@
 ﻿### Details
 
 {{~ for entry in $.version_change_log.all_entries ~}}
-    {{~ include "changelog-entry.scriban-txt" entry: entry }}
-{{~ end ~}}
+    {{~ if !for.first ~}}
 
+    {{~ end ~}}
+    {{~ include "changelog-entry.scriban-txt" entry: entry ~}}
+{{~ end ~}}

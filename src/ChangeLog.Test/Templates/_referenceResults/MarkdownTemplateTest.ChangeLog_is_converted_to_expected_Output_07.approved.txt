@@ -1,8 +1,5 @@
 ﻿# Change Log
 
-
-
-
 ## 1.2.3
 
 ### New Features
@@ -18,18 +15,14 @@
 
 - [Some breaking change](#05e1587)
 
-
 ### Breaking Changes
 
 - [Some breaking change](#05e1587)
 - [A breaking bugfix](#473a330)
 
-
 ### Details
 
-
 #### **api:** Some change
-
 
 Changelog entry body Line1
 Line2
@@ -37,29 +30,14 @@ Line2
 Changelog entry body Line3
 Line4
 
-
-
-
 #### **cli:** A bug was fixed
-
-
-
-
 
 #### A breaking bugfix
 
 **Breaking Change**
 
-
-
-
 #### Some breaking change
 
 **Breaking Change**
-
-
-
-
-
 
 

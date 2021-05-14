@@ -1,8 +1,5 @@
 ﻿# Change Log
 
-
-
-
 ## 1.2.3
 
 ### New Features
@@ -13,14 +10,9 @@
 
 - [**cli:** A bug was fixed](#fecc81a)
 
-
-
-
 ### Details
 
-
 #### **api:** Some change
-
 
 Changelog entry body Line1
 Line2
@@ -28,15 +20,6 @@ Line2
 Changelog entry body Line3
 Line4
 
-
-
-
 #### **cli:** A bug was fixed
-
-
-
-
-
-
 
 

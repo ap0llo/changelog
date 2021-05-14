@@ -3,4 +3,3 @@
 {{~ for entry in $.entry_group.entries ~}}
     {{~ }}- [{{~ include "entry-title.scriban-txt" entry: entry ~}}](#{{~entry.commit.abbreviated_id~}})
 {{~ end ~}}
-

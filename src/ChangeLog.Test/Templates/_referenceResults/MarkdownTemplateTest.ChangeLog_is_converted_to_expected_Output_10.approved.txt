@@ -1,11 +1,7 @@
 ﻿# Change Log
 
-
-
-
 ## 1.2.3
 
-    
 #### **api:** Some change
 
 **Breaking Change:** Description of breaking change
@@ -15,8 +11,4 @@ Line2
 
 Changelog entry body Line3
 Line4
-
-
-
-
 

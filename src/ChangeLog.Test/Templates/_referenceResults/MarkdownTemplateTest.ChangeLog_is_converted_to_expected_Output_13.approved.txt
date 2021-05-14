@@ -1,8 +1,5 @@
 ﻿# Change Log
 
-
-
-
 ## 1.2.3
 
 ### New Features
@@ -13,24 +10,10 @@
 
 - [**scope2:** A bug was fixed](#fecc81a)
 
-
-
-
 ### Details
-
 
 #### **Scope 1 Display Name:** Some change
 
-
-
-
-
 #### **scope2:** A bug was fixed
-
-
-
-
-
-
 
 

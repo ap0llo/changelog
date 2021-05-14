@@ -1,5 +1,10 @@
 ﻿{{~ for entry_group in $.version_change_log.entry_groups ~}}
+    {{~ if !for.first ~}}
+
+    {{~ end ~}}
     {{~ include "changelog-entry-list.scriban-txt" entry_group: entry_group ~}}
 {{~ end ~}}
+{{~ if enumerable.any($.version_change_log.entry_groups) && enumerable.any($.version_change_log.breaking_changes) ~}}
 
-{{ include "changelog-breakingchanges-list.scriban-txt" version_change_log: version_change_log }}
+{{~ end ~}}
+{{~ include "changelog-breakingchanges-list.scriban-txt" version_change_log: version_change_log ~}}

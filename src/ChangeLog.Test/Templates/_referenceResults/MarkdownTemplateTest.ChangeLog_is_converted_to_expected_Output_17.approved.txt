@@ -1,16 +1,8 @@
 ﻿# Change Log
 
-
-
-
 ## 1.2.3
 
-    
 #### **scope1:** Some change
 
-
-
 - See Also: [Link](http://example.com/)
-
-
 

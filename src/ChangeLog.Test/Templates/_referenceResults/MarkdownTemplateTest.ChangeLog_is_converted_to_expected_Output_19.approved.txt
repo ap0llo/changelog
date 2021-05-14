@@ -1,8 +1,5 @@
 ﻿# Change Log
 
-
-
-
 ## 1.2.3
 
 ### New Features
@@ -13,25 +10,12 @@
 
 - [**scope:** Some bug fix](#abcd123)
 
-
-
-
 ### Details
-
 
 #### Some feature
 
-
-
 - See Also: [**scope:** Some bug fix](#abcd123)
 
-
 #### **scope:** Some bug fix
-
-
-
-
-
-
 
 
