@@ -22,4 +22,3 @@
 
 #### <a id="changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3"></a> A documentation change
 
-

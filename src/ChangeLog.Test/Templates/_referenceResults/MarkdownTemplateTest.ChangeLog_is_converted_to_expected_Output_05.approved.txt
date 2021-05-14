@@ -22,4 +22,3 @@ Line4
 
 #### <a id="changelog-heading-fecc81adb3c0389ded66e848b1cfd904fd7d7e5b"></a> **cli:** A bug was fixed
 
-

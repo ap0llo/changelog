@@ -9,4 +9,3 @@ Line2
 
 Changelog entry body Line3
 Line4
-
