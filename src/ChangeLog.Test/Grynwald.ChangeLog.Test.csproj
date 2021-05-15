@@ -25,6 +25,12 @@
     <ProjectReference Include="..\ChangeLog\Grynwald.ChangeLog.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="IO\_Resources\**\*.*"/>
+    <EmbeddedResource Include="IO\_Resources\**\*.*" LogicalName="%(RecursiveDir)%(FileName)%(Extension)"/>
+  </ItemGroup>
+    
+
   <!--
     After build, publish the application into the test's output directory.
     This is required for running E2E tests where the application is started as a child processs

@@ -74,6 +74,7 @@ Thanks to all the people contributing to these projects:
 - [Spectre.Console](https://spectresystems.github.io/spectre.console/)
 - [Xunit.Combinatorial](https://github.com/AArnott/Xunit.Combinatorial)
 - [CliWrap](https://github.com/Tyrrrz/CliWrap)
+- [Zio](https://github.com/xoofx/zio)
 
 ## Versioning and Branching
 

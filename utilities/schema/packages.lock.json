@@ -1249,6 +1249,11 @@
           "xunit.extensibility.core": "[2.4.1]"
         }
       },
+      "Zio": {
+        "type": "Transitive",
+        "resolved": "0.11.0",
+        "contentHash": "eNHy6n/UCuQKtqCVw2XIw7L9g1/5vEFuMJ8aLM6tXLxh+vAFajwW1+oFAL65t31YNWro0uLDCez5mGsamC73QA=="
+      },
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
@@ -1267,7 +1272,8 @@
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
           "Octokit": "0.50.0",
-          "Scriban": "3.8.2"
+          "Scriban": "3.8.2",
+          "Zio": "0.11.0"
         }
       }
     }

@@ -177,6 +177,12 @@
           "System.Threading.Tasks.Extensions": "4.5.0"
         }
       },
+      "Zio": {
+        "type": "Direct",
+        "requested": "[0.11.0, )",
+        "resolved": "0.11.0",
+        "contentHash": "eNHy6n/UCuQKtqCVw2XIw7L9g1/5vEFuMJ8aLM6tXLxh+vAFajwW1+oFAL65t31YNWro0uLDCez5mGsamC73QA=="
+      },
       "LibGit2Sharp.NativeBinaries": {
         "type": "Transitive",
         "resolved": "2.0.312",
@@ -522,6 +528,12 @@
           "System.Threading.Tasks.Extensions": "4.5.0"
         }
       },
+      "Zio": {
+        "type": "Direct",
+        "requested": "[0.11.0, )",
+        "resolved": "0.11.0",
+        "contentHash": "eNHy6n/UCuQKtqCVw2XIw7L9g1/5vEFuMJ8aLM6tXLxh+vAFajwW1+oFAL65t31YNWro0uLDCez5mGsamC73QA=="
+      },
       "LibGit2Sharp.NativeBinaries": {
         "type": "Transitive",
         "resolved": "2.0.312",
@@ -794,6 +806,12 @@
         "requested": "[3.8.2, )",
         "resolved": "3.8.2",
         "contentHash": "fuhc7Rx/lARCCym/Vv1y4B63EYSYzs1vYPW9HkUeOBOrtAsTU/g/f9SJZkCy4xASkb4xtrugQwDRtksJ/oAJrQ=="
+      },
+      "Zio": {
+        "type": "Direct",
+        "requested": "[0.11.0, )",
+        "resolved": "0.11.0",
+        "contentHash": "eNHy6n/UCuQKtqCVw2XIw7L9g1/5vEFuMJ8aLM6tXLxh+vAFajwW1+oFAL65t31YNWro0uLDCez5mGsamC73QA=="
       },
       "LibGit2Sharp.NativeBinaries": {
         "type": "Transitive",
