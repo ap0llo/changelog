@@ -1,13 +1,12 @@
 <div class="changelog-entry-list">
 
-    <div class="changelog-entry-list-header">
-        <h3>{{~ html.escape($.entry_group.display_name) ~}}</h3>
-    </div>
+    {{~ include "changelog-entry-list-header.scriban-html" entry_group: $.entry_group ~}}
 
     <div class="changelog-entry-list-content">
         <ul>
             {{~ for entry in $.entry_group.entries ~}}
-                <li><a href="#{{~entry.commit.abbreviated_id~}}">{{~ include "entry-title.scriban-html" entry: entry ~}}</a></li>
+                {{~ id = include "entry-id.scriban-html" entry: entry ~}}
+                <li><a href="#{{~ id ~}}">{{~ include "entry-title.scriban-html" entry: entry ~}}</a></li>
             {{~ end ~}}
         </ul>
     </div>

@@ -15,3 +15,4 @@
 #### <a id="changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3"></a> **Scope 1 Display Name:** Some change
 
 #### <a id="changelog-heading-fecc81adb3c0389ded66e848b1cfd904fd7d7e5b"></a> **scope2:** A bug was fixed
+

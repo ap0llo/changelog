@@ -89,7 +89,7 @@ namespace Grynwald.ChangeLog.Configuration
             Default,
             GitLabRelease,
             GitHubRelease,
-            Html
+            Html,
         }
 
         public class TemplateConfiguration
@@ -107,18 +107,8 @@ namespace Grynwald.ChangeLog.Configuration
             public HtmlTemplateConfiguration Html { get; set; } = new();
         }
 
-        public enum MarkdownPreset
-        {
-            Default,
-            MkDocs
-        }
-
         public class DefaultTemplateConfiguration
         {
-            [JsonSchemaDefaultValue]
-            [SettingDisplayName("Default Template Markdown Preset")]
-            public MarkdownPreset MarkdownPreset { get; set; } = MarkdownPreset.Default;
-
             [JsonSchemaDefaultValue]
             public bool NormalizeReferences { get; set; } = true;
         }

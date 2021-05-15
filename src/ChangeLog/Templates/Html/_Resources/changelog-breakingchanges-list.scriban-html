@@ -1,19 +1,18 @@
 ﻿{{~ if enumerable.any($.version_change_log.breaking_changes) ~}}
 <div class="changelog-breakingchanges-list">
 
-    <div class="changelog-breakingchanges-list-header">
-        <h3>Breaking Changes</h3>
-    </div>
+    {{~ include "changelog-breakingchanges-list-header.scriban-html" version_change_log: $.version_change_log ~}}
 
     <div class="changelog-breakingchanges-list-content">
         <ul>
             {{~ for entry in $.version_change_log.breaking_changes ~}}
+                {{~ id = include "entry-id.scriban-html" entry: entry ~}}
                 {{~ if enumerable.any(entry.breaking_change_descriptions) ~}}
                     {{~ for description in entry.breaking_change_descriptions ~}}
-                    <li><a href="#{{~ entry.commit.abbreviated_id ~}}">{{~ html.escape(description) ~}}</a></li>
+                    <li><a href="#{{~ id ~}}">{{~ html.escape(description) ~}}</a></li>
                     {{~ end ~}}
                 {{~ else ~}}
-                    <li><a href="#{{~ entry.commit.abbreviated_id ~}}">{{~ include "entry-title.scriban-html" entry: entry ~}}</a></li>
+                    <li><a href="#{{~ id ~}}">{{~ include "entry-title.scriban-html" entry: entry ~}}</a></li>
                 {{~ end ~}}
             {{~ end ~}}
         </ul>

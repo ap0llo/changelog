@@ -168,19 +168,17 @@ p {
 
         <div class="changelog-version">
 
-    <div class="changelog-version-header">
-        <h2 id="1.2.3">1.2.3</h2>
-    </div>
-
+<div class="changelog-version-header">
+    <h2 id="1.2.3">1.2.3</h2>
+</div>
     <div class="changelog-version-content">
             <div class="changelog-version-summary">
 
         <div class="changelog-entry-list">
 
-    <div class="changelog-entry-list-header">
-        <h3>New Features</h3>
-    </div>
-
+<div class="changelog-entry-list-header">
+    <h3>New Features</h3>
+</div>
     <div class="changelog-entry-list-content">
         <ul>
                 <li><a href="#efgh567">Some feature</a></li>
@@ -190,10 +188,9 @@ p {
 </div>
         <div class="changelog-entry-list">
 
-    <div class="changelog-entry-list-header">
-        <h3>Bug Fixes</h3>
-    </div>
-
+<div class="changelog-entry-list-header">
+    <h3>Bug Fixes</h3>
+</div>
     <div class="changelog-entry-list-content">
         <ul>
                 <li><a href="#abcd123">Some bug fix</a></li>
@@ -207,17 +204,15 @@ p {
 </div>
             <div class="changelog-version-details">
 
-    <div class="changelog-version-details-header">
-        <h3>Details</h3>
-    </div>
-
+<div class="changelog-version-details-header">
+    <h3>Details</h3>
+</div>
     <div class="changelog-version-details-content">
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="efgh567">Some feature</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="efgh567">Some feature</h4>
+</div>
     <div class="changelog-entry-content">
 
 
@@ -232,10 +227,9 @@ p {
 </div>
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="abcd123">Some bug fix</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="abcd123">Some bug fix</h4>
+</div>
     <div class="changelog-entry-content">
 
 

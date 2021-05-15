@@ -10,8 +10,9 @@
 
 ##### **scope1:** Some change
 
-- See Also: Issue \#5
+- See Also: Issue #5
 
 ##### **scope2:** A bug was fixed
 
 - Reviewed by: someone@example.com
+

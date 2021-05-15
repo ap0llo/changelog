@@ -2,6 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
@@ -44,10 +45,57 @@ namespace Grynwald.ChangeLog.Templates
             }
         }
 
+        private class HtmlUtilities : ScriptObject
+        {
+            /// <summary>
+            /// Generates a "url slug" from the specified value that can be used as a HTML id.
+            /// </summary>
+            /// <remarks>
+            /// This method can be used to generate a id for linking within a document (typically a link to a heading).
+            /// <para>
+            /// There is no official spec for how anchors for headings in Markdown work.
+            /// This implementation follows the guidance from <see href="https://stackoverflow.com/questions/27981247/github-markdown-same-page-link">Stack Overflow</see>:
+            /// <list type="bullet">
+            ///     <item><description>Leading and trailing whitespace is dropped.</description></item>
+            ///     <item><description>Punctuation marks are dropped.</description></item>
+            ///     <item><description>Upper case letters are converted to lower case.</description></item>
+            ///     <item><description>Spaces are replaced with <c>-</c></description></item>
+            /// </list>
+            /// </para>
+            /// </remarks>
+            public static string Slugify(string? value)
+            {
+                value = value?.Trim();
+
+                if (String.IsNullOrEmpty(value))
+                {
+                    return "";
+                }
+
+                var slug = new StringBuilder();
+
+                foreach (var c in value!)
+                {
+                    if (Char.IsLetter(c) || Char.IsNumber(c))
+                    {
+                        slug.Append(Char.ToLower(c));
+                    }
+                    else if (Char.IsWhiteSpace(c))
+                    {
+                        slug.Append('-');
+                    }
+                }
+
+                return slug.ToString();
+            }
+        }
+
 
         private readonly ChangeLogConfiguration m_Configuration;
 
+
         protected abstract object TemplateSettings { get; }
+
 
         public ScribanBaseTemplate(ChangeLogConfiguration configuration)
         {
@@ -55,7 +103,7 @@ namespace Grynwald.ChangeLog.Templates
         }
 
 
-        public void SaveChangeLog(ApplicationChangeLog changeLog, string outputPath)
+        public virtual void SaveChangeLog(ApplicationChangeLog changeLog, string outputPath)
         {
             var viewModel = new ApplicationChangeLogViewModel(m_Configuration, changeLog);
 
@@ -71,6 +119,7 @@ namespace Grynwald.ChangeLog.Templates
                 { "model", viewModel },
                 { "enumerable", new EnumerableFunctions() },
                 { "textelement", new TextElementFunctions() },
+                { "html_utilities", new HtmlUtilities() },
                 { "changelog", new ChangeLogFunctions() },
                 { "template_settings", TemplateSettings }
             };

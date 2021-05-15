@@ -232,7 +232,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Default Template settings
             // 
             yield return TestCase(config => Assert.NotNull(config.Template.Default));
-            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MarkdownPreset.Default, config.Template.Default.MarkdownPreset));
             yield return TestCase(config => Assert.True(config.Template.Default.NormalizeReferences));
 
             //
@@ -477,10 +476,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             //
             // Default Template settings
             //
-            foreach (var value in GetEnumValues<ChangeLogConfiguration.MarkdownPreset>())
-            {
-                yield return TestCase("template:default:markdownpreset", config => config.Template.Default.MarkdownPreset, value);
-            }
             yield return TestCase("template:default:normalizeReferences", config => config.Template.Default.NormalizeReferences, true);
             yield return TestCase("template:default:normalizeReferences", config => config.Template.Default.NormalizeReferences, false);
 

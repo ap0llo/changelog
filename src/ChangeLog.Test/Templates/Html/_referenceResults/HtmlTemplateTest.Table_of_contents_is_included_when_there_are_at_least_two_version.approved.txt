@@ -182,17 +182,15 @@ p {
 
         <div class="changelog-version">
 
-    <div class="changelog-version-header">
-        <h2 id="4.5.6">4.5.6</h2>
-    </div>
-
+<div class="changelog-version-header">
+    <h2 id="4.5.6">4.5.6</h2>
+</div>
     <div class="changelog-version-content">
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="0398ff2">Some feature</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="0398ff2">Some feature</h4>
+</div>
     <div class="changelog-entry-content">
 
 
@@ -205,17 +203,15 @@ p {
 </div>
         <div class="changelog-version">
 
-    <div class="changelog-version-header">
-        <h2 id="1.2.3">1.2.3</h2>
-    </div>
-
+<div class="changelog-version-header">
+    <h2 id="1.2.3">1.2.3</h2>
+</div>
     <div class="changelog-version-content">
             <div class="changelog-entry">
 
-    <div class="changelog-entry-header">
-        <h4 id="05e1587">Some other feature</h4>
-    </div>
-
+<div class="changelog-entry-header">
+    <h4 id="05e1587">Some other feature</h4>
+</div>
     <div class="changelog-entry-content">
 
 

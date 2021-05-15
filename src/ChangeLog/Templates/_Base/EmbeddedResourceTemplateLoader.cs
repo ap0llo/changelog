@@ -1,28 +1,26 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Scriban;
 using Scriban.Parsing;
-using Scriban.Runtime;
 
-namespace Grynwald.ChangeLog.Templates.Html
+namespace Grynwald.ChangeLog.Templates
 {
     internal class EmbeddedResourceTemplateLoader : ScribanTemplateLoader
     {
         private const string s_Scheme = "embeddedResource";
-        private readonly string m_Prefix;
+        private static readonly HashSet<string> s_ResourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames().ToHashSet();
+
+        private readonly IReadOnlyList<string> m_ResourceNamePrefixes;
         private readonly string m_EntryTemplateName;
 
-        public EmbeddedResourceTemplateLoader(string prefix, string entryTemplateName)
+        public EmbeddedResourceTemplateLoader(IEnumerable<string> resourceNamePrefixes, string entryTemplateName)
         {
-            if (String.IsNullOrWhiteSpace(prefix))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(prefix));
-
             if (String.IsNullOrWhiteSpace(entryTemplateName))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(entryTemplateName));
 
-            m_Prefix = prefix;
+            m_ResourceNamePrefixes = resourceNamePrefixes?.ToList() ?? throw new ArgumentNullException(nameof(resourceNamePrefixes));
             m_EntryTemplateName = entryTemplateName;
         }
 
@@ -40,7 +38,19 @@ namespace Grynwald.ChangeLog.Templates.Html
             LoadEmbeddedResource(templatePath);
 
 
-        private string GetResourceUri(string templateName) => $"{s_Scheme}:///{m_Prefix.TrimEnd('/')}/{templateName}";
+        private string GetResourceUri(string templateName)
+        {
+            foreach (var prefix in m_ResourceNamePrefixes)
+            {
+                var resourceName = $"{prefix.TrimEnd('/')}/{templateName}";
+                if (s_ResourceNames.Contains(resourceName))
+                {
+                    return $"{s_Scheme}:///{resourceName}";
+                }
+            }
+
+            throw new TemplateExecutionException($"Failed to locate template '{templateName}'");
+        }
 
         private string LoadEmbeddedResource(string resourceUri)
         {

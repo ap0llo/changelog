@@ -1,8 +1,6 @@
 ﻿<div class="changelog-version-details">
 
-    <div class="changelog-version-details-header">
-        <h3>Details</h3>
-    </div>
+    {{~ include "changelog-version-details-header.scriban-html" version_change_log: $.version_change_log ~}}
 
     <div class="changelog-version-details-content">
         {{~ for entry in $.version_change_log.all_entries ~}}

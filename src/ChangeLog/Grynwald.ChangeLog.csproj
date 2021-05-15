@@ -19,6 +19,18 @@
     <EmbeddedResource Include="Templates\Html\_Resources\*.*">
       <LogicalName>templates/Html/%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
+    <None Remove="Templates\Default\_Resources\*.*" />
+    <EmbeddedResource Include="Templates\Default\_Resources\*.*">
+      <LogicalName>templates/Default/%(FileName)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <None Remove="Templates\GitLabRelease\_Resources\*.*" />
+    <EmbeddedResource Include="Templates\GitLabRelease\_Resources\*.*">
+      <LogicalName>templates/GitLabRelease/%(FileName)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <None Remove="Templates\GitHubRelease\_Resources\*.*" />
+    <EmbeddedResource Include="Templates\GitHubRelease\_Resources\*.*">
+      <LogicalName>templates/GitHubRelease/%(FileName)%(Extension)</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +38,6 @@
     <PackageReference Include="Grynwald.Utilities" Version="1.6.11-pre" />
     <PackageReference Include="Grynwald.Utilities.Configuration" Version="1.6.11-pre" />
     <PackageReference Include="Grynwald.Utilities.Logging" Version="1.6.11-pre" />
-    <PackageReference Include="Grynwald.MarkdownGenerator" Version="2.5.34" />
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0096" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />

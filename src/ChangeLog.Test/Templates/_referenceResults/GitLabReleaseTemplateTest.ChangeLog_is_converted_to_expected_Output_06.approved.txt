@@ -1,7 +1,7 @@
 ﻿##### **api:** Some change
 
-Changelog entry body Line1  
+Changelog entry body Line1
 Line2
 
-Changelog entry body Line3  
+Changelog entry body Line3
 Line4

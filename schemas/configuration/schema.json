@@ -301,15 +301,6 @@
             "default": {
               "type": "object",
               "properties": {
-                "markdownPreset": {
-                  "type": "string",
-                  "enum": [
-                    "Default",
-                    "MkDocs"
-                  ],
-                  "default": "Default",
-                  "title": "Default Template Markdown Preset"
-                },
                 "normalizeReferences": {
                   "type": "boolean",
                   "default": true

@@ -9,13 +9,11 @@ namespace Grynwald.ChangeLog.Templates.Html
 
         public HtmlTemplate(ChangeLogConfiguration configuration) : base(configuration)
         {
-            TemplateSettings = new
-            {
-                EnableNormalization = configuration.Template.Html.NormalizeReferences
-            };
+            TemplateSettings = configuration.Template.Html;
         }
 
 
-        protected override ScribanTemplateLoader CreateTemplateLoader() => new EmbeddedResourceTemplateLoader("templates/Html", "main.scriban-html");
+        protected override ScribanTemplateLoader CreateTemplateLoader() =>
+            new EmbeddedResourceTemplateLoader(new[] { "templates/Html" }, "main.scriban-html");
     }
 }

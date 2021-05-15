@@ -33,12 +33,6 @@
           "Newtonsoft.Json": "12.0.3"
         }
       },
-      "Grynwald.MarkdownGenerator": {
-        "type": "Direct",
-        "requested": "[2.5.34, )",
-        "resolved": "2.5.34",
-        "contentHash": "2esww+F8jCv2bfFkQJ7lAUfk7adbjI70i4cXdsd6TQIKIUIVgLNbLw0sZuvjbXpRfjrKu3nOTYiehS5Ua1l0Mw=="
-      },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",
         "requested": "[0.4.178, )",
@@ -396,12 +390,6 @@
           "Newtonsoft.Json": "12.0.3"
         }
       },
-      "Grynwald.MarkdownGenerator": {
-        "type": "Direct",
-        "requested": "[2.5.34, )",
-        "resolved": "2.5.34",
-        "contentHash": "2esww+F8jCv2bfFkQJ7lAUfk7adbjI70i4cXdsd6TQIKIUIVgLNbLw0sZuvjbXpRfjrKu3nOTYiehS5Ua1l0Mw=="
-      },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",
         "requested": "[0.4.178, )",
@@ -680,12 +668,6 @@
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         }
-      },
-      "Grynwald.MarkdownGenerator": {
-        "type": "Direct",
-        "requested": "[2.5.34, )",
-        "resolved": "2.5.34",
-        "contentHash": "2esww+F8jCv2bfFkQJ7lAUfk7adbjI70i4cXdsd6TQIKIUIVgLNbLw0sZuvjbXpRfjrKu3nOTYiehS5Ua1l0Mw=="
       },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",

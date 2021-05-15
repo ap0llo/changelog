@@ -38,7 +38,6 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 - [Parser Mode](./configuration/settings/parser-mode.md)
 - [Version Range](./configuration/settings/version-range.md)
 - [Current Version](./configuration/settings/current-version.md)
-- [Markdown Preset](./configuration/settings/markdown-preset.md)
 - [Tag Patterns](./configuration/settings/tag-patterns.md)
 - [Output Path](./configuration/settings/output-path.md)
 - [Integration Provider](./configuration/settings/integration-provider.md)
@@ -56,12 +55,13 @@ For example setting `key:subkey` to `value` would need to be specified in the co
   - [GitLab Project Name](./configuration/settings/gitlab-integration.md#gitlab-project-name)
 - [Template Name](./configuration/settings/template-name.md)
 - [Default Template](./configuration/settings/default-template.md)
-  - [Markdown Preset](./configuration/settings/default-template.md#markdown-preset)
   - [Normalize References](./configuration/settings/default-template.md#normalize-references)
 - [GitHubRelease Template](./configuration/settings/githubrelease-template.md)
   - [Normalize References](./configuration/settings/githubrelease-template.md#normalize-references)
 - [GitLabRelease Template](./configuration/settings/gitlabrelease-template.md)
   - [Normalize References](./configuration/settings/gitlabrelease-template.md#normalize-references)
+- [Html Template](./configuration/settings/html-template.md)
+  - [Normalize References](./configuration/settings/html-template.md#normalize-references)
 
 
 ## See Also

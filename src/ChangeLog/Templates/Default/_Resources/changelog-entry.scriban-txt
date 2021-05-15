@@ -1,0 +1,35 @@
+﻿{{ include "changelog-entry-header.scriban-txt" entry: $.entry }}
+{{~ if $.entry.contains_breaking_changes || enumerable.any($.entry.body) || enumerable.any($.entry.footers)~}}
+
+{{~ end ~}}
+{{~ if $.entry.contains_breaking_changes ~}}
+    {{~ if enumerable.any($.entry.breaking_change_descriptions) ~}}
+        {{~ if enumerable.count($.entry.breaking_change_descriptions) == 1 ~}}
+            {{~ ~}}**Breaking Change:** {{ html.escape(enumerable.single($.entry.breaking_change_descriptions)) ~}}
+
+        {{~ else ~}}
+            {{~ for description in $.entry.breaking_change_descriptions ~}}
+            {{~ ~}} - **Breaking Change:** {{ html.escape(description) }}
+            {{~ end ~}}
+        {{~ end ~}}
+    {{~ else ~}}
+        {{~ }}**Breaking Change**
+    {{~ end ~}}
+{{~ end ~}}
+{{- if enumerable.any($.entry.body) ~}}
+    {{~ if $.entry.contains_breaking_changes ~}}
+
+    {{~ end ~}}
+    {{~ for paragraph in $.entry.body ~}}
+        {{~if !for.first ~}}
+
+        {{~ end ~}}
+        {{~ html.escape(paragraph) }}
+    {{~ end ~}}
+{{~ end ~}}
+
+{{- if enumerable.any($.entry.footers) ~}}
+    {{~ for footer in $.entry.footers ~}}
+{{~ ~}} - {{ html.escape(footer.display_name) }}: {{ include "text-element.scriban-txt" element: footer.value }}
+    {{~ end ~}}
+{{~ end ~}}
