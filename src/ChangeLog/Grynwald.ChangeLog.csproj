@@ -27,6 +27,10 @@
     <EmbeddedResource Include="Templates\GitLabRelease\_Resources\*.*">
       <LogicalName>templates/GitLabRelease/%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
+    <None Remove="Templates\GitHubRelease\_Resources\*.*" />
+    <EmbeddedResource Include="Templates\GitHubRelease\_Resources\*.*">
+      <LogicalName>templates/GitHubRelease/%(FileName)%(Extension)</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

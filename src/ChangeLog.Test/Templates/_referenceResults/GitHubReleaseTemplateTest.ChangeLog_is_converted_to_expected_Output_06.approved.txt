@@ -1,7 +1,7 @@
 ﻿### <a id="changelog-heading-0398ff29cc80d82071c735f75aea7d7ab8bbf9a3"></a> **api:** Some change
 
-Changelog entry body Line1  
+Changelog entry body Line1
 Line2
 
-Changelog entry body Line3  
+Changelog entry body Line3
 Line4
