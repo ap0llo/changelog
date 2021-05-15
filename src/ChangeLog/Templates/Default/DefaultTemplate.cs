@@ -1,4 +1,7 @@
-﻿using Grynwald.ChangeLog.Configuration;
+﻿using System.Reflection;
+using Grynwald.ChangeLog.Configuration;
+using Grynwald.ChangeLog.IO;
+using Zio;
 
 namespace Grynwald.ChangeLog.Templates.Default
 {
@@ -7,6 +10,7 @@ namespace Grynwald.ChangeLog.Templates.Default
     /// </summary>
     internal class DefaultTemplate : ScribanBaseTemplate
     {
+        /// <inheritdoc />
         protected override object TemplateSettings { get; }
 
 
@@ -15,7 +19,13 @@ namespace Grynwald.ChangeLog.Templates.Default
             TemplateSettings = configuration.Template.Default;
         }
 
-        protected override ScribanTemplateLoader CreateTemplateLoader() =>
-            new EmbeddedResourceTemplateLoader(new[] { "templates/Default/" }, "main.scriban-txt");
+        /// <inheritdoc />
+        protected override ScribanTemplateLoader CreateTemplateLoader()
+        {
+            var embeddedResourcesFs = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
+            var templateFileSystem = embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/Default");
+
+            return new FileSystemTemplateLoader(templateFileSystem, "/main.scriban-txt");
+        }
     }
 }
