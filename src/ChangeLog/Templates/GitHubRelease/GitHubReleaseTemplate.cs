@@ -12,10 +12,7 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
 
         public GitHubReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
         {
-            TemplateSettings = new
-            {
-                EnableNormalization = configuration.Template.GitHubRelease.NormalizeReferences
-            };
+            TemplateSettings = configuration.Template.GitHubRelease;
         }
 
 

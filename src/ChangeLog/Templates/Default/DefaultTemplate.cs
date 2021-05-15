@@ -9,12 +9,10 @@ namespace Grynwald.ChangeLog.Templates.Default
     {
         protected override object TemplateSettings { get; }
 
+
         public DefaultTemplate(ChangeLogConfiguration configuration) : base(configuration)
         {
-            TemplateSettings = new
-            {
-                EnableNormalization = configuration.Template.Default.NormalizeReferences
-            };
+            TemplateSettings = configuration.Template.Default;
         }
 
         protected override ScribanTemplateLoader CreateTemplateLoader() =>

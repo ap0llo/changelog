@@ -6,7 +6,7 @@
     {{~ if textelement.is_link($.element) ~}}
         {{~ ~}}[{{~ ~}}
     {{~ end ~}}
-    {{~ if template_settings.enable_normalization && textelement.is_normalizable($.element) ~}}
+    {{~ if template_settings.normalize_references && textelement.is_normalizable($.element) ~}}
         {{~ if $.element.normalized_style == "Code" ~}}
         {{~ ~}}`{{~ html.escape($.element.normalized_text) ~}}` {{~ ~}}
         {{~ else ~}}

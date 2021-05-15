@@ -14,10 +14,7 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
 
         public GitLabReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
         {
-            TemplateSettings = new
-            {
-                EnableNormalization = configuration.Template.GitLabRelease.NormalizeReferences
-            };
+            TemplateSettings = configuration.Template.GitLabRelease;
         }
 
 

@@ -9,10 +9,7 @@ namespace Grynwald.ChangeLog.Templates.Html
 
         public HtmlTemplate(ChangeLogConfiguration configuration) : base(configuration)
         {
-            TemplateSettings = new
-            {
-                EnableNormalization = configuration.Template.Html.NormalizeReferences
-            };
+            TemplateSettings = configuration.Template.Html;
         }
 
 
