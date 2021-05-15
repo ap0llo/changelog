@@ -200,11 +200,6 @@
           "Newtonsoft.Json": "12.0.3"
         }
       },
-      "Grynwald.MarkdownGenerator": {
-        "type": "Transitive",
-        "resolved": "2.5.34",
-        "contentHash": "2esww+F8jCv2bfFkQJ7lAUfk7adbjI70i4cXdsd6TQIKIUIVgLNbLw0sZuvjbXpRfjrKu3nOTYiehS5Ua1l0Mw=="
-      },
       "Grynwald.Utilities": {
         "type": "Transitive",
         "resolved": "1.6.11-pre",
@@ -1510,7 +1505,6 @@
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.1.0",
           "GitLabApiClient": "1.7.0",
-          "Grynwald.MarkdownGenerator": "2.5.34",
           "Grynwald.Utilities": "1.6.11-pre",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
           "Grynwald.Utilities.Logging": "1.6.11-pre",
@@ -1706,11 +1700,6 @@
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         }
-      },
-      "Grynwald.MarkdownGenerator": {
-        "type": "Transitive",
-        "resolved": "2.5.34",
-        "contentHash": "2esww+F8jCv2bfFkQJ7lAUfk7adbjI70i4cXdsd6TQIKIUIVgLNbLw0sZuvjbXpRfjrKu3nOTYiehS5Ua1l0Mw=="
       },
       "Grynwald.Utilities": {
         "type": "Transitive",
@@ -3503,7 +3492,6 @@
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.1.0",
           "GitLabApiClient": "1.7.0",
-          "Grynwald.MarkdownGenerator": "2.5.34",
           "Grynwald.Utilities": "1.6.11-pre",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
           "Grynwald.Utilities.Logging": "1.6.11-pre",
@@ -3699,11 +3687,6 @@
         "dependencies": {
           "Newtonsoft.Json": "12.0.3"
         }
-      },
-      "Grynwald.MarkdownGenerator": {
-        "type": "Transitive",
-        "resolved": "2.5.34",
-        "contentHash": "2esww+F8jCv2bfFkQJ7lAUfk7adbjI70i4cXdsd6TQIKIUIVgLNbLw0sZuvjbXpRfjrKu3nOTYiehS5Ua1l0Mw=="
       },
       "Grynwald.Utilities": {
         "type": "Transitive",
@@ -5475,7 +5458,6 @@
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.1.0",
           "GitLabApiClient": "1.7.0",
-          "Grynwald.MarkdownGenerator": "2.5.34",
           "Grynwald.Utilities": "1.6.11-pre",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
           "Grynwald.Utilities.Logging": "1.6.11-pre",
