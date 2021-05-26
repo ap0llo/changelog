@@ -91,13 +91,11 @@
       },
       "NetArchTest.Rules": {
         "type": "Direct",
-        "requested": "[1.3.0, )",
-        "resolved": "1.3.0",
-        "contentHash": "diq1qvLSOlt8amjhbuzomM1uzP+z6pOR6ff/SxLM++/VhInbADpPq1s+pF688ooOaDvFuA5Xp+YOM5/27iOm7Q==",
+        "requested": "[1.3.2, )",
+        "resolved": "1.3.2",
+        "contentHash": "puPyNXkwJq8/UwXhHV8NrzNzkQl4IxEbcP+3PU0xLRiOedsVpaSdpwHhvOZfI0VwTcRvawCNxYQcSRbD4RUg4w==",
         "dependencies": {
-          "Mono.Cecil": "0.11.2",
-          "System.Reflection.Extensions": "4.3.0",
-          "System.Reflection.Primitives": "4.3.0"
+          "Mono.Cecil": "0.11.3"
         }
       },
       "Newtonsoft.Json": {
@@ -533,8 +531,8 @@
       },
       "Mono.Cecil": {
         "type": "Transitive",
-        "resolved": "0.11.2",
-        "contentHash": "hZNAnXKQsOs/SZMFtT/e82/nA/iLgkeDy+sHD8xix4f0m9/3G0RNZplE1QHB+0n8QXq54jLqR/IPgVOkLapkyg=="
+        "resolved": "0.11.3",
+        "contentHash": "DNYE+io5XfEE8+E+5padThTPHJARJHbz1mhbhMPNrrWGKVKKqj/KEeLvbawAmbIcT73NuxLV7itHZaYCZcVWGg=="
       },
       "NETStandard.Library": {
         "type": "Transitive",
@@ -1593,13 +1591,11 @@
       },
       "NetArchTest.Rules": {
         "type": "Direct",
-        "requested": "[1.3.0, )",
-        "resolved": "1.3.0",
-        "contentHash": "diq1qvLSOlt8amjhbuzomM1uzP+z6pOR6ff/SxLM++/VhInbADpPq1s+pF688ooOaDvFuA5Xp+YOM5/27iOm7Q==",
+        "requested": "[1.3.2, )",
+        "resolved": "1.3.2",
+        "contentHash": "puPyNXkwJq8/UwXhHV8NrzNzkQl4IxEbcP+3PU0xLRiOedsVpaSdpwHhvOZfI0VwTcRvawCNxYQcSRbD4RUg4w==",
         "dependencies": {
-          "Mono.Cecil": "0.11.2",
-          "System.Reflection.Extensions": "4.3.0",
-          "System.Reflection.Primitives": "4.3.0"
+          "Mono.Cecil": "0.11.3"
         }
       },
       "Newtonsoft.Json": {
@@ -2016,8 +2012,8 @@
       },
       "Mono.Cecil": {
         "type": "Transitive",
-        "resolved": "0.11.2",
-        "contentHash": "hZNAnXKQsOs/SZMFtT/e82/nA/iLgkeDy+sHD8xix4f0m9/3G0RNZplE1QHB+0n8QXq54jLqR/IPgVOkLapkyg=="
+        "resolved": "0.11.3",
+        "contentHash": "DNYE+io5XfEE8+E+5padThTPHJARJHbz1mhbhMPNrrWGKVKKqj/KEeLvbawAmbIcT73NuxLV7itHZaYCZcVWGg=="
       },
       "NETStandard.Library": {
         "type": "Transitive",
@@ -3580,13 +3576,11 @@
       },
       "NetArchTest.Rules": {
         "type": "Direct",
-        "requested": "[1.3.0, )",
-        "resolved": "1.3.0",
-        "contentHash": "diq1qvLSOlt8amjhbuzomM1uzP+z6pOR6ff/SxLM++/VhInbADpPq1s+pF688ooOaDvFuA5Xp+YOM5/27iOm7Q==",
+        "requested": "[1.3.2, )",
+        "resolved": "1.3.2",
+        "contentHash": "puPyNXkwJq8/UwXhHV8NrzNzkQl4IxEbcP+3PU0xLRiOedsVpaSdpwHhvOZfI0VwTcRvawCNxYQcSRbD4RUg4w==",
         "dependencies": {
-          "Mono.Cecil": "0.11.2",
-          "System.Reflection.Extensions": "4.3.0",
-          "System.Reflection.Primitives": "4.3.0"
+          "Mono.Cecil": "0.11.3"
         }
       },
       "Newtonsoft.Json": {
@@ -3996,8 +3990,8 @@
       },
       "Mono.Cecil": {
         "type": "Transitive",
-        "resolved": "0.11.2",
-        "contentHash": "hZNAnXKQsOs/SZMFtT/e82/nA/iLgkeDy+sHD8xix4f0m9/3G0RNZplE1QHB+0n8QXq54jLqR/IPgVOkLapkyg=="
+        "resolved": "0.11.3",
+        "contentHash": "DNYE+io5XfEE8+E+5padThTPHJARJHbz1mhbhMPNrrWGKVKKqj/KEeLvbawAmbIcT73NuxLV7itHZaYCZcVWGg=="
       },
       "NETStandard.Library": {
         "type": "Transitive",
