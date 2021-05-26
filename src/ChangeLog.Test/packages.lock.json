@@ -626,8 +626,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "3.7.0",
-        "contentHash": "BYdciKDcm195IfpFUIOM/JlI327kxs/N2z8BozDbbKCzoeQ9uRkjDlnpx3MBu5yhTLxcyxfg5GzTU09gjkpyEg==",
+        "resolved": "3.8.1",
+        "contentHash": "r29CLVN3fjtAZ+pZXlwNCwBwq1QqhXSfwIUGhDpAL5qyzpE4+31wJVubTehzkY6+TOsgZZ2mOJ4LgEJEsLdI0g==",
         "dependencies": {
           "Microsoft.CSharp": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.0"
@@ -1516,7 +1516,7 @@
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
           "Octokit": "0.50.0",
-          "Scriban": "3.7.0"
+          "Scriban": "3.8.1"
         }
       }
     },
@@ -2250,8 +2250,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "3.7.0",
-        "contentHash": "BYdciKDcm195IfpFUIOM/JlI327kxs/N2z8BozDbbKCzoeQ9uRkjDlnpx3MBu5yhTLxcyxfg5GzTU09gjkpyEg==",
+        "resolved": "3.8.1",
+        "contentHash": "r29CLVN3fjtAZ+pZXlwNCwBwq1QqhXSfwIUGhDpAL5qyzpE4+31wJVubTehzkY6+TOsgZZ2mOJ4LgEJEsLdI0g==",
         "dependencies": {
           "Microsoft.CSharp": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.0"
@@ -3503,7 +3503,7 @@
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
           "Octokit": "0.50.0",
-          "Scriban": "3.7.0"
+          "Scriban": "3.8.1"
         }
       }
     },
@@ -4230,8 +4230,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "3.7.0",
-        "contentHash": "BYdciKDcm195IfpFUIOM/JlI327kxs/N2z8BozDbbKCzoeQ9uRkjDlnpx3MBu5yhTLxcyxfg5GzTU09gjkpyEg=="
+        "resolved": "3.8.1",
+        "contentHash": "r29CLVN3fjtAZ+pZXlwNCwBwq1QqhXSfwIUGhDpAL5qyzpE4+31wJVubTehzkY6+TOsgZZ2mOJ4LgEJEsLdI0g=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -5469,7 +5469,7 @@
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
           "Octokit": "0.50.0",
-          "Scriban": "3.7.0"
+          "Scriban": "3.8.1"
         }
       }
     }
