@@ -49,7 +49,7 @@
     <PackageReference Include="Octokit" Version="0.50.0" />
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="GitLabApiClient" Version="1.7.0" />
-    <PackageReference Include="Scriban" Version="3.8.1" />  
+    <PackageReference Include="Scriban" Version="3.8.2" />  
   </ItemGroup>
 
   <!-- Auto-Generated command line help -->
