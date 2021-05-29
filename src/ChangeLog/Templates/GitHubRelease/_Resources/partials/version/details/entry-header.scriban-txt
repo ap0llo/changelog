@@ -1,0 +1,2 @@
+﻿{{~ id = include "/helpers/entry-id.scriban-txt" entry: $.entry ~}}
+### <a id="{{~ id ~}}"></a> {{ include "/helpers/entry-title.scriban-txt" entry: $.entry }}

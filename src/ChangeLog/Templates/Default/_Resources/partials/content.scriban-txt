@@ -3,5 +3,5 @@
         {{~ ~}}___
 
     {{~ end ~}}
-    {{~ include "changelog-version.scriban-txt" version_change_log: version_change_log ~}}
+    {{~ include "/partials/version/version.scriban-txt" version_change_log: version_change_log ~}}
 {{~ end ~}}

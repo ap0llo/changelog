@@ -1,0 +1,6 @@
+{{ include "/partials/version/summary/entry-list-header.scriban-txt" entry_group: $.entry_group }}
+
+{{~ for entry in $.entry_group.entries ~}}
+    {{~ id = include "/helpers/entry-id.scriban-txt" entry: entry ~}}    
+    {{~ }}- [{{~ include "/helpers/entry-title.scriban-txt" entry: entry ~}}](#{{~ id ~}})
+{{~ end ~}}

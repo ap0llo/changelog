@@ -1,4 +1,4 @@
-﻿{{ include "changelog-entry-header.scriban-txt" entry: $.entry }}
+﻿{{ include "/partials/version/details/entry-header.scriban-txt" entry: $.entry }}
 {{~ if $.entry.contains_breaking_changes || enumerable.any($.entry.body) || enumerable.any($.entry.footers)~}}
 
 {{~ end ~}}
@@ -30,6 +30,6 @@
 
 {{- if enumerable.any($.entry.footers) ~}}
     {{~ for footer in $.entry.footers ~}}
-{{~ ~}} - {{ html.escape(footer.display_name) }}: {{ include "text-element.scriban-txt" element: footer.value }}
+{{~ ~}} - {{ html.escape(footer.display_name) }}: {{ include "/helpers/text-element.scriban-txt" element: footer.value }}
     {{~ end ~}}
 {{~ end ~}}

@@ -1,7 +1,7 @@
 ﻿{{~ if textelement.is_change_log_entry_reference($.element) ~}}
     {{~ referencedEntry = changelog.find_entry(model, $.element.entry.commit) ~}}
-    {{~ referencedId = include "entry-id.scriban-txt" entry: referencedEntry ~}}
-    {{~ ~}}[{{~ include "entry-title.scriban-txt" entry: referencedEntry ~}}](#{{~ referencedId ~}}){{~ ~}}
+    {{~ referencedId = include "/helpers/entry-id.scriban-txt" entry: referencedEntry ~}}
+    {{~ ~}}[{{~ include "/helpers/entry-title.scriban-txt" entry: referencedEntry ~}}](#{{~ referencedId ~}}){{~ ~}}
 {{~ else ~}}
     {{~ if textelement.is_link($.element) ~}}
         {{~ ~}}[{{~ ~}}

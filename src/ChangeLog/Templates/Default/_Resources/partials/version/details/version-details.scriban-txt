@@ -1,0 +1,8 @@
+﻿{{ include "/partials/version/details/version-details-header.scriban-txt" version_change_log: $.version_change_log }}
+
+{{~ for entry in $.version_change_log.all_entries ~}}
+    {{~ if !for.first ~}}
+
+    {{~ end ~}}
+    {{~ include "/partials/version/details/entry.scriban-txt" entry: entry ~}}
+{{~ end ~}}
