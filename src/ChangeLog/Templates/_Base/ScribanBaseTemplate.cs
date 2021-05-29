@@ -127,9 +127,8 @@ namespace Grynwald.ChangeLog.Templates
 
             try
             {
-
-                var entryTemplate = Template.Parse(templateLoader.LoadEntryTemplate());
-                var rendered = entryTemplate.Render(templateContext);
+                var template = templateLoader.LoadEntryTemplate();
+                var rendered = template.Render(templateContext);
                 File.WriteAllText(outputPath, rendered);
             }
             catch (ScriptRuntimeException ex)

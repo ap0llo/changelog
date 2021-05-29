@@ -21,7 +21,11 @@ namespace Grynwald.ChangeLog.Templates
         }
 
 
-        public override string LoadEntryTemplate() => m_FileSystem.ReadAllText(m_EntryTemplatePath);
+        public override Template LoadEntryTemplate()
+        {
+            var templateText = m_FileSystem.ReadAllText(m_EntryTemplatePath);
+            return Template.Parse(templateText, m_EntryTemplatePath);
+        }
 
         public override string GetPath(TemplateContext context, SourceSpan callerSpan, string templateRelativePath)
         {
