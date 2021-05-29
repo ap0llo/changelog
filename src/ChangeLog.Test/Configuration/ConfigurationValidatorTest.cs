@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.Utilities.IO;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Configuration
@@ -76,7 +77,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             var error = Assert.Single(result.Errors);
             Assert.Contains("'Scope Name' must be unique", error.ErrorMessage);
         }
-
 
         [Theory]
         [InlineData("")]
@@ -738,5 +738,109 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 error => Assert.Contains("'Filter Scope Expression'", error.ErrorMessage)
             );
         }
+
+
+        [Theory]
+        [CombinatorialData]
+        public void Template_custom_directory_can_be_null_or_empty(
+            ChangeLogConfiguration.TemplateName template,
+            [CombinatorialValues(null, "")] string customDirectory)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var customDirectoryProperty = config.Template.GetType().GetProperty(template.ToString());
+            var templateSettings = (ChangeLogConfiguration.TemplateSettings)customDirectoryProperty!.GetValue(config.Template)!;
+            templateSettings.CustomDirectory = customDirectory;
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
+        }
+
+        [Theory]
+        [CombinatorialData]
+        public void Template_custom_directory_must_not_be_whitespace(
+            ChangeLogConfiguration.TemplateName template,
+            [CombinatorialValues("\t", " ")] string customDirectory)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var customDirectoryProperty = config.Template.GetType().GetProperty(template.ToString());
+            var templateSettings = (ChangeLogConfiguration.TemplateSettings)customDirectoryProperty!.GetValue(config.Template)!;
+            templateSettings.CustomDirectory = customDirectory;
+
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Template Custom Directory'", error.ErrorMessage)
+            );
+        }
+
+        [Theory]
+        [CombinatorialData]
+        public void Template_custom_directory_must_exist_when_it_is_not_null_or_empty(ChangeLogConfiguration.TemplateName template)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var customDirectoryProperty = config.Template.GetType().GetProperty(template.ToString());
+            var templateSettings = (ChangeLogConfiguration.TemplateSettings)customDirectoryProperty!.GetValue(config.Template)!;
+            templateSettings.CustomDirectory = "/Some-Directory";
+
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error =>
+                {
+                    Assert.Contains("'Template Custom Directory'", error.ErrorMessage);
+                    Assert.Contains("'/Some-Directory'", error.ErrorMessage);
+                }
+            );
+        }
+
+        [Theory]
+        [CombinatorialData]
+        public void Template_custom_directory_is_valid_when_directory_exists(ChangeLogConfiguration.TemplateName template)
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();
+
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var customDirectoryProperty = config.Template.GetType().GetProperty(template.ToString());
+            var templateSettings = (ChangeLogConfiguration.TemplateSettings)customDirectoryProperty!.GetValue(config.Template)!;
+            templateSettings.CustomDirectory = temporaryDirectory;
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
+        }
+
+
+
     }
 }

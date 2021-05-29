@@ -98,37 +98,23 @@ namespace Grynwald.ChangeLog.Configuration
             [SettingDisplayName("Template Name")]
             public TemplateName Name { get; set; }
 
-            public DefaultTemplateConfiguration Default { get; set; } = new();
+            public TemplateSettings Default { get; set; } = new();
 
-            public GitHubReleaseTemplateConfiguration GitHubRelease { get; set; } = new();
+            public TemplateSettings GitHubRelease { get; set; } = new();
 
-            public GitLabReleaseTemplateConfiguration GitLabRelease { get; set; } = new();
+            public TemplateSettings GitLabRelease { get; set; } = new();
 
-            public HtmlTemplateConfiguration Html { get; set; } = new();
+            public TemplateSettings Html { get; set; } = new();
         }
 
-        public class DefaultTemplateConfiguration
+        public class TemplateSettings
         {
             [JsonSchemaDefaultValue]
             public bool NormalizeReferences { get; set; } = true;
-        }
 
-        public class GitHubReleaseTemplateConfiguration
-        {
             [JsonSchemaDefaultValue]
-            public bool NormalizeReferences { get; set; } = true;
-        }
-
-        public class GitLabReleaseTemplateConfiguration
-        {
-            [JsonSchemaDefaultValue]
-            public bool NormalizeReferences { get; set; } = true;
-        }
-
-        public class HtmlTemplateConfiguration
-        {
-            [JsonSchemaDefaultValue]
-            public bool NormalizeReferences { get; set; } = true;
+            [SettingDisplayName("Template Custom Directory")]
+            public string? CustomDirectory { get; set; } = null;
         }
 
         public class EntryTypeConfiguration
