@@ -1,9 +1,0 @@
-﻿<div class="changelog-version-summary">
-
-    {{~ for entry_group in $.version_change_log.entry_groups ~}}
-        {{ include "changelog-entry-list.scriban-html" entry_group: entry_group}}
-    {{~ end ~}}
-
-    {{ include "changelog-breakingchanges-list.scriban-html" version_change_log: version_change_log }}
-
-</div>

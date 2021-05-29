@@ -1,6 +1,6 @@
 ﻿<div class="changelog-entry">
 
-    {{~ include "changelog-entry-header.scriban-html" entry: entry ~}}
+    {{~ include "/partials/version/details/entry-header.scriban-html" entry: entry ~}}
 
     <div class="changelog-entry-content">
 
@@ -30,7 +30,7 @@
         <ul>
             {{~ for footer in $.entry.footers ~}}
                 <li>
-                    {{ html.escape(footer.display_name) }}: {{ include "text-element.scriban-html" element: footer.value }}
+                    {{ html.escape(footer.display_name) }}: {{ include "/helpers/text-element.scriban-html" element: footer.value }}
                 </li>
             {{~ end ~}}
         </ul>

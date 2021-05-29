@@ -15,21 +15,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Templates\Html\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\Html\_Resources\*.*">
-      <LogicalName>templates/Html/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\Html\_Resources\**\*.*" />
+    <EmbeddedResource Include="Templates\Html\_Resources\**\*.*">
+      <LogicalName>templates/Html/%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <None Remove="Templates\Default\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\Default\_Resources\*.*">
-      <LogicalName>templates/Default/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\Default\_Resources\**\*.*" />
+    <EmbeddedResource Include="Templates\Default\_Resources\**\*.*">
+      <LogicalName>templates/Default/%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <None Remove="Templates\GitLabRelease\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\GitLabRelease\_Resources\*.*">
-      <LogicalName>templates/GitLabRelease/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\GitLabRelease\_Resources\**\*.*" />
+    <EmbeddedResource Include="Templates\GitLabRelease\_Resources\**\*.*">
+      <LogicalName>templates/GitLabRelease/%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <None Remove="Templates\GitHubRelease\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\GitHubRelease\_Resources\*.*">
-      <LogicalName>templates/GitHubRelease/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\GitHubRelease\_Resources\**\*.*" />
+    <EmbeddedResource Include="Templates\GitHubRelease\_Resources\**\*.*">
+      <LogicalName>templates/GitHubRelease/%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 

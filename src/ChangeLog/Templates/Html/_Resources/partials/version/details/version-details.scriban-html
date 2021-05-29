@@ -1,0 +1,11 @@
+﻿<div class="changelog-version-details">
+
+    {{~ include "/partials/version/details/version-details-header.scriban-html" version_change_log: $.version_change_log ~}}
+
+    <div class="changelog-version-details-content">
+        {{~ for entry in $.version_change_log.all_entries ~}}
+            {{ include "/partials/version/details/entry.scriban-html" entry: entry }}
+        {{~ end ~}}
+    </div>
+
+</div>

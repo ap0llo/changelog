@@ -1,7 +1,7 @@
 ﻿{{~ if textelement.is_change_log_entry_reference($.element) ~}}
     {{~ referencedEntry = changelog.find_entry(model, $.element.entry.commit) ~}}
-    {{~ referencedId = include "entry-id.scriban-html" entry: referencedEntry ~}}
-    {{~ ~}}<a href="#{{~ referencedId ~}}">{{~ include "entry-title.scriban-html" entry: referencedEntry ~}}</a>{{~ ~}}
+    {{~ referencedId = include "/helpers/entry-id.scriban-html" entry: referencedEntry ~}}
+    {{~ ~}}<a href="#{{~ referencedId ~}}">{{~ include "/helpers/entry-title.scriban-html" entry: referencedEntry ~}}</a>{{~ ~}}
 {{~ else ~}}
     {{~ if textelement.is_link($.element) ~}}
         {{~ ~}}<a href="{{~ $.element.uri ~}}">{{~ ~}}

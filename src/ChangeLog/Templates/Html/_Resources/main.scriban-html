@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change Log</title>
     <style type="text/css">
-    {{ include "changelog.css" }}
+    {{ include "/changelog.css" }}
     </style>
 </head>
 <body>
-    {{ include "changelog.scriban-html" model: model}}
+    {{ include "/partials/changelog.scriban-html" model: model}}
 </body>
 </html>
