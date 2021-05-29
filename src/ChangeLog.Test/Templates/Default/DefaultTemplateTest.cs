@@ -4,7 +4,6 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Default;
 using Xunit;
-using Zio;
 
 namespace Grynwald.ChangeLog.Test.Templates.Default
 {
@@ -15,7 +14,10 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new DefaultTemplate(configuration);
 
-        protected override IFileSystem CreateTemplateFileSystem() => DefaultTemplate.GetTemplateFileSystem();
+        protected override void SetCustomDirectory(ChangeLogConfiguration configuration, string customDirectory)
+        {
+            configuration.Template.Default.CustomDirectory = customDirectory;
+        }
 
 
         [Fact]
@@ -112,5 +114,7 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
             // ACT / ASSERT
             Approve(changeLog, configuration);
         }
+
+
     }
 }

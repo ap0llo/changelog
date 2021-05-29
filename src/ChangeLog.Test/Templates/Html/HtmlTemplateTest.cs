@@ -4,7 +4,6 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Html;
 using Xunit;
-using Zio;
 
 namespace Grynwald.ChangeLog.Test.Templates.Html
 {
@@ -12,8 +11,10 @@ namespace Grynwald.ChangeLog.Test.Templates.Html
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new HtmlTemplate(configuration);
 
-        protected override IFileSystem CreateTemplateFileSystem() => HtmlTemplate.GetTemplateFileSystem();
-
+        protected override void SetCustomDirectory(ChangeLogConfiguration configuration, string customDirectory)
+        {
+            configuration.Template.Html.CustomDirectory = customDirectory;
+        }
 
         private class CustomTextElement : INormalizedTextElement
         {

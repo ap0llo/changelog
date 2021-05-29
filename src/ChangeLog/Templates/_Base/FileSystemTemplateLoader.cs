@@ -8,23 +8,18 @@ namespace Grynwald.ChangeLog.Templates
     internal class FileSystemTemplateLoader : ScribanTemplateLoader
     {
         private readonly IFileSystem m_FileSystem;
-        private readonly string m_EntryTemplatePath;
 
 
-        public FileSystemTemplateLoader(IFileSystem fileSystem, string entryTemplatePath)
+        public FileSystemTemplateLoader(IFileSystem fileSystem)
         {
-            if (String.IsNullOrWhiteSpace(entryTemplatePath))
-                throw new ArgumentException("Value must not be null or whitespace", nameof(entryTemplatePath));
-
             m_FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
-            m_EntryTemplatePath = entryTemplatePath;
         }
 
 
-        public override Template LoadEntryTemplate()
+        public override Template Load(string templatePath)
         {
-            var templateText = m_FileSystem.ReadAllText(m_EntryTemplatePath);
-            return Template.Parse(templateText, m_EntryTemplatePath);
+            var templateText = m_FileSystem.ReadAllText(templatePath);
+            return Template.Parse(templateText, templatePath);
         }
 
         public override string GetPath(TemplateContext context, SourceSpan callerSpan, string templateRelativePath)

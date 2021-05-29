@@ -4,7 +4,6 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.GitHubRelease;
 using Xunit;
-using Zio;
 
 namespace Grynwald.ChangeLog.Test.Templates.GitHubRelease
 {
@@ -12,7 +11,10 @@ namespace Grynwald.ChangeLog.Test.Templates.GitHubRelease
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new GitHubReleaseTemplate(configuration);
 
-        protected override IFileSystem CreateTemplateFileSystem() => GitHubReleaseTemplate.GetTemplateFileSystem();
+        protected override void SetCustomDirectory(ChangeLogConfiguration configuration, string customDirectory)
+        {
+            configuration.Template.GitHubRelease.CustomDirectory = customDirectory;
+        }
 
 
         [Fact]

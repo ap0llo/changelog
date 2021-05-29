@@ -2,15 +2,19 @@
 using System.Collections;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
+using Grynwald.ChangeLog.IO;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates.ViewModel;
 using Scriban;
 using Scriban.Runtime;
 using Scriban.Syntax;
+using Zio;
+using Zio.FileSystems;
 
 namespace Grynwald.ChangeLog.Templates
 {
@@ -35,7 +39,6 @@ namespace Grynwald.ChangeLog.Templates
 
             public static bool IsChangeLogEntryReference(ITextElement element) => element is ChangeLogEntryReferenceTextElement;
         }
-
 
         private class ChangeLogFunctions : ScriptObject
         {
@@ -91,15 +94,36 @@ namespace Grynwald.ChangeLog.Templates
         }
 
 
-        private readonly ChangeLogConfiguration m_Configuration;
+        private readonly Lazy<IFileSystem> m_Filesystem;
+        protected readonly ChangeLogConfiguration m_Configuration;
 
 
-        protected abstract object TemplateSettings { get; }
+        protected abstract ChangeLogConfiguration.TemplateSettings TemplateSettings { get; }
+
+        protected abstract string TemplateFileExtension { get; }
+
+        public IFileSystem FileSystem => m_Filesystem.Value;
 
 
         public ScribanBaseTemplate(ChangeLogConfiguration configuration)
         {
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            m_Filesystem = new Lazy<IFileSystem>(() =>
+            {
+                var fileSystem = GetTemplateFileSystem();
+
+                if (!String.IsNullOrEmpty(TemplateSettings.CustomDirectory))
+                {
+                    var physicalFileSystem = new PhysicalFileSystem();
+                    var path = physicalFileSystem.ConvertPathFromInternal(TemplateSettings.CustomDirectory);
+
+                    var aggregateFileSystem = new AggregateFileSystem(fileSystem);
+                    aggregateFileSystem.AddFileSystem(physicalFileSystem.GetOrCreateSubFileSystem(path));
+                    fileSystem = aggregateFileSystem;
+                }
+
+                return fileSystem;
+            });
         }
 
 
@@ -107,8 +131,7 @@ namespace Grynwald.ChangeLog.Templates
         {
             var viewModel = new ApplicationChangeLogViewModel(m_Configuration, changeLog);
 
-            var templateLoader = CreateTemplateLoader();
-
+            var templateLoader = new FileSystemTemplateLoader(FileSystem);
 
             var templateContext = new TemplateContext()
             {
@@ -127,7 +150,7 @@ namespace Grynwald.ChangeLog.Templates
 
             try
             {
-                var template = templateLoader.LoadEntryTemplate();
+                var template = templateLoader.Load($"/main{TemplateFileExtension}");
                 var rendered = template.Render(templateContext);
                 File.WriteAllText(outputPath, rendered);
             }
@@ -138,6 +161,16 @@ namespace Grynwald.ChangeLog.Templates
         }
 
 
-        protected abstract ScribanTemplateLoader CreateTemplateLoader();
+        protected abstract IFileSystem GetTemplateFileSystem();
+
+        protected static IFileSystem CreateEmbeddedResourcesFileSystem(string subFolder = "")
+        {
+            IFileSystem fileSystem = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
+            if (!String.IsNullOrEmpty(subFolder))
+            {
+                fileSystem = fileSystem.GetOrCreateSubFileSystem(subFolder);
+            }
+            return fileSystem;
+        }
     }
 }

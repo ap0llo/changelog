@@ -1,23 +1,20 @@
 ﻿using System.Linq;
-using System.Reflection;
 using Grynwald.ChangeLog.Configuration;
-using Grynwald.ChangeLog.IO;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Templates.Default;
 using Zio;
 using Zio.FileSystems;
 
 namespace Grynwald.ChangeLog.Templates.GitHubRelease
 {
-    internal class GitHubReleaseTemplate : ScribanBaseTemplate
+    internal class GitHubReleaseTemplate : DefaultTemplate
     {
         /// <inheritdoc />
-        protected override object TemplateSettings { get; }
+        protected override ChangeLogConfiguration.TemplateSettings TemplateSettings => m_Configuration.Template.GitHubRelease;
 
 
         public GitHubReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
-        {
-            TemplateSettings = configuration.Template.GitHubRelease;
-        }
+        { }
 
 
         /// <inheritdoc />
@@ -29,23 +26,15 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
             base.SaveChangeLog(changeLog, outputPath);
         }
 
-        internal static IFileSystem GetTemplateFileSystem()
+        protected override IFileSystem GetTemplateFileSystem()
         {
-            var embeddedResourcesFs = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
-
             // GitHubRelease template is based on the "Default" template
             // => create aggregate file system with the files of both the "Default" and "GitHubRelease" templates
             var templateFileSystem = new AggregateFileSystem();
-            templateFileSystem.AddFileSystem(embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/Default"));
-            templateFileSystem.AddFileSystem(embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/GitHubRelease"));
+            templateFileSystem.AddFileSystem(base.GetTemplateFileSystem());
+            templateFileSystem.AddFileSystem(CreateEmbeddedResourcesFileSystem("/templates/GitHubRelease"));
 
             return templateFileSystem;
-        }
-
-        /// <inheritdoc />
-        protected override ScribanTemplateLoader CreateTemplateLoader()
-        {
-            return new FileSystemTemplateLoader(GetTemplateFileSystem(), "/main.scriban-txt");
         }
     }
 }
