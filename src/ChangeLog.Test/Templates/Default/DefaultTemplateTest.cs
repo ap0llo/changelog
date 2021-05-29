@@ -4,15 +4,18 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Default;
 using Xunit;
+using Zio;
 
 namespace Grynwald.ChangeLog.Test.Templates.Default
 {
     /// <summary>
     /// Tests for <see cref="DefaultTemplate"/>
     /// </summary>
-    public class DefaultTemplateTest : TemplateTest
+    public class DefaultTemplateTest : ScribanBaseTemplateTest
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new DefaultTemplate(configuration);
+
+        protected override IFileSystem CreateTemplateFileSystem() => DefaultTemplate.GetTemplateFileSystem();
 
 
         [Fact]

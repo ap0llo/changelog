@@ -33,8 +33,7 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
         }
 
 
-        /// <inheritdoc />
-        protected override ScribanTemplateLoader CreateTemplateLoader()
+        internal static IFileSystem GetTemplateFileSystem()
         {
             var embeddedResourcesFs = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
 
@@ -44,7 +43,14 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
             templateFileSystem.AddFileSystem(embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/Default"));
             templateFileSystem.AddFileSystem(embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/GitLabRelease"));
 
-            return new FileSystemTemplateLoader(templateFileSystem, "/main.scriban-txt");
+            return templateFileSystem;
+        }
+
+
+        /// <inheritdoc />
+        protected override ScribanTemplateLoader CreateTemplateLoader()
+        {
+            return new FileSystemTemplateLoader(GetTemplateFileSystem(), "/main.scriban-txt");
         }
 
     }

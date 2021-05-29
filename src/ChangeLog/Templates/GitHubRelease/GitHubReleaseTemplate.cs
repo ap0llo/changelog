@@ -29,8 +29,7 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
             base.SaveChangeLog(changeLog, outputPath);
         }
 
-        /// <inheritdoc />
-        protected override ScribanTemplateLoader CreateTemplateLoader()
+        internal static IFileSystem GetTemplateFileSystem()
         {
             var embeddedResourcesFs = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
 
@@ -40,7 +39,13 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
             templateFileSystem.AddFileSystem(embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/Default"));
             templateFileSystem.AddFileSystem(embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/GitHubRelease"));
 
-            return new FileSystemTemplateLoader(templateFileSystem, "/main.scriban-txt");
+            return templateFileSystem;
+        }
+
+        /// <inheritdoc />
+        protected override ScribanTemplateLoader CreateTemplateLoader()
+        {
+            return new FileSystemTemplateLoader(GetTemplateFileSystem(), "/main.scriban-txt");
         }
     }
 }

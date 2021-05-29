@@ -4,12 +4,15 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.GitLabRelease;
 using Xunit;
+using Zio;
 
 namespace Grynwald.ChangeLog.Test.Templates.GitLabRelease
 {
-    public class GitLabReleaseTemplateTest : TemplateTest
+    public class GitLabReleaseTemplateTest : ScribanBaseTemplateTest
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new GitLabReleaseTemplate(configuration);
+
+        protected override IFileSystem CreateTemplateFileSystem() => GitLabReleaseTemplate.GetTemplateFileSystem();
 
 
         [Fact]

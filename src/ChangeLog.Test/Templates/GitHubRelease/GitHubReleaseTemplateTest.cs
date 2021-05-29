@@ -4,12 +4,15 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.GitHubRelease;
 using Xunit;
+using Zio;
 
 namespace Grynwald.ChangeLog.Test.Templates.GitHubRelease
 {
-    public class GitHubReleaseTemplateTest : TemplateTest
+    public class GitHubReleaseTemplateTest : ScribanBaseTemplateTest
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new GitHubReleaseTemplate(configuration);
+
+        protected override IFileSystem CreateTemplateFileSystem() => GitHubReleaseTemplate.GetTemplateFileSystem();
 
 
         [Fact]

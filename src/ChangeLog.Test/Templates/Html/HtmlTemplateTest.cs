@@ -4,12 +4,15 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Html;
 using Xunit;
+using Zio;
 
 namespace Grynwald.ChangeLog.Test.Templates.Html
 {
-    public class HtmlTemplateTest : TemplateTest
+    public class HtmlTemplateTest : ScribanBaseTemplateTest
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new HtmlTemplate(configuration);
+
+        protected override IFileSystem CreateTemplateFileSystem() => HtmlTemplate.GetTemplateFileSystem();
 
 
         private class CustomTextElement : INormalizedTextElement

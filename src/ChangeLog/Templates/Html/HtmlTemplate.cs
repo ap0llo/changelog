@@ -16,14 +16,21 @@ namespace Grynwald.ChangeLog.Templates.Html
             TemplateSettings = configuration.Template.Html;
         }
 
-
-        /// <inheritdoc />
-        protected override ScribanTemplateLoader CreateTemplateLoader()
+        internal static IFileSystem GetTemplateFileSystem()
         {
             var embeddedResourcesFs = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
             var templateFileSystem = embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/Html");
 
-            return new FileSystemTemplateLoader(templateFileSystem, "/main.scriban-html");
+            return templateFileSystem;
         }
+
+
+        /// <inheritdoc />
+        protected override ScribanTemplateLoader CreateTemplateLoader()
+        {
+            return new FileSystemTemplateLoader(GetTemplateFileSystem(), "/main.scriban-html");
+        }
+
+
     }
 }

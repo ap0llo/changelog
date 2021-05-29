@@ -19,13 +19,18 @@ namespace Grynwald.ChangeLog.Templates.Default
             TemplateSettings = configuration.Template.Default;
         }
 
+
+        internal static IFileSystem GetTemplateFileSystem()
+        {
+            var embeddedResourcesFs = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
+            return embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/Default");
+        }
+
+
         /// <inheritdoc />
         protected override ScribanTemplateLoader CreateTemplateLoader()
         {
-            var embeddedResourcesFs = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
-            var templateFileSystem = embeddedResourcesFs.GetOrCreateSubFileSystem("/templates/Default");
-
-            return new FileSystemTemplateLoader(templateFileSystem, "/main.scriban-txt");
+            return new FileSystemTemplateLoader(GetTemplateFileSystem(), "/main.scriban-txt");
         }
     }
 }
