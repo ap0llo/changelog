@@ -15,21 +15,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Templates\Html\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\Html\_Resources\*.*">
-      <LogicalName>templates/Html/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\Html\_Resources\**\*.*" />
+    <EmbeddedResource Include="Templates\Html\_Resources\**\*.*">
+      <LogicalName>templates/Html/%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <None Remove="Templates\Default\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\Default\_Resources\*.*">
-      <LogicalName>templates/Default/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\Default\_Resources\**\*.*" />
+    <EmbeddedResource Include="Templates\Default\_Resources\**\*.*">
+      <LogicalName>templates/Default/%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <None Remove="Templates\GitLabRelease\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\GitLabRelease\_Resources\*.*">
-      <LogicalName>templates/GitLabRelease/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\GitLabRelease\_Resources\**\*.*" />
+    <EmbeddedResource Include="Templates\GitLabRelease\_Resources\**\*.*">
+      <LogicalName>templates/GitLabRelease/%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <None Remove="Templates\GitHubRelease\_Resources\*.*" />
-    <EmbeddedResource Include="Templates\GitHubRelease\_Resources\*.*">
-      <LogicalName>templates/GitHubRelease/%(FileName)%(Extension)</LogicalName>
+    <None Remove="Templates\GitHubRelease\_Resources\**\*.*" />
+    <EmbeddedResource Include="Templates\GitHubRelease\_Resources\**\*.*">
+      <LogicalName>templates/GitHubRelease/%(RecursiveDir)%(FileName)%(Extension)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -50,6 +50,7 @@
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="GitLabApiClient" Version="1.7.0" />
     <PackageReference Include="Scriban" Version="3.8.2" />  
+    <PackageReference Include="Zio" Version="0.11.0" />
   </ItemGroup>
 
   <!-- Auto-Generated command line help -->

@@ -7,10 +7,14 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Templates.Html
 {
-    public class HtmlTemplateTest : TemplateTest
+    public class HtmlTemplateTest : ScribanBaseTemplateTest
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new HtmlTemplate(configuration);
 
+        protected override void SetCustomDirectory(ChangeLogConfiguration configuration, string customDirectory)
+        {
+            configuration.Template.Html.CustomDirectory = customDirectory;
+        }
 
         private class CustomTextElement : INormalizedTextElement
         {

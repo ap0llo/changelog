@@ -7,9 +7,14 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Templates.GitHubRelease
 {
-    public class GitHubReleaseTemplateTest : TemplateTest
+    public class GitHubReleaseTemplateTest : ScribanBaseTemplateTest
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new GitHubReleaseTemplate(configuration);
+
+        protected override void SetCustomDirectory(ChangeLogConfiguration configuration, string customDirectory)
+        {
+            configuration.Template.GitHubRelease.CustomDirectory = customDirectory;
+        }
 
 
         [Fact]

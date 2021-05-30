@@ -1,0 +1,7 @@
+<main class="changelog-content">
+
+    {{~ for version_change_log in $.model.change_logs ~}}
+        {{ include "/partials/version/version.scriban-html" version_change_log: version_change_log}}
+    {{~ end ~}}
+
+</main>

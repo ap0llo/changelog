@@ -7,7 +7,7 @@ namespace Grynwald.ChangeLog.Templates
 {
     internal abstract class ScribanTemplateLoader : ITemplateLoader
     {
-        public abstract string LoadEntryTemplate();
+        public abstract Template Load(string templatePath);
 
         public abstract string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName);
 

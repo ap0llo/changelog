@@ -1,4 +1,5 @@
 ﻿using Grynwald.ChangeLog.Configuration;
+using Zio;
 
 namespace Grynwald.ChangeLog.Templates.Default
 {
@@ -7,15 +8,17 @@ namespace Grynwald.ChangeLog.Templates.Default
     /// </summary>
     internal class DefaultTemplate : ScribanBaseTemplate
     {
-        protected override object TemplateSettings { get; }
+        /// <inheritdoc />
+        protected override ChangeLogConfiguration.TemplateSettings TemplateSettings => m_Configuration.Template.Default;
+
+        protected override string TemplateFileExtension => ".scriban-txt";
 
 
         public DefaultTemplate(ChangeLogConfiguration configuration) : base(configuration)
-        {
-            TemplateSettings = configuration.Template.Default;
-        }
+        { }
 
-        protected override ScribanTemplateLoader CreateTemplateLoader() =>
-            new EmbeddedResourceTemplateLoader(new[] { "templates/Default/" }, "main.scriban-txt");
+
+        /// <inheritdoc />
+        protected override IFileSystem GetTemplateFileSystem() => CreateEmbeddedResourcesFileSystem("/templates/Default");
     }
 }

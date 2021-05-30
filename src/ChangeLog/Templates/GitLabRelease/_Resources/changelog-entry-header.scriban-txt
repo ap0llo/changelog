@@ -1,1 +1,0 @@
-﻿##### {{ include "entry-title.scriban-txt" entry: $.entry }}

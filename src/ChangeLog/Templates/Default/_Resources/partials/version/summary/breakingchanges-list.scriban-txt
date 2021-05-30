@@ -1,0 +1,14 @@
+﻿{{~ if enumerable.any($.version_change_log.breaking_changes) ~}}
+{{ include "/partials/version/summary/breakingchanges-list-header.scriban-txt" version_change_log: $.version_change_log}}
+
+    {{~ for entry in $.version_change_log.breaking_changes ~}}
+        {{~ id = include "/helpers/entry-id.scriban-txt" entry: entry ~}}
+        {{~ if enumerable.any(entry.breaking_change_descriptions) ~}}
+            {{~ for description in entry.breaking_change_descriptions ~}}
+                {{~ }}- [{{~ html.escape(description) ~}}](#{{~ id ~}})
+            {{~ end ~}}
+        {{~ else ~}}
+            {{~ }}- [{{~ include "/helpers/entry-title.scriban-txt" entry: entry ~}}](#{{~ id ~}})
+        {{~ end ~}}
+    {{~ end ~}}
+{{~ end ~}}

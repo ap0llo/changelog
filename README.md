@@ -18,7 +18,7 @@ using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 - [Getting started](./docs/getting-started.md)
 - [Configuration](./docs/configuration.md)
 - [Integrations](./docs/integrations.md)
-- [Templates](./docs/templates.md)
+- [Templates](./docs/templates/README.md)
 - [Commandline Reference](./docs/commandline-reference/index.md)
 - [Automatic References](./docs/auto-references.md)
 
@@ -74,6 +74,7 @@ Thanks to all the people contributing to these projects:
 - [Spectre.Console](https://spectresystems.github.io/spectre.console/)
 - [Xunit.Combinatorial](https://github.com/AArnott/Xunit.Combinatorial)
 - [CliWrap](https://github.com/Tyrrrz/CliWrap)
+- [Zio](https://github.com/xoofx/zio)
 
 ## Versioning and Branching
 

@@ -64,7 +64,7 @@ namespace docs.Validation
                 var directoryPath = Path.GetDirectoryName(absoluteInputPath) ?? "";
                 var absoluteTargetPath = Path.GetFullPath(Path.Combine(directoryPath, relativeTargetPath));
 
-                if (!File.Exists(absoluteTargetPath))
+                if (!File.Exists(absoluteTargetPath) && !Directory.Exists(absoluteTargetPath))
                 {
                     result.AddError(s_RuleId, $"Invalid link '{link.Url}': Target path '{absoluteTargetPath}' does not exist", lineNumber);
                 }

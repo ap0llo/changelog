@@ -1,19 +1,20 @@
 ﻿using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Templates.Default;
+using Zio;
+using Zio.FileSystems;
 
 namespace Grynwald.ChangeLog.Templates.GitHubRelease
 {
-    internal class GitHubReleaseTemplate : ScribanBaseTemplate
+    internal class GitHubReleaseTemplate : DefaultTemplate
     {
         /// <inheritdoc />
-        protected override object TemplateSettings { get; }
+        protected override ChangeLogConfiguration.TemplateSettings TemplateSettings => m_Configuration.Template.GitHubRelease;
 
 
         public GitHubReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
-        {
-            TemplateSettings = configuration.Template.GitHubRelease;
-        }
+        { }
 
 
         /// <inheritdoc />
@@ -25,8 +26,15 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
             base.SaveChangeLog(changeLog, outputPath);
         }
 
-        /// <inheritdoc />
-        protected override ScribanTemplateLoader CreateTemplateLoader() =>
-            new EmbeddedResourceTemplateLoader(new[] { "templates/GitHubRelease/", "templates/Default/" }, "main.scriban-txt");
+        protected override IFileSystem GetTemplateFileSystem()
+        {
+            // GitHubRelease template is based on the "Default" template
+            // => create aggregate file system with the files of both the "Default" and "GitHubRelease" templates
+            var templateFileSystem = new AggregateFileSystem();
+            templateFileSystem.AddFileSystem(base.GetTemplateFileSystem());
+            templateFileSystem.AddFileSystem(CreateEmbeddedResourcesFileSystem("/templates/GitHubRelease"));
+
+            return templateFileSystem;
+        }
     }
 }

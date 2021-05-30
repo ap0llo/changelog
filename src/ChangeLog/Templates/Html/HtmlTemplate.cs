@@ -1,19 +1,22 @@
 ﻿using Grynwald.ChangeLog.Configuration;
+using Zio;
 
 namespace Grynwald.ChangeLog.Templates.Html
 {
     internal sealed class HtmlTemplate : ScribanBaseTemplate
     {
-        protected override object TemplateSettings { get; }
+        /// <inheritdoc />
+        protected override ChangeLogConfiguration.TemplateSettings TemplateSettings => m_Configuration.Template.Html;
+
+        /// <inheritdoc />
+        protected override string TemplateFileExtension => ".scriban-html";
 
 
         public HtmlTemplate(ChangeLogConfiguration configuration) : base(configuration)
-        {
-            TemplateSettings = configuration.Template.Html;
-        }
+        { }
 
 
-        protected override ScribanTemplateLoader CreateTemplateLoader() =>
-            new EmbeddedResourceTemplateLoader(new[] { "templates/Html" }, "main.scriban-html");
+        /// <inheritdoc />
+        protected override IFileSystem GetTemplateFileSystem() => CreateEmbeddedResourcesFileSystem("/templates/Html");
     }
 }

@@ -10,9 +10,14 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
     /// <summary>
     /// Tests for <see cref="DefaultTemplate"/>
     /// </summary>
-    public class DefaultTemplateTest : TemplateTest
+    public class DefaultTemplateTest : ScribanBaseTemplateTest
     {
         protected override ITemplate GetTemplateInstance(ChangeLogConfiguration configuration) => new DefaultTemplate(configuration);
+
+        protected override void SetCustomDirectory(ChangeLogConfiguration configuration, string customDirectory)
+        {
+            configuration.Template.Default.CustomDirectory = customDirectory;
+        }
 
 
         [Fact]
@@ -109,5 +114,7 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
             // ACT / ASSERT
             Approve(changeLog, configuration);
         }
+
+
     }
 }

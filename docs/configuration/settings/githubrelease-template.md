@@ -7,7 +7,7 @@
 -->
 # GitHubRelease Template Settings
 
-This pages describes the configuration options of the [GitHub Release Template](../../templates.md#github-release-template).
+This pages describes the configuration options of the [GitHub Release Template](../../templates/githubrelease.md).
 
 ## Normalize References
 
@@ -40,8 +40,41 @@ The *Normalize References* settings controls whether references in the change lo
 
 See [Reference Normalization](../../auto-references.md#normalization) for details.
 
+## Custom Directory
+
+
+<table>
+    <tr>
+        <td><b>Setting</b></td>
+        <td><code>changelog:template:githubRelease:customDirectory</code></td>
+    </tr>
+    <tr>
+        <td><b>Environment Variable</b></td>
+        <td><code>CHANGELOG__TEMPLATE__GITHUBRELEASE__CUSTOMDIRECTORY</code></td>
+    </tr>
+    <tr>
+        <td><b>Commandline Parameter</b></td>
+        <td>-</td>
+    </tr>
+    <tr>
+        <td><b>Default value</b></td>
+        <td>
+            -
+        </td>
+    </tr>
+    <tr>
+        <td><b>Version Support</b></td>
+        <td>0.4+</td>
+    </tr>
+</table>
+
+The "Custom Directory" settings allows specifying the path for a directory that contains customizations for the template.
+For details see [Customization (GitHub Release Template)](../../templates/githubrelease.md#customization)
+
+
 ## See Also
 
-- [Templates Overview](../../templates.md)
+- [GitHub Release Template](../../templates/githubrelease.md)
+- [Templates Overview](../../templates/README.md)
 - [Configuration Overview](../../configuration.md)
 - [Template Name Setting](./template-name.md)

@@ -1,23 +1,26 @@
 ﻿using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Templates.Default;
+using Zio;
+using Zio.FileSystems;
 
 namespace Grynwald.ChangeLog.Templates.GitLabRelease
 {
     /// <summary>
     /// Template optimized to produce a Markdown file for use as description text of a GitLab Release
     /// </summary>
-    internal class GitLabReleaseTemplate : ScribanBaseTemplate
+    internal class GitLabReleaseTemplate : DefaultTemplate
     {
-        protected override object TemplateSettings { get; }
+        /// <inheritdoc />
+        protected override ChangeLogConfiguration.TemplateSettings TemplateSettings => m_Configuration.Template.GitLabRelease;
 
 
         public GitLabReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
-        {
-            TemplateSettings = configuration.Template.GitLabRelease;
-        }
+        { }
 
 
+        /// <inheritdoc />
         public override void SaveChangeLog(ApplicationChangeLog changeLog, string outputPath)
         {
             if (changeLog.ChangeLogs.Count() > 1)
@@ -27,7 +30,15 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
         }
 
 
-        protected override ScribanTemplateLoader CreateTemplateLoader() =>
-            new EmbeddedResourceTemplateLoader(new[] { "templates/GitLabRelease/", "templates/Default/" }, "main.scriban-txt");
+        protected override IFileSystem GetTemplateFileSystem()
+        {
+            // GitLabRelease template is based on the "Default" template
+            // => create aggregate file system with the files of both the "Default" and "GitLabRelease" templates
+            var templateFileSystem = new AggregateFileSystem();
+            templateFileSystem.AddFileSystem(base.GetTemplateFileSystem());
+            templateFileSystem.AddFileSystem(CreateEmbeddedResourcesFileSystem("/templates/GitLabRelease"));
+
+            return templateFileSystem;
+        }
     }
 }

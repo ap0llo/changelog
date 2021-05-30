@@ -1,0 +1,59 @@
+# Html Template
+
+The Html template render a change log as a standalone Html page.
+
+For configuration options, see [Html Template Settings](../configuration/settings/html-template.md).
+
+## Customization
+
+The "Html" template is implemented using [Scriban](https://github.com/scriban/scriban/) and is split into multiple files.
+
+The generated change log can be customized by replacing one or more of the template's files.
+To achieve that, specify a "Custom Directory" in the template's settings (see [Custom Directory setting](../configuration/settings/html-template.md#custom-directory)), e.g. in the configuration file:
+
+```json
+{
+    "changelog" : {
+        "template" : {
+            "html" : {
+                "customDirectory" : "./custom_theme"
+            }
+        }
+    }
+}
+```
+
+ChangeLog uses a virtual file system to load the template's files.
+
+![Template Virtual Filesystem](./template-customization.drawio.svg)
+
+If a "custom directory" is specified, the files in this directory are "overlayed" over the template's built-in files:
+
+- If a file exists in the "custom directory", it is used instead of the file at the same location in the template's default file
+- If a file only exists in the template's built-in files, the built-in file is used.
+  Thus, you only need to place the files you wish to override in the custom directory.
+
+To override a file, the "custom directory" must use the file & directory structure defined by the template's built-in files. 
+The "Html" template includes the following files:
+
+```txt
+{{~ templates.get_file_tree("Html") ~}}
+```
+
+- The entry point of the template is `main.scriban-html`
+- In `main.scriban-html`, Scriban's `include` feature is used to import the other files at the appropriate locations
+- The paths of the imported files are defined *in* the template files. 
+  This means, that additional files that do not exist in the set of built-in files can be placed in the custom directory and then be imported from one of the overridden files.
+  Theoretically, you can build a completely custom template by replacing `main.scriban-html` with a version that only uses files from the custom directory.
+
+You can browse the template's built-in files [here](../../src/ChangeLog/Templates/Html/_Resources)
+
+## Version support
+
+The "Html" template was introduced in verison 0.4.
+
+## See Also
+ 
+- [Templates Overview](./README.md)
+- [Html Template Settings](../configuration/settings/html-template.md)
+- [Scriban](https://github.com/scriban/scriban/)

@@ -1,0 +1,4 @@
+{{~ include "/partials/header.scriban-txt" model: $.model ~}}
+
+
+{{~ include "/partials/content.scriban-txt" model: $.model ~}}

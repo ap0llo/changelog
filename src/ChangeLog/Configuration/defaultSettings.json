@@ -101,16 +101,23 @@
       "name": "Default",
 
       "default": {
-        "markdownPreset": "Default",
-        "normalizeReferences": true
+        "normalizeReferences": true,
+        "customDirectory": null
       },
 
       "gitHubRelease": {
-        "normalizeReferences": true
+        "normalizeReferences": true,
+        "customDirectory": null
       },
 
       "gitLabRelease": {
-        "normalizeReferences": true
+        "normalizeReferences": true,
+        "customDirectory": null
+      },
+
+      "html": {
+        "normalizeReferences": true,
+        "customDirectory": null
       }
     },
 

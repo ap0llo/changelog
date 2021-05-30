@@ -44,7 +44,7 @@
 </table>
 
 Sets the template to use for generating the change log.
-For details see [Templates](../../templates.md).
+For details see [Templates](../../templates/README.md).
 
 ## Example
 
@@ -61,7 +61,7 @@ For details see [Templates](../../templates.md).
 ## See Also
 
 - [Configuration Overview](../../configuration.md)
-- [Templates Overview](../../templates.md)
+- [Templates Overview](../../templates/README.md)
 - Template settings
     - [Default Template Settings](./default-template.md)
     - [GitHubRelease Template Settings](./githubrelease-template.md)

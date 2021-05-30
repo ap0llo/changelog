@@ -233,16 +233,25 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // 
             yield return TestCase(config => Assert.NotNull(config.Template.Default));
             yield return TestCase(config => Assert.True(config.Template.Default.NormalizeReferences));
+            yield return TestCase(config => Assert.Empty(config.Template.Default.CustomDirectory));
 
             //
             // GitHubRelease Template settings
             // 
             yield return TestCase(config => Assert.True(config.Template.GitHubRelease.NormalizeReferences));
+            yield return TestCase(config => Assert.Empty(config.Template.GitHubRelease.CustomDirectory));
 
             //
             // GitLabRelease Template settings
             // 
             yield return TestCase(config => Assert.True(config.Template.GitLabRelease.NormalizeReferences));
+            yield return TestCase(config => Assert.Empty(config.Template.GitLabRelease.CustomDirectory));
+
+            //
+            // Html template settings
+            //
+            yield return TestCase(config => Assert.True(config.Template.Html.NormalizeReferences));
+            yield return TestCase(config => Assert.Empty(config.Template.Html.CustomDirectory));
 
             //
             // Entry Types settings
@@ -478,24 +487,32 @@ namespace Grynwald.ChangeLog.Test.Configuration
             //
             yield return TestCase("template:default:normalizeReferences", config => config.Template.Default.NormalizeReferences, true);
             yield return TestCase("template:default:normalizeReferences", config => config.Template.Default.NormalizeReferences, false);
+            yield return TestCase("template:default:customDirectory", config => config.Template.Default.CustomDirectory, "");
+            yield return TestCase("template:default:customDirectory", config => config.Template.Default.CustomDirectory, "some-custom-directory");
 
             //
             // GitHubRelease Template settings
             //
             yield return TestCase("template:gitHubRelease:normalizeReferences", config => config.Template.GitHubRelease.NormalizeReferences, true);
             yield return TestCase("template:gitHubRelease:normalizeReferences", config => config.Template.GitHubRelease.NormalizeReferences, false);
+            yield return TestCase("template:gitHubRelease:customDirectory", config => config.Template.GitHubRelease.CustomDirectory, "");
+            yield return TestCase("template:gitHubRelease:customDirectory", config => config.Template.GitHubRelease.CustomDirectory, "some-custom-directory");
 
             //
             // GitLabRelease Template settings
             //
             yield return TestCase("template:gitLabRelease:normalizeReferences", config => config.Template.GitLabRelease.NormalizeReferences, true);
             yield return TestCase("template:gitLabRelease:normalizeReferences", config => config.Template.GitLabRelease.NormalizeReferences, false);
+            yield return TestCase("template:gitLabRelease:customDirectory", config => config.Template.GitLabRelease.CustomDirectory, "");
+            yield return TestCase("template:gitLabRelease:customDirectory", config => config.Template.GitLabRelease.CustomDirectory, "some-custom-directory");
 
             //
             // Html template settings
             //
             yield return TestCase("template:html:normalizeReferences", config => config.Template.Html.NormalizeReferences, true);
             yield return TestCase("template:html:normalizeReferences", config => config.Template.Html.NormalizeReferences, false);
+            yield return TestCase("template:html:customDirectory", config => config.Template.Html.CustomDirectory, "");
+            yield return TestCase("template:html:customDirectory", config => config.Template.Html.CustomDirectory, "some-custom-directory");
 
             //
             // Integration provider setting

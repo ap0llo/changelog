@@ -1,1 +1,1 @@
-{{ include "changelog.scriban-txt" model: model}}
+{{ include "/partials/changelog.scriban-txt" model: model}}

@@ -1,0 +1,75 @@
+# GitLab Release Template
+
+The GitLab Release Template renders a change log suited to be used as the description of a [GitLab Release](https://docs.gitlab.com/ee/user/project/releases/).
+
+This template **only supports including the changes of a single version**, so it should be combined with the [Version Range setting](../configuration/settings/version-range.md).
+Compared to the default template, the GitLab Release template omits the "Change Log" and version headings and adjusts the heading levels so the changelog can is properly rendered in the Releases view of the GitLab web interface.
+
+**Note:** The GitLab Release template is independent of the [GitLab Integration](../integrations/gitlab.md) for links.
+Both features can be used independently of each other.
+
+For configuration options, see [GitLabRelease Template Settings](../configuration/settings/gitlabrelease-template.md).
+
+## Customization
+
+The "GitLab Release" template is implemented using [Scriban](https://github.com/scriban/scriban/) and is split into multiple files.
+
+The generated change log can be customized by replacing one or more of the template's files.
+To achieve that, specify a "Custom Directory" in the template's settings (see [Custom Directory setting](../configuration/settings/gitlabrelease-template.md#custom-directory)), e.g. in the configuration file:
+
+```json
+{
+    "changelog" : {
+        "template" : {
+            "gitLabRelease" : {
+                "customDirectory" : "./custom_theme"
+            }
+        }
+    }
+}
+```
+
+ChangeLog uses a virtual file system to load the template's files.
+
+![Template Virtual Filesystem](./template-customization.drawio.svg)
+
+If a "custom directory" is specified, the files in this directory are "overlayed" over the template's built-in files:
+
+- If a file exists in the "custom directory", it is used instead of the file at the same location in the template's default file
+- If a file only exists in the template's built-in files, the built-in file is used.
+  Thus, you only need to place the files you wish to override in the custom directory.
+
+To override a file, the "custom directory" must use the file & directory structure defined by the template's built-in files. 
+The "GitLab Release" template includes the following files:
+
+```txt
+{{~ templates.get_file_tree("GitLabRelease") ~}}
+```
+
+Note that the "GitLab Release" template is itself a customized version of the ["Default" template](./default.md) and not all built-in files are used by default.
+
+Files for the template are loaded from the following locations (in order of precedence):
+
+1. "Custom Directory" for the "GitLab Release" template
+1. ["GitLab Release" template built-in files](../../src/ChangeLog/Templates/GitLabRelease/_Resources)
+1. ["Default" template built-in files](../../src/ChangeLog/Templates/Default/_Resources)
+
+
+- The entry point of the template is `main.scriban-txt`
+- In `main.scriban-txt`, Scriban's `include` feature is used to import the other files at the appropriate locations
+- The paths of the imported files are defined *in* the template files. 
+  This means, that additional files that do not exist in the set of built-in files can be placed in the custom directory and then be imported from one of the overridden files.
+  Theoretically, you can build a completely custom template by replacing `main.scriban-txt` with a version that only uses files from the custom directory.
+
+## Version support
+
+- Support for templates and the "GitLab Release" template was introduced in version 0.2.  
+- The option to customize the template by overriding individual files was added in version 0.4.
+
+## See Also
+ 
+- [Templates Overview](./README.md)
+- ["Default" Template](./default.md)
+- [GitLabRelease Template Settings](../configuration/settings/gitlabrelease-template.md)
+- [GitLab Releases](https://docs.gitlab.com/ee/user/project/releases/)
+- [Scriban](https://github.com/scriban/scriban/)

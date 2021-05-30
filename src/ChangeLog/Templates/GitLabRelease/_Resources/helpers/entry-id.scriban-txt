@@ -1,0 +1,2 @@
+{{~ entryTitle =  include "/helpers/entry-title.scriban-txt" entry: $.entry ~}}
+{{~ html_utilities.slugify(entryTitle) ~}}

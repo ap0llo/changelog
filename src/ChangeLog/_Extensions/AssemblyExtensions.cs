@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 
 namespace Grynwald.ChangeLog
@@ -13,9 +12,7 @@ namespace Grynwald.ChangeLog
             if (resourceStream is null)
                 throw new InvalidOperationException($"Resource '{resourceName}' does not exist in assembly '{assembly.GetName().Name}'");
 
-            using var streamReader = new StreamReader(resourceStream);
-
-            return streamReader.ReadToEnd();
+            return resourceStream.ReadToEnd();
         }
     }
 }

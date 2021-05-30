@@ -304,6 +304,14 @@
                 "normalizeReferences": {
                   "type": "boolean",
                   "default": true
+                },
+                "customDirectory": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "Template Custom Directory"
                 }
               }
             },
@@ -313,6 +321,14 @@
                 "normalizeReferences": {
                   "type": "boolean",
                   "default": true
+                },
+                "customDirectory": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "Template Custom Directory"
                 }
               }
             },
@@ -322,6 +338,14 @@
                 "normalizeReferences": {
                   "type": "boolean",
                   "default": true
+                },
+                "customDirectory": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "Template Custom Directory"
                 }
               }
             },
@@ -331,6 +355,14 @@
                 "normalizeReferences": {
                   "type": "boolean",
                   "default": true
+                },
+                "customDirectory": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "title": "Template Custom Directory"
                 }
               }
             }

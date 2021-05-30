@@ -1,2 +1,0 @@
-﻿{{~ id = include "entry-id.scriban-txt" entry: $.entry ~}}
-### <a id="{{~ id ~}}"></a> {{ include "entry-title.scriban-txt" entry: $.entry }}

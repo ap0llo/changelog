@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using FluentValidation;
 using FluentValidation.Results;
@@ -70,6 +71,30 @@ namespace Grynwald.ChangeLog.Configuration
             RuleForEach(x => x.Filter.Exclude)
                 .ChildRules(filter => filter.RuleFor(f => f.Type).NotWhitespace())
                 .ChildRules(filter => filter.RuleFor(f => f.Scope).NotWhitespace());
+
+            RuleFor(x => x.Template.Default.CustomDirectory).NotWhitespace();
+            RuleFor(x => x.Template.Default.CustomDirectory)
+                .Must(Directory.Exists)
+                .UnlessNullOrWhiteSpace()
+                .WithMessage("Directory '{PropertyValue}' specified as '{PropertyName}' does not exists");
+
+            RuleFor(x => x.Template.GitHubRelease.CustomDirectory).NotWhitespace();
+            RuleFor(x => x.Template.GitHubRelease.CustomDirectory)
+                .Must(Directory.Exists)
+                .UnlessNullOrWhiteSpace()
+                .WithMessage("Directory '{PropertyValue}' specified as '{PropertyName}' does not exists");
+
+            RuleFor(x => x.Template.GitLabRelease.CustomDirectory).NotWhitespace();
+            RuleFor(x => x.Template.GitLabRelease.CustomDirectory)
+                .Must(Directory.Exists)
+                .UnlessNullOrWhiteSpace()
+                .WithMessage("Directory '{PropertyValue}' specified as '{PropertyName}' does not exists");
+
+            RuleFor(x => x.Template.Html.CustomDirectory).NotWhitespace();
+            RuleFor(x => x.Template.Html.CustomDirectory)
+                .Must(Directory.Exists)
+                .UnlessNullOrWhiteSpace()
+                .WithMessage("Directory '{PropertyValue}' specified as '{PropertyName}' does not exists");
         }
 
 
