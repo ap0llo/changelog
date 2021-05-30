@@ -5,6 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.ChangeLog.Templates;
+using Grynwald.ChangeLog.Templates.Default;
+using Grynwald.ChangeLog.Templates.GitHubRelease;
+using Grynwald.ChangeLog.Templates.GitLabRelease;
+using Grynwald.ChangeLog.Templates.Html;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Scriban;
@@ -94,6 +99,25 @@ namespace docs
         {
             public static IEnumerable<string> GetTemplateNames() =>
                 Enum.GetValues<ChangeLogConfiguration.TemplateName>().Select(x => x.ToString());
+
+            public static string GetFileTree(string templateName)
+            {
+                var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+                if (!Enum.TryParse<ChangeLogConfiguration.TemplateName>(templateName, ignoreCase: true, out var parsed))
+                    throw new ArgumentException($"Unknown template name '{templateName}'", nameof(templateName));
+
+                ScribanBaseTemplate template = parsed switch
+                {
+                    ChangeLogConfiguration.TemplateName.Default => new DefaultTemplate(configuration),
+                    ChangeLogConfiguration.TemplateName.GitHubRelease => new GitHubReleaseTemplate(configuration),
+                    ChangeLogConfiguration.TemplateName.GitLabRelease => new GitLabReleaseTemplate(configuration),
+                    ChangeLogConfiguration.TemplateName.Html => new HtmlTemplate(configuration),
+                    _ => throw new NotImplementedException()
+                };
+
+                return template.FileSystem.ToAsciiTree();
+            }
         }
 
         public static string RenderTemplate(string inputPath)
