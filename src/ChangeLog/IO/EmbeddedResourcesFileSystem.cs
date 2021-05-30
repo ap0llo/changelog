@@ -280,12 +280,12 @@ namespace Grynwald.ChangeLog.IO
 
                     if (!entries.ContainsKey(newDirPath))
                     {
-                        entries.Add(newDirPath, new Directory(newDirPath));
+                        var newDir = new Directory(newDirPath);
+                        entries.Add(newDirPath, newDir);
+                        currentDir.Add(newDir);
                     }
 
-                    var newDir = (Directory)entries[newDirPath];
-                    currentDir.Add(newDir);
-                    currentDir = newDir;
+                    currentDir = (Directory)entries[newDirPath];
                 }
 
                 var file = new File(currentDir.Path / path[path.Length - 1], resourceName);
