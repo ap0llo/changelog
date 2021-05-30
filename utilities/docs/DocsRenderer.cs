@@ -87,6 +87,14 @@ namespace docs
             }
         }
 
+        /// <summary>
+        /// Functions that retrieve infomation about changelog templates made available to scriban templates
+        /// </summary>
+        private class TemplateFunctions : ScriptObject
+        {
+            public static IEnumerable<string> GetTemplateNames() =>
+                Enum.GetValues<ChangeLogConfiguration.TemplateName>().Select(x => x.ToString());
+        }
 
         public static string RenderTemplate(string inputPath)
         {
@@ -99,7 +107,8 @@ namespace docs
             var rootScriptObject = new ScriptObject()
             {
                 { "configuration", new ConfigurationFunctions() },
-                { "enumerable", new EnumerableFunctions() }
+                { "enumerable", new EnumerableFunctions() },
+                { "templates", new TemplateFunctions() }
             };
 
             context.PushGlobal(rootScriptObject);

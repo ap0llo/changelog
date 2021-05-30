@@ -72,5 +72,5 @@ For example setting `key:subkey` to `value` would need to be specified in the co
 - [Semantic Versioning](https://semver.org/)
 - [Integrations](./integrations.md)
 - [NuGet Version Ranges](https://docs.microsoft.com/en-us/nuget/concepts/package-versioning#version-ranges)
-- [Templates](./templates.md)
+- [Templates](./templates/README.md)
 - [Commit Message Parser](./commit-message-parser.md)

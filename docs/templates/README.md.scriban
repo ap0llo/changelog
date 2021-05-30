@@ -1,0 +1,17 @@
+# Templates
+
+Templates allow generating a change log in different formats or for different environments.
+
+The template to use can be configured using the [Template Name Setting](../configuration/settings/template-name.md) for details.
+
+The following templates are supported:
+
+{{~ for templateName in templates.get_template_names() ~}}
+- [{{templateName}}](./{{string.downcase templateName}}.md)
+{{~ end ~}}
+
+
+## See Also
+
+- [Configuration](../configuration.md)
+- [Template Name Setting](../configuration/settings/template-name.md)

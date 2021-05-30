@@ -7,7 +7,7 @@
 -->
 # Default Template Settings
 
-This pages describes the configuration options of the [Default Template](../../templates.md#default-template).
+This pages describes the configuration options of the [Default Template](../../templates/default.md).
 
 ## Normalize References
 
@@ -42,6 +42,7 @@ See [Reference Normalization](../../auto-references.md#normalization) for detail
 
 ## See Also
 
-- [Templates Overview](../../templates.md)
+- [Default Template](../../templates/default.md)
+- [Templates Overview](../../templates/README.md)
 - [Configuration Overview](../../configuration.md)
 - [Template Name Setting](./template-name.md)

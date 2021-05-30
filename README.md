@@ -18,7 +18,7 @@ using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 - [Getting started](./docs/getting-started.md)
 - [Configuration](./docs/configuration.md)
 - [Integrations](./docs/integrations.md)
-- [Templates](./docs/templates.md)
+- [Templates](./docs/templates/README.md)
 - [Commandline Reference](./docs/commandline-reference/index.md)
 - [Automatic References](./docs/auto-references.md)
 
