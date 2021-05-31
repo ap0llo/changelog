@@ -169,9 +169,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[3.8.2, )",
-        "resolved": "3.8.2",
-        "contentHash": "fuhc7Rx/lARCCym/Vv1y4B63EYSYzs1vYPW9HkUeOBOrtAsTU/g/f9SJZkCy4xASkb4xtrugQwDRtksJ/oAJrQ==",
+        "requested": "[3.9.0, )",
+        "resolved": "3.9.0",
+        "contentHash": "NvfA06M7z7KPUANQy5m+4fR5QSUaXHuQcBfD+w8MiFJg41ymDUHqQLBjeAr6wviBwqJsYTKuTbfA7G2wu/8y6Q==",
         "dependencies": {
           "Microsoft.CSharp": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.0"
@@ -520,9 +520,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[3.8.2, )",
-        "resolved": "3.8.2",
-        "contentHash": "fuhc7Rx/lARCCym/Vv1y4B63EYSYzs1vYPW9HkUeOBOrtAsTU/g/f9SJZkCy4xASkb4xtrugQwDRtksJ/oAJrQ==",
+        "requested": "[3.9.0, )",
+        "resolved": "3.9.0",
+        "contentHash": "NvfA06M7z7KPUANQy5m+4fR5QSUaXHuQcBfD+w8MiFJg41ymDUHqQLBjeAr6wviBwqJsYTKuTbfA7G2wu/8y6Q==",
         "dependencies": {
           "Microsoft.CSharp": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.0"
@@ -803,9 +803,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[3.8.2, )",
-        "resolved": "3.8.2",
-        "contentHash": "fuhc7Rx/lARCCym/Vv1y4B63EYSYzs1vYPW9HkUeOBOrtAsTU/g/f9SJZkCy4xASkb4xtrugQwDRtksJ/oAJrQ=="
+        "requested": "[3.9.0, )",
+        "resolved": "3.9.0",
+        "contentHash": "NvfA06M7z7KPUANQy5m+4fR5QSUaXHuQcBfD+w8MiFJg41ymDUHqQLBjeAr6wviBwqJsYTKuTbfA7G2wu/8y6Q=="
       },
       "Zio": {
         "type": "Direct",

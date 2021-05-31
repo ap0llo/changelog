@@ -38,9 +38,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[3.8.2, )",
-        "resolved": "3.8.2",
-        "contentHash": "fuhc7Rx/lARCCym/Vv1y4B63EYSYzs1vYPW9HkUeOBOrtAsTU/g/f9SJZkCy4xASkb4xtrugQwDRtksJ/oAJrQ=="
+        "requested": "[3.9.0, )",
+        "resolved": "3.9.0",
+        "contentHash": "NvfA06M7z7KPUANQy5m+4fR5QSUaXHuQcBfD+w8MiFJg41ymDUHqQLBjeAr6wviBwqJsYTKuTbfA7G2wu/8y6Q=="
       },
       "Spectre.Console": {
         "type": "Direct",
@@ -282,7 +282,7 @@
           "Microsoft.Extensions.Logging": "5.0.0",
           "NuGet.Versioning": "5.9.1",
           "Octokit": "0.50.0",
-          "Scriban": "3.8.2",
+          "Scriban": "3.9.0",
           "Zio": "0.11.0"
         }
       }
