@@ -141,6 +141,17 @@ jobs:
       publishTestResults: true
       projects: $(solutionPath)
       arguments: '--configuration $(configuration) --no-build --collect:"XPlat Code Coverage"'
+
+  - powershell: |
+      $trxFiles = Get-ChildItem -Path "$(Agent.TempDirectory)" -Filter "*.trx" -File -Recurse
+      $trxFileCount = ($trxFiles | Measure-Object).Count
+      Write-Host "Found $trxFileCount trx files in '$(Agent.TempDirectory)'"
+      foreach($trxFile in $trxFiles) {
+        Write-Host "Publishing Artifact '$($trxFile.FullName)'"
+        Write-Host "##vso[artifact.upload artifactname=TestResults]$($trxFile.FullName)"
+      }
+    displayName: Publish test results
+
   # The PublishCodeCoverageResults task only supports publishing a single coverage result file,
   # so the results are merged into a single cobertura file using "ReportGenerator"
   # The dotnet test task redirects test results to $(Agent.TempDirectory) so coverage reports will be written there, too
