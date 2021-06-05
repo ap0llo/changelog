@@ -31,7 +31,10 @@ namespace Grynwald.ChangeLog.Test.E2E
             var applicationVersion = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
 
             // ACT 
-            var result = await RunApplicationAsync(new[] { "--help" });
+            var result = await RunApplicationAsync(
+                args: new[] { "--help" },
+                commandId: nameof(Requesting_help_succeeds)
+            );
 
             // ASSERT
             Assert.Equal(0, result.ExitCode);
@@ -56,7 +59,10 @@ namespace Grynwald.ChangeLog.Test.E2E
             var expectedVersion = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
 
             // ACT 
-            var result = await RunApplicationAsync(new[] { "--version" });
+            var result = await RunApplicationAsync(
+                args: new[] { "--version" },
+                commandId: nameof(Requesting_version_succeeds)
+            );
 
             // ASSERT
             Assert.Equal(0, result.ExitCode);
@@ -92,7 +98,10 @@ namespace Grynwald.ChangeLog.Test.E2E
                 "");
 
             // ACT 
-            var result = await RunApplicationAsync(new[] { "--repository", temporaryDirectory });
+            var result = await RunApplicationAsync(
+                args: new[] { "--repository", temporaryDirectory },
+                commandId: nameof(Change_log_is_generated_from_the_specified_repository)
+            );
 
             // ASSERT
             Assert.Equal(0, result.ExitCode);
@@ -122,7 +131,9 @@ namespace Grynwald.ChangeLog.Test.E2E
             // ACT 
             var result = await RunApplicationAsync(
                 args: new[] { "--repository", "repo" },
-                workingDirectory: temporaryDirectory);
+                workingDirectory: temporaryDirectory,
+                commandId: nameof(Repository_path_can_be_passed_as_relative_path)
+            );
 
             // ASSERT
             Assert.Equal(0, result.ExitCode);
@@ -161,7 +172,11 @@ namespace Grynwald.ChangeLog.Test.E2E
                 "");
 
             // ACT 
-            var result = await RunApplicationAsync(args: Array.Empty<string>(), workingDirectory: workingDirectory);
+            var result = await RunApplicationAsync(
+                args: new[] { "--verbose" },
+                workingDirectory: workingDirectory,
+                commandId: $"{nameof(When_no_repository_is_specified_the_repository_is_located_from_the_current_directory)}(\"{relativeWorkingDirectoryPath}\")"
+            );
 
             // ASSERT
             Assert.Equal(0, result.ExitCode);
@@ -176,7 +191,10 @@ namespace Grynwald.ChangeLog.Test.E2E
             using var temporaryDirectory = new TemporaryDirectory();
 
             // ACT 
-            var result = await RunApplicationAsync(new[] { "--repository", temporaryDirectory });
+            var result = await RunApplicationAsync(
+                args: new[] { "--repository", temporaryDirectory },
+                commandId: nameof(When_specified_repository_path_is_not_a_git_repository_an_error_is_shown)
+            );
 
             // ASSERT
             Assert.Equal(1, result.ExitCode);
@@ -193,7 +211,9 @@ namespace Grynwald.ChangeLog.Test.E2E
             // ACT 
             var result = await RunApplicationAsync(
                 args: Array.Empty<string>(),
-                workingDirectory: temporaryDirectory);
+                workingDirectory: temporaryDirectory,
+                commandId: nameof(When_started_outside_of_a_git_repository_and_no_repository_path_is_specified_an_error_is_shown)
+            );
 
             // ASSERT
             Assert.Equal(1, result.ExitCode);
@@ -205,7 +225,7 @@ namespace Grynwald.ChangeLog.Test.E2E
         /// <summary>
         /// Runs changelog with the specified command line parameters
         /// </summary>
-        private async Task<BufferedCommandResult> RunApplicationAsync(string[] args, string? workingDirectory = null)
+        private async Task<BufferedCommandResult> RunApplicationAsync(string[] args, string? workingDirectory = null, string? commandId = null)
         {
             var applicationAssembly = typeof(Program).Assembly;
 
@@ -239,7 +259,7 @@ namespace Grynwald.ChangeLog.Test.E2E
                 command = command.WithWorkingDirectory(workingDirectory);
             }
 
-            var result = await command.ExecuteBufferedWithTestOutputAsync(m_TestOutputHelper);
+            var result = await command.ExecuteBufferedWithTestOutputAsync(m_TestOutputHelper, commandId: commandId);
 
             return result;
         }
