@@ -1,6 +1,5 @@
 {
   "extends": [
       "github>ap0llo/renovate-config"
-  ],
-  "commitBody": "Updates-Dependency: {{depName}}"
+  ]
 }
