@@ -82,8 +82,8 @@
       },
       "FluentValidation": {
         "type": "Transitive",
-        "resolved": "10.2.1",
-        "contentHash": "ZFyVk+AXiWjML6M201GUbkhrmrUfd1U55LmOPOEHpw2bQ+STi0TIilXX3KlWvqt5AX5qSu+B1d/s/Ik5p6Tu3Q=="
+        "resolved": "10.2.3",
+        "contentHash": "R2w/E6jgg9RPSlg7JQSTHg6AWDwlOXARaV4ZUKrPJ1gi1e+oaBEcomxmo29j9BLZivkyQhOpAboJ9nKZS4/xYA=="
       },
       "GitLabApiClient": {
         "type": "Transitive",
@@ -1259,7 +1259,7 @@
         "dependencies": {
           "Autofac": "6.2.0",
           "CommandLineParser": "2.8.0",
-          "FluentValidation": "10.2.1",
+          "FluentValidation": "10.2.3",
           "GitLabApiClient": "1.7.0",
           "Grynwald.Utilities": "1.6.11-pre",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
