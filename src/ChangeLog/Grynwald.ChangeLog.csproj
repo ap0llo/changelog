@@ -48,9 +48,13 @@
     <PackageReference Include="NuGet.Versioning" Version="5.9.1" />
     <PackageReference Include="Octokit" Version="0.50.0" />
     <PackageReference Include="Autofac" Version="6.2.0" />
-    <PackageReference Include="GitLabApiClient" Version="1.7.0" />
     <PackageReference Include="Scriban" Version="4.0.1" />  
     <PackageReference Include="Zio" Version="0.11.0" />
+  </ItemGroup>
+    
+    
+  <ItemGroup>
+    <ProjectReference Include="..\..\deps\GitLabApiClient\src\GitLabApiClient\GitLabApiClient.csproj" />
   </ItemGroup>
 
   <!-- Auto-Generated command line help -->
