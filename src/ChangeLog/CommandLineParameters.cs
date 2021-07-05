@@ -56,6 +56,9 @@ namespace Grynwald.ChangeLog
         [ConfigurationValue("changelog:template:name")]
         public ChangeLogConfiguration.TemplateName? Template { get; set; }
 
+        [Option("integrationProvider", Required = false, Default = null, HelpText = "Sets the integration provider to use")]
+        [ConfigurationValue("changelog:integrations:provider")]
+        public string? IntegrationProvider { get; set; }
 
 
         public static ParserResult<CommandLineParameters> Parse(string[] args)

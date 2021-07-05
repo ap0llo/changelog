@@ -14,6 +14,7 @@ changelog [--configurationFilePath|-c <VALUE>]
           [--currentVersion <VALUE>]
           [--githubAccessToken <VALUE>]
           [--gitlabAccessToken <VALUE>]
+          [--integrationProvider <VALUE>]
           [--outputPath|-o <VALUE>]
           [--repository|-r <VALUE>]
           [--template <VALUE>]
@@ -29,6 +30,7 @@ changelog [--configurationFilePath|-c <VALUE>]
 | [currentVersion](#currentversion-parameter)               |                                       | Sets the version of the currently checked\-out commit. Value must be a valid semantic version                                                                                                                                                  |
 | [githubAccessToken](#githubaccesstoken-parameter)         |                                       | The access token to use if the GitHub integration is enabled.                                                                                                                                                                                  |
 | [gitlabAccessToken](#gitlabaccesstoken-parameter)         |                                       | The access token to use if the GitLab integration is enabled.                                                                                                                                                                                  |
+| [integrationProvider](#integrationprovider-parameter)     |                                       | Sets the integration provider to use                                                                                                                                                                                                           |
 | [outputPath](#outputpath-parameter)                       | [o](#outputpath-parameter)            | The path to save the changelog to.                                                                                                                                                                                                             |
 | [repository](#repository-parameter)                       | [r](#repository-parameter)            | The local path of the git repository to generate a change log for.                                                                                                                                                                             |
 | [template](#template-parameter)                           |                                       | Sets the template to use for generating the changelog.                                                                                                                                                                                         |
@@ -85,6 +87,19 @@ The access token to use if the GitLab integration is enabled.
 | Position:      | *Named parameter* |
 | Required:      | No                |
 | Default value: | *None*            |
+
+___
+
+### `integrationProvider` Parameter
+
+Sets the integration provider to use
+
+|                |                     |
+| -------------- | ------------------- |
+| Name:          | integrationProvider |
+| Position:      | *Named parameter*   |
+| Required:      | No                  |
+| Default value: | *None*              |
 
 ___
 

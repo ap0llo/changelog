@@ -44,7 +44,12 @@
     </tr>
     <tr>
         <td><b>Version Support</b></td>
-        <td>0.1+</td>
+        <td>
+            <ul>
+                <li>0.1+: Setting supported through environment variables and configuration file.</li>
+                <li>0.4+: Setting supported through environment variables, configuration file and commandline parameter.</li>
+            </ul>
+        </td>
     </tr>
 </table>
 
