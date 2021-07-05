@@ -29,7 +29,9 @@ See also [Integrations - GitLab](../../integrations/gitlab.md).
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td><code>gitlabAccessToken</code></td>
+        <td>
+            <code>gitlabAccessToken</code>
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -63,7 +65,9 @@ accessing the GitLab  API when the GitLab integration is enabled.
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -102,7 +106,9 @@ For details on how the remote URL is parsed, see [Integrations - GitLab](../../i
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -133,7 +139,9 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -165,7 +173,9 @@ When no namespace is specified (default behaviour), ChangeLog will attempt to de
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>

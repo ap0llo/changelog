@@ -29,7 +29,13 @@ See also [Integrations - GitLab](../../integrations/gitlab.md).
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td><code>gitlabAccessToken</code></td>
+        <td>
+        {{~ if configuration.get_commandline_parameter settingskey_accesstoken ~}}
+            <code>{{configuration.get_commandline_parameter settingskey_accesstoken | html.escape}}</code>
+        {{~ else ~}}
+            -
+        {{~ end ~}}
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -67,7 +73,13 @@ accessing the GitLab  API when the GitLab integration is enabled.
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+        {{~ if configuration.get_commandline_parameter settingskey_remotename ~}}
+            <code>{{configuration.get_commandline_parameter settingskey_remotename | html.escape}}</code>
+        {{~ else ~}}
+            -
+        {{~ end ~}}
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -110,7 +122,13 @@ For details on how the remote URL is parsed, see [Integrations - GitLab](../../i
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+        {{~ if configuration.get_commandline_parameter settingskey_host ~}}
+            <code>{{configuration.get_commandline_parameter settingskey_host | html.escape}}</code>
+        {{~ else ~}}
+            -
+        {{~ end ~}}
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -145,7 +163,13 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+        {{~ if configuration.get_commandline_parameter settingskey_namespace ~}}
+            <code>{{configuration.get_commandline_parameter settingskey_namespace | html.escape}}</code>
+        {{~ else ~}}
+            -
+        {{~ end ~}}
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -181,7 +205,13 @@ When no namespace is specified (default behaviour), ChangeLog will attempt to de
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+        {{~ if configuration.get_commandline_parameter settingskey_project ~}}
+            <code>{{configuration.get_commandline_parameter settingskey_project | html.escape}}</code>
+        {{~ else ~}}
+            -
+        {{~ end ~}}
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>

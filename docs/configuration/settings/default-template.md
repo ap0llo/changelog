@@ -22,7 +22,9 @@ This pages describes the configuration options of the [Default Template](../../t
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -54,7 +56,9 @@ See [Reference Normalization](../../auto-references.md#normalization) for detail
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>

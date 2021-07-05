@@ -18,7 +18,9 @@
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td><code>currentVersion</code></td>
+        <td>
+            <code>currentVersion</code>
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>

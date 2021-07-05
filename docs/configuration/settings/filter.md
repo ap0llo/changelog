@@ -18,7 +18,9 @@
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -97,7 +99,7 @@ The following examples illustrate different filter expressions:
     <tr>
         <td><code>{ "type" : "*" }</code></td>
         <td>Matches any entry. Because the default condition for scope is <code>*</code>, this is equivalent to the example above.</td>
-    </tr>    
+    </tr>
     <tr>
         <td><code>{ "type" : "feat",  "scope" : "*" }</code></td>
         <td>Matches any entry of type `feat` regardless of the scope.</td>

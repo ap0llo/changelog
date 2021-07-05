@@ -3,13 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
+using CommandLine;
+using Grynwald.ChangeLog;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Default;
 using Grynwald.ChangeLog.Templates.GitHubRelease;
 using Grynwald.ChangeLog.Templates.GitLabRelease;
 using Grynwald.ChangeLog.Templates.Html;
+using Grynwald.Utilities.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Scriban;
@@ -53,7 +57,7 @@ namespace docs
 
                 return value switch
                 {
-                    IEnumerable enumerable => (IEnumerable<object>)enumerable.Cast<object>(),
+                    IEnumerable enumerable => enumerable.Cast<object>(),
                     _ => Enumerable.Empty<object>()
                 };
             }
@@ -68,6 +72,18 @@ namespace docs
             }
 
             public static string GetEnvironmentVariableName(string settingsKey) => settingsKey.Replace(":", "__").ToUpper();
+
+            public static string? GetCommandlineParameter(string settingsKey)
+            {
+                var property = typeof(CommandLineParameters).GetProperties()
+                    .SingleOrDefault(x =>
+                        x.GetCustomAttribute<OptionAttribute>() is not null &&
+                        x.GetCustomAttribute<ConfigurationValueAttribute>() is ConfigurationValueAttribute configurationAttribute &&
+                        configurationAttribute.Key.Equals(settingsKey, StringComparison.OrdinalIgnoreCase)
+                    );
+
+                return property?.GetCustomAttribute<OptionAttribute>()?.LongName;
+            }
 
 
             private static object? GetConfigurationValue(string settingsKey)

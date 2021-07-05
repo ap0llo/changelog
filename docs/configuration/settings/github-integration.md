@@ -29,7 +29,9 @@ See also [Integrations - GitHub](../../integrations/github.md).
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td><code>githubAccessToken</code></td>
+        <td>
+            <code>githubAccessToken</code>
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -63,7 +65,9 @@ accessing the GitHub API when the GitHub integration is enabled.
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -102,7 +106,9 @@ For details on how the remote URL is parsed, see [Integrations - GitHub](../../i
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -135,7 +141,9 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -166,7 +174,9 @@ When no owner is specified (default behaviour), ChangeLog will attempt to determ
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+            -
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>

@@ -18,7 +18,9 @@
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td><code>template</code></td>
+        <td>
+            <code>template</code>
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -63,7 +65,7 @@ For details see [Templates](../../templates/README.md).
 - [Configuration Overview](../../configuration.md)
 - [Templates Overview](../../templates/README.md)
 - Template settings
-    - [Default Template Settings](./default-template.md)
-    - [GitHubRelease Template Settings](./githubrelease-template.md)
-    - [GitLabRelease Template Settings](./gitlabrelease-template.md)
-    - [Html Template Settings](./html-template.md)
+  - [Default Template Settings](./default-template.md)
+  - [GitHubRelease Template Settings](./githubrelease-template.md)
+  - [GitLabRelease Template Settings](./gitlabrelease-template.md)
+  - [Html Template Settings](./html-template.md)

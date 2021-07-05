@@ -14,7 +14,13 @@
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>-</td>
+        <td>
+        {{~ if configuration.get_commandline_parameter settingskey ~}}
+            <code>{{configuration.get_commandline_parameter settingskey | html.escape}}</code>
+        {{~ else ~}}
+            -
+        {{~ end ~}}
+        </td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
