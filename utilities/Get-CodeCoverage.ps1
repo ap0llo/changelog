@@ -22,7 +22,7 @@ try {
     }
 
     log "Running dotnet test with coverage"
-    exec "dotnet test ./ChangeLog.sln --collect:`"XPlat Code Coverage`" "
+    exec "dotnet test ./ChangeLog.sln --collect:`"XPlat Code Coverage`" --settings ChangeLog.runsettings"
 
     log "Generating code coverage report"
     exec "dotnet tool run reportgenerator -- `"-reports:$testResultsDirectory\*\coverage.cobertura.xml`" `"-targetdir:$testResultsDirectory\Coverage`" `"-reporttypes:html`" `"-historyDir:$coverageHistoryDirectory`" "
