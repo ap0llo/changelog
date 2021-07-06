@@ -5,6 +5,7 @@ using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks

@@ -2,6 +2,7 @@
 using System.Linq;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
+using Grynwald.ChangeLog.Pipeline;
 
 namespace Grynwald.ChangeLog.Tasks
 {

@@ -42,12 +42,12 @@ namespace Grynwald.ChangeLog.Test
             var changelogEnvironmentVariables = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
                 .Select(x => new KeyValuePair<string, string?>((string)x.Key, (string?)x.Value))
                 .Where(x => x.Key.StartsWith("CHANGELOG_", StringComparison.OrdinalIgnoreCase))
-                .ToArray(); 
+                .ToArray();
 
             testOutputHelper.WriteLine("CHANGELOG_ environment variables:");
-            if(changelogEnvironmentVariables.Any())
+            if (changelogEnvironmentVariables.Any())
             {
-                foreach(var (name, value) in changelogEnvironmentVariables)
+                foreach (var (name, value) in changelogEnvironmentVariables)
                 {
                     testOutputHelper.WriteLine($"    {name}: '{value ?? ""}'");
                 }

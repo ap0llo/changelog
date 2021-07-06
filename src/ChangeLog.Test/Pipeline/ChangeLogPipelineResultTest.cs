@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test
+namespace Grynwald.ChangeLog.Test.Pipeline
 {
     /// <summary>
     /// Tests for <see cref="ChangeLogPipelineResult"/>

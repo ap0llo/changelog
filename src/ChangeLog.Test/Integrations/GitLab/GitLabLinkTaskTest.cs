@@ -15,6 +15,7 @@ using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations.GitLab;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
+using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Test.Configuration;
 using Grynwald.ChangeLog.Test.Git;

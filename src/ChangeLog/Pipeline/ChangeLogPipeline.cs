@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.Model;
-using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Grynwald.ChangeLog
+namespace Grynwald.ChangeLog.Pipeline
 {
     public sealed class ChangeLogPipeline
     {

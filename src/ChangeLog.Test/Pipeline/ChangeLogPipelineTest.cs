@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.Model;
-using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test
+namespace Grynwald.ChangeLog.Test.Pipeline
 {
     /// <summary>
     /// Tests for <see cref="ChangeLogPipeline"/>
@@ -72,7 +72,6 @@ namespace Grynwald.ChangeLog.Test
             tasks[1].Verify(x => x.RunAsync(It.IsAny<ApplicationChangeLog>()), Times.Once);
             tasks[2].Verify(x => x.RunAsync(It.IsAny<ApplicationChangeLog>()), Times.Never);
         }
-
 
         [Fact]
         public async Task Run_continues_execution_if_a_task_is_skipped()

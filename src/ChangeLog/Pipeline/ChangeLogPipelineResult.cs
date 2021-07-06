@@ -1,7 +1,7 @@
 ﻿using System;
 using Grynwald.ChangeLog.Model;
 
-namespace Grynwald.ChangeLog
+namespace Grynwald.ChangeLog.Pipeline
 {
     public sealed class ChangeLogPipelineResult
     {

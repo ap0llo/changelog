@@ -2,6 +2,7 @@
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 

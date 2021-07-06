@@ -6,7 +6,7 @@ using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
-using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 using Octokit;
 

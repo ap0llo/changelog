@@ -11,6 +11,7 @@ using Grynwald.ChangeLog.Filtering;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations;
 using Grynwald.ChangeLog.Logging;
+using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.Utilities.Configuration;
