@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CliWrap;
 using CliWrap.Buffered;
 using Xunit.Abstractions;
@@ -33,6 +37,24 @@ namespace Grynwald.ChangeLog.Test
             if (commandId is not null)
             {
                 testOutputHelper.WriteLine($"Command Id: '{commandId}'");
+            }
+
+            var changelogEnvironmentVariables = Environment.GetEnvironmentVariables().Cast<DictionaryEntry>()
+                .Select(x => new KeyValuePair<string, string?>((string)x.Key, (string?)x.Value))
+                .Where(x => x.Key.StartsWith("CHANGELOG_", StringComparison.OrdinalIgnoreCase))
+                .ToArray(); 
+
+            testOutputHelper.WriteLine("CHANGELOG_ environment variables:");
+            if(changelogEnvironmentVariables.Any())
+            {
+                foreach(var (name, value) in changelogEnvironmentVariables)
+                {
+                    testOutputHelper.WriteLine($"    {name}: '{value ?? ""}'");
+                }
+            }
+            else
+            {
+                testOutputHelper.WriteLine("    None");
             }
             testOutputHelper.WriteLine("------------------------------------------------------------");
 
