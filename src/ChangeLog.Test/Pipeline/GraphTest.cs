@@ -175,7 +175,7 @@ namespace Grynwald.ChangeLog.Test.Pipeline
             }
         }
 
-        public class GetAdjacentNodes
+        public class GetOutgoingEdges
         {
             [Fact]
             public void Throws_ArgumentNullException_is_node_is_null()
@@ -184,7 +184,7 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                 var sut = new Graph<object>();
 
                 // ACT 
-                var ex = Record.Exception(() => sut.GetAdjacentNodes(null!));
+                var ex = Record.Exception(() => sut.GetOutgoingEdges(null!));
 
                 // ASSERT
                 var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
@@ -200,7 +200,7 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                 var sut = new Graph<object>();
 
                 // ACT 
-                var ex = Record.Exception(() => sut.GetAdjacentNodes(node));
+                var ex = Record.Exception(() => sut.GetOutgoingEdges(node));
 
                 // ASSERT
                 var argumentNullException = Assert.IsType<ArgumentException>(ex);
@@ -216,14 +216,14 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                 sut.AddNode(node);
 
                 // ACT 
-                var adjacentNodes = sut.GetAdjacentNodes(node);
+                var edges = sut.GetOutgoingEdges(node);
 
                 // ASSERT
-                Assert.Empty(adjacentNodes);
+                Assert.Empty(edges);
             }
 
             [Fact]
-            public void Returns_adjacent_nodes()
+            public void Returns_expected_edges()
             {
                 // ARRANGE
                 var node1 = new object();
@@ -235,14 +235,85 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                 sut.AddEdge(node1, node3);
 
                 // ACT 
-                var adjacentNodes = sut.GetAdjacentNodes(node1);
+                var edges = sut.GetOutgoingEdges(node1);
 
                 // ASSERT
-                Assert.Equal(2, adjacentNodes.Count);
-                Assert.Contains(adjacentNodes, x => x == node2);
-                Assert.Contains(adjacentNodes, x => x == node3);
+                Assert.Equal(2, edges.Count());
+                Assert.All(edges, e => Assert.Equal(node1, e.From));
+                Assert.Contains(edges, e => e.To == node2);
+                Assert.Contains(edges, e => e.To == node3);
             }
         }
 
+
+        public class GetIncomingEdges
+        {
+            [Fact]
+            public void Throws_ArgumentNullException_is_node_is_null()
+            {
+                // ARRANGE
+                var sut = new Graph<object>();
+
+                // ACT 
+                var ex = Record.Exception(() => sut.GetIncomingEdges(null!));
+
+                // ASSERT
+                var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+                Assert.Equal("node", argumentNullException.ParamName);
+            }
+
+            [Fact]
+            public void Throws_ArgumentNullException_if_not_is_not_found()
+            {
+                // ARRANGE
+                var node = new object();
+
+                var sut = new Graph<object>();
+
+                // ACT 
+                var ex = Record.Exception(() => sut.GetIncomingEdges(node));
+
+                // ASSERT
+                var argumentNullException = Assert.IsType<ArgumentException>(ex);
+            }
+
+            [Fact]
+            public void Returns_empty_collection_if_node_has_no_neighbours()
+            {
+                // ARRANGE
+                var node = new object();
+
+                var sut = new Graph<object>();
+                sut.AddNode(node);
+
+                // ACT 
+                var edges = sut.GetIncomingEdges(node);
+
+                // ASSERT
+                Assert.Empty(edges);
+            }
+
+            [Fact]
+            public void Returns_expected_edges()
+            {
+                // ARRANGE
+                var node1 = new object();
+                var node2 = new object();
+                var node3 = new object();
+
+                var sut = new Graph<object>();
+                sut.AddEdge(node2, node1);
+                sut.AddEdge(node3, node1);
+
+                // ACT 
+                var edges = sut.GetIncomingEdges(node1);
+
+                // ASSERT
+                Assert.Equal(2, edges.Count());
+                Assert.All(edges, e => Assert.Equal(node1, e.To));
+                Assert.Contains(edges, e => e.From == node2);
+                Assert.Contains(edges, e => e.From == node3);
+            }
+        }
     }
 }

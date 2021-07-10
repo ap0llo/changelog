@@ -36,35 +36,25 @@ namespace Grynwald.ChangeLog.Pipeline
         }
 
 
-        private readonly Dictionary<T, HashSet<T>> m_Edges = new Dictionary<T, HashSet<T>>();
+        private readonly Dictionary<T, HashSet<Edge>> m_OutgoingEdges = new Dictionary<T, HashSet<Edge>>();
+        private readonly Dictionary<T, HashSet<Edge>> m_IncomingEdges = new Dictionary<T, HashSet<Edge>>();
+        private readonly HashSet<T> m_Nodes = new HashSet<T>();
+        private readonly HashSet<Edge> m_Edges = new HashSet<Edge>();
+
 
         /// <summary>
         /// Gets all the graph's nodes
         /// </summary>
-        public IReadOnlyCollection<T> Nodes { get; }
+        public IReadOnlyCollection<T> Nodes => m_Nodes;
 
         /// <summary>
         /// Gets all the graph's edges
         /// </summary>
-        public IEnumerable<Edge> Edges
-        {
-            get
-            {
-                foreach (var (fromNode, to) in m_Edges)
-                {
-                    foreach (var toNode in to)
-                    {
-                        yield return new(fromNode, toNode);
-                    }
-                }
-            }
-        }
+        public IReadOnlyCollection<Edge> Edges => m_Edges;
 
 
         public Graph()
-        {
-            Nodes = ReadOnlyCollectionAdapter.Create(m_Edges.Keys);
-        }
+        { }
 
 
         /// <summary>
@@ -78,10 +68,11 @@ namespace Grynwald.ChangeLog.Pipeline
             if (node is null)
                 throw new ArgumentNullException(nameof(node));
 
-            if (m_Edges.ContainsKey(node))
+            if (!m_Nodes.Add(node))
                 return false;
 
-            m_Edges.Add(node, new HashSet<T>());
+            m_OutgoingEdges.Add(node, new HashSet<Edge>());
+            m_IncomingEdges.Add(node, new HashSet<Edge>());
             return true;
         }
 
@@ -106,27 +97,44 @@ namespace Grynwald.ChangeLog.Pipeline
             AddNode(from);
             AddNode(to);
 
-            return m_Edges[from].Add(to);
+            var edge = new Edge(from, to);
+
+            m_OutgoingEdges[from].Add(edge);
+            m_IncomingEdges[to].Add(edge);
+            return m_Edges.Add(edge);
         }
 
         /// <summary>
-        /// Gets the adjacent nodes of the specified nodes.
+        /// Gets all edges that start at the specified node
         /// </summary>
-        /// <remarks>
-        /// Gets all the nodes for which an edge from <see cref="node"/> to the node exists.
-        /// </remarks>
         /// <exception cref="ArgumentNullException">Thrown when <see cref="node"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">Thrown when the graph does not contain <see cref="node"/>.</exception>
-        public IReadOnlyCollection<T> GetAdjacentNodes(T node)
+        public IReadOnlyCollection<Edge> GetOutgoingEdges(T node)
         {
             if (node is null)
                 throw new ArgumentNullException(nameof(node));
 
-            if (!m_Edges.ContainsKey(node))
+            if (!m_Nodes.Contains(node))
                 throw new ArgumentException("Specified node was not found in the graph", nameof(node));
 
-            return m_Edges[node];
-
+            return m_OutgoingEdges[node];
         }
+
+        /// <summary>
+        /// Gets all edges that end at the specified node
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when <see cref="node"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">Thrown when the graph does not contain <see cref="node"/>.</exception>
+        public IReadOnlyCollection<Edge> GetIncomingEdges(T node)
+        {
+            if (node is null)
+                throw new ArgumentNullException(nameof(node));
+
+            if (!m_Nodes.Contains(node))
+                throw new ArgumentException("Specified node was not found in the graph", nameof(node));
+
+            return m_IncomingEdges[node];
+        }
+
     }
 }
