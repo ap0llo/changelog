@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Grynwald.Utilities.Collections;
+using System.Linq;
 
 namespace Grynwald.ChangeLog.Pipeline
 {
@@ -101,7 +101,10 @@ namespace Grynwald.ChangeLog.Pipeline
 
             m_OutgoingEdges[from].Add(edge);
             m_IncomingEdges[to].Add(edge);
-            return m_Edges.Add(edge);
+
+            var added = m_Edges.Add(edge);
+
+            return added;
         }
 
         /// <summary>
@@ -136,5 +139,73 @@ namespace Grynwald.ChangeLog.Pipeline
             return m_IncomingEdges[node];
         }
 
+        /// <summary>
+        /// Enumerates the graph's cycles
+        /// </summary>
+        public IEnumerable<IReadOnlyList<T>> GetCycles()
+        {
+            // No need to check for cycles if there aren't any edges
+            if (m_Edges.Count == 0)
+                yield break;
+
+
+            bool CheckForCycles(T currentNode, HashSet<T> allVisitedNodes, Stack<T> currentPath)
+            {
+                allVisitedNodes.Add(currentNode);
+                currentPath.Push(currentNode);
+
+                // Recurse for all outoging edges
+                foreach (var edge in GetOutgoingEdges(currentNode))
+                {
+                    // We reached a node already on the current path => we found a cycle
+                    if (currentPath.Contains(edge.To))
+                    {
+                        // Add the current node to the path, so it the last node is in the path twice
+                        // e.g. node1 -> node2 -> node1
+                        currentPath.Push(edge.To);
+                        return true;
+                    }
+
+                    // check for paths recursively, abort when the first cycle is found
+                    if (CheckForCycles(edge.To, allVisitedNodes, currentPath))
+                        return true;
+                }
+
+                // Remove the current node from the path,
+                // there are no cycles that go through the current node
+                currentPath.Pop();
+                return false;
+            }
+
+
+            // The graph might contain nodes without incoming edges
+            // so we need to consider all nodes as a possible start point for a cycle
+            var startNodes = new HashSet<T>(m_Nodes);
+            while (startNodes.Count > 0)
+            {
+                // Start Searching at the first unprocessed node
+                var currentNode = startNodes.First();
+
+                // The set of all nodes visited when doing a depth-first search starting at 'currentNode' 
+                var visitedNodes = new HashSet<T>();
+
+                // The stack keeps track of the path currently being visited
+                var cycle = new Stack<T>();
+
+                // Visit the graph and search for cycles
+                if (CheckForCycles(currentNode, visitedNodes, cycle))
+                {
+                    // The stack contains the path in reverse order
+                    // => return the reversed stack to the returned cycle is in the order in which the nodes were visited
+                    yield return cycle.Reverse().ToList();
+                }
+
+                // Remove all nodes visited from the set of start nodes
+                // There is no need to start searching for cycles beginning at these nodes again
+                // as they already were visited when starting from 'currentNode'
+                startNodes.ExceptWith(visitedNodes);
+            }
+
+        }
     }
 }

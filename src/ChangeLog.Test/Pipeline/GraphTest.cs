@@ -245,7 +245,6 @@ namespace Grynwald.ChangeLog.Test.Pipeline
             }
         }
 
-
         public class GetIncomingEdges
         {
             [Fact]
@@ -313,6 +312,175 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                 Assert.All(edges, e => Assert.Equal(node1, e.To));
                 Assert.Contains(edges, e => e.From == node2);
                 Assert.Contains(edges, e => e.From == node3);
+            }
+        }
+
+        public class GetCycles
+        {
+            [Fact]
+            public void Returns_empty_enumerable_for_an_empty_graph()
+            {
+                // ARRANGE
+                var sut = new Graph<object>();
+
+                // ACT 
+                var cycles = sut.GetCycles();
+
+                // ASSERT
+                Assert.Empty(cycles);
+            }
+
+            [Fact]
+            public void Returns_empty_enumerable_for_a_graph_without_edges()
+            {
+                // ARRANGE
+                var node1 = new object();
+                var node2 = new object();
+                var sut = new Graph<object>();
+
+                sut.AddNode(node1);
+                sut.AddNode(node2);
+
+                // ACT 
+                var cycles = sut.GetCycles();
+
+                // ASSERT
+                Assert.Empty(cycles);
+            }
+
+            [Fact]
+            public void Returns_empty_enumerable_if_graph_is_acyclic()
+            {
+                // ARRANGE
+                var sut = new Graph<string>();
+
+                sut.AddNode("node1");
+                sut.AddNode("node2");
+                sut.AddNode("node3");
+
+                sut.AddEdge("node1", "node2");
+                sut.AddEdge("node2", "node3");
+                sut.AddEdge("node1", "node3");
+
+                // ACT 
+                var cycles = sut.GetCycles();
+
+                // ASSERT
+                Assert.Empty(cycles);
+            }
+
+
+
+            [Fact]
+            public void Returns_empty_enumerable_if_graph_contains_multiple_acyclic_components()
+            {
+                // ARRANGE
+                var sut = new Graph<string>();
+
+                sut.AddNode("node10");
+                sut.AddNode("node11");
+
+                sut.AddNode("node20");
+                sut.AddNode("node21");
+
+                sut.AddEdge("node10", "node11");
+                sut.AddEdge("node20", "node21");
+
+                // ACT 
+                var cycles = sut.GetCycles();
+
+                // ASSERT
+                Assert.Empty(cycles);
+            }
+
+
+
+            [Fact]
+            public void Returns_expected_cycles_for_a_cyclic_graph()
+            {
+                // ARRANGE
+                var sut = new Graph<string>();
+
+                sut.AddNode("node1");
+                sut.AddNode("node2");
+
+                sut.AddEdge("node1", "node2");
+                sut.AddEdge("node2", "node1");
+
+                // ACT 
+                var cycles = sut.GetCycles();
+
+                // ASSERT
+                var cycle = Assert.Single(cycles);
+                Assert.Collection(
+                    cycle,
+                    x => Assert.Equal("node1", x),
+                    x => Assert.Equal("node2", x),
+                    x => Assert.Equal("node1", x)
+                );
+            }
+
+            [Fact]
+            public void Returns_expected_cycles_if_graph_contains_a_self_loop()
+            {
+                // ARRANGE
+                var sut = new Graph<string>();
+
+                sut.AddNode("node1");
+                sut.AddEdge("node1", "node1");
+
+                // ACT 
+                var cycles = sut.GetCycles();
+
+                // ASSERT
+                var cycle = Assert.Single(cycles);
+                Assert.Collection(
+                     cycle,
+                     x => Assert.Equal("node1", x),
+                     x => Assert.Equal("node1", x)
+                 );
+            }
+            [Fact]
+            public void Returns_expected_cycles_if_graph_contains_multiple_cycles()
+            {
+                // ARRANGE
+                var sut = new Graph<string>();
+
+                sut.AddNode("node1");
+                sut.AddNode("node2");
+                sut.AddNode("node3");
+                sut.AddNode("node4");
+
+                // Cycle1 : node1 -> node2 -> node3 -> node1
+                sut.AddEdge("node1", "node2");
+                sut.AddEdge("node2", "node3");
+                sut.AddEdge("node3", "node1");
+
+                // Cycle2: node4 -> node5 -> node4
+                sut.AddEdge("node4", "node5");
+                sut.AddEdge("node5", "node4");
+
+                // ACT 
+                var cycles = sut.GetCycles();
+
+                // ASSERT
+                Assert.Collection(
+                     cycles,
+                     cycle1 =>
+                        Assert.Collection(
+                            cycle1,
+                            x => Assert.Equal("node1", x),
+                            x => Assert.Equal("node2", x),
+                            x => Assert.Equal("node3", x),
+                            x => Assert.Equal("node1", x)
+                        ),
+                     cycle2 => Assert.Collection(
+                            cycle2,
+                            x => Assert.Equal("node4", x),
+                            x => Assert.Equal("node5", x),
+                            x => Assert.Equal("node4", x)
+                        )
+                 );
             }
         }
     }
