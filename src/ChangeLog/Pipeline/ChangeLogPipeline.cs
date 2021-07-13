@@ -26,21 +26,27 @@ namespace Grynwald.ChangeLog.Pipeline
         public async Task<ChangeLogPipelineResult> RunAsync()
         {
             var changeLog = new ApplicationChangeLog();
-            foreach (var task in m_Tasks)
+            var executedTasks = new List<ChangeLogTaskExecutionResult>();
+            var pendingTasks = new Queue<IChangeLogTask>(m_Tasks);
+
+            while (pendingTasks.Count > 0)
             {
+                var task = pendingTasks.Dequeue();
                 var taskName = task.GetType().Name;
 
                 m_Logger.LogDebug($"Running task '{taskName}'");
                 var result = await task.RunAsync(changeLog);
                 m_Logger.LogDebug($"Task '{taskName}' completed with result '{result}'");
 
+                executedTasks.Add(new ChangeLogTaskExecutionResult(task, result));
+
                 if (result == ChangeLogTaskResult.Error)
                 {
                     m_Logger.LogDebug($"Task '{taskName}' failed, aborting execution of pipeline.");
-                    return ChangeLogPipelineResult.CreateErrorResult();
+                    return ChangeLogPipelineResult.CreateErrorResult(executedTasks, pendingTasks.ToList());
                 }
             }
-            return ChangeLogPipelineResult.CreateSuccessResult(changeLog);
+            return ChangeLogPipelineResult.CreateSuccessResult(executedTasks, Array.Empty<IChangeLogTask>(), changeLog);
         }
     }
 }

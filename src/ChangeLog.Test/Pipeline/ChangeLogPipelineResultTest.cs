@@ -10,35 +10,154 @@ namespace Grynwald.ChangeLog.Test.Pipeline
     /// </summary>
     public class ChangeLogPipelineResultTest
     {
-        [Fact]
-        public void Error_result_throws_InvalidOperationException_when_accessing_the_Value()
+        public class Success
         {
-            // ARRANGE
+            [Fact]
+            public void Is_false_for_error_result()
+            {
+                // ARRANGE
+                var executedTasks = Array.Empty<ChangeLogTaskExecutionResult>();
+                var pendingTasks = Array.Empty<IChangeLogTask>();
+                var errorResult = ChangeLogPipelineResult.CreateErrorResult(executedTasks, pendingTasks);
 
-            // ACT
-            var errorResult = ChangeLogPipelineResult.CreateErrorResult();
+                // ACT
+                var success = errorResult.Success;
 
-            // ASSERT
-            Assert.False(errorResult.Success);
-            Assert.Throws<InvalidOperationException>(() => errorResult.Value);
+                // ASSERT
+                Assert.False(success);
+            }
+
+
+            [Fact]
+            public void Is_true_for_success_result()
+            {
+                // ARRANGE
+                var changeLog = new ApplicationChangeLog();
+                var executedTasks = Array.Empty<ChangeLogTaskExecutionResult>();
+                var pendingTasks = Array.Empty<IChangeLogTask>();
+                var successResult = ChangeLogPipelineResult.CreateSuccessResult(executedTasks, pendingTasks, changeLog);
+
+                // ACT
+                var success = successResult.Success;
+
+                // ASSERT
+                Assert.True(success);
+            }
+
         }
 
-        [Fact]
-        public void Success_result_returns_expected_value()
+        public class Value
         {
-            // ARRANGE
-            var changeLog = new ApplicationChangeLog();
-            var successResult = ChangeLogPipelineResult.CreateSuccessResult(changeLog);
+            [Fact]
+            public void Throws_InvalidOperationException_for_error_result()
+            {
+                // ARRANGE
+                var executedTasks = Array.Empty<ChangeLogTaskExecutionResult>();
+                var pendingTasks = Array.Empty<IChangeLogTask>();
+                var errorResult = ChangeLogPipelineResult.CreateErrorResult(executedTasks, pendingTasks);
 
-            // ACT / ASSERT
-            Assert.True(successResult.Success);
-            Assert.Same(changeLog, successResult.Value);
+                // ACT
+                var ex = Record.Exception(() => errorResult.Value);
+
+                // ASSERT
+                Assert.IsType<InvalidOperationException>(ex);
+            }
+
+            [Fact]
+            public void Returns_value_for_success_result()
+            {
+                // ARRANGE
+                var changeLog = new ApplicationChangeLog();
+                var executedTasks = Array.Empty<ChangeLogTaskExecutionResult>();
+                var pendingTasks = Array.Empty<IChangeLogTask>();
+                var successResult = ChangeLogPipelineResult.CreateSuccessResult(executedTasks, pendingTasks, changeLog);
+
+                // ACT
+                var value = successResult.Value;
+
+                // ASSERT
+                Assert.Same(changeLog, value);
+            }
         }
 
-        [Fact]
-        public void CreateSuccessResult_checks_value_for_null()
+        public class CreateErrorResult
         {
-            Assert.Throws<ArgumentNullException>(() => ChangeLogPipelineResult.CreateSuccessResult(null!));
+            [Fact]
+            public void Checks_executed_tasks_parameter_for_null()
+            {
+                // ARRANGE
+                var pendingTasks = Array.Empty<IChangeLogTask>();
+
+                // ACT 
+                var ex = Record.Exception(() => ChangeLogPipelineResult.CreateErrorResult(null!, pendingTasks));
+
+                // ASSERT
+                var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+                Assert.Equal("executedTasks", argumentNullException.ParamName);
+            }
+
+            [Fact]
+            public void Checks_pending_tasks_parameter_for_null()
+            {
+                // ARRANGE
+                var executedTasks = Array.Empty<ChangeLogTaskExecutionResult>();
+
+                // ACT 
+                var ex = Record.Exception(() => ChangeLogPipelineResult.CreateErrorResult(executedTasks, null!));
+
+                // ASSERT
+                var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+                Assert.Equal("pendingTasks", argumentNullException.ParamName);
+            }
         }
+
+        public class CreateSuccessResult
+        {
+            [Fact]
+            public void Checks_executed_tasks_parameter_for_null()
+            {
+                // ARRANGE
+                var value = new ApplicationChangeLog();
+                var pendingTasks = Array.Empty<IChangeLogTask>();
+
+                // ACT 
+                var ex = Record.Exception(() => ChangeLogPipelineResult.CreateSuccessResult(null!, pendingTasks, value));
+
+                // ASSERT
+                var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+                Assert.Equal("executedTasks", argumentNullException.ParamName);
+            }
+
+            [Fact]
+            public void Checks_pending_tasks_parameter_for_null()
+            {
+                // ARRANGE
+                var value = new ApplicationChangeLog();
+                var executedTasks = Array.Empty<ChangeLogTaskExecutionResult>();
+
+                // ACT 
+                var ex = Record.Exception(() => ChangeLogPipelineResult.CreateSuccessResult(executedTasks, null!, value));
+
+                // ASSERT
+                var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+                Assert.Equal("pendingTasks", argumentNullException.ParamName);
+            }
+
+            [Fact]
+            public void Checks_value_parameter_for_null()
+            {
+                // ARRANGE
+                var executedTasks = Array.Empty<ChangeLogTaskExecutionResult>();
+                var pendingTasks = Array.Empty<IChangeLogTask>();
+
+                // ACT 
+                var ex = Record.Exception(() => ChangeLogPipelineResult.CreateSuccessResult(executedTasks, pendingTasks, null!));
+
+                // ASSERT
+                var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+                Assert.Equal("value", argumentNullException.ParamName);
+            }
+        }
+
     }
 }
