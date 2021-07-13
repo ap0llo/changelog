@@ -33,6 +33,13 @@ namespace Grynwald.ChangeLog.Pipeline
                        From.Equals(other.From) &&
                        To.Equals(other.To);
             }
+
+
+            public void Deconstruct(out T from, out T to)
+            {
+                from = From;
+                to = To;
+            }
         }
 
 

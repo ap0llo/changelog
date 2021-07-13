@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Pipeline
 {
@@ -15,7 +15,13 @@ namespace Grynwald.ChangeLog.Test.Pipeline
     /// </summary>
     public class ChangeLogPipelineTest
     {
-        private readonly ILogger<ChangeLogPipeline> m_Logger = NullLogger<ChangeLogPipeline>.Instance;
+        private readonly ILogger<ChangeLogPipeline> m_Logger;
+
+
+        public ChangeLogPipelineTest(ITestOutputHelper testOutputHelper)
+        {
+            m_Logger = new XunitLogger<ChangeLogPipeline>(testOutputHelper);
+        }
 
 
         [Theory]
@@ -149,5 +155,176 @@ namespace Grynwald.ChangeLog.Test.Pipeline
 
             Assert.Empty(result.PendingTasks);
         }
+
+        private abstract class TestTaskBase : IChangeLogTask
+        {
+            public virtual Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog) => Task.FromResult(ChangeLogTaskResult.Success);
+        }
+
+
+        private class TestTask1 : TestTaskBase
+        {
+        }
+
+        [BeforeTask(typeof(TestTask1))]
+        private class TestTask2 : TestTaskBase
+        {
+        }
+
+        [AfterTask(typeof(TestTask2))]
+        private class TestTask3 : TestTaskBase
+        {
+        }
+
+        private class TestTask4 : TestTaskBase
+        {
+        }
+
+        [Fact]
+        public async Task Run_executes_a_tasks_dependencies_before_running_the_task()
+        {
+            // ARRANGE
+            var task1 = new TestTask1();
+            var task2 = new TestTask2();
+            var task3 = new TestTask3();
+            var task4 = new TestTask4();
+            var sut = new ChangeLogPipeline(m_Logger, new IChangeLogTask[] { task1, task2, task3, task4 });
+
+            // ACT
+            var result = await sut.RunAsync();
+
+            // ASSERT
+            Assert.True(result.Success);
+
+            Assert.Collection(
+                result.ExecutedTasks,
+                executedTask => Assert.Same(task2, executedTask.Task),
+                executedTask => Assert.Same(task1, executedTask.Task),
+                executedTask => Assert.Same(task3, executedTask.Task),
+                executedTask => Assert.Same(task4, executedTask.Task)
+            );
+
+            Assert.Empty(result.PendingTasks);
+        }
+
+
+        [BeforeTask(typeof(TestTask5))]
+        private class TestTask5 : TestTaskBase
+        { }
+
+
+        [Fact]
+        public async Task Run_throws_InvalidPipelineConfigurationException_if_there_are_cyclic_dependencies_between_tasks_01()
+        {
+            // ARRANGE
+            var tasks = new IChangeLogTask[]
+            {
+                new TestTask5()
+            };
+            var sut = new ChangeLogPipeline(m_Logger, tasks);
+
+            // ACT 
+            var ex = await Record.ExceptionAsync(async () => await sut.RunAsync());
+
+            // ASSERT
+            Assert.IsType<InvalidPipelineConfigurationException>(ex);
+            Assert.Equal("Detected circular dependency between tasks: 'TestTask5' -> 'TestTask5'", ex.Message);
+
+        }
+
+        [AfterTask(typeof(TestTask7))]
+        [BeforeTask(typeof(TestTask9))]
+        private class TestTask6 : TestTaskBase
+        { }
+
+        [AfterTask(typeof(TestTask8))]
+        private class TestTask7 : TestTaskBase
+        { }
+
+        [AfterTask(typeof(TestTask9))]
+        private class TestTask8 : TestTaskBase
+        { }
+
+        private class TestTask9 : TestTaskBase
+        { }
+
+        [Fact]
+        public async Task Run_throws_InvalidPipelineConfigurationException_if_there_are_cyclic_dependencies_between_tasks_02()
+        {
+            // ARRANGE
+            var tasks = new IChangeLogTask[]
+            {
+                new TestTask6(),
+                new TestTask7(),
+                new TestTask8(),
+                new TestTask9(),
+            };
+            var sut = new ChangeLogPipeline(m_Logger, tasks);
+
+            // ACT 
+            var ex = await Record.ExceptionAsync(async () => await sut.RunAsync());
+
+            // ASSERT
+            Assert.IsType<InvalidPipelineConfigurationException>(ex);
+            Assert.Equal("Detected circular dependency between tasks: 'TestTask6' -> 'TestTask7' -> 'TestTask8' -> 'TestTask9' -> 'TestTask6'", ex.Message);
+        }
+
+        // TODO 2021-07-13: Pipeline fails if there are circular dependencies (add additional tests)
+
+        private class TestTask10 : TestTaskBase
+        { }
+
+        [AfterTask(typeof(TestTask10))]
+        private class TestTask11 : TestTaskBase
+        { }
+
+        [Fact]
+        public async Task Run_throws_InvalidPipelineConfigurationException_if_there_is_a_dependency_to_task_not_added_to_the_pipeline_01()
+        {
+            // ARRANGE
+            var tasks = new IChangeLogTask[]
+            {
+                new TestTask11(),
+            };
+            var sut = new ChangeLogPipeline(m_Logger, tasks);
+
+            // ACT 
+            var ex = await Record.ExceptionAsync(async () => await sut.RunAsync());
+
+            // ASSERT
+            Assert.IsType<InvalidPipelineConfigurationException>(ex);
+            Assert.Equal("Dependency 'TestTask10' of task 'TestTask11' was not found", ex.Message);
+
+        }
+
+        [BeforeTask(typeof(TestTask13))]
+        private class TestTask12 : TestTaskBase
+        { }
+
+        private class TestTask13 : TestTaskBase
+        { }
+
+
+        [Fact]
+        public async Task Run_throws_InvalidPipelineConfigurationException_if_there_is_a_dependency_to_task_not_added_to_the_pipeline_02()
+        {
+            // ARRANGE
+            var tasks = new IChangeLogTask[]
+            {
+                new TestTask12(),
+            };
+            var sut = new ChangeLogPipeline(m_Logger, tasks);
+
+            // ACT 
+            var ex = await Record.ExceptionAsync(async () => await sut.RunAsync());
+
+            // ASSERT
+            Assert.IsType<InvalidPipelineConfigurationException>(ex);
+            Assert.Equal("Dependent task 'TestTask13' of task 'TestTask12' was not found", ex.Message);
+
+        }
+
+
+        // TODO 2021-07-13: Multiple tasks of the same type
     }
 }
