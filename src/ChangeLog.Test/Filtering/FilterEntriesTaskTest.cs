@@ -4,7 +4,7 @@ using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Filtering;
 using Grynwald.ChangeLog.Model;
-using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
