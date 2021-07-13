@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
@@ -43,6 +44,15 @@ namespace Grynwald.ChangeLog.Test.Pipeline
             Assert.True(result.Success);
             Assert.NotNull(result.Value);
             Assert.All(tasks, task => task.Verify(x => x.RunAsync(It.IsAny<ApplicationChangeLog>()), Times.Once));
+            Assert.Collection(
+                result.ExecutedTasks,
+                tasks.Select<Mock<IChangeLogTask>, Action<ChangeLogTaskExecutionResult>>(taskMock => r =>
+                {
+                    Assert.Same(taskMock.Object, r.Task);
+                    Assert.Equal(ChangeLogTaskResult.Success, r.Result);
+                }).ToArray()
+            );
+            Assert.Empty(result.PendingTasks);
         }
 
         [Fact]
@@ -71,6 +81,25 @@ namespace Grynwald.ChangeLog.Test.Pipeline
             tasks[0].Verify(x => x.RunAsync(It.IsAny<ApplicationChangeLog>()), Times.Once);
             tasks[1].Verify(x => x.RunAsync(It.IsAny<ApplicationChangeLog>()), Times.Once);
             tasks[2].Verify(x => x.RunAsync(It.IsAny<ApplicationChangeLog>()), Times.Never);
+
+            Assert.Collection(
+                result.ExecutedTasks,
+                executedTask =>
+                {
+                    Assert.Same(tasks[0].Object, executedTask.Task);
+                    Assert.Equal(ChangeLogTaskResult.Success, executedTask.Result);
+                },
+                executedTask =>
+                {
+                    Assert.Same(tasks[1].Object, executedTask.Task);
+                    Assert.Equal(ChangeLogTaskResult.Error, executedTask.Result);
+                }
+            );
+
+            Assert.Collection(
+                result.PendingTasks,
+                pendingTask => Assert.Same(tasks[2].Object, pendingTask)
+            );
         }
 
         [Fact]
@@ -98,6 +127,27 @@ namespace Grynwald.ChangeLog.Test.Pipeline
             Assert.True(result.Success);
             Assert.NotNull(result.Value);
             Assert.All(tasks, task => task.Verify(x => x.RunAsync(It.IsAny<ApplicationChangeLog>()), Times.Once));
+
+            Assert.Collection(
+                result.ExecutedTasks,
+                executedTask =>
+                {
+                    Assert.Same(tasks[0].Object, executedTask.Task);
+                    Assert.Equal(ChangeLogTaskResult.Success, executedTask.Result);
+                },
+                executedTask =>
+                {
+                    Assert.Same(tasks[1].Object, executedTask.Task);
+                    Assert.Equal(ChangeLogTaskResult.Skipped, executedTask.Result);
+                },
+                executedTask =>
+                {
+                    Assert.Same(tasks[2].Object, executedTask.Task);
+                    Assert.Equal(ChangeLogTaskResult.Success, executedTask.Result);
+                }
+            );
+
+            Assert.Empty(result.PendingTasks);
         }
     }
 }
