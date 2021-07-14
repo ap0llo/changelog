@@ -2,7 +2,7 @@
 using Autofac;
 using Grynwald.ChangeLog.Tasks;
 
-namespace Grynwald.ChangeLog
+namespace Grynwald.ChangeLog.Pipeline
 {
     internal interface IChangeLogPipelineBuilder
     {

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 using NuGet.Versioning;
 

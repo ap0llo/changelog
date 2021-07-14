@@ -5,6 +5,7 @@ using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Integrations;
 using Grynwald.ChangeLog.Integrations.GitHub;
 using Grynwald.ChangeLog.Integrations.GitLab;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;

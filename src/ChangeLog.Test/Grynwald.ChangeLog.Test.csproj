@@ -1,42 +1,42 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
-    <IsPackable>false</IsPackable>
-    <RootNamespace>Grynwald.ChangeLog.Test</RootNamespace>
-    <AssemblyName>Grynwald.ChangeLog.Test</AssemblyName>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>Grynwald.ChangeLog.Test</RootNamespace>
+        <AssemblyName>Grynwald.ChangeLog.Test</AssemblyName>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ApprovalTests" Version="5.5.0" />
-    <PackageReference Include="CliWrap" Version="3.3.2" />
-    <PackageReference Include="coverlet.collector" Version="3.0.3" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-    <PackageReference Include="Moq" Version="4.16.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
-    <PackageReference Include="Xunit.Combinatorial" Version="1.4.1" />
-    <PackageReference Include="NetArchTest.Rules" Version="1.3.2" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="ApprovalTests" Version="5.5.0" />
+        <PackageReference Include="CliWrap" Version="3.3.2" />
+        <PackageReference Include="coverlet.collector" Version="3.0.3" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+        <PackageReference Include="Moq" Version="4.16.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+        <PackageReference Include="Xunit.Combinatorial" Version="1.4.1" />
+        <PackageReference Include="NetArchTest.Rules" Version="1.3.2" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.10.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ChangeLog\Grynwald.ChangeLog.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ChangeLog\Grynwald.ChangeLog.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="IO\_Resources\**\*.*"/>
-    <EmbeddedResource Include="IO\_Resources\**\*.*" LogicalName="%(RecursiveDir)%(FileName)%(Extension)"/>
-  </ItemGroup>
-    
+    <ItemGroup>
+        <None Remove="IO\_Resources\**\*.*" />
+        <EmbeddedResource Include="IO\_Resources\**\*.*" LogicalName="%(RecursiveDir)%(FileName)%(Extension)" />
+    </ItemGroup>
 
-  <!--
+
+    <!--
     After build, publish the application into the test's output directory.
     This is required for running E2E tests where the application is started as a child processs
   -->
-  <Target Name="PublishApplicationToTestDirectory" AfterTargets="AfterBuild">
-    <MSBuild Projects="..\ChangeLog\Grynwald.ChangeLog.csproj" Targets="Publish" Properties="TargetFramework=$(TargetFramework);Configuration=$(Configuration);PublishDir=$(OutputPath)/Grynwald.ChangeLog" />
-  </Target>
+    <Target Name="PublishApplicationToTestDirectory" AfterTargets="AfterBuild">
+        <MSBuild Projects="..\ChangeLog\Grynwald.ChangeLog.csproj" Targets="Publish" Properties="TargetFramework=$(TargetFramework);Configuration=$(Configuration);PublishDir=$(OutputPath)/Grynwald.ChangeLog" />
+    </Target>
 
 </Project>

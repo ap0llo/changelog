@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 
 namespace Grynwald.ChangeLog.Tasks
 {
