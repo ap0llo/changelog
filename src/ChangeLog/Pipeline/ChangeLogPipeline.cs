@@ -62,9 +62,6 @@ namespace Grynwald.ChangeLog.Pipeline
                 graph.AddNode(task);
             }
 
-            // TODO 2021-07-13: When mapping between tasks and types, should it be an exact match or IsAssignableFrom().
-            // When keeping exact match, add test to ensure all tasks that have a dependency attribute are sealed
-
             // Add all dependencies between graphs as edges to the graph
             foreach (var task in m_Tasks)
             {
@@ -79,6 +76,10 @@ namespace Grynwald.ChangeLog.Pipeline
                 var dependencies = new List<IChangeLogTask>();
                 foreach (var type in dependencyTypes)
                 {
+                    // Evaluation of dependencies only matches the type declared using the [AfterTask] attribute exactly
+                    // and does not consider derived types.
+                    // There is a test in ArchTest.cs that ensure that all tasks referenced using a [AfterTask] attribute
+                    // are sealed. Thus, the simple '==' comparison of the types is sufficient
                     var matchingTasks = m_Tasks.Where(t => t.GetType() == type);
                     if (!matchingTasks.Any())
                     {
@@ -105,6 +106,10 @@ namespace Grynwald.ChangeLog.Pipeline
                 var dependents = new List<IChangeLogTask>();
                 foreach (var type in dependentTypes)
                 {
+                    // Evaluation of dependencies only matches the type declared using the [BeforeTask] attribute exactly
+                    // and does not consider derived types.
+                    // There is a test in ArchTest.cs that ensure that all tasks referenced using a [BeforeTask] attribute
+                    // are sealed. Thus, the simple '==' comparison of the types is sufficient
                     var matchingTasks = m_Tasks.Where(t => t.GetType() == type);
                     if (!matchingTasks.Any())
                     {

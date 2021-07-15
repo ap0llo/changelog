@@ -3,11 +3,11 @@
 namespace Grynwald.ChangeLog.Pipeline
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    internal sealed class AfterTaskAttribute : Attribute
+    internal abstract class TaskDependencyAttribute : Attribute
     {
         public Type TaskType { get; }
 
-        public AfterTaskAttribute(Type taskType)
+        public TaskDependencyAttribute(Type taskType)
         {
             TaskType = taskType ?? throw new ArgumentNullException(nameof(taskType));
         }
