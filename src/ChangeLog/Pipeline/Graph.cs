@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Grynwald.ChangeLog.Pipeline
 {
@@ -213,6 +214,46 @@ namespace Grynwald.ChangeLog.Pipeline
                 startNodes.ExceptWith(visitedNodes);
             }
 
+        }
+
+        /// <summary>
+        /// Returns a representation of the graph in the "dot" format
+        /// </summary>
+        /// <param name="nodeLabeler">Optional function to determine the nodes' label. When value is <c>null</c>, the nodes' <see cref="Object.ToString"/> method is used.</param>
+        public string ToDotGraph(Func<T, string>? nodeLabeler = null)
+        {
+            var dotGraphBuilder = new StringBuilder();
+
+            // Begin Graph
+            dotGraphBuilder.AppendLine("digraph G {");
+
+            // add all nodes to the output
+            var nodeNames = new Dictionary<T, string>();
+            var i = 1;
+            foreach (var node in m_Nodes)
+            {
+                // Assign a name to each node ("node{ID}")
+                var name = $"node{i++}";
+                nodeNames[node] = name;
+
+                // Determine node label
+                var label = nodeLabeler is null ? node.ToString() : nodeLabeler(node);
+
+                // write node and label to output
+                dotGraphBuilder.AppendLine(@$"    {name}[label=""{label}""]");
+            }
+
+            // Add all edges to the output
+            dotGraphBuilder.AppendLine();
+            foreach (var (from, to) in Edges)
+            {
+                dotGraphBuilder.AppendLine(@$"    {nodeNames[from]} -> {nodeNames[to]}");
+            }
+
+            // End graph
+            dotGraphBuilder.AppendLine("}");
+
+            return dotGraphBuilder.ToString();
         }
     }
 }

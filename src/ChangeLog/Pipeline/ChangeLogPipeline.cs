@@ -125,8 +125,7 @@ namespace Grynwald.ChangeLog.Pipeline
                 }
             }
 
-
-            //TODO 2021-07-13: Write graph to log (as DEBUG message)
+            m_Logger.LogDebug($"Task Dependency graph after loading all tasks:{Environment.NewLine}{graph.ToDotGraph(nodeLabeler: GetTaskName)}");
             return graph;
         }
 

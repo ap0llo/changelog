@@ -369,8 +369,6 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                 Assert.Empty(cycles);
             }
 
-
-
             [Fact]
             public void Returns_empty_enumerable_if_graph_contains_multiple_acyclic_components()
             {
@@ -392,8 +390,6 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                 // ASSERT
                 Assert.Empty(cycles);
             }
-
-
 
             [Fact]
             public void Returns_expected_cycles_for_a_cyclic_graph()
@@ -482,6 +478,92 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                         )
                  );
             }
+        }
+
+
+        public class ToDotGraph
+        {
+            [Fact]
+            public void Returns_the_expected_graph()
+            {
+                // ARRANGE
+                var node1 = "First Node";
+                var node2 = "Second Node";
+                var node3 = "Another Node";
+
+                var sut = new Graph<string>();
+                sut.AddNode(node1);
+                sut.AddNode(node2);
+                sut.AddNode(node3);
+                sut.AddEdge(node1, node2);
+                sut.AddEdge(node3, node2);
+
+                // ACT 
+                var dotGraph = sut.ToDotGraph();
+
+                // ASSERT
+                Assert.Equal(
+                    String.Join(Environment.NewLine,
+                        $"digraph G {{",
+                        $"    node1[label=\"{node1}\"]",
+                        $"    node2[label=\"{node2}\"]",
+                        $"    node3[label=\"{node3}\"]",
+                        "",
+                        $"    node1 -> node2",
+                        $"    node3 -> node2",
+                        $"}}",
+                        ""),
+                    dotGraph
+                );
+            }
+
+            [Fact]
+            public void Returns_the_expected_graph_when_node_labeler_is_specified()
+            {
+                // ARRANGE
+                var node1 = new object();
+                var node2 = new object();
+                var node3 = new object();
+
+                string nodeLabeler(object node)
+                {
+                    return node switch
+                    {
+                        object o when o == node1 => "First Node",
+                        object o when o == node2 => "Second Node",
+                        object o when o == node3 => "Another Node",
+                        _ => throw new NotImplementedException()
+                    };
+                }
+
+
+                var sut = new Graph<object>();
+                sut.AddNode(node1);
+                sut.AddNode(node2);
+                sut.AddNode(node3);
+                sut.AddEdge(node1, node2);
+                sut.AddEdge(node3, node2);
+
+                // ACT 
+                var dotGraph = sut.ToDotGraph(nodeLabeler);
+
+                // ASSERT
+                Assert.Equal(
+                    String.Join(Environment.NewLine,
+                        $"digraph G {{",
+                        $"    node1[label=\"First Node\"]",
+                        $"    node2[label=\"Second Node\"]",
+                        $"    node3[label=\"Another Node\"]",
+                        "",
+                        $"    node1 -> node2",
+                        $"    node3 -> node2",
+                        $"}}",
+                        ""),
+                    dotGraph
+                );
+            }
+
+
         }
     }
 }
