@@ -10,6 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
 {
+    [AfterTask(typeof(LoadVersionsFromTagsTask))]
+    [AfterTask(typeof(LoadCurrentVersionTask))]
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class ParseCommitsTask : SynchronousChangeLogTask
     {
         private readonly ILogger<ParseCommitsTask> m_Logger;

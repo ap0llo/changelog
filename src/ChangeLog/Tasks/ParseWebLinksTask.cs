@@ -10,6 +10,8 @@ namespace Grynwald.ChangeLog.Tasks
     /// Detects footer values that are web links.
     /// When a valid url is found, replaces  the footer's value (see <see cref="ChangeLogEntryFooter.Value"/>) with a <see cref="WebLinkTextElement"/>.
     /// </summary>
+    [AfterTask(typeof(ParseCommitsTask))]
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class ParseWebLinksTask : SynchronousChangeLogTask
     {
         protected override ChangeLogTaskResult Run(ApplicationChangeLog changelog)

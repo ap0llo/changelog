@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
 {
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class ResolveEntryReferencesTask : SynchronousChangeLogTask
     {
         private readonly ILogger<ResolveEntryReferencesTask> m_Logger;

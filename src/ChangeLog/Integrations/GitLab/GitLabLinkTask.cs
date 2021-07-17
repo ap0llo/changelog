@@ -10,10 +10,15 @@ using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Pipeline;
+using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Integrations.GitLab
 {
+    [BeforeTask(typeof(RenderTemplateTask))]
+    [AfterTask(typeof(ParseCommitsTask))]
+    // AddCommitFooterTask must run before eGitHubLinkTask so a web link can be added to the "Commit" footer
+    [AfterTask(typeof(AddCommitFooterTask))]
     internal sealed class GitLabLinkTask : IChangeLogTask
     {
         private readonly ILogger<GitLabLinkTask> m_Logger;

@@ -136,8 +136,6 @@ namespace Grynwald.ChangeLog
                         return 1;
                     }
 
-                    // Note: The order of the tasks added here is important.
-                    // E.g. In order for commits for versions loaded correctly, ParseCommitsTask needs to run before FilterVersionsTask
                     var pipeline = new ChangeLogPipelineBuilder(container)
                         .AddTask<LoadCurrentVersionTask>()
                         .AddTask<LoadVersionsFromTagsTask>()
@@ -146,12 +144,7 @@ namespace Grynwald.ChangeLog
                         .AddTask<ParseWebLinksTask>()
                         .AddTask<FilterVersionsTask>()
                         .AddTask<FilterEntriesTask>()
-                        // ResolveEntryReferencesTask must run *after* filtering
-                        // in order to avoid resolving references to entries being filtered out
                         .AddTask<ResolveEntryReferencesTask>()
-                        // AddCommitFooterTask must run before the integration provider tasks
-                        // because the GitHub and GitLab integrations are supposed to add a web link
-                        // to the "Commit" footer
                         .AddTask<AddCommitFooterTask>()
                         .AddIntegrationTasks()
                         .AddTask<RenderTemplateTask>()

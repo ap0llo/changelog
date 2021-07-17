@@ -8,6 +8,7 @@ using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Tasks
 {
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class LoadCurrentVersionTask : SynchronousChangeLogTask
     {
         private readonly ILogger<LoadCurrentVersionTask> m_Logger;
