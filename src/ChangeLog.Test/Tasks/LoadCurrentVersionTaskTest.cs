@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
@@ -26,6 +27,46 @@ namespace Grynwald.ChangeLog.Test.Tasks
             m_RepositoryMock = new Mock<IGitRepository>(MockBehavior.Strict);
         }
 
+
+        [Fact]
+        public void Logger_must_not_be_null()
+        {
+            // ARRANGE
+            var config = new ChangeLogConfiguration();
+
+            // ACT 
+            var ex = Record.Exception(() => new LoadCurrentVersionTask(logger: null!, configuration: config, repository: m_RepositoryMock.Object));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("logger", argumentNullException.ParamName);
+        }
+
+        [Fact]
+        public void Configuration_must_not_be_null()
+        {
+            // ARRANGE
+
+            // ACT 
+            var ex = Record.Exception(() => new LoadCurrentVersionTask(logger: m_Logger, configuration: null!, repository: m_RepositoryMock.Object));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("configuration", argumentNullException.ParamName);
+        }
+
+        [Fact]
+        public void Repository_must_not_be_null()
+        {
+            // ARRANGE
+            var config = new ChangeLogConfiguration();
+            // ACT 
+            var ex = Record.Exception(() => new LoadCurrentVersionTask(logger: m_Logger, configuration: config, repository: null!));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("repository", argumentNullException.ParamName);
+        }
 
         [Theory]
         [InlineData("")]
@@ -101,5 +142,32 @@ namespace Grynwald.ChangeLog.Test.Tasks
             Assert.Equal(NuGetVersion.Parse("1.2.3"), addedVersion.Version);
             Assert.Equal(head.Id, addedVersion.Commit);
         }
+
+        [Fact]
+        public async Task Run_fails_if_the_current_version_already_exists_in_the_change_log()
+        {
+            // ARRANGE
+            var config = new ChangeLogConfiguration()
+            {
+                CurrentVersion = "1.2.3"
+            };
+
+            var head = GetGitCommit(id: TestGitIds.Id1);
+            m_RepositoryMock.Setup(x => x.Head).Returns(head);
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(version: "1.2.3")
+            };
+
+            var sut = new LoadCurrentVersionTask(m_Logger, config, m_RepositoryMock.Object);
+
+            // ACT 
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Error, result);
+        }
+
     }
 }
