@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Grynwald.ChangeLog.Pipeline;
 using NetArchTest.Rules;
 using Xunit;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Grynwald.ChangeLog
@@ -26,8 +28,8 @@ namespace Grynwald.ChangeLog
                 if (!result.IsSuccessful)
                 {
                     throw new XunitException(
-                        "The following types should be sealed: \r\n" +
-                        String.Join("\r\n", result.FailingTypeNames.Select(x => $" - {x}")));
+                        $"The following types should be sealed:{Environment.NewLine}" +
+                        String.Join(Environment.NewLine, result.FailingTypeNames.Select(x => $" - {x}")));
                 }
             }
         }
@@ -35,6 +37,13 @@ namespace Grynwald.ChangeLog
 
         public class Implementation_of_IChangeLogTask
         {
+            private readonly ITestOutputHelper m_TestOutputHelper;
+
+            public Implementation_of_IChangeLogTask(ITestOutputHelper testOutputHelper)
+            {
+                m_TestOutputHelper = testOutputHelper ?? throw new ArgumentNullException(nameof(testOutputHelper));
+            }
+
             [Theory]
             [InlineData(typeof(AfterTaskAttribute))]
             [InlineData(typeof(BeforeTaskAttribute))]
@@ -52,8 +61,29 @@ namespace Grynwald.ChangeLog
                 if (invalidTypes.Any())
                 {
                     throw new XunitException(
-                        $"The following types have a [{attributeType.Name.RemoveSuffix("Attribute")}] attribute but do not implement IChangeLogTask: \r\n" +
-                        String.Join("\r\n", invalidTypes.Select(x => $" - {x.Name}")));
+                        $"The following types have a [{attributeType.Name.RemoveSuffix("Attribute")}] attribute but do not implement IChangeLogTask:{Environment.NewLine}" +
+                        String.Join(Environment.NewLine, invalidTypes.Select(x => $" - {x.Name}")));
+                }
+            }
+
+            [Theory]
+            [InlineData(typeof(AfterTaskAttribute))]
+            [InlineData(typeof(BeforeTaskAttribute))]
+            public void Classes_with_a_task_dependency_attribute_should_be_sealed(Type attributeType)
+            {
+                // [AfterTask] and [BeforeTask] attributes are not inherited, so
+                // they must not only be applied to classes without derived types
+
+                var result = Types.InAssembly(typeof(Program).Assembly)
+                    .That().HaveCustomAttribute(attributeType)
+                    .Should().BeSealed()
+                    .GetResult();
+
+                if (!result.IsSuccessful)
+                {
+                    throw new XunitException(
+                        $"The following types have a [{attributeType.Name.RemoveSuffix("Attribute")}] attribute but are abstract:{Environment.NewLine}" +
+                        String.Join(Environment.NewLine, result.FailingTypeNames.Select(x => $" - {x}")));
                 }
             }
 
@@ -79,8 +109,8 @@ namespace Grynwald.ChangeLog
                 if (invalidDependencies.Any())
                 {
                     throw new XunitException(
-                        $"The following task dependency attributes are invalid because the defined dependency does not implement IChangeLogTask: \r\n" +
-                        String.Join("\r\n", invalidDependencies.Select(x => $" - [{attributeType.Name.RemoveSuffix("Attribute")}({x.DependencyType})] on {x.DeclaringType}")));
+                        $"The following task dependency attributes are invalid because the defined dependency does not implement IChangeLogTask:{Environment.NewLine}" +
+                        String.Join(Environment.NewLine, invalidDependencies.Select(x => $" - [{attributeType.Name.RemoveSuffix("Attribute")}({x.DependencyType})] on {x.DeclaringType}")));
                 }
 
             }
@@ -110,8 +140,56 @@ namespace Grynwald.ChangeLog
                 if (invalidDependencies.Any())
                 {
                     throw new XunitException(
-                        $"The following tasks are referenced using a [{attributeType.Name.RemoveSuffix("Attribute")}] attribute and should thus be sealed: \r\n" +
-                        String.Join("\r\n", invalidDependencies.Select(x => $" - {x}")));
+                        $"The following tasks are referenced using a [{attributeType.Name.RemoveSuffix("Attribute")}] attribute and should thus be sealed:{Environment.NewLine}" +
+                        String.Join(Environment.NewLine, invalidDependencies.Select(x => $" - {x}")));
+                }
+
+            }
+
+            [Fact]
+            public void There_are_no_cyclic_dependencies_between_tasks()
+            {
+                // Check for implementation of the IChangeLogTask interface through reflection
+                // because NetArchTest's Should().ImplementInterface() only seems to work if a type
+                // implements the interface directory and not for cases where
+                // the base class implements the interface
+                var taskTypes = Types.InAssembly(typeof(Program).Assembly)
+                    .That().AreNotAbstract().And().AreNotInterfaces()
+                    .GetTypes()
+                    .Where(t => typeof(IChangeLogTask).IsAssignableFrom(t))
+                    .ToArray();
+
+                var dependencyGraph = new Graph<Type>();
+
+                foreach (var taskType in taskTypes)
+                {
+                    dependencyGraph.AddNode(taskType);
+
+                    var dependencies = taskType.GetCustomAttributes<AfterTaskAttribute>().Select(x => x.TaskType);
+                    foreach (var dependency in dependencies)
+                    {
+                        dependencyGraph.AddEdge(taskType, dependency);
+                    }
+
+                    var dependents = taskType.GetCustomAttributes<BeforeTaskAttribute>().Select(x => x.TaskType);
+                    foreach (var dependent in dependents)
+                    {
+                        dependencyGraph.AddEdge(dependent, taskType);
+                    }
+                }
+
+                m_TestOutputHelper.WriteLine(
+                    $"Task dependency graph:{Environment.NewLine}" +
+                    dependencyGraph.ToDotGraph(nodeLabeler: type => type.Name)
+                );
+
+                var firstCycle = dependencyGraph.GetCycles().FirstOrDefault();
+
+                if (firstCycle is not null)
+                {
+                    throw new XunitException(
+                        $"Detected dependency cycle between tasks: {String.Join(" -> ", firstCycle.Select(x => x.Name))}"
+                    );
                 }
 
             }
