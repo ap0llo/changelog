@@ -16,11 +16,9 @@ using Grynwald.ChangeLog.Integrations.GitLab;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Pipeline;
-using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Test.Configuration;
 using Grynwald.ChangeLog.Test.Git;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 using Xunit.Abstractions;
@@ -86,19 +84,23 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             public override string ToString() => Description;
         }
 
-        private readonly ILogger<GitLabLinkTask> m_Logger = NullLogger<GitLabLinkTask>.Instance;
-        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+        private readonly ILogger<GitLabLinkTask> m_Logger;
+        private readonly ChangeLogConfiguration m_DefaultConfiguration;
         private readonly Mock<IGitLabClientFactory> m_ClientFactoryMock;
         private readonly GitLabClientMock m_ClientMock;
         private readonly Mock<IGitRepository> m_RepositoryMock;
 
-        public GitLabLinkTaskTest()
+
+        public GitLabLinkTaskTest(ITestOutputHelper testOutputHelper)
         {
-            m_ClientMock = new();
+            m_Logger = new XunitLogger<GitLabLinkTask>(testOutputHelper);
+            m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             m_ClientFactoryMock = new(MockBehavior.Strict);
+            m_ClientMock = new();
             m_ClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(m_ClientMock.Object);
             m_RepositoryMock = new Mock<IGitRepository>(MockBehavior.Strict);
         }
+
 
         private ProjectId MatchProjectId(string expected)
         {

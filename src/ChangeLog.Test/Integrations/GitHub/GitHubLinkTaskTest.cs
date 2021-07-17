@@ -12,7 +12,6 @@ using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Test.Configuration;
 using Grynwald.ChangeLog.Test.Git;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Octokit;
 using Xunit;
@@ -80,13 +79,17 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             public override string ToString() => Description;
         }
 
-        private readonly ILogger<GitHubLinkTask> m_Logger = NullLogger<GitHubLinkTask>.Instance;
-        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+        private readonly ILogger<GitHubLinkTask> m_Logger;
+        private readonly ChangeLogConfiguration m_DefaultConfiguration;
         private readonly GitHubClientMock m_GithubClientMock;
         private readonly Mock<IGitHubClientFactory> m_GitHubClientFactoryMock;
 
-        public GitHubLinkTaskTest()
+        public GitHubLinkTaskTest(ITestOutputHelper testOutputHelper)
         {
+            m_Logger = new XunitLogger<GitHubLinkTask>(testOutputHelper);
+
+            m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
             m_GithubClientMock = new();
 
             m_GitHubClientFactoryMock = new(MockBehavior.Strict);

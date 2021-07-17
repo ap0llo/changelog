@@ -6,10 +6,10 @@ using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NuGet.Versioning;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
@@ -18,7 +18,14 @@ namespace Grynwald.ChangeLog.Test.Tasks
     /// </summary>
     public class LoadVersionsFromTagsTaskTest
     {
-        private readonly ILogger<LoadVersionsFromTagsTask> m_Logger = NullLogger<LoadVersionsFromTagsTask>.Instance;
+        private readonly ILogger<LoadVersionsFromTagsTask> m_Logger;
+
+
+        public LoadVersionsFromTagsTaskTest(ITestOutputHelper testOutputHelper)
+        {
+            m_Logger = new XunitLogger<LoadVersionsFromTagsTask>(testOutputHelper);
+        }
+
 
         [Fact]
         public async Task Run_adds_versions_from_tags()

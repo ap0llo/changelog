@@ -7,9 +7,9 @@ using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.Utilities.IO;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
@@ -18,7 +18,13 @@ namespace Grynwald.ChangeLog.Test.Tasks
     /// </summary>
     public class RenderTemplateTaskTest
     {
-        private readonly ILogger<RenderTemplateTask> m_Logger = NullLogger<RenderTemplateTask>.Instance;
+        private readonly ILogger<RenderTemplateTask> m_Logger;
+
+
+        public RenderTemplateTaskTest(ITestOutputHelper testOutputHelper)
+        {
+            m_Logger = new XunitLogger<RenderTemplateTask>(testOutputHelper);
+        }
 
 
         [Fact]

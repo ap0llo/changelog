@@ -7,9 +7,9 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
@@ -19,10 +19,12 @@ namespace Grynwald.ChangeLog.Test.Tasks
     public class ParseCommitReferencesTaskTest
     {
         private readonly Mock<IGitRepository> m_GitRepositoryMock;
-        private readonly ILogger<ParseCommitReferencesTask> m_Logger = NullLogger<ParseCommitReferencesTask>.Instance;
+        private readonly ILogger<ParseCommitReferencesTask> m_Logger;
 
-        public ParseCommitReferencesTaskTest()
+
+        public ParseCommitReferencesTaskTest(ITestOutputHelper testOutputHelper)
         {
+            m_Logger = new XunitLogger<ParseCommitReferencesTask>(testOutputHelper);
             m_GitRepositoryMock = new Mock<IGitRepository>(MockBehavior.Strict);
         }
 

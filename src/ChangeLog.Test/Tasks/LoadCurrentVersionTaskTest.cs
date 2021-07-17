@@ -6,10 +6,10 @@ using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using NuGet.Versioning;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
@@ -21,9 +21,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
         private readonly ILogger<LoadCurrentVersionTask> m_Logger;
         private readonly Mock<IGitRepository> m_RepositoryMock;
 
-        public LoadCurrentVersionTaskTest()
+
+        public LoadCurrentVersionTaskTest(ITestOutputHelper testOutputHelper)
         {
-            m_Logger = NullLogger<LoadCurrentVersionTask>.Instance;
+            m_Logger = new XunitLogger<LoadCurrentVersionTask>(testOutputHelper);
             m_RepositoryMock = new Mock<IGitRepository>(MockBehavior.Strict);
         }
 

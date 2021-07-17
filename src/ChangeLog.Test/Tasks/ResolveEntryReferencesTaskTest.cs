@@ -6,8 +6,8 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
@@ -16,7 +16,13 @@ namespace Grynwald.ChangeLog.Test.Tasks
     /// </summary>
     public class ResolveEntryReferencesTaskTest
     {
-        private readonly ILogger<ResolveEntryReferencesTask> m_Logger = NullLogger<ResolveEntryReferencesTask>.Instance;
+        private readonly ILogger<ResolveEntryReferencesTask> m_Logger;
+
+
+        public ResolveEntryReferencesTaskTest(ITestOutputHelper testOutputHelper)
+        {
+            m_Logger = new XunitLogger<ResolveEntryReferencesTask>(testOutputHelper);
+        }
 
 
         [Fact]

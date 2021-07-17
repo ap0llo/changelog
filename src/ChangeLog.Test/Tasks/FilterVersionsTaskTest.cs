@@ -5,8 +5,8 @@ using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
@@ -15,7 +15,14 @@ namespace Grynwald.ChangeLog.Test.Tasks
     /// </summary>
     public class FilterVersionsTaskTest : TestBase
     {
-        private readonly ILogger<FilterVersionsTask> m_Logger = NullLogger<FilterVersionsTask>.Instance;
+        private readonly ILogger<FilterVersionsTask> m_Logger;
+
+
+        public FilterVersionsTaskTest(ITestOutputHelper testOutputHelper)
+        {
+            m_Logger = new XunitLogger<FilterVersionsTask>(testOutputHelper);
+        }
+
 
         [Theory]
         [InlineData("")]

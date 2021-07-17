@@ -8,9 +8,9 @@ using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test.Tasks
 {
@@ -19,8 +19,16 @@ namespace Grynwald.ChangeLog.Test.Tasks
     /// </summary>
     public class ParseCommitsTaskTest : TestBase
     {
-        private readonly ILogger<ParseCommitsTask> m_Logger = NullLogger<ParseCommitsTask>.Instance;
-        private readonly ChangeLogConfiguration m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+        private readonly ILogger<ParseCommitsTask> m_Logger;
+        private readonly ChangeLogConfiguration m_DefaultConfiguration;
+
+
+        public ParseCommitsTaskTest(ITestOutputHelper testOutputHelper)
+        {
+            m_Logger = new XunitLogger<ParseCommitsTask>(testOutputHelper);
+            m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+        }
+
 
         [Fact]
         public async Task Run_does_nothing_for_empty_changelog()

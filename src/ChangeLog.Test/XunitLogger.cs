@@ -4,7 +4,6 @@ using Xunit.Abstractions;
 
 namespace Grynwald.ChangeLog.Test
 {
-    //TODO 2021-07-13: Use XunitLogger instead of NullLogger in all tests
     public class XunitLogger : ILogger
     {
         private readonly ITestOutputHelper m_TestOutputHelper;
