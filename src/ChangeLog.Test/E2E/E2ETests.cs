@@ -14,6 +14,10 @@ namespace Grynwald.ChangeLog.Test.E2E
     /// <summary>
     /// End-to-End tests that run "changelog" as a separate process on a real (created for the test) git repository
     /// </summary>
+    // This test class launches changelog as a child process which inherits the test process' environment variables
+    // To avoid the test from inheriting environment variables it shouldn't, add it to the test "EnvironmentVariable"
+    // test collections to prevent the tests from running in parallel with test that modify environment variables
+    [Collection(nameof(EnvironmentVariableCollection))]
     public class E2ETests
     {
         private readonly ITestOutputHelper m_TestOutputHelper;

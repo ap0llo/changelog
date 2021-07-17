@@ -17,30 +17,28 @@ namespace Grynwald.ChangeLog.Test.Configuration
     /// <summary>
     /// Tests for <see cref="ChangeLogConfigurationLoader"/>.
     /// </summary>
+    [Collection(nameof(EnvironmentVariableCollection))]
     public class ChangeLogConfigurationLoaderTest : IDisposable
     {
         private readonly TemporaryDirectory m_ConfigurationDirectory = new TemporaryDirectory();
         private readonly string m_ConfigurationFilePath;
+        private readonly EnvironmentVariableFixture m_EnvironmentVariables;
 
-        public ChangeLogConfigurationLoaderTest()
+
+        public ChangeLogConfigurationLoaderTest(EnvironmentVariableFixture environmentVariables)
         {
+            m_EnvironmentVariables = environmentVariables ?? throw new ArgumentNullException(nameof(environmentVariables));
             m_ConfigurationFilePath = Path.Combine(m_ConfigurationDirectory, "changelog.settings.json");
-
-            // clear environment variables (might be set by previous test runs)
-            var envVars = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
-            foreach (var key in envVars.Keys.Cast<string>().Where(x => x?.StartsWith("CHANGELOG__") == true))
-            {
-                Environment.SetEnvironmentVariable(key!, null, EnvironmentVariableTarget.Process);
-            }
         }
+
 
         public void Dispose() => m_ConfigurationDirectory.Dispose();
 
 
-        private void SetConfigEnvironmentVariable(string configKey, string? value)
+        private IDisposable SetConfigEnvironmentVariable(string configKey, string? value)
         {
             var variableName = "CHANGELOG__" + configKey.Replace(":", "__");
-            Environment.SetEnvironmentVariable(variableName, value, EnvironmentVariableTarget.Process);
+            return m_EnvironmentVariables.SetEnvironmentVariable(variableName, value);
         }
 
         private void PrepareConfiguration(string key, object value)
@@ -325,7 +323,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         {
             // ARRANGE
             PrepareConfiguration("currentVersion", "1.2.3");
-            SetConfigEnvironmentVariable("currentVersion", "4.5.6");
+            using var modifiedEnvironment = SetConfigEnvironmentVariable("currentVersion", "4.5.6");
 
             // ACT
             var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
@@ -364,7 +362,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         public void Value_from_settings_object_overrides_value_from_environment_variables()
         {
             // ARRANGE
-            SetConfigEnvironmentVariable("currentVersion", "1.2.3");
+            using var modifiedEnvironment = SetConfigEnvironmentVariable("currentVersion", "1.2.3");
 
             var settingsObject = new TestSettingsClass()
             {
@@ -383,7 +381,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
         public void Value_from_settings_object_overrides_values_from_configuration_file_and_environment_variables()
         {
             // ARRANGE
-            SetConfigEnvironmentVariable("currentVersion", "1.2.3");
+            using var modifiedEnvironment = SetConfigEnvironmentVariable("currentVersion", "1.2.3");
             PrepareConfiguration("currentVersion", "4.5.6");
 
             var settingsObject = new TestSettingsClass()
@@ -753,7 +751,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Action<ChangeLogConfiguration>? assert)
         {
             // ARRANGE
-            SetConfigEnvironmentVariable(key, expectedValue?.ToString());
+            using var modifiedEnvironment = SetConfigEnvironmentVariable(key, expectedValue?.ToString());
 
             // ACT 
             var config = ChangeLogConfigurationLoader.GetConfiguration(m_ConfigurationFilePath);
