@@ -151,6 +151,7 @@ jobs:
         Write-Host "##vso[artifact.upload artifactname=TestResults]$($trxFile.FullName)"
       }
     displayName: Publish test results
+    condition: succeededOrFailed()
 
   # The PublishCodeCoverageResults task only supports publishing a single coverage result file,
   # so the results are merged into a single cobertura file using "ReportGenerator"
