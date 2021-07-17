@@ -141,17 +141,9 @@ namespace Grynwald.ChangeLog.Configuration
         {
             var outputStream = new MemoryStream();
 
-#if NETCOREAPP2_1
-            // On .NET Core 2.1, a encoding and buffer size MUST be required.
-            // UTF-8 without BOM and 1024 are the default values used by StreamWriter
-            // (see https://source.dot.net/#System.Private.CoreLib/StreamWriter.cs,74)
-            var encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
-            using (var streamWriter = new StreamWriter(outputStream, encoding, 1024, leaveOpen: true))
-#else
-            // On .NET Core 3.1 (and presumably later), we can just set encoding and buffer size to null/-1
+            // On .NET Core 3.1 (and later), we can just set encoding and buffer size to null/-1
             // and StreamWriter will use the default values without the need to hard-code them here.
             using (var streamWriter = new StreamWriter(outputStream, null, -1, leaveOpen: true))
-#endif
             using (var writer = new JsonTextWriter(streamWriter))
             {
                 json.WriteTo(writer);

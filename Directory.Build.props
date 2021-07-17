@@ -38,13 +38,6 @@
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
 	</ItemGroup>
 
-
-	<!-- Disable nullable support on .NET Core 2.1 -->
-	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
-		<Nullable>disable</Nullable>
-		<NoWarn>8632</NoWarn>  <!-- Suppress warning about nullable annotation in the source code although nullable is disabled-->
-	</PropertyGroup>
-
 	<!--NuGet package properties -->
 	<PropertyGroup>
 		<Authors>Andreas Gruenwald</Authors>

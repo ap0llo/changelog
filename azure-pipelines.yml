@@ -68,12 +68,7 @@ jobs:
       packageType: sdk
       useGlobalJson: true
 
-  # Also install older .NET runtimes (because tests are run for each supported runtime)
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core 2.1 runtime'
-    inputs:
-      packageType: runtime
-      version: 2.1.x
+  # Also install .NET Core 3.1 runtime (because tests are run for each supported runtime)
   - task: UseDotNet@2
     displayName: 'Install .NET Core 3.1 runtime'
     inputs:
