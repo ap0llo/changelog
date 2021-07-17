@@ -29,14 +29,38 @@ namespace Grynwald.ChangeLog.Test.Tasks
             m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
         }
 
+        [Fact]
+        public void Logger_must_not_be_null()
+        {
+            // ARRANGE
+
+            // ACT 
+            var ex = Record.Exception(() => new ParseCommitsTask(logger: null!, configuration: m_DefaultConfiguration));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("logger", argumentNullException.ParamName);
+        }
+
+        [Fact]
+        public void Configuration_must_not_be_null()
+        {
+            // ARRANGE
+
+            // ACT 
+            var ex = Record.Exception(() => new ParseCommitsTask(logger: m_Logger, configuration: null!));
+
+            // ASSERT
+            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
+            Assert.Equal("configuration", argumentNullException.ParamName);
+        }
+
 
         [Fact]
         public async Task Run_does_nothing_for_empty_changelog()
         {
-            // ARRANGE
-            var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
-
-            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo);
+            // ARRANGE            
+            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration);
 
             // ACT
             var changelog = new ApplicationChangeLog();
@@ -49,19 +73,13 @@ namespace Grynwald.ChangeLog.Test.Tasks
         [Fact]
         public async Task Run_adds_all_parsable_changes_if_no_previous_version_exists()
         {
-            // ARRANGE
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            repo
-                .Setup(x => x.GetCommits(null, It.IsAny<GitId>()))
-                .Returns(new[]
-                {
-                    GetGitCommit(TestGitIds.Id1, "feat: Some new feature"),
-                    GetGitCommit(TestGitIds.Id2, "fix: Some bugfix")
-                });
-
-            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
+            // ARRANGE                        
+            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
+            versionChangeLog.Add(GetGitCommit(TestGitIds.Id1, "feat: Some new feature"));
+            versionChangeLog.Add(GetGitCommit(TestGitIds.Id2, "fix: Some bugfix"));
+
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
@@ -69,8 +87,6 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
-
-            repo.Verify(x => x.GetCommits(It.IsAny<GitId?>(), It.IsAny<GitId>()), Times.Once);
 
             Assert.NotNull(versionChangeLog.AllEntries);
             Assert.Equal(2, versionChangeLog.AllEntries.Count());
@@ -97,23 +113,14 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Run_adds_the_expected_entries_if_a_previous_version_exists()
         {
             // ARRANGE
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            repo
-                .Setup(x => x.GetCommits(null, TestGitIds.Id1))
-                .Returns(Array.Empty<GitCommit>());
-
-            repo
-                .Setup(x => x.GetCommits(TestGitIds.Id1, TestGitIds.Id2))
-                .Returns(new[]
-                {
-                    GetGitCommit(TestGitIds.Id1, "feat: Some new feature" ),
-                    GetGitCommit(TestGitIds.Id2, "fix: Some bugfix" ),
-                });
-
-            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration);
 
             var versionChangeLog1 = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
+
             var versionChangeLog2 = GetSingleVersionChangeLog("2.4.5", TestGitIds.Id2);
+            versionChangeLog2.Add(GetGitCommit(TestGitIds.Id1, "feat: Some new feature"));
+            versionChangeLog2.Add(GetGitCommit(TestGitIds.Id2, "fix: Some bugfix"));
+
             var changelog = new ApplicationChangeLog()
             {
                 versionChangeLog1, versionChangeLog2
@@ -124,9 +131,6 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
-
-            repo.Verify(x => x.GetCommits(null, It.IsAny<GitId>()), Times.Once);
-            repo.Verify(x => x.GetCommits(It.IsAny<GitId>(), It.IsAny<GitId>()), Times.Once);
 
             Assert.NotNull(versionChangeLog1.AllEntries);
             Assert.Empty(versionChangeLog1.AllEntries);
@@ -155,18 +159,11 @@ namespace Grynwald.ChangeLog.Test.Tasks
         [Fact]
         public async Task Run_ignores_unparsable_commit_messages()
         {
-            // ARRANGE
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            repo
-                .Setup(x => x.GetCommits(null, It.IsAny<GitId>()))
-                .Returns(new[]
-                {
-                    GetGitCommit(commitMessage: "Not a conventional commit"),
-                });
-
-            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
+            // ARRANGE            
+            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
+            versionChangeLog.Add(GetGitCommit(commitMessage: "Not a conventional commit"));
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
@@ -185,18 +182,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Parser.Mode = ChangeLogConfiguration.ParserMode.Loose;
 
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            repo
-                .Setup(x => x.GetCommits(null, It.IsAny<GitId>()))
-                .Returns(new[]
-                {
-                    // commit message is only parsable in "Loose" mode
-                    GetGitCommit(commitMessage: "feat: Some Description\r\n" + "\r\n" + "\r\n" +  "Message Body\r\n"),
-                });
-
-            var sut = new ParseCommitsTask(m_Logger, config, repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, config);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
+            versionChangeLog.Add(GetGitCommit(commitMessage: "feat: Some Description\r\n" + "\r\n" + "\r\n" + "Message Body\r\n"));
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
@@ -215,18 +204,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Parser.Mode = ChangeLogConfiguration.ParserMode.Strict;
 
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            repo
-                .Setup(x => x.GetCommits(null, It.IsAny<GitId>()))
-                .Returns(new[]
-                {
-                    // commit message is only parsable in "Loose" mode
-                    GetGitCommit(commitMessage: "feat: Some Description\r\n" + "\r\n" + "\r\n" +  "Message Body\r\n"),
-                });
-
-            var sut = new ParseCommitsTask(m_Logger, config, repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, config);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
+            versionChangeLog.Add(GetGitCommit(commitMessage: "feat: Some Description\r\n" + "\r\n" + "\r\n" + "Message Body\r\n"));
             var changelog = new ApplicationChangeLog() { versionChangeLog };
 
             // ACT
