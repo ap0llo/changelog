@@ -130,11 +130,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         /// <param name="kind"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-#if NETCOREAPP2_1
-        protected bool TestAndMatchToken(TTokenKind kind, [NotNullWhen(true)]out TToken token)
-#else
         protected bool TestAndMatchToken(TTokenKind kind, [NotNullWhen(true)] out TToken? token)
-#endif
         {
             if (TestToken(kind))
             {
