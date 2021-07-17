@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using Autofac;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test
+namespace Grynwald.ChangeLog.Test.Pipeline
 {
     /// <summary>
     /// Tests for <see cref="ChangeLogPipelineBuilder"/>

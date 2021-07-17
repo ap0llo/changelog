@@ -2,11 +2,17 @@
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Tasks
 {
+    [AfterTask(typeof(LoadCurrentVersionTask))]
+    [AfterTask(typeof(LoadVersionsFromTagsTask))]
+    [BeforeTask(typeof(RenderTemplateTask))]
+    // ResolveEntryReferencesTask must run *after* filtering in order to avoid resolving references to entries being filtered out
+    [BeforeTask(typeof(ResolveEntryReferencesTask))]
     internal sealed class FilterVersionsTask : SynchronousChangeLogTask
     {
         private readonly ILogger<FilterVersionsTask> m_Logger;

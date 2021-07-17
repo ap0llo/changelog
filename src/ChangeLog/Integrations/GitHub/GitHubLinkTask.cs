@@ -6,6 +6,7 @@ using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
+using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
 using Octokit;
@@ -15,7 +16,11 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
     /// <summary>
     /// Detects and inserts links to GitHub for pull requests, issues and commits
     /// </summary>
-    internal class GitHubLinkTask : IChangeLogTask
+    [BeforeTask(typeof(RenderTemplateTask))]
+    [AfterTask(typeof(ParseCommitsTask))]
+    // AddCommitFooterTask must run before eGitHubLinkTask so a web link can be added to the "Commit" footer
+    [AfterTask(typeof(AddCommitFooterTask))]
+    internal sealed class GitHubLinkTask : IChangeLogTask
     {
         private readonly ILogger<GitHubLinkTask> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;

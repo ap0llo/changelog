@@ -1,4 +1,4 @@
-﻿namespace Grynwald.ChangeLog.Tasks
+﻿namespace Grynwald.ChangeLog.Pipeline
 {
     public enum ChangeLogTaskResult
     {

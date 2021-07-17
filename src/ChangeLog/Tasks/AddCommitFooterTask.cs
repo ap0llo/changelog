@@ -1,12 +1,14 @@
 ﻿using System.Linq;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
+using Grynwald.ChangeLog.Pipeline;
 
 namespace Grynwald.ChangeLog.Tasks
 {
     /// <summary>
     /// Tasks that adds a "Commit" footer with the commit's id to each change log entry
     /// </summary>
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class AddCommitFooterTask : SynchronousChangeLogTask
     {
         protected override ChangeLogTaskResult Run(ApplicationChangeLog changelog)

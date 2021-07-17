@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
 {
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class ResolveEntryReferencesTask : SynchronousChangeLogTask
     {
         private readonly ILogger<ResolveEntryReferencesTask> m_Logger;

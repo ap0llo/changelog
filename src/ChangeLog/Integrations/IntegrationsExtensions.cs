@@ -2,6 +2,7 @@
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Integrations.GitHub;
 using Grynwald.ChangeLog.Integrations.GitLab;
+using Grynwald.ChangeLog.Pipeline;
 
 namespace Grynwald.ChangeLog.Integrations
 {

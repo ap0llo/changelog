@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 using NuGet.Versioning;
 
@@ -14,6 +15,7 @@ namespace Grynwald.ChangeLog.Tasks
     /// <summary>
     /// Tasks that loads versions from git tags in a repository
     /// </summary>
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class LoadVersionsFromTagsTask : SynchronousChangeLogTask
     {
         private const RegexOptions s_RegexOptions = RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled;

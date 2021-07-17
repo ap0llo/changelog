@@ -2,11 +2,13 @@
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Tasks
 {
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class LoadCurrentVersionTask : SynchronousChangeLogTask
     {
         private readonly ILogger<LoadCurrentVersionTask> m_Logger;
@@ -31,6 +33,12 @@ namespace Grynwald.ChangeLog.Tasks
             if (!NuGetVersion.TryParse(m_Configuration.CurrentVersion, out var version))
             {
                 m_Logger.LogError($"Invalid 'currentVersion' setting: '{m_Configuration.CurrentVersion}' is not a valid version");
+                return ChangeLogTaskResult.Error;
+            }
+
+            if (changeLog.ContainsVersion(version))
+            {
+                m_Logger.LogError($"Cannot add current version '{version}' because the changelog already contains this version.");
                 return ChangeLogTaskResult.Error;
             }
 

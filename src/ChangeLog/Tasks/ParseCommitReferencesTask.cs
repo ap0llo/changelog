@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
@@ -12,6 +13,8 @@ namespace Grynwald.ChangeLog.Tasks
     /// Detects footer values that are references to git commits.
     /// When a valid reference to a git commit is found, replaces the footer's value (see <see cref="ChangeLogEntryFooter.Value"/>) with a <see cref="CommitReferenceTextElement"/>.
     /// </summary>
+    [AfterTask(typeof(ParseCommitsTask))]
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class ParseCommitReferencesTask : SynchronousChangeLogTask
     {
         private static readonly Regex s_ObjectIdRegex = new Regex(@"^[\dA-z]+$", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);

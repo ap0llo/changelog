@@ -5,10 +5,14 @@ using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
+using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
 {
+    [AfterTask(typeof(LoadVersionsFromTagsTask))]
+    [AfterTask(typeof(LoadCurrentVersionTask))]
+    [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class ParseCommitsTask : SynchronousChangeLogTask
     {
         private readonly ILogger<ParseCommitsTask> m_Logger;
