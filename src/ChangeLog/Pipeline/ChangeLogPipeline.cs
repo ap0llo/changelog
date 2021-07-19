@@ -70,7 +70,7 @@ namespace Grynwald.ChangeLog.Pipeline
                 // [AfterTask(typeof(Task1))]
                 // public class Task2 { }
                 //
-                // Task1 must run before Task2, thus resulting in an Task1 -> Task2 edge in the graph
+                // Task1 must run before Task2, thus resulting in an Task2 -> Task1 edge in the graph
                 //
                 var dependencyTypes = task.GetType().GetCustomAttributes<AfterTaskAttribute>().Select(x => x.TaskType);
                 var dependencies = new List<IChangeLogTask>();
@@ -100,7 +100,7 @@ namespace Grynwald.ChangeLog.Pipeline
                 // [BeforeTask(typeof(Task1))]
                 // public class Task2 { }
                 //
-                // Task2 must run before Task1, thus resulting in an Task1 <- Task2 edge in the graph
+                // Task2 must run before Task1, thus resulting in an Task1 -> Task2 edge in the graph
                 //
                 var dependentTypes = task.GetType().GetCustomAttributes<BeforeTaskAttribute>().Select(x => x.TaskType).ToHashSet();
                 var dependents = new List<IChangeLogTask>();
