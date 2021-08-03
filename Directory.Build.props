@@ -8,6 +8,7 @@
 		<BaseOutputPath Condition="!HasTrailingSlash('BaseOutputPath')">$(BaseOutputPath)/</BaseOutputPath>
 		<OutputPath>$(BaseOutputPath)$(Configuration)/$(MSBuildProjectName)/</OutputPath>
 		<VSTestResultsDirectory>$(BaseOutputPath)TestResults/</VSTestResultsDirectory>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 
 	<!-- Nerdbank.GitVersioning -->
@@ -20,6 +21,8 @@
 		<LangVersion>9.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<!-- Disable warning CS1591 ( missing XML documentation comments) -->
+		<NoWarn>$(NoWarn),1591</NoWarn>
 	</PropertyGroup>
 
 	<!-- Enable deterministic builds when building in Azure DevOps-->

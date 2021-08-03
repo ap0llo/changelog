@@ -9,7 +9,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
     /// <remarks>
     /// The header encapsulates all information provided in the commit message subject and is mandatory for all commit messages.
     /// </remarks>
-    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</see>
+    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</seealso>
     /// <seealso cref="CommitMessage"/>
     public sealed class CommitMessageHeader : IEquatable<CommitMessageHeader>
     {

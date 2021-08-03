@@ -8,7 +8,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
     /// <summary>
     /// Parser for commit messages following the <see href="https://www.conventionalcommits.org">Conventional Commits </see> format.
     /// </summary>
-    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</see>
+    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</seealso>
     /// <remarks>
     /// As different parsing rules apply to the different parts of the commit message (header/subject, body and footers),
     /// The parser and tokenizer is split into multiple parts.

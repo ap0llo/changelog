@@ -70,7 +70,7 @@ namespace Grynwald.ChangeLog.Pipeline
         /// </summary>
         /// <param name="node">The node to add</param>
         /// <returns>Returns <c>true</c> is the node was added or <c>false</c> if the graph already contained the node.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <see cref="node"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="node"/> is <c>null</c>.</exception>
         public bool AddNode(T node)
         {
             if (node is null)
@@ -93,7 +93,7 @@ namespace Grynwald.ChangeLog.Pipeline
         /// <param name="from">The edge's start node</param>
         /// <param name="to">The edge's end node</param>
         /// <returns>Returns <c>true</c> is the edge was added or <c>false</c> if the graph already contained the edge.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <see cref="from"/> of <see cref="to"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="from"/> of <paramref name="to"/> is <c>null</c>.</exception>
         public bool AddEdge(T from, T to)
         {
             if (from is null)
@@ -118,8 +118,8 @@ namespace Grynwald.ChangeLog.Pipeline
         /// <summary>
         /// Gets all edges that start at the specified node
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown when <see cref="node"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentException">Thrown when the graph does not contain <see cref="node"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="node"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">Thrown when the graph does not contain <paramref name="node"/>.</exception>
         public IReadOnlyCollection<Edge> GetOutgoingEdges(T node)
         {
             if (node is null)
@@ -134,8 +134,8 @@ namespace Grynwald.ChangeLog.Pipeline
         /// <summary>
         /// Gets all edges that end at the specified node
         /// </summary>
-        /// <exception cref="ArgumentNullException">Thrown when <see cref="node"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentException">Thrown when the graph does not contain <see cref="node"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="node"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException">Thrown when the graph does not contain <paramref name="node"/>.</exception>
         public IReadOnlyCollection<Edge> GetIncomingEdges(T node)
         {
             if (node is null)

@@ -18,8 +18,7 @@ namespace Grynwald.ChangeLog.Tasks
 
         /// <summary>
         /// Initializes a new instance of <see cref="RenderTemplateTask"/>.
-        /// </summary>
-        /// <param name="outputPath">The file path to save the changelog to.</param>
+        /// </summary>        
         public RenderTemplateTask(ILogger<RenderTemplateTask> logger, ChangeLogConfiguration configuration, ITemplate template)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));

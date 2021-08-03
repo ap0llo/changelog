@@ -30,8 +30,9 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         /// Initializes a new instance of <see cref="GitLabProjectInfo"/>
         /// </summary>
         /// <param name="host">The host name of the GitLab server.</param>
-        /// <param name="projectPath">The GitLab project path (i.e. namespace + repository name).</param>
-        /// <exception cref="ArgumentException">Thrown when <paramref name="host"/> or <paramref name="projectPath"/> is null or whitespace</exception>
+        /// <param name="namespace">The GitLab project's namespace (user name or group and subgroup)</param>
+        /// <param name="project">The GitLab project's name</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="host"/>, <paramref name="namespace"/> or <paramref name="project"/> is null or whitespace</exception>
         public GitLabProjectInfo(string host, string @namespace, string project)
         {
             if (String.IsNullOrWhiteSpace(host))

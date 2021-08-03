@@ -115,7 +115,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         /// </summary>
         /// <param name="kind">The kind to test the token for.</param>
         /// <param name="value">The value to compare the token value to.</param>
-        /// <param name="lookAhead">The number of tokens from the current to look ahead. Value pf <c>0</c> tests <see cref="Current"/>.</param>
+        /// <param name="offset">The number of tokens from the current to look ahead. Value pf <c>0</c> tests <see cref="Current"/>.</param>
         /// <returns></returns>
         protected bool TestToken(TTokenKind kind, string value, int offset = 0)
         {

@@ -83,7 +83,7 @@ namespace Grynwald.ChangeLog.Test.Git
 
         /// <summary>
         /// Checks out a new branch created from the current HEAD commit
-        /// </summary
+        /// </summary>
         public Task CheckoutNewBranchAsync(string branchName) => ExecAsync($"checkout -b \"{branchName}\"");
 
 

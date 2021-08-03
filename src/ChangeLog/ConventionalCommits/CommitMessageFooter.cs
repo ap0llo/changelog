@@ -6,7 +6,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
     /// <summary>
     /// Encapsulates information provided in a commit message footer
     /// </summary>
-    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</see>
+    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</seealso>
     /// <seealso cref="CommitMessage"/>
     public sealed class CommitMessageFooter : IEquatable<CommitMessageFooter>
     {

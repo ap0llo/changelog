@@ -13,7 +13,7 @@ namespace Grynwald.ChangeLog.Validation
     internal static class ValidationExtensions
     {
         /// <summary>
-        /// Sets <see cref="ValidatorConfiguration.DisplayNameResolver"/> to a custom resolver that handles <see cref="ValidationDisplayNameAttribute"/> and <see cref="OptionAttribute"/>.
+        /// Sets <see cref="ValidatorConfiguration.DisplayNameResolver"/> to a custom resolver that handles <see cref="SettingDisplayNameAttribute"/> and <see cref="OptionAttribute"/>.
         /// </summary>
         public static void UseCustomDisplayNameResolver(this ValidatorConfiguration validatorConfiguration)
         {
@@ -45,6 +45,7 @@ namespace Grynwald.ChangeLog.Validation
 
         /// <summary>
         /// Defines a  validator that will fail if the property is NOT <c>null</c> or empty BUT consists only of whitespace characters.
+        /// </summary>
         public static IRuleBuilderOptions<T, string?> NotWhitespace<T>(this IRuleBuilder<T, string?> ruleBuilder)
         {
             return ruleBuilder

@@ -53,7 +53,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 
 
         /// <summary>
-        /// Initializes a new instance of <see cref="GitHubReferenceTextElement"/>.
+        /// Initializes a new instance of <see cref="GitLabReferenceTextElement"/>.
         /// </summary>
         public GitLabReferenceTextElement(string text, Uri uri, GitLabProjectInfo currentProject, GitLabReference reference)
         {

@@ -16,7 +16,7 @@ namespace Grynwald.ChangeLog.Test
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="SimpleConsoleLogger"/>
+        /// Initializes a new instance of <see cref="XunitLogger"/>
         /// </summary>
         public XunitLogger(ITestOutputHelper testOutputHelper, string? categoryName)
         {

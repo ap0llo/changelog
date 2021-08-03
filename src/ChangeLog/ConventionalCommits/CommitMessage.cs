@@ -8,7 +8,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
     /// <summary>
     /// Encapsulates a parsed commit message following the <see href="https://www.conventionalcommits.org">Conventional Commits </see> format.
     /// </summary>
-    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</see>
+    /// <seealso href="https://www.conventionalcommits.org">Conventional Commits</seealso>
     public sealed class CommitMessage : IEquatable<CommitMessage>
     {
         /// <summary>
