@@ -10,9 +10,9 @@
       },
       "Markdig": {
         "type": "Direct",
-        "requested": "[0.25.0, )",
-        "resolved": "0.25.0",
-        "contentHash": "8szvH6U9LvqIpc297eOwC2NEF6f6fsPIV25Vptq21uHgkGCjYxwfSLujcnZa8wgvu71BeK/P00kAbYb/T+OmpQ=="
+        "requested": "[0.26.0, )",
+        "resolved": "0.26.0",
+        "contentHash": "9+V9emMb+/rzzuwbNldmIUK6YTYU7hP4Fw1QxH2ht1N0Pr33TJobayzXM6/cBCILV1nhhOxzNGdISj85v2OBcQ=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
