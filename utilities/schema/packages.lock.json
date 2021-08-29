@@ -353,8 +353,8 @@
       },
       "NuGet.Versioning": {
         "type": "Transitive",
-        "resolved": "5.10.0",
-        "contentHash": "kXB4moY6JVjvv8InTlrDFpPEGZYLlK7e3bVrSn8NPbtrWhEdU3MlPagPjE2zsbjL7Oq80RNEnogNv6QkdUB+Rw=="
+        "resolved": "5.11.0",
+        "contentHash": "mCv/GzvMk5iatWoZY41PoIShEbwVxq9CDCc1fV/uqPFKZ4DD/1JuKZ5AL/FJJRsTanvMR3EOXKYCLdQ7PFYn8Q=="
       },
       "Octokit": {
         "type": "Transitive",
@@ -1268,7 +1268,7 @@
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "5.0.0",
           "Microsoft.Extensions.Configuration.Json": "5.0.0",
           "Microsoft.Extensions.Logging": "5.0.0",
-          "NuGet.Versioning": "5.10.0",
+          "NuGet.Versioning": "5.11.0",
           "Octokit": "0.50.0",
           "Scriban": "4.0.1",
           "Zio": "0.11.0"
