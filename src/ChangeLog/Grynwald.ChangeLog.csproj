@@ -59,7 +59,7 @@
 
   <!-- Auto-Generated command line help -->
   <ItemGroup>
-    <PackageReference Include="Grynwald.MdDocs.MSBuild" Version="0.4.178" PrivateAssets="all" />
+    <PackageReference Include="Grynwald.MdDocs.MSBuild" Version="0.4.179" PrivateAssets="all" />
   </ItemGroup>
   <PropertyGroup>
     <CommandLineDocumentationOutputPath>$(MSBuildThisFileDirectory)..\..\docs\commandline-reference\</CommandLineDocumentationOutputPath>
