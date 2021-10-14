@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommandLineParser" Version="2.8.0" />
-		<PackageReference Include="Scriban" Version="4.0.1" />
+		<PackageReference Include="Scriban" Version="4.1.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Spectre.Console" Version="0.41.0" />
 		<PackageReference Include="Markdig" Version="0.26.0" />
