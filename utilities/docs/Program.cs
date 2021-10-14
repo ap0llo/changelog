@@ -122,7 +122,7 @@ namespace docs
                 }
             }
 
-            AnsiConsole.Render(resultsTable);
+            AnsiConsole.Write(resultsTable);
             return success ? 0 : 1;
         }
 
