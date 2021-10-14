@@ -25,9 +25,9 @@
       },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",
-        "requested": "[0.4.178, )",
-        "resolved": "0.4.178",
-        "contentHash": "nr9Imjtp5bSVuW2HaFPuAYWNeS64evDsozBvwyHEV7KJCf6PhAboO6ZHn0AyPC/bJ0cTMPb2xkfdWvLzNrqGeA=="
+        "requested": "[0.4.179, )",
+        "resolved": "0.4.179",
+        "contentHash": "2jP6Bs4g6jLk334FVKQv9amkHLiA5sJdbXwM2XwbV7dMEgM8tCjl7+YSJ1sE98B3EPuRr5rK0/xGagpXQuuxDg=="
       },
       "Grynwald.Utilities": {
         "type": "Direct",
@@ -307,9 +307,9 @@
       },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",
-        "requested": "[0.4.178, )",
-        "resolved": "0.4.178",
-        "contentHash": "nr9Imjtp5bSVuW2HaFPuAYWNeS64evDsozBvwyHEV7KJCf6PhAboO6ZHn0AyPC/bJ0cTMPb2xkfdWvLzNrqGeA=="
+        "requested": "[0.4.179, )",
+        "resolved": "0.4.179",
+        "contentHash": "2jP6Bs4g6jLk334FVKQv9amkHLiA5sJdbXwM2XwbV7dMEgM8tCjl7+YSJ1sE98B3EPuRr5rK0/xGagpXQuuxDg=="
       },
       "Grynwald.Utilities": {
         "type": "Direct",
