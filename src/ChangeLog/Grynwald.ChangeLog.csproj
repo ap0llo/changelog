@@ -38,7 +38,7 @@
     <PackageReference Include="Grynwald.Utilities" Version="1.6.11-pre" />
     <PackageReference Include="Grynwald.Utilities.Configuration" Version="1.6.11-pre" />
     <PackageReference Include="Grynwald.Utilities.Logging" Version="1.6.11-pre" />
-    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0119" />
+    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0156" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
