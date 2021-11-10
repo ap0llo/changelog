@@ -16,9 +16,9 @@ try {
     log "Restoring tools"
     exec "dotnet tool restore"
 
-    log "Running dotnet format"
+    log "Running dotnet-format"
     foreach($folder in $sourceFolders) {
-        exec "dotnet format `"$folder`" --folder"
+        exec "dotnet dotnet-format `"$folder`" --folder"
     }
 }
 finally {
