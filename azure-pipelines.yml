@@ -75,6 +75,13 @@ jobs:
       packageType: runtime
       version: 3.1.x
 
+  # Also install .NET 5 runtime (because tests are run for each supported runtime)
+  - task: UseDotNet@2
+    displayName: 'Install .NET 5 runtime'
+    inputs:
+      packageType: runtime
+      version: 5.0.x
+
   # Restore local .NET Core tools
   - task: DotNetCoreCLI@2
     displayName: Restore local tools
@@ -114,8 +121,8 @@ jobs:
 
   # Check the formatting using dotnet-format
   - script: |
-      dotnet format ./src --folder --check
-      dotnet format ./utilities --folder --check
+      dotnet dotnet-format ./src --folder --check
+      dotnet dotnet-format ./utilities --folder --check
     displayName: Check code formatting
 
     # Restore, Build, Test
