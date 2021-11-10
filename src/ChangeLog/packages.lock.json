@@ -409,9 +409,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.240, )",
-        "resolved": "3.4.240",
-        "contentHash": "OLVIcTEKZCyUbF7+h6Lm+gU9V7wT+PPpYZ7sGtz3GfjNoB84drKxRh5qLrbLV6tqD/YWvvXZH2DAbCSQilGSGA=="
+        "requested": "[3.4.244, )",
+        "resolved": "3.4.244",
+        "contentHash": "L+xHZiYgIvMEbHo1X49HxgfUhfh52/TWLOuUDsOP3OAY0QAn+W6SRNA5bvIRBQ4291SlTZUXPbCRPX8bn7H86Q=="
       },
       "NuGet.Versioning": {
         "type": "Direct",
@@ -562,9 +562,9 @@
       },
       "FluentValidation": {
         "type": "Direct",
-        "requested": "[10.3.3, )",
-        "resolved": "10.3.3",
-        "contentHash": "sgRC+7q4mnmDHE9ehk2cvb+FDTy/gtw5iBoKFY3FVp1ZwFsLS0kIcdSpNlCO3XyyNIzZI2ca8I/YiFG9pM6x0Q=="
+        "requested": "[10.3.4, )",
+        "resolved": "10.3.4",
+        "contentHash": "hsGRtnhTlCrRbxIOkKp6rCBtkq3UV0i31ckcJtd5j1i99zqLgbQGcbxK0SMU63DIto94f++uIdRpoycu8ySnDQ=="
       },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",
@@ -676,9 +676,9 @@
       },
       "NuGet.Versioning": {
         "type": "Direct",
-        "requested": "[5.11.0, )",
-        "resolved": "5.11.0",
-        "contentHash": "mCv/GzvMk5iatWoZY41PoIShEbwVxq9CDCc1fV/uqPFKZ4DD/1JuKZ5AL/FJJRsTanvMR3EOXKYCLdQ7PFYn8Q=="
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "XA59hPSbKdExu28TbONlD/BwOkKzjo4u2mkEJIP4wnDz9P65FdM34cVA+2/jztKrKyFmX8jpQW++xOp99mufjw=="
       },
       "Octokit": {
         "type": "Direct",
@@ -688,9 +688,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[4.1.0, )",
-        "resolved": "4.1.0",
-        "contentHash": "rEjPy11TaTfCg3pcSC+VhTrlk5HRnAbEJg6nutNm0tqhtOHRsxv5lh0RXSp073irj7R8J7UsSgC9Kix+SIYvpQ=="
+        "requested": "[5.0.0, )",
+        "resolved": "5.0.0",
+        "contentHash": "/kqARxHaYytWngSOqwHvXZkvTGgh6gbFgUiMrg1jbxATSkmHAB1KAfr+d6Dy92rloAynUPveAJBqijL1Vr2Ttw=="
       },
       "Zio": {
         "type": "Direct",
