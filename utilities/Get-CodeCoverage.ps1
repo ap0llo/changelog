@@ -22,12 +22,14 @@ try {
     }
 
     log "Running dotnet test with coverage"
-    exec "dotnet test ./ChangeLog.sln --collect:`"XPlat Code Coverage`" --settings ChangeLog.runsettings"
+    exec "dotnet test ./ChangeLog.sln --collect:`"XPlat Code Coverage`" "
 
     log "Generating code coverage report"
     exec "dotnet tool run reportgenerator -- `"-reports:$testResultsDirectory\*\coverage.cobertura.xml`" `"-targetdir:$testResultsDirectory\Coverage`" `"-reporttypes:html`" `"-historyDir:$coverageHistoryDirectory`" "
 
-    log "Code Coverage report generated to $((Get-location).Path)\$testResultsDirectory\Coverage\index.html"
+    $coverageReportPath = Join-Path (Get-Location) "$testResultsDirectory\Coverage\index.html"
+    $coverageReportPath = [System.IO.Path]::GetFullPath($coverageReportPath)
+    log "Code Coverage report generated to $coverageReportPath"
 }
 finally {
     Pop-Location

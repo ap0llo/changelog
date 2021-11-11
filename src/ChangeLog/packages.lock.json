@@ -23,6 +23,15 @@
         "resolved": "10.3.4",
         "contentHash": "hsGRtnhTlCrRbxIOkKp6rCBtkq3UV0i31ckcJtd5j1i99zqLgbQGcbxK0SMU63DIto94f++uIdRpoycu8ySnDQ=="
       },
+      "GitLabApiClient": {
+        "type": "Direct",
+        "requested": "[1.8.0, )",
+        "resolved": "1.8.0",
+        "contentHash": "xfC4r7AQaRsX/IgQuMAskAK520CfB66rnENt327qymAD+ZIh/y6DwSqKmvPIZMQao74rL0Dpm66cn5q1X+lqLA==",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        }
+      },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",
         "requested": "[0.4.179, )",
@@ -314,12 +323,6 @@
         "type": "Transitive",
         "resolved": "4.5.0",
         "contentHash": "csAJe24tWCOTO/rXoJAuBGuOq7ZdHY60XtC6b/hNMHT9tuX+2J9HK7nciLEtNvnrRLMxBACLXO3R4y5+kCduMA=="
-      },
-      "gitlabapiclient": {
-        "type": "Project",
-        "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
-        }
       }
     },
     ".NETCoreApp,Version=v5.0": {
@@ -343,6 +346,15 @@
         "requested": "[10.3.4, )",
         "resolved": "10.3.4",
         "contentHash": "hsGRtnhTlCrRbxIOkKp6rCBtkq3UV0i31ckcJtd5j1i99zqLgbQGcbxK0SMU63DIto94f++uIdRpoycu8ySnDQ=="
+      },
+      "GitLabApiClient": {
+        "type": "Direct",
+        "requested": "[1.8.0, )",
+        "resolved": "1.8.0",
+        "contentHash": "xfC4r7AQaRsX/IgQuMAskAK520CfB66rnENt327qymAD+ZIh/y6DwSqKmvPIZMQao74rL0Dpm66cn5q1X+lqLA==",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        }
       },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",
@@ -620,12 +632,6 @@
           "System.Runtime.CompilerServices.Unsafe": "6.0.0",
           "System.Text.Encodings.Web": "6.0.0"
         }
-      },
-      "gitlabapiclient": {
-        "type": "Project",
-        "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
-        }
       }
     },
     "net6.0": {
@@ -649,6 +655,15 @@
         "requested": "[10.3.4, )",
         "resolved": "10.3.4",
         "contentHash": "hsGRtnhTlCrRbxIOkKp6rCBtkq3UV0i31ckcJtd5j1i99zqLgbQGcbxK0SMU63DIto94f++uIdRpoycu8ySnDQ=="
+      },
+      "GitLabApiClient": {
+        "type": "Direct",
+        "requested": "[1.8.0, )",
+        "resolved": "1.8.0",
+        "contentHash": "xfC4r7AQaRsX/IgQuMAskAK520CfB66rnENt327qymAD+ZIh/y6DwSqKmvPIZMQao74rL0Dpm66cn5q1X+lqLA==",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        }
       },
       "Grynwald.MdDocs.MSBuild": {
         "type": "Direct",
@@ -911,12 +926,6 @@
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0",
           "System.Text.Encodings.Web": "6.0.0"
-        }
-      },
-      "gitlabapiclient": {
-        "type": "Project",
-        "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
         }
       }
     }

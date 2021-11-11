@@ -172,6 +172,14 @@
         "resolved": "10.3.4",
         "contentHash": "hsGRtnhTlCrRbxIOkKp6rCBtkq3UV0i31ckcJtd5j1i99zqLgbQGcbxK0SMU63DIto94f++uIdRpoycu8ySnDQ=="
       },
+      "GitLabApiClient": {
+        "type": "Transitive",
+        "resolved": "1.8.0",
+        "contentHash": "xfC4r7AQaRsX/IgQuMAskAK520CfB66rnENt327qymAD+ZIh/y6DwSqKmvPIZMQao74rL0Dpm66cn5q1X+lqLA==",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        }
+      },
       "Grynwald.Utilities": {
         "type": "Transitive",
         "resolved": "1.6.11-pre",
@@ -1978,19 +1986,13 @@
         "resolved": "0.11.0",
         "contentHash": "eNHy6n/UCuQKtqCVw2XIw7L9g1/5vEFuMJ8aLM6tXLxh+vAFajwW1+oFAL65t31YNWro0uLDCez5mGsamC73QA=="
       },
-      "gitlabapiclient": {
-        "type": "Project",
-        "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
-        }
-      },
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
           "Autofac": "6.3.0",
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.3.4",
-          "GitLabApiClient": "1.0.0",
+          "GitLabApiClient": "1.8.0",
           "Grynwald.Utilities": "1.6.11-pre",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
           "Grynwald.Utilities.Logging": "1.6.11-pre",
@@ -2177,6 +2179,14 @@
         "type": "Transitive",
         "resolved": "10.3.4",
         "contentHash": "hsGRtnhTlCrRbxIOkKp6rCBtkq3UV0i31ckcJtd5j1i99zqLgbQGcbxK0SMU63DIto94f++uIdRpoycu8ySnDQ=="
+      },
+      "GitLabApiClient": {
+        "type": "Transitive",
+        "resolved": "1.8.0",
+        "contentHash": "xfC4r7AQaRsX/IgQuMAskAK520CfB66rnENt327qymAD+ZIh/y6DwSqKmvPIZMQao74rL0Dpm66cn5q1X+lqLA==",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        }
       },
       "Grynwald.Utilities": {
         "type": "Transitive",
@@ -3969,19 +3979,13 @@
         "resolved": "0.11.0",
         "contentHash": "eNHy6n/UCuQKtqCVw2XIw7L9g1/5vEFuMJ8aLM6tXLxh+vAFajwW1+oFAL65t31YNWro0uLDCez5mGsamC73QA=="
       },
-      "gitlabapiclient": {
-        "type": "Project",
-        "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
-        }
-      },
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
           "Autofac": "6.3.0",
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.3.4",
-          "GitLabApiClient": "1.0.0",
+          "GitLabApiClient": "1.8.0",
           "Grynwald.Utilities": "1.6.11-pre",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
           "Grynwald.Utilities.Logging": "1.6.11-pre",
@@ -4168,6 +4172,14 @@
         "type": "Transitive",
         "resolved": "10.3.4",
         "contentHash": "hsGRtnhTlCrRbxIOkKp6rCBtkq3UV0i31ckcJtd5j1i99zqLgbQGcbxK0SMU63DIto94f++uIdRpoycu8ySnDQ=="
+      },
+      "GitLabApiClient": {
+        "type": "Transitive",
+        "resolved": "1.8.0",
+        "contentHash": "xfC4r7AQaRsX/IgQuMAskAK520CfB66rnENt327qymAD+ZIh/y6DwSqKmvPIZMQao74rL0Dpm66cn5q1X+lqLA==",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3"
+        }
       },
       "Grynwald.Utilities": {
         "type": "Transitive",
@@ -5963,19 +5975,13 @@
         "resolved": "0.11.0",
         "contentHash": "eNHy6n/UCuQKtqCVw2XIw7L9g1/5vEFuMJ8aLM6tXLxh+vAFajwW1+oFAL65t31YNWro0uLDCez5mGsamC73QA=="
       },
-      "gitlabapiclient": {
-        "type": "Project",
-        "dependencies": {
-          "Newtonsoft.Json": "12.0.3"
-        }
-      },
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
           "Autofac": "6.3.0",
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.3.4",
-          "GitLabApiClient": "1.0.0",
+          "GitLabApiClient": "1.8.0",
           "Grynwald.Utilities": "1.6.11-pre",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
           "Grynwald.Utilities.Logging": "1.6.11-pre",

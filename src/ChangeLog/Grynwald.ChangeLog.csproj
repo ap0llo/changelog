@@ -50,12 +50,9 @@
     <PackageReference Include="Autofac" Version="6.3.0" />    
     <PackageReference Include="Scriban" Version="5.0.0" />  
     <PackageReference Include="Zio" Version="0.11.0" />
+    <PackageReference Include="GitLabApiClient" Version="1.8.0" />
   </ItemGroup>
     
-    
-  <ItemGroup>
-    <ProjectReference Include="..\..\deps\GitLabApiClient\src\GitLabApiClient\GitLabApiClient.csproj" />
-  </ItemGroup>
 
   <!-- Auto-Generated command line help -->
   <ItemGroup>
