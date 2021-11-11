@@ -55,11 +55,11 @@
       },
       "LibGit2Sharp": {
         "type": "Direct",
-        "requested": "[0.27.0-preview-0156, )",
-        "resolved": "0.27.0-preview-0156",
-        "contentHash": "gF8bAG8LC9OyL/NcWRQJXdZUAUTSvCmTHkKFO1sDgtKBFWsA5TY5KIyYv+QW7zMxVkKjgtVfQilCWcKG4jj6rQ==",
+        "requested": "[0.27.0-preview-0158, )",
+        "resolved": "0.27.0-preview-0158",
+        "contentHash": "wAYMqRfUcumaS9Jbtk1ogkusksp06B/3IkoNSSTQ9hTKZ9ehHUX0wYlqkg49Z+6z7OFtsYow6I/29Sc/T0hvjQ==",
         "dependencies": {
-          "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.7]"
+          "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.9]"
         }
       },
       "Microsoft.Extensions.Configuration": {
@@ -163,8 +163,8 @@
       },
       "LibGit2Sharp.NativeBinaries": {
         "type": "Transitive",
-        "resolved": "2.0.315-alpha.0.7",
-        "contentHash": "Gp+c16PMTDcpyRGTWWijbQBjXQ3dBN2EUnXLOWBsW43yXa1yxpIzZi2VZVq6ZSofvZb0RAuvGMh/Uw4khVJ5Ow=="
+        "resolved": "2.0.315-alpha.0.9",
+        "contentHash": "Cl9E9ZRZm2ma5k/gD/9+f5WAh/9ayhENos/jLkSmPmzkuKl8qkTaLHA9j70qEZ1RSRceDlIwbfSYzVD5JaxHzg=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -376,11 +376,11 @@
       },
       "LibGit2Sharp": {
         "type": "Direct",
-        "requested": "[0.27.0-preview-0156, )",
-        "resolved": "0.27.0-preview-0156",
-        "contentHash": "gF8bAG8LC9OyL/NcWRQJXdZUAUTSvCmTHkKFO1sDgtKBFWsA5TY5KIyYv+QW7zMxVkKjgtVfQilCWcKG4jj6rQ==",
+        "requested": "[0.27.0-preview-0158, )",
+        "resolved": "0.27.0-preview-0158",
+        "contentHash": "wAYMqRfUcumaS9Jbtk1ogkusksp06B/3IkoNSSTQ9hTKZ9ehHUX0wYlqkg49Z+6z7OFtsYow6I/29Sc/T0hvjQ==",
         "dependencies": {
-          "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.7]"
+          "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.9]"
         }
       },
       "Microsoft.Extensions.Configuration": {
@@ -480,8 +480,8 @@
       },
       "LibGit2Sharp.NativeBinaries": {
         "type": "Transitive",
-        "resolved": "2.0.315-alpha.0.7",
-        "contentHash": "Gp+c16PMTDcpyRGTWWijbQBjXQ3dBN2EUnXLOWBsW43yXa1yxpIzZi2VZVq6ZSofvZb0RAuvGMh/Uw4khVJ5Ow=="
+        "resolved": "2.0.315-alpha.0.9",
+        "contentHash": "Cl9E9ZRZm2ma5k/gD/9+f5WAh/9ayhENos/jLkSmPmzkuKl8qkTaLHA9j70qEZ1RSRceDlIwbfSYzVD5JaxHzg=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
@@ -682,11 +682,11 @@
       },
       "LibGit2Sharp": {
         "type": "Direct",
-        "requested": "[0.27.0-preview-0156, )",
-        "resolved": "0.27.0-preview-0156",
-        "contentHash": "gF8bAG8LC9OyL/NcWRQJXdZUAUTSvCmTHkKFO1sDgtKBFWsA5TY5KIyYv+QW7zMxVkKjgtVfQilCWcKG4jj6rQ==",
+        "requested": "[0.27.0-preview-0158, )",
+        "resolved": "0.27.0-preview-0158",
+        "contentHash": "wAYMqRfUcumaS9Jbtk1ogkusksp06B/3IkoNSSTQ9hTKZ9ehHUX0wYlqkg49Z+6z7OFtsYow6I/29Sc/T0hvjQ==",
         "dependencies": {
-          "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.7]"
+          "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.9]"
         }
       },
       "Microsoft.Extensions.Configuration": {
@@ -786,8 +786,8 @@
       },
       "LibGit2Sharp.NativeBinaries": {
         "type": "Transitive",
-        "resolved": "2.0.315-alpha.0.7",
-        "contentHash": "Gp+c16PMTDcpyRGTWWijbQBjXQ3dBN2EUnXLOWBsW43yXa1yxpIzZi2VZVq6ZSofvZb0RAuvGMh/Uw4khVJ5Ow=="
+        "resolved": "2.0.315-alpha.0.9",
+        "contentHash": "Cl9E9ZRZm2ma5k/gD/9+f5WAh/9ayhENos/jLkSmPmzkuKl8qkTaLHA9j70qEZ1RSRceDlIwbfSYzVD5JaxHzg=="
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",
