@@ -121,8 +121,7 @@ jobs:
 
   # Check the formatting using dotnet-format
   - script: |
-      dotnet dotnet-format ./src --folder --check
-      dotnet dotnet-format ./utilities --folder --check
+      dotnet format $(solutionPath) --verify-no-changes
     displayName: Check code formatting
 
     # Restore, Build, Test
