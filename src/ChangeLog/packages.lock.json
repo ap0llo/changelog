@@ -138,9 +138,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.244, )",
-        "resolved": "3.4.244",
-        "contentHash": "L+xHZiYgIvMEbHo1X49HxgfUhfh52/TWLOuUDsOP3OAY0QAn+W6SRNA5bvIRBQ4291SlTZUXPbCRPX8bn7H86Q=="
+        "requested": "[3.5.54-alpha, )",
+        "resolved": "3.5.54-alpha",
+        "contentHash": "k/sVSDMtXMSqACw2to3uW+h8AeS2mvcc6KspQG+OG8U3/ARhikFgMrw2nDbb0cRCL2Ox6aLzvt4smw5p2docXw=="
       },
       "NuGet.Versioning": {
         "type": "Direct",
@@ -462,9 +462,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.244, )",
-        "resolved": "3.4.244",
-        "contentHash": "L+xHZiYgIvMEbHo1X49HxgfUhfh52/TWLOuUDsOP3OAY0QAn+W6SRNA5bvIRBQ4291SlTZUXPbCRPX8bn7H86Q=="
+        "requested": "[3.5.54-alpha, )",
+        "resolved": "3.5.54-alpha",
+        "contentHash": "k/sVSDMtXMSqACw2to3uW+h8AeS2mvcc6KspQG+OG8U3/ARhikFgMrw2nDbb0cRCL2Ox6aLzvt4smw5p2docXw=="
       },
       "NuGet.Versioning": {
         "type": "Direct",
@@ -771,9 +771,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.4.244, )",
-        "resolved": "3.4.244",
-        "contentHash": "L+xHZiYgIvMEbHo1X49HxgfUhfh52/TWLOuUDsOP3OAY0QAn+W6SRNA5bvIRBQ4291SlTZUXPbCRPX8bn7H86Q=="
+        "requested": "[3.5.54-alpha, )",
+        "resolved": "3.5.54-alpha",
+        "contentHash": "k/sVSDMtXMSqACw2to3uW+h8AeS2mvcc6KspQG+OG8U3/ARhikFgMrw2nDbb0cRCL2Ox6aLzvt4smw5p2docXw=="
       },
       "NuGet.Versioning": {
         "type": "Direct",
