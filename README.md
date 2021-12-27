@@ -25,15 +25,15 @@ using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 ## Building from source
 
 ChangeLog is a .NET Core application.
-Building it from source requires the .NET 5 SDK (version 5.0.100 as specified in [global.json](./global.json))
+Building it from source requires the .NET 6 SDK (version 6.0.101 as specified in [global.json](./global.json)) and uses [Cake](https://cakebuild.net/) for the build.
+
+To execute the default task, run
 
 ```ps1
-dotnet restore .\ChangeLog.sln
-
-dotnet build .\ChangeLog.sln
-
-dotnet pack .\ChangeLog.sln
+.\build.ps1
 ```
+
+This will build the project, run all tests and pack the NuGet package.
 
 ## Issues
 
@@ -75,6 +75,8 @@ Thanks to all the people contributing to these projects:
 - [Xunit.Combinatorial](https://github.com/AArnott/Xunit.Combinatorial)
 - [CliWrap](https://github.com/Tyrrrz/CliWrap)
 - [Zio](https://github.com/xoofx/zio)
+- [Cake](https://cakebuild.net/)
+- [Cake.BuildSystems.Module](https://github.com/cake-contrib/Cake.BuildSystems.Module)
 
 ## Versioning and Branching
 
@@ -89,9 +91,9 @@ in `version.json` using [Nerdbank.GitVersioning](https://github.com/AArnott/Nerd
   commit hash included in the version string
 
 To create a new release branch use the [`nbgv` tool](https://www.nuget.org/packages/nbgv/)
-(at least version `3.0.4-beta`):
+(at least version `3.0.24:
 
 ```ps1
-dotnet tool install --global nbgv --version 3.0.4-beta
+dotnet tool install --global nbgv 
 nbgv prepare-release
 ```
