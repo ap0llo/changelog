@@ -1,5 +1,5 @@
-﻿using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Run;
+﻿using Cake.Common.Tools.DotNet;
+using Cake.Common.Tools.DotNet.Run;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
@@ -9,18 +9,18 @@ namespace Build
 {
     [TaskName("GenerateDocumentation")]
     [TaskDescription("Updates auto-generated documentation files")]
-    [Dependency(typeof(BuildTask))]
+    [IsDependentOn(typeof(BuildTask))]
     [IsDependeeOf(typeof(GenerateTask))]
     public class GenerateDocumentationTask : FrostingTask<BuildContext>
     {
         public override void Run(BuildContext context)
         {
-            context.DotNetCoreRun(
+            context.DotNetRun(
                 "./utilities/docs/docs.csproj",
                 new ProcessArgumentBuilder()
                     .Append("generate")
                     .Append("./docs"),
-                new DotNetCoreRunSettings()
+                new DotNetRunSettings()
                 {
                     Configuration = context.BuildSettings.Configuration,
                     NoBuild = true,

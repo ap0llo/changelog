@@ -1,5 +1,5 @@
-﻿using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Run;
+﻿using Cake.Common.Tools.DotNet;
+using Cake.Common.Tools.DotNet.Run;
 using Cake.Core;
 using Cake.Core.Diagnostics;
 using Cake.Core.IO;
@@ -28,7 +28,7 @@ namespace Build
                     .Append($"--template GitHubRelease")
                     .Append($"--verbose");
 
-            var dotnetCoreRunSettings = new DotNetCoreRunSettings()
+            var dotnetCoreRunSettings = new DotNetRunSettings()
             {
                 Configuration = context.BuildSettings.Configuration,
                 NoBuild = true,
@@ -48,7 +48,7 @@ namespace Build
                 context.Log.Warning("No GitHub access token specified, generating change log without GitHub integration");
             }
 
-            context.DotNetCoreRun(
+            context.DotNetRun(
                 "./src/ChangeLog/Grynwald.ChangeLog.csproj",
                 args,
                 dotnetCoreRunSettings
