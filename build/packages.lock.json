@@ -39,9 +39,9 @@
       },
       "Grynwald.SharedBuild": {
         "type": "Direct",
-        "requested": "[2.0.2-pre, )",
-        "resolved": "2.0.2-pre",
-        "contentHash": "AMekHlrpEQgsli5xaDwj9pHTDiQ+XtJNlGU9em/2jXTFEbO5lJy1a3t4/arAb2W5MgJ4UCoJ3GPSFQ5cu3CADQ==",
+        "requested": "[2.0.3, )",
+        "resolved": "2.0.3",
+        "contentHash": "4989oRU51AicWx9JnIIOh1WbARju07lN5/b7Hlme20b+js09t7LBget1ufe5Ve6fhiGkExGT+DohZK7Zv60OMw==",
         "dependencies": {
           "Cake.Frosting": "2.0.0",
           "Cake.GitHubReleases": "1.0.10",
