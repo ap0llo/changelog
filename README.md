@@ -91,7 +91,7 @@ in `version.json` using [Nerdbank.GitVersioning](https://github.com/AArnott/Nerd
   commit hash included in the version string
 
 To create a new release branch use the [`nbgv` tool](https://www.nuget.org/packages/nbgv/)
-(at least version `3.0.24:
+(at least version `3.0.24`):
 
 ```ps1
 dotnet tool install --global nbgv 
