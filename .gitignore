@@ -23,7 +23,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-[Bb]uild/
+[Bb]inaries/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -343,3 +343,6 @@ MigrationBackup/
 
 launchSettings.json
 src/ChangeLog.Test/Tasks/*.received.txt
+
+# Cake Build tools directory
+tools/

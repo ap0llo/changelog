@@ -2,10 +2,6 @@
     "$schema": "./schemas/configuration/schema.json",
     "changelog": {
 
-        "integrations": {
-            "provider": "GitHub"
-        },
-
         "scopes": {
             "github" : { "displayName": "GitHub Integration" },
             "gitlab" :  { "displayName": "GitLab Integration" },
