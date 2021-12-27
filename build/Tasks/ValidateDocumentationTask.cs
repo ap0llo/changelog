@@ -1,5 +1,5 @@
-﻿using Cake.Common.Tools.DotNetCore;
-using Cake.Common.Tools.DotNetCore.Run;
+﻿using Cake.Common.Tools.DotNet;
+using Cake.Common.Tools.DotNet.Run;
 using Cake.Core;
 using Cake.Core.IO;
 using Cake.Frosting;
@@ -9,19 +9,19 @@ namespace Build
 {
     [TaskName("ValidateDocumentation")]
     [TaskDescription("Validates documentation files")]
-    [Dependency(typeof(BuildTask))]
+    [IsDependentOn(typeof(BuildTask))]
     [IsDependeeOf(typeof(ValidateTask))]
     public class ValidateDocumentationTask : FrostingTask<BuildContext>
     {
         public override void Run(BuildContext context)
         {
-            context.DotNetCoreRun(
+            context.DotNetRun(
                 "./utilities/docs/docs.csproj",
                 new ProcessArgumentBuilder()
                     .Append("validate")
                     .Append("./docs")
                     .Append("README.md"),
-                new DotNetCoreRunSettings()
+                new DotNetRunSettings()
                 {
                     Configuration = context.BuildSettings.Configuration,
                     NoBuild = true,
