@@ -47,12 +47,12 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="NuGet.Versioning" Version="6.0.0" />
     <PackageReference Include="Octokit" Version="0.50.0" />
-    <PackageReference Include="Autofac" Version="6.3.0" />    
-    <PackageReference Include="Scriban" Version="5.0.0" />  
+    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="Scriban" Version="5.0.0" />
     <PackageReference Include="Zio" Version="0.11.0" />
     <PackageReference Include="GitLabApiClient" Version="1.8.0" />
   </ItemGroup>
-    
+
 
   <!-- Auto-Generated command line help -->
   <ItemGroup>
@@ -63,6 +63,5 @@
     <!-- Generate docs only for net5.0, otherwise there would be race-conditions between the buidls for the different target frameworks-->
     <GenerateCommandLineDocumentationOnBuild Condition=" '$(TargetFramework)' == 'net5.0' ">true</GenerateCommandLineDocumentationOnBuild>
   </PropertyGroup>
-
 
 </Project>
