@@ -27,7 +27,7 @@ jobs:
 
     - name: Update lock files
       run: |-
-        dotnet restore ./ChangeLog.sln
+        dotnet restore
 
     - name: Commit and push if lock file was changed
       run: |-
