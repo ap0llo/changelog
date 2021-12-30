@@ -331,5 +331,82 @@ namespace Grynwald.ChangeLog.Test.Git
             Assert.NotNull(actualCommit);
             Assert.Equal(expectedCommit, actualCommit);
         }
+
+        [Fact]
+        public async Task GetNotes_returns_empty_enumerable_if_no_notes_exist()
+        {
+            // ARRANGE
+            var commit = await Git.CommitAsync("Commit 1");
+
+            // ACT 
+            using var sut = new GitRepository(m_WorkingDirectory);
+            var notes = sut.GetNotes(commit.Id);
+
+            // ASSERT
+            Assert.NotNull(notes);
+            Assert.Empty(notes);
+        }
+
+        [Fact]
+        public async Task GetNotes_returns_expected_note_from_default_namespace()
+        {
+            // ARRANGE
+            var commit = await Git.CommitAsync("Commit 1");
+            await Git.AddNotesAsync(message: "Some note");
+
+            // ACT 
+            using var sut = new GitRepository(m_WorkingDirectory);
+            var notes = sut.GetNotes(commit.Id);
+
+            // ASSERT
+            var note = Assert.Single(notes);
+
+            Assert.Equal(commit.Id, note.Target);
+            Assert.Equal("commits", note.Namespace);
+            Assert.Equal("Some note", note.Message.TrimEnd());
+        }
+
+        [Fact]
+        public async Task GetNotes_returns_expected_notes()
+        {
+            // ARRANGE
+            var commit = await Git.CommitAsync("Commit 1");
+            await Git.AddNotesAsync(message: "Some note");
+            await Git.AddNotesAsync(message: "Some other note", @ref: "custom-namespace");
+
+            // ACT 
+            using var sut = new GitRepository(m_WorkingDirectory);
+            var notes = sut.GetNotes(commit.Id);
+
+            // ASSERT
+            Assert.Collection(
+                notes.OrderBy(x => x.Namespace),
+                note =>
+                {
+                    Assert.Equal(commit.Id, note.Target);
+                    Assert.Equal("commits", note.Namespace);
+                    Assert.Equal("Some note", note.Message.TrimEnd());
+                },
+                note =>
+                {
+                    Assert.Equal(commit.Id, note.Target);
+                    Assert.Equal("custom-namespace", note.Namespace);
+                    Assert.Equal("Some other note", note.Message.TrimEnd());
+                });
+        }
+
+        [Fact]
+        public void GetNotes_throws_GitObjectNotFoundException_if_target_cannot_be_found()
+        {
+            // ARRANGE
+            var target = TestGitIds.Id1;
+
+            // ACT 
+            using var sut = new GitRepository(m_WorkingDirectory);
+            var ex = Record.Exception(() => sut.GetNotes(target));
+
+            // ASSERT
+            Assert.IsType<GitObjectNotFoundException>(ex);
+        }
     }
 }

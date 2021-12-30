@@ -67,6 +67,18 @@ namespace Grynwald.ChangeLog.Git
             return commit is null ? null : ToGitCommit(commit);
         }
 
+        /// <inheritdoc />
+        public IReadOnlyList<GitNote> GetNotes(GitId id)
+        {
+            var gitObject = m_Repository.Lookup<GitObject>(id.Id);
+
+            if (gitObject is null)
+                throw new GitObjectNotFoundException($"Git object '{id}' was not found. Cannot retrieve notes for object.");
+
+            return m_Repository.Notes[gitObject.Id]
+                .Select(ToGitNote)
+                .ToList();
+        }
 
         /// <inheritdoc />
         public void Dispose() => m_Repository.Dispose();
@@ -88,10 +100,20 @@ namespace Grynwald.ChangeLog.Git
             return new GitId(gitObject.Sha, abbreviatedId);
         }
 
+        private GitId ToGitId(ObjectId objectId)
+        {
+            var gitObject = m_Repository.Lookup<GitObject>(objectId);
+            return ToGitId(gitObject);
+        }
+
         private GitAuthor ToGitAuthor(Signature signature) => new GitAuthor(name: signature.Name, email: signature.Email);
 
         private GitTag ToGitTag(Tag tag) => new GitTag(tag.FriendlyName, ToGitId(tag.Target));
 
         private GitRemote ToGitRemote(Remote remote) => new GitRemote(remote.Name, remote.Url);
+
+        private GitNote ToGitNote(Note note) =>
+            new GitNote(ToGitId(note.TargetObjectId), note.Namespace, note.Message);
+
     }
 }
