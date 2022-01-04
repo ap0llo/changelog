@@ -64,9 +64,9 @@
       },
       "LibGit2Sharp": {
         "type": "Direct",
-        "requested": "[0.27.0-preview-0158, )",
-        "resolved": "0.27.0-preview-0158",
-        "contentHash": "wAYMqRfUcumaS9Jbtk1ogkusksp06B/3IkoNSSTQ9hTKZ9ehHUX0wYlqkg49Z+6z7OFtsYow6I/29Sc/T0hvjQ==",
+        "requested": "[0.27.0-preview-0175, )",
+        "resolved": "0.27.0-preview-0175",
+        "contentHash": "dshdxaQU3MPVbVCTEbv/6Bek1G0uAq1zSiqHC0XUvJG/MHU3HxC3rLiaEvnMfLuEls/2HZQcWFW2ys1qUA3x2Q==",
         "dependencies": {
           "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.9]"
         }
@@ -388,9 +388,9 @@
       },
       "LibGit2Sharp": {
         "type": "Direct",
-        "requested": "[0.27.0-preview-0158, )",
-        "resolved": "0.27.0-preview-0158",
-        "contentHash": "wAYMqRfUcumaS9Jbtk1ogkusksp06B/3IkoNSSTQ9hTKZ9ehHUX0wYlqkg49Z+6z7OFtsYow6I/29Sc/T0hvjQ==",
+        "requested": "[0.27.0-preview-0175, )",
+        "resolved": "0.27.0-preview-0175",
+        "contentHash": "dshdxaQU3MPVbVCTEbv/6Bek1G0uAq1zSiqHC0XUvJG/MHU3HxC3rLiaEvnMfLuEls/2HZQcWFW2ys1qUA3x2Q==",
         "dependencies": {
           "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.9]"
         }
@@ -697,9 +697,9 @@
       },
       "LibGit2Sharp": {
         "type": "Direct",
-        "requested": "[0.27.0-preview-0158, )",
-        "resolved": "0.27.0-preview-0158",
-        "contentHash": "wAYMqRfUcumaS9Jbtk1ogkusksp06B/3IkoNSSTQ9hTKZ9ehHUX0wYlqkg49Z+6z7OFtsYow6I/29Sc/T0hvjQ==",
+        "requested": "[0.27.0-preview-0175, )",
+        "resolved": "0.27.0-preview-0175",
+        "contentHash": "dshdxaQU3MPVbVCTEbv/6Bek1G0uAq1zSiqHC0XUvJG/MHU3HxC3rLiaEvnMfLuEls/2HZQcWFW2ys1qUA3x2Q==",
         "dependencies": {
           "LibGit2Sharp.NativeBinaries": "[2.0.315-alpha.0.9]"
         }
