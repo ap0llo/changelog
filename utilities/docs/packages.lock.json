@@ -2,12 +2,6 @@
   "version": 1,
   "dependencies": {
     "net6.0": {
-      "CommandLineParser": {
-        "type": "Direct",
-        "requested": "[2.8.0, )",
-        "resolved": "2.8.0",
-        "contentHash": "eco2HlKQBY4Joz9odHigzGpVzv6pjsXnY5lziioMveQxr+i2Z7xYcIOMeZTgYiqnMtMAbXMXsVhrNfWO5vJS8Q=="
-      },
       "Markdig": {
         "type": "Direct",
         "requested": "[0.26.0, )",
@@ -36,12 +30,6 @@
         "resolved": "13.0.1",
         "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
       },
-      "Scriban": {
-        "type": "Direct",
-        "requested": "[5.0.0, )",
-        "resolved": "5.0.0",
-        "contentHash": "/kqARxHaYytWngSOqwHvXZkvTGgh6gbFgUiMrg1jbxATSkmHAB1KAfr+d6Dy92rloAynUPveAJBqijL1Vr2Ttw=="
-      },
       "Spectre.Console": {
         "type": "Direct",
         "requested": "[0.43.0, )",
@@ -55,6 +43,11 @@
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "4.7.1"
         }
+      },
+      "CommandLineParser": {
+        "type": "Transitive",
+        "resolved": "2.8.0",
+        "contentHash": "eco2HlKQBY4Joz9odHigzGpVzv6pjsXnY5lziioMveQxr+i2Z7xYcIOMeZTgYiqnMtMAbXMXsVhrNfWO5vJS8Q=="
       },
       "FluentValidation": {
         "type": "Transitive",
@@ -251,6 +244,11 @@
         "type": "Transitive",
         "resolved": "0.50.0",
         "contentHash": "J5vqespSvjxIAAtjG1Tc6ghBqyfRgDJtKnk/ifi4N0hD/f3JbPwyEDRT+Eelu/bS4C4M6mu5gt1WJqar+fByzg=="
+      },
+      "Scriban": {
+        "type": "Transitive",
+        "resolved": "5.0.0",
+        "contentHash": "/kqARxHaYytWngSOqwHvXZkvTGgh6gbFgUiMrg1jbxATSkmHAB1KAfr+d6Dy92rloAynUPveAJBqijL1Vr2Ttw=="
       },
       "System.Diagnostics.DiagnosticSource": {
         "type": "Transitive",
