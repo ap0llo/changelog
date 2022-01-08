@@ -137,6 +137,46 @@ namespace Grynwald.ChangeLog.IO
             }
         }
 
+        protected override IEnumerable<FileSystemItem> EnumerateItemsImpl(UPath path, SearchOption searchOption, SearchPredicate? searchPredicate)
+        {
+            IEnumerable<FileSystemItem> DoEnumerate(Directory directory, SearchOption searchOption, SearchPredicate? searchPredicate)
+            {
+                foreach (var subDirectory in directory.Directories)
+                {
+                    var fileSystemItem = new FileSystemItem(this, subDirectory.Path, true);
+                    if (searchPredicate is null || searchPredicate.Invoke(ref fileSystemItem))
+                        yield return fileSystemItem;
+                }
+
+                foreach (var file in directory.Files)
+                {
+                    var fileSystemItem = new FileSystemItem(this, file.Path, false);
+                    if (searchPredicate is null || searchPredicate.Invoke(ref fileSystemItem))
+                        yield return fileSystemItem;
+                }
+
+                if (searchOption == SearchOption.AllDirectories)
+                {
+                    foreach (var subDirectory in directory.Directories)
+                    {
+                        foreach (var path in DoEnumerate(subDirectory, searchOption, searchPredicate))
+                        {
+                            yield return path;
+                        }
+                    }
+                }
+            }
+
+            if (TryGetFileSystemEntry(path, SearchTarget.Directory) is Directory directory)
+            {
+                return DoEnumerate(directory, searchOption, searchPredicate);
+            }
+            else
+            {
+                throw new DirectoryNotFoundException($"Directory '{path}' does not exist");
+            }
+        }
+
         protected override bool DirectoryExistsImpl(UPath path) => TryGetFileSystemEntry(path, SearchTarget.Directory) is not null;
 
         protected override bool FileExistsImpl(UPath path) => TryGetFileSystemEntry(path, SearchTarget.File) is not null;

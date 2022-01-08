@@ -282,8 +282,8 @@
       },
       "Zio": {
         "type": "Transitive",
-        "resolved": "0.11.0",
-        "contentHash": "eNHy6n/UCuQKtqCVw2XIw7L9g1/5vEFuMJ8aLM6tXLxh+vAFajwW1+oFAL65t31YNWro0uLDCez5mGsamC73QA=="
+        "resolved": "0.13.0",
+        "contentHash": "caQXHcNNPLyF2wB28FttQ4GvF7/CVffbTKpjLk0NDhFwOphZEf/X+mlSFGOoQ0Pqu3BcxHH94x9e+5/d956dfA=="
       },
       "grynwald.changelog": {
         "type": "Project",
@@ -304,7 +304,7 @@
           "NuGet.Versioning": "6.0.0",
           "Octokit": "0.50.0",
           "Scriban": "5.0.0",
-          "Zio": "0.11.0"
+          "Zio": "0.13.0"
         }
       }
     }

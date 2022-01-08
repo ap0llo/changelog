@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -318,6 +320,217 @@ namespace Grynwald.ChangeLog.Test.IO
                 // ARRANGE
                 var sut = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
                 Action act = () => sut.EnumeratePaths(path, "*", SearchOption.AllDirectories, SearchTarget.Both).ToArray();
+
+                // ACT 
+                var ex = Record.Exception(act);
+
+                // ASSERT
+                Assert.IsType<DirectoryNotFoundException>(ex);
+            }
+
+        }
+
+        public class EnumerateItems
+        {
+            private class FileSystemItemComparer : IEqualityComparer<FileSystemItem>
+            {
+                public bool Equals([AllowNull] FileSystemItem x, [AllowNull] FileSystemItem y) =>
+                    x.Path.Equals(y.Path) && x.IsDirectory == y.IsDirectory;
+
+                public int GetHashCode([DisallowNull] FileSystemItem obj) => obj.Path.GetHashCode();
+            }
+
+            public static IEnumerable<object?[]> ExpectedItems()
+            {
+                object?[] TestCase(string id, string path, SearchOption searchOption, SearchPredicate? searchPredicate, IReadOnlyList<FileSystemItem> expected) =>
+                    new object?[] { id, path, searchOption, searchPredicate, expected };
+
+                //
+                // Base test cases: get both files and directories without recursion
+                //
+                yield return TestCase(
+                    id: "T01",
+                    path: "/",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: null,
+                    expected: new[]
+                    {
+                        new FileSystemItem(null!, "/dir1", true),
+                        new FileSystemItem(null!, "/file1.txt", false),
+                        new FileSystemItem(null!, "/file2.txt", false),
+                    });
+
+                yield return TestCase(
+                    id: "T02",
+                    path: "/dir1",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: null,
+                    expected: new[] { new FileSystemItem(null!, "/dir1/file2.txt", false) });
+
+                //
+                // Use denormalized paths
+                //
+                yield return TestCase(
+                    id: "T03",
+                    path: "/dir1/../",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: null,
+                    expected: new[]
+                    {
+                        new FileSystemItem(null!, "/dir1", true),
+                        new FileSystemItem(null!, "/file1.txt", false),
+                        new FileSystemItem(null!, "/file2.txt", false)
+                    });
+
+                yield return TestCase(
+                    id: "T04",
+                    path: "/dir1/../dir1",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: null,
+                    expected: new[] { new FileSystemItem(null!, "/dir1/file2.txt", false) });
+
+                //
+                // Specify search-predicate
+                //
+                yield return TestCase(
+                    id: "T05",
+                    path: "/",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: (ref FileSystemItem x) => x.AbsolutePath.GetName().StartsWith("file1."),
+                    expected: new[] { new FileSystemItem(null!, "/file1.txt", false) });
+
+                yield return TestCase(
+                    id: "T06",
+                    path: "/dir1",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: (ref FileSystemItem x) => x.AbsolutePath.GetName().EndsWith(".xml"),
+                    expected: Array.Empty<FileSystemItem>());
+
+                //
+                // Get all items recursively
+                //
+                yield return TestCase(
+                    id: "T07",
+                    path: "/",
+                    searchOption: SearchOption.AllDirectories,
+                    searchPredicate: null,
+                    expected: new[]
+                    {
+                        new FileSystemItem(null!, "/dir1",true),
+                        new FileSystemItem(null!, "/file1.txt",false),
+                        new FileSystemItem(null!, "/file2.txt",false),
+                        new FileSystemItem(null!, "/dir1/file2.txt",false)
+                    });
+
+                yield return TestCase(
+                    id: "T08",
+                    path: "/dir1",
+                    searchOption: SearchOption.AllDirectories,
+                    searchPredicate: null,
+                    expected: new[] { new FileSystemItem(null!, "/dir1/file2.txt", false) });
+
+                //
+                // Get files recursively
+                //
+                yield return TestCase(
+                    id: "T09",
+                    path: "/",
+                    searchOption: SearchOption.AllDirectories,
+                    searchPredicate: (ref FileSystemItem x) => !x.IsDirectory,
+                    expected: new[]
+                    {
+                        new FileSystemItem(null!, "/file1.txt", false),
+                        new FileSystemItem(null!, "/file2.txt", false),
+                        new FileSystemItem(null!, "/dir1/file2.txt", false)
+                    });
+
+                yield return TestCase(
+                    id: "T10",
+                    path: "/dir1",
+                    searchOption: SearchOption.AllDirectories,
+                    searchPredicate: (ref FileSystemItem x) => !x.IsDirectory,
+                    expected: new[] { new FileSystemItem(null!, "/dir1/file2.txt", false) });
+
+                //
+                // Get directories recursively
+                //
+                yield return TestCase(
+                    id: "T11",
+                    path: "/",
+                    searchOption: SearchOption.AllDirectories,
+                    searchPredicate: (ref FileSystemItem x) => x.IsDirectory,
+                    expected: new[] { new FileSystemItem(null!, "/dir1", true) });
+
+                yield return TestCase(
+                    id: "T12",
+                    path: "/dir1",
+                    searchOption: SearchOption.AllDirectories,
+                    searchPredicate: (ref FileSystemItem x) => x.IsDirectory,
+                    expected: Array.Empty<FileSystemItem>());
+
+                //
+                // Get only files
+                //
+                yield return TestCase(
+                    id: "T13",
+                    path: "/",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: (ref FileSystemItem x) => !x.IsDirectory,
+                    expected: new[]
+                    {
+                        new FileSystemItem(null!, "/file1.txt", false),
+                        new FileSystemItem(null!, "/file2.txt", false)
+                    });
+
+                yield return TestCase(
+                    id: "T14",
+                    path: "/dir1",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: (ref FileSystemItem x) => !x.IsDirectory,
+                    expected: new[] { new FileSystemItem(null!, "/dir1/file2.txt", false) });
+
+                //
+                // Get only directories
+                //
+                yield return TestCase(
+                    id: "T15",
+                    path: "/",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: (ref FileSystemItem x) => x.IsDirectory,
+                    expected: new[] { new FileSystemItem(null!, "/dir1", true) });
+
+                yield return TestCase(
+                    id: "T16",
+                    path: "/dir1",
+                    searchOption: SearchOption.TopDirectoryOnly,
+                    searchPredicate: (ref FileSystemItem x) => x.IsDirectory,
+                    expected: Array.Empty<FileSystemItem>());
+            }
+
+            [Theory]
+            [MemberData(nameof(ExpectedItems))]
+            public void Returns_expected_values(string id, string path, SearchOption searchOption, SearchPredicate? searchPredicate, IReadOnlyList<FileSystemItem> expected)
+            {
+                // ARRANGE
+                _ = id;
+                var sut = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
+                var expectedItems = expected.ToHashSet(new FileSystemItemComparer());
+
+                // ACT
+                var actualItems = sut.EnumerateItems(path, searchOption, searchPredicate);
+
+                // ASSERT
+                Assert.True(expectedItems.SetEquals(actualItems));
+            }
+
+            [Theory]
+            [InlineData("/file1.txt")]
+            [InlineData("/does-not-exist")]
+            public void Throws_DirectoryNotFoundException_when_directory_does_not_exist(string path)
+            {
+                // ARRANGE
+                var sut = new EmbeddedResourcesFileSystem(Assembly.GetExecutingAssembly());
+                Action act = () => sut.EnumerateItems(path, SearchOption.AllDirectories).ToArray();
 
                 // ACT 
                 var ex = Record.Exception(act);
