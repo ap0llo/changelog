@@ -137,6 +137,18 @@ namespace Grynwald.ChangeLog.Configuration
             [JsonSchemaDefaultValue]
             [SettingDisplayName("Parser Mode")]
             public ParserMode Mode { get; set; }
+
+            public MessageOverrideConfiguration MessageOverrides { get; set; } = new();
+        }
+
+        public class MessageOverrideConfiguration
+        {
+            [JsonSchemaDefaultValue]
+            public bool Enabled { get; set; }
+
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("Message Overide Git Notes Namespace")]
+            public string GitNotesNamespace { get; set; } = "";
         }
 
 

@@ -68,7 +68,8 @@ namespace Grynwald.ChangeLog.Tasks
             var strictMode = m_Configuration.Parser.Mode == ChangeLogConfiguration.ParserMode.Strict;
             try
             {
-                var parsed = CommitMessageParser.Parse(commit.CommitMessage, strictMode);
+                var commitMessage = GetCommitMessage(commit);
+                var parsed = CommitMessageParser.Parse(commitMessage, strictMode);
                 entry = ChangeLogEntry.FromCommitMessage(commit, parsed);
                 return true;
             }
@@ -78,6 +79,27 @@ namespace Grynwald.ChangeLog.Tasks
                 entry = default;
                 return false;
             }
+        }
+
+
+        private string GetCommitMessage(GitCommit commit)
+        {
+            if (!m_Configuration.Parser.MessageOverrides.Enabled)
+            {
+                return commit.CommitMessage;
+            }
+
+            var notes = m_Repository
+                .GetNotes(commit.Id)
+                .Where(n => n.Namespace == m_Configuration.Parser.MessageOverrides.GitNotesNamespace);
+
+            if (notes.Any())
+            {
+                m_Logger.LogInformation($"Commit message for commit '{commit.Id}' was overridden through git-notes. Using message from git-notes instead of commit message.");
+                return notes.Single().Message;
+            }
+
+            return commit.CommitMessage;
         }
     }
 }

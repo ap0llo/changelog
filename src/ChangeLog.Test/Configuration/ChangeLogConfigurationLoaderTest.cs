@@ -272,6 +272,8 @@ namespace Grynwald.ChangeLog.Test.Configuration
             //
             yield return TestCase(config => Assert.NotNull(config.Parser));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.ParserMode.Loose, config.Parser.Mode));
+            yield return TestCase(config => Assert.True(config.Parser.MessageOverrides.Enabled));
+            yield return TestCase(config => Assert.Equal("changelog/message-override", config.Parser.MessageOverrides.GitNotesNamespace));
 
             //
             // Filter settings
@@ -547,6 +549,11 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 yield return TestCase("parser:mode", config => config.Parser.Mode, value);
             }
 
+            yield return TestCase("parser:messageOverrides:enabled", config => config.Parser.MessageOverrides.Enabled, true);
+            yield return TestCase("parser:messageOverrides:enabled", config => config.Parser.MessageOverrides.Enabled, false);
+
+            yield return TestCase("parser:messageOverrides:gitNotesNamespace", config => config.Parser.MessageOverrides.GitNotesNamespace, "some-namespace");
+
             //
             // Tag Patterns settting
             //
@@ -682,38 +689,20 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 ));
         }
 
-        public static IEnumerable<object?[]> ConfigurationFileSetValueTestCases()
-        {
-            foreach (var (testData, target) in AllSetValueTestCases())
-            {
-                if (target.HasFlag(SettingsTarget.ConfigurationFile))
-                {
-                    yield return testData;
-                }
-            }
-        }
+        public static IEnumerable<object?[]> ConfigurationFileSetValueTestCases() =>
+            AllSetValueTestCases()
+                .Where(x => x.target.HasFlag(SettingsTarget.ConfigurationFile))
+                .Select(x => x.testData);
 
-        public static IEnumerable<object?[]> EnvironmentVariablesSetValueTestCases()
-        {
-            foreach (var (testData, target) in AllSetValueTestCases())
-            {
-                if (target.HasFlag(SettingsTarget.EnvironmentVariables))
-                {
-                    yield return testData;
-                }
-            }
-        }
+        public static IEnumerable<object?[]> EnvironmentVariablesSetValueTestCases() =>
+            AllSetValueTestCases()
+                .Where(x => x.target.HasFlag(SettingsTarget.EnvironmentVariables))
+                .Select(x => x.testData);
 
-        public static IEnumerable<object?[]> SettingsObjectSetValueTestCases()
-        {
-            foreach (var (testData, target) in AllSetValueTestCases())
-            {
-                if (target.HasFlag(SettingsTarget.SettingsObject))
-                {
-                    yield return testData;
-                }
-            }
-        }
+        public static IEnumerable<object?[]> SettingsObjectSetValueTestCases() =>
+            AllSetValueTestCases()
+                .Where(x => x.target.HasFlag(SettingsTarget.SettingsObject))
+                .Select(x => x.testData);
 
 
         [Theory]
