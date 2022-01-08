@@ -96,9 +96,9 @@ namespace Grynwald.ChangeLog.Configuration
                 .UnlessNullOrWhiteSpace()
                 .WithMessage("Directory '{PropertyValue}' specified as '{PropertyName}' does not exists");
 
-            RuleFor(x => x.Parser.MessageOverrides.GitNotesNamespace)
+            RuleFor(x => x.MessageOverrides.GitNotesNamespace)
                 .NotEmpty()
-                .When(x => x.Parser.MessageOverrides.Enabled);
+                .When(x => x.MessageOverrides.Enabled);
         }
 
 

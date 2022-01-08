@@ -84,14 +84,14 @@ namespace Grynwald.ChangeLog.Tasks
 
         private string GetCommitMessage(GitCommit commit)
         {
-            if (!m_Configuration.Parser.MessageOverrides.Enabled)
+            if (!m_Configuration.MessageOverrides.Enabled)
             {
                 return commit.CommitMessage;
             }
 
             var notes = m_Repository
                 .GetNotes(commit.Id)
-                .Where(n => n.Namespace == m_Configuration.Parser.MessageOverrides.GitNotesNamespace);
+                .Where(n => n.Namespace == m_Configuration.MessageOverrides.GitNotesNamespace);
 
             if (notes.Any())
             {

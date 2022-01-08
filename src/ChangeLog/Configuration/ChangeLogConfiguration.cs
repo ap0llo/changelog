@@ -137,20 +137,7 @@ namespace Grynwald.ChangeLog.Configuration
             [JsonSchemaDefaultValue]
             [SettingDisplayName("Parser Mode")]
             public ParserMode Mode { get; set; }
-
-            public MessageOverrideConfiguration MessageOverrides { get; set; } = new();
         }
-
-        public class MessageOverrideConfiguration
-        {
-            [JsonSchemaDefaultValue]
-            public bool Enabled { get; set; }
-
-            [JsonSchemaDefaultValue]
-            [SettingDisplayName("Message Overide Git Notes Namespace")]
-            public string GitNotesNamespace { get; set; } = "";
-        }
-
 
         public class FilterConfiguration
         {
@@ -170,6 +157,17 @@ namespace Grynwald.ChangeLog.Configuration
             [JsonSchemaDefaultValue]
             [SettingDisplayName("Filter Scope Expression")]
             public string Scope { get; set; } = "*";
+        }
+
+        public class MessageOverrideConfiguration
+        {
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("Enable Commit Message Overrides")]
+            public bool Enabled { get; set; }
+
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("Commit Message Overide Git Notes Namespace")]
+            public string GitNotesNamespace { get; set; } = "";
         }
 
 
@@ -210,6 +208,8 @@ namespace Grynwald.ChangeLog.Configuration
         [JsonSchemaDefaultValue]
         [SettingDisplayName("Filter")]
         public FilterConfiguration Filter { get; set; } = new FilterConfiguration();
+
+        public MessageOverrideConfiguration MessageOverrides { get; set; } = new();
 
 
         public string GetFullOutputPath()

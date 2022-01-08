@@ -15,11 +15,11 @@ Commit Message Override Settings control the behavior of the ["Commit Message Ov
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:parser:messageOverrides:enabled</code></td>
+        <td><code>changelog:messageOverrides:enabled</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__PARSER__MESSAGEOVERRIDES__ENABLED</code></td>
+        <td><code>CHANGELOG__MESSAGEOVERRIDES__ENABLED</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
@@ -49,11 +49,11 @@ Enabled/disables the ["Commit Message Overrides" feature](../../message-override
 <table>
     <tr>
         <td><b>Setting</b></td>
-        <td><code>changelog:parser:messageOverrides:gitNotesNamespace</code></td>
+        <td><code>changelog:messageOverrides:gitNotesNamespace</code></td>
     </tr>
     <tr>
         <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__PARSER__MESSAGEOVERRIDES__GITNOTESNAMESPACE</code></td>
+        <td><code>CHANGELOG__MESSAGEOVERRIDES__GITNOTESNAMESPACE</code></td>
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>

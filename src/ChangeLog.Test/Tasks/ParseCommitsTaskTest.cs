@@ -265,10 +265,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
 
             if (enableMessageOverrides.HasValue)
-                config.Parser.MessageOverrides.Enabled = enableMessageOverrides.Value;
+                config.MessageOverrides.Enabled = enableMessageOverrides.Value;
 
             if (gitNotesNamespace is not null)
-                config.Parser.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+                config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
 
             var shouldOverrideMessage = enableMessageOverrides == null || enableMessageOverrides == true;
 

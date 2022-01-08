@@ -850,8 +850,8 @@ namespace Grynwald.ChangeLog.Test.Configuration
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.Parser.MessageOverrides.Enabled = true;
-            config.Parser.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+            config.MessageOverrides.Enabled = true;
+            config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
 
             var sut = new ConfigurationValidator();
 
@@ -861,7 +861,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // ASSERT
             Assert.False(result.IsValid);
             Assert.Collection(result.Errors,
-                error => Assert.Contains("'Message Overide Git Notes Namespace'", error.ErrorMessage)
+                error => Assert.Contains("'Commit Message Overide Git Notes Namespace'", error.ErrorMessage)
             );
         }
 
@@ -874,8 +874,8 @@ namespace Grynwald.ChangeLog.Test.Configuration
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.Parser.MessageOverrides.Enabled = false;
-            config.Parser.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+            config.MessageOverrides.Enabled = false;
+            config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
 
             var sut = new ConfigurationValidator();
 

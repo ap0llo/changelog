@@ -272,8 +272,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             //
             yield return TestCase(config => Assert.NotNull(config.Parser));
             yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.ParserMode.Loose, config.Parser.Mode));
-            yield return TestCase(config => Assert.True(config.Parser.MessageOverrides.Enabled));
-            yield return TestCase(config => Assert.Equal("changelog/message-override", config.Parser.MessageOverrides.GitNotesNamespace));
 
             //
             // Filter settings
@@ -288,6 +286,12 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             yield return TestCase(config => Assert.NotNull(config.Filter.Exclude));
             yield return TestCase(config => Assert.Empty(config.Filter.Exclude));
+
+            //
+            // Message override settings
+            //
+            yield return TestCase(config => Assert.True(config.MessageOverrides.Enabled));
+            yield return TestCase(config => Assert.Equal("changelog/message-override", config.MessageOverrides.GitNotesNamespace));
         }
 
         [Theory]
@@ -549,11 +553,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 yield return TestCase("parser:mode", config => config.Parser.Mode, value);
             }
 
-            yield return TestCase("parser:messageOverrides:enabled", config => config.Parser.MessageOverrides.Enabled, true);
-            yield return TestCase("parser:messageOverrides:enabled", config => config.Parser.MessageOverrides.Enabled, false);
-
-            yield return TestCase("parser:messageOverrides:gitNotesNamespace", config => config.Parser.MessageOverrides.GitNotesNamespace, "some-namespace");
-
             //
             // Tag Patterns settting
             //
@@ -687,6 +686,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
                         x => AssertFilterExpression(x, "docs", "some-scope"),
                         x => AssertFilterExpression(x, "ci", "*")
                 ));
+
+            //
+            // Message override settings
+            //
+            yield return TestCase("messageOverrides:enabled", config => config.MessageOverrides.Enabled, true);
+            yield return TestCase("messageOverrides:enabled", config => config.MessageOverrides.Enabled, false);
+
+            yield return TestCase("messageOverrides:gitNotesNamespace", config => config.MessageOverrides.GitNotesNamespace, "some-namespace");
         }
 
         public static IEnumerable<object?[]> ConfigurationFileSetValueTestCases() =>

@@ -602,20 +602,6 @@
               ],
               "default": "Loose",
               "title": "Parser Mode"
-            },
-            "messageOverrides": {
-              "type": "object",
-              "properties": {
-                "enabled": {
-                  "type": "boolean",
-                  "default": true
-                },
-                "gitNotesNamespace": {
-                  "type": "string",
-                  "default": "changelog/message-override",
-                  "title": "Message Overide Git Notes Namespace"
-                }
-              }
             }
           }
         },
@@ -671,6 +657,21 @@
             "exclude": []
           },
           "title": "Filter"
+        },
+        "messageOverrides": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "title": "Enable Commit Message Overrides"
+            },
+            "gitNotesNamespace": {
+              "type": "string",
+              "default": "changelog/message-override",
+              "title": "Commit Message Overide Git Notes Namespace"
+            }
+          }
         }
       }
     }

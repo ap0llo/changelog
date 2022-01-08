@@ -1,5 +1,5 @@
 {{~
-    defaultNamespace = configuration.get_scalar "changelog:parser:messageOverrides:gitNotesNamespace" | html.escape
+    defaultNamespace = configuration.get_scalar "changelog:messageOverrides:gitNotesNamespace" | html.escape
 ~}}
 # Commit Message Overrides
 
