@@ -43,5 +43,12 @@ namespace Grynwald.ChangeLog.Git
         /// </summary>
         /// <param name="id">The id to search a commit for. Value can be an abbreviated commit SHA.</param>
         GitCommit? TryGetCommit(string id);
+
+        /// <summary>
+        /// Gets all git notes for the specified object
+        /// </summary>
+        /// <param name="id">The id of the object to get notes for.</param>
+        /// <returns>Returns all notes for the specified object or an empty list if no notes exist for the object.</returns>
+        IReadOnlyList<GitNote> GetNotes(GitId id);
     }
 }

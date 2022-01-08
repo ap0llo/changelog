@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using CliWrap;
 using CliWrap.Buffered;
@@ -86,6 +87,28 @@ namespace Grynwald.ChangeLog.Test.Git
         /// </summary>
         public Task CheckoutNewBranchAsync(string branchName) => ExecAsync($"checkout -b \"{branchName}\"");
 
+        /// <summary>
+        /// Adds new notes to a commit
+        /// </summary>
+        public async Task AddNotesAsync(string message, string? commit = null, string? @ref = null)
+        {
+            var command = new StringBuilder();
+
+            command.Append(" notes ");
+
+            if (@ref is not null)
+                command.Append($" --ref \"{@ref}\" ");
+
+            command.Append(" add ");
+
+            if (commit is not null)
+                command.Append($" \"{commit}\" ");
+
+            command.Append($" -m \"{message}\" ");
+
+            await ExecAsync(command.ToString());
+
+        }
 
         private Task<BufferedCommandResult> ExecAsync(string command)
         {

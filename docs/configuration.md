@@ -62,6 +62,9 @@ For example setting `key:subkey` to `value` would need to be specified in the co
   - [Normalize References](./configuration/settings/gitlabrelease-template.md#normalize-references)
 - [Html Template](./configuration/settings/html-template.md)
   - [Normalize References](./configuration/settings/html-template.md#normalize-references)
+- [Commit Message Overrides](./configuration/settings/message-overrides.md)
+  - [Enable Message Overrides](./configuration/settings/message-overrides.md#enable-message-overrides)
+  - [Git Notes Namespace](./configuration/settings/message-overrides.md#git-notes-namespace)
 
 
 ## See Also

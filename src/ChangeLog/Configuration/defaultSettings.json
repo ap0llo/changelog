@@ -122,7 +122,12 @@
     },
 
     "parser": {
-      "mode" :  "Loose"
+      "mode": "Loose"
+    },
+
+    "messageOverrides": {
+      "enabled": true,
+      "gitNotesNamespace": "changelog/message-overrides"
     }
   }
 }

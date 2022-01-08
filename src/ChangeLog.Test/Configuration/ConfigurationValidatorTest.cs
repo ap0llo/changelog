@@ -841,6 +841,51 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void MessageOverrides_GitNotesNamespace_must_not_be_null_or_whitespace_when_message_overrides_are_enabled(string gitNotesNamespace)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.MessageOverrides.Enabled = true;
+            config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Commit Message Overide Git Notes Namespace'", error.ErrorMessage)
+            );
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("\t")]
+        [InlineData("  ")]
+        public void MessageOverrides_GitNotesNamespace_may_be_null_or_whitespace_when_message_overrides_are_disabled(string gitNotesNamespace)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.MessageOverrides.Enabled = false;
+            config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
+        }
 
     }
 }
