@@ -40,9 +40,9 @@
       },
       "Grynwald.Utilities": {
         "type": "Direct",
-        "requested": "[1.6.11-pre, )",
-        "resolved": "1.6.11-pre",
-        "contentHash": "yeAy/2naCVuq2dMHxMglvjc88Vys8ASDlXaSD25xyOc/Y8HiK5pQG8Kpa5bRoShBs2Bvuu6HyMIdPPkw4/Z2DA=="
+        "requested": "[1.6.122, )",
+        "resolved": "1.6.122",
+        "contentHash": "mToOFiNgw43Tcvo1FA+hnNHEO4TrcK7QJi/pXony2B/4ui7d66/MVUrVWIGIxE1LT6jW776d74t/c3E99G9hLQ=="
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Direct",
@@ -364,9 +364,9 @@
       },
       "Grynwald.Utilities": {
         "type": "Direct",
-        "requested": "[1.6.11-pre, )",
-        "resolved": "1.6.11-pre",
-        "contentHash": "yeAy/2naCVuq2dMHxMglvjc88Vys8ASDlXaSD25xyOc/Y8HiK5pQG8Kpa5bRoShBs2Bvuu6HyMIdPPkw4/Z2DA=="
+        "requested": "[1.6.122, )",
+        "resolved": "1.6.122",
+        "contentHash": "mToOFiNgw43Tcvo1FA+hnNHEO4TrcK7QJi/pXony2B/4ui7d66/MVUrVWIGIxE1LT6jW776d74t/c3E99G9hLQ=="
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Direct",
@@ -673,9 +673,9 @@
       },
       "Grynwald.Utilities": {
         "type": "Direct",
-        "requested": "[1.6.11-pre, )",
-        "resolved": "1.6.11-pre",
-        "contentHash": "yeAy/2naCVuq2dMHxMglvjc88Vys8ASDlXaSD25xyOc/Y8HiK5pQG8Kpa5bRoShBs2Bvuu6HyMIdPPkw4/Z2DA=="
+        "requested": "[1.6.122, )",
+        "resolved": "1.6.122",
+        "contentHash": "mToOFiNgw43Tcvo1FA+hnNHEO4TrcK7QJi/pXony2B/4ui7d66/MVUrVWIGIxE1LT6jW776d74t/c3E99G9hLQ=="
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Direct",
