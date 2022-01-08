@@ -64,8 +64,8 @@
       },
       "Grynwald.Utilities": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "yeAy/2naCVuq2dMHxMglvjc88Vys8ASDlXaSD25xyOc/Y8HiK5pQG8Kpa5bRoShBs2Bvuu6HyMIdPPkw4/Z2DA=="
+        "resolved": "1.6.122",
+        "contentHash": "mToOFiNgw43Tcvo1FA+hnNHEO4TrcK7QJi/pXony2B/4ui7d66/MVUrVWIGIxE1LT6jW776d74t/c3E99G9hLQ=="
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Transitive",
@@ -292,7 +292,7 @@
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.3.6",
           "GitLabApiClient": "1.8.0",
-          "Grynwald.Utilities": "1.6.11-pre",
+          "Grynwald.Utilities": "1.6.122",
           "Grynwald.Utilities.Configuration": "1.6.11-pre",
           "Grynwald.Utilities.Logging": "1.6.11-pre",
           "LibGit2Sharp": "0.27.0-preview-0175",
