@@ -35,9 +35,9 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="10.3.6" />
-    <PackageReference Include="Grynwald.Utilities" Version="1.6.11-pre" />
-    <PackageReference Include="Grynwald.Utilities.Configuration" Version="1.6.11-pre" />
-    <PackageReference Include="Grynwald.Utilities.Logging" Version="1.6.11-pre" />
+    <PackageReference Include="Grynwald.Utilities" Version="1.6.122" />
+    <PackageReference Include="Grynwald.Utilities.Configuration" Version="1.6.122" />
+    <PackageReference Include="Grynwald.Utilities.Logging" Version="1.6.122" />
     <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0175" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0" />
