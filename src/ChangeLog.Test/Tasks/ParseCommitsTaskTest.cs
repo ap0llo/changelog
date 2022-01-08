@@ -253,9 +253,9 @@ namespace Grynwald.ChangeLog.Test.Tasks
         [InlineData(true, null)]
         [InlineData(false, null)]
         [InlineData(null, null)]
-        [InlineData(true, "changelog/message-override")]
-        [InlineData(false, "changelog/message-override")]
-        [InlineData(null, "changelog/message-override")]
+        [InlineData(true, "changelog/message-overrides")]
+        [InlineData(false, "changelog/message-overrides")]
+        [InlineData(null, "changelog/message-overrides")]
         [InlineData(true, "custom-namespace")]
         [InlineData(false, "custom-namespace")]
         [InlineData(null, "custom-namespace")]
@@ -288,7 +288,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 .Returns(new[]
                 {
                     new GitNote(TestGitIds.Id2, "commits", "some text"),
-                    new GitNote(TestGitIds.Id2, gitNotesNamespace ?? "changelog/message-override", "feat: New Description"),
+                    new GitNote(TestGitIds.Id2, gitNotesNamespace ?? "changelog/message-overrides", "feat: New Description"),
                 });
 
 
@@ -347,7 +347,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 .Setup(x => x.GetNotes(TestGitIds.Id2))
                 .Returns(new[]
                 {
-                    new GitNote(TestGitIds.Id2, "changelog/message-override", "Not a conventioal commit message"),
+                    new GitNote(TestGitIds.Id2, "changelog/message-overrides", "Not a conventioal commit message"),
                 });
 
 

@@ -291,7 +291,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Message override settings
             //
             yield return TestCase(config => Assert.True(config.MessageOverrides.Enabled));
-            yield return TestCase(config => Assert.Equal("changelog/message-override", config.MessageOverrides.GitNotesNamespace));
+            yield return TestCase(config => Assert.Equal("changelog/message-overrides", config.MessageOverrides.GitNotesNamespace));
         }
 
         [Theory]

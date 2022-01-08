@@ -127,7 +127,7 @@
 
     "messageOverrides": {
       "enabled": true,
-      "gitNotesNamespace": "changelog/message-override"
+      "gitNotesNamespace": "changelog/message-overrides"
     }
   }
 }

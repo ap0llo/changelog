@@ -15,7 +15,7 @@ To allow editing the message used for generating the change log, version 0.5 int
 
 It uses ["git notes"](https://git-scm.com/docs/git-notes) to set a message that takes precedence over a commit's message.
 
-By default, the "override message" is read from the `changelog/message-override` namespace.
+By default, the "override message" is read from the `changelog/message-overrides` namespace.
 This can be customized through the [Git Notes Namespace setting](./configuration/settings/message-overrides.md#git-notes-namespace).
 
 Note that when a git note is present, it **always** takes precedence over the commit message, regardless of whether the commit message and/or the override message can be parsed as conventional commit.
@@ -45,13 +45,13 @@ Overrides can be disabled by setting the ["Enable Message Overrides"](./configur
 
 For more information on git notes, please refer to the [Git Documentation](https://git-scm.com/docs/git-notes).
 
-By default, changelog looks for override messages in the namespace `changelog/message-override`.
+By default, changelog looks for override messages in the namespace `changelog/message-overrides`.
 This can be customized through the [Git Notes Namespace setting](./configuration/settings/message-overrides.md#git-notes-namespace).
 
 To add an override message, run
 
 ```ps1
-git notes --ref "changelog/message-override" add "<COMMIT>"
+git notes --ref "changelog/message-overrides" add "<COMMIT>"
 ```
 
 where `<COMMIT>` is the SHA1 of the commit to add a note to.
@@ -60,13 +60,13 @@ where `<COMMIT>` is the SHA1 of the commit to add a note to.
 Similarly, notes can be edited by running
 
 ```ps1
-git notes --ref "changelog/message-override" edit "<COMMIT>"
+git notes --ref "changelog/message-overrides" edit "<COMMIT>"
 ```
 
 or removed using 
 
 ```ps1
-git notes --ref "changelog/message-override" remove "<COMMIT>"
+git notes --ref "changelog/message-overrides" remove "<COMMIT>"
 ```
 
 
@@ -74,7 +74,7 @@ To show message overrides in the output of `git log`, run
 
 ```ps1
 # Include "changelog message overrides" in the output of git log
-git log --show-notes=changelog/message-override
+git log --show-notes=changelog/message-overrides
 
 # Show *all* notes in the output of git log
 git log --show-notes=*
@@ -89,7 +89,7 @@ To push git notes, run
 
 ```ps1
 # Fetch changelog message overrides
-git push origin "refs/notes/changelog/message-override"
+git push origin "refs/notes/changelog/message-overrides"
 
 # Push all notes
 git push origin "refs/notes/*"
@@ -99,7 +99,7 @@ Before generating the change log, ensure that git notes have been fetched into t
 
 ```ps1
 # Fetch notes for the message override namespace
-git fetch origin "refs/notes/changelog/message-override:refs/notes/changelog/message-override"
+git fetch origin "refs/notes/changelog/message-overrides:refs/notes/changelog/message-overrides"
 
 # Fetch all notes
 git fetch origin "refs/notes/*:refs/notes/*"

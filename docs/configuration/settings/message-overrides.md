@@ -64,7 +64,7 @@ Enabled/disables the ["Commit Message Overrides" feature](../../message-override
     <tr>
         <td><b>Default value</b></td>
         <td>
-            <code>changelog/message-override</code>
+            <code>changelog/message-overrides</code>
         </td>
     </tr>
     <tr>
@@ -75,7 +75,7 @@ Enabled/disables the ["Commit Message Overrides" feature](../../message-override
 
 
 Configures the "git notes namespace" to search for override messages.
-By default, override messages are read from the `changelog/message-override` namespace.
+By default, override messages are read from the `changelog/message-overrides` namespace.
 
 
 ## See Also

@@ -668,7 +668,7 @@
             },
             "gitNotesNamespace": {
               "type": "string",
-              "default": "changelog/message-override",
+              "default": "changelog/message-overrides",
               "title": "Commit Message Overide Git Notes Namespace"
             }
           }
