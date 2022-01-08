@@ -69,10 +69,10 @@
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "COA4bt4+NN9aBXf+u188T7NrpDC77OMRnZsWOgtLoLpSHfWyC/7RYYl73zlKdGKLuk6/jOm/EfZWflGokHpOuA==",
+        "resolved": "1.6.122",
+        "contentHash": "e/8Dt4EGZrQmyxyS7rKYVP5YyNP62PfV3mfPFg+cYc2pGRut3QMKfYCA6JAqkiJtoQOh3akguC8JwjRl5o61Jg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.2.0"
+          "Microsoft.Extensions.Configuration": "6.0.0"
         }
       },
       "Grynwald.Utilities.Logging": {
@@ -293,7 +293,7 @@
           "FluentValidation": "10.3.6",
           "GitLabApiClient": "1.8.0",
           "Grynwald.Utilities": "1.6.11-pre",
-          "Grynwald.Utilities.Configuration": "1.6.11-pre",
+          "Grynwald.Utilities.Configuration": "1.6.122",
           "Grynwald.Utilities.Logging": "1.6.11-pre",
           "LibGit2Sharp": "0.27.0-preview-0175",
           "Microsoft.Extensions.Configuration": "6.0.0",
