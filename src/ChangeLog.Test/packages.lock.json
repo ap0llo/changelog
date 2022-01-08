@@ -182,23 +182,23 @@
       },
       "Grynwald.Utilities": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "yeAy/2naCVuq2dMHxMglvjc88Vys8ASDlXaSD25xyOc/Y8HiK5pQG8Kpa5bRoShBs2Bvuu6HyMIdPPkw4/Z2DA=="
+        "resolved": "1.6.122",
+        "contentHash": "mToOFiNgw43Tcvo1FA+hnNHEO4TrcK7QJi/pXony2B/4ui7d66/MVUrVWIGIxE1LT6jW776d74t/c3E99G9hLQ=="
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "COA4bt4+NN9aBXf+u188T7NrpDC77OMRnZsWOgtLoLpSHfWyC/7RYYl73zlKdGKLuk6/jOm/EfZWflGokHpOuA==",
+        "resolved": "1.6.122",
+        "contentHash": "e/8Dt4EGZrQmyxyS7rKYVP5YyNP62PfV3mfPFg+cYc2pGRut3QMKfYCA6JAqkiJtoQOh3akguC8JwjRl5o61Jg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.2.0"
+          "Microsoft.Extensions.Configuration": "6.0.0"
         }
       },
       "Grynwald.Utilities.Logging": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "Xsei76jgGxM1QklOrQxWNrur2p77aZbj7jZK/O0NEuq/T9cKUHqF2DgB2jPcDEw4I3GesjKJc4S3i2YeXvPzhg==",
+        "resolved": "1.6.122",
+        "contentHash": "r9lg3afsHlvAKqlWTWwYQ/IzSZAuzXkPoo38DRWD1Wo9ZWqklpxD1mjl1/gv7Lh0/4WbBLK5XSExqN0Th/WqGw==",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.4"
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "LibGit2Sharp": {
@@ -1993,9 +1993,9 @@
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.3.6",
           "GitLabApiClient": "1.8.0",
-          "Grynwald.Utilities": "1.6.11-pre",
-          "Grynwald.Utilities.Configuration": "1.6.11-pre",
-          "Grynwald.Utilities.Logging": "1.6.11-pre",
+          "Grynwald.Utilities": "1.6.122",
+          "Grynwald.Utilities.Configuration": "1.6.122",
+          "Grynwald.Utilities.Logging": "1.6.122",
           "LibGit2Sharp": "0.27.0-preview-0175",
           "Microsoft.Extensions.Configuration": "6.0.0",
           "Microsoft.Extensions.Configuration.Binder": "6.0.0",
@@ -2190,23 +2190,23 @@
       },
       "Grynwald.Utilities": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "yeAy/2naCVuq2dMHxMglvjc88Vys8ASDlXaSD25xyOc/Y8HiK5pQG8Kpa5bRoShBs2Bvuu6HyMIdPPkw4/Z2DA=="
+        "resolved": "1.6.122",
+        "contentHash": "mToOFiNgw43Tcvo1FA+hnNHEO4TrcK7QJi/pXony2B/4ui7d66/MVUrVWIGIxE1LT6jW776d74t/c3E99G9hLQ=="
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "COA4bt4+NN9aBXf+u188T7NrpDC77OMRnZsWOgtLoLpSHfWyC/7RYYl73zlKdGKLuk6/jOm/EfZWflGokHpOuA==",
+        "resolved": "1.6.122",
+        "contentHash": "e/8Dt4EGZrQmyxyS7rKYVP5YyNP62PfV3mfPFg+cYc2pGRut3QMKfYCA6JAqkiJtoQOh3akguC8JwjRl5o61Jg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.2.0"
+          "Microsoft.Extensions.Configuration": "6.0.0"
         }
       },
       "Grynwald.Utilities.Logging": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "Xsei76jgGxM1QklOrQxWNrur2p77aZbj7jZK/O0NEuq/T9cKUHqF2DgB2jPcDEw4I3GesjKJc4S3i2YeXvPzhg==",
+        "resolved": "1.6.122",
+        "contentHash": "r9lg3afsHlvAKqlWTWwYQ/IzSZAuzXkPoo38DRWD1Wo9ZWqklpxD1mjl1/gv7Lh0/4WbBLK5XSExqN0Th/WqGw==",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.4"
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "LibGit2Sharp": {
@@ -3986,9 +3986,9 @@
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.3.6",
           "GitLabApiClient": "1.8.0",
-          "Grynwald.Utilities": "1.6.11-pre",
-          "Grynwald.Utilities.Configuration": "1.6.11-pre",
-          "Grynwald.Utilities.Logging": "1.6.11-pre",
+          "Grynwald.Utilities": "1.6.122",
+          "Grynwald.Utilities.Configuration": "1.6.122",
+          "Grynwald.Utilities.Logging": "1.6.122",
           "LibGit2Sharp": "0.27.0-preview-0175",
           "Microsoft.Extensions.Configuration": "6.0.0",
           "Microsoft.Extensions.Configuration.Binder": "6.0.0",
@@ -4183,23 +4183,23 @@
       },
       "Grynwald.Utilities": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "yeAy/2naCVuq2dMHxMglvjc88Vys8ASDlXaSD25xyOc/Y8HiK5pQG8Kpa5bRoShBs2Bvuu6HyMIdPPkw4/Z2DA=="
+        "resolved": "1.6.122",
+        "contentHash": "mToOFiNgw43Tcvo1FA+hnNHEO4TrcK7QJi/pXony2B/4ui7d66/MVUrVWIGIxE1LT6jW776d74t/c3E99G9hLQ=="
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "COA4bt4+NN9aBXf+u188T7NrpDC77OMRnZsWOgtLoLpSHfWyC/7RYYl73zlKdGKLuk6/jOm/EfZWflGokHpOuA==",
+        "resolved": "1.6.122",
+        "contentHash": "e/8Dt4EGZrQmyxyS7rKYVP5YyNP62PfV3mfPFg+cYc2pGRut3QMKfYCA6JAqkiJtoQOh3akguC8JwjRl5o61Jg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.2.0"
+          "Microsoft.Extensions.Configuration": "6.0.0"
         }
       },
       "Grynwald.Utilities.Logging": {
         "type": "Transitive",
-        "resolved": "1.6.11-pre",
-        "contentHash": "Xsei76jgGxM1QklOrQxWNrur2p77aZbj7jZK/O0NEuq/T9cKUHqF2DgB2jPcDEw4I3GesjKJc4S3i2YeXvPzhg==",
+        "resolved": "1.6.122",
+        "contentHash": "r9lg3afsHlvAKqlWTWwYQ/IzSZAuzXkPoo38DRWD1Wo9ZWqklpxD1mjl1/gv7Lh0/4WbBLK5XSExqN0Th/WqGw==",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "3.1.4"
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.0"
         }
       },
       "LibGit2Sharp": {
@@ -5982,9 +5982,9 @@
           "CommandLineParser": "2.8.0",
           "FluentValidation": "10.3.6",
           "GitLabApiClient": "1.8.0",
-          "Grynwald.Utilities": "1.6.11-pre",
-          "Grynwald.Utilities.Configuration": "1.6.11-pre",
-          "Grynwald.Utilities.Logging": "1.6.11-pre",
+          "Grynwald.Utilities": "1.6.122",
+          "Grynwald.Utilities.Configuration": "1.6.122",
+          "Grynwald.Utilities.Logging": "1.6.122",
           "LibGit2Sharp": "0.27.0-preview-0175",
           "Microsoft.Extensions.Configuration": "6.0.0",
           "Microsoft.Extensions.Configuration.Binder": "6.0.0",
