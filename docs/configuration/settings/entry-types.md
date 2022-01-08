@@ -9,7 +9,7 @@
 
 ---
 
-⚠️ The behaviour and format of the "Entry Types" setting has changed in version 0.3 of changelog.
+⚠️ The behavior and format of the "Entry Types" setting has changed in version 0.3 of changelog.
 
 For documentation on the "Entry Types" setting in version 0.2, see [Entry Types Setting (v0.2)](https://github.com/ap0llo/changelog/blob/release/v0.2/docs/configuration.md#entry-types).
 

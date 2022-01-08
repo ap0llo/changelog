@@ -42,8 +42,7 @@ For all full list of commandline parameters, see
 
 ## Configuration
 
-The behaviour of ChangeLog can be customized using a configuration file
-and environment variables.
+The behavior of ChangeLog can be customized using a configuration file and environment variables.
 
 For details, see [Configuration](./configuration.md).
 

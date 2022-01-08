@@ -7,7 +7,7 @@
 ~}}
 # GitHub Integration Settings
 
-The *GitHub Integration* settings control the behaviour of the GitHub integration.
+The *GitHub Integration* settings control the behavior of the GitHub integration.
 See also [Integrations - GitHub](../../integrations/github.md).
 
 - [GitHub Access Token](#github-access-token)
@@ -150,7 +150,7 @@ The *GitHub Host* setting specifies the host-name of the GitHub server to commun
 
 Typically, this will be `github.com`, but the host name will be different when using a GitHub Enterprise installation.
 
-When no host name is specified (default behaviour), ChangeLog will attempt to determine the host name from the git repository's remote URL (see also [*GitHub Remote Name* setting](#github-remote-name)).
+When no host name is specified (default behavior), ChangeLog will attempt to determine the host name from the git repository's remote URL (see also [*GitHub Remote Name* setting](#github-remote-name)).
 
 ## GitHub Repository Owner
 
@@ -191,7 +191,7 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
 
 The *GitHub Repository Owner* setting specifies the name of the owner (user or organization) of the GitHub repository to use .
 
-When no owner is specified (default behaviour), ChangeLog will attempt to determine the owner from the git repository's remote URL (see also [*GitHub Remote Name* setting](#github-remote-name)).
+When no owner is specified (default behavior), ChangeLog will attempt to determine the owner from the git repository's remote URL (see also [*GitHub Remote Name* setting](#github-remote-name)).
 
 ## GitHub Repository Name
 
@@ -232,7 +232,7 @@ When no owner is specified (default behaviour), ChangeLog will attempt to determ
 
 The *GitHub Repository Name* setting specifies the name of the GitHub repository to use.
 
-When no repository name is specified (default behaviour), ChangeLog will attempt to determine the repository name from the git repository's remote URL (see also [*GitHub Remote Name* setting](#github-remote-name)).
+When no repository name is specified (default behavior), ChangeLog will attempt to determine the repository name from the git repository's remote URL (see also [*GitHub Remote Name* setting](#github-remote-name)).
 
 ## See Also
 

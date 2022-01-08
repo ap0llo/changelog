@@ -7,7 +7,7 @@
 ~}}
 # GitLab Integration Settings
 
-The *GitLab Integration* settings control the behaviour of the GitLab integration.
+The *GitLab Integration* settings control the behavior of the GitLab integration.
 See also [Integrations - GitLab](../../integrations/gitlab.md).
 
 - [GitLab Access Token](#gitlab-access-token)
@@ -148,7 +148,7 @@ For details on how the remote URL is parsed, see [Integrations - GitLab](../../i
 
 The *GitLab Host* setting specifies the host-name of the GitLab server to communicate with.
 
-When no host name is specified (default behaviour), ChangeLog will attempt to determine the host name from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
+When no host name is specified (default behavior), ChangeLog will attempt to determine the host name from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
 
 ## GitLab Namespace
 
@@ -190,7 +190,7 @@ When no host name is specified (default behaviour), ChangeLog will attempt to de
 The *GitLab Namespace* setting specifies the namespace of the GitLab project to use.
 This can be a GitLab user name or the name of a group/subgroup.
 
-When no namespace is specified (default behaviour), ChangeLog will attempt to determine the namespace from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
+When no namespace is specified (default behavior), ChangeLog will attempt to determine the namespace from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
 
 ## GitLab Project Name
 
@@ -231,7 +231,7 @@ When no namespace is specified (default behaviour), ChangeLog will attempt to de
 
 The *GitLab Project Name* setting specifies the name of the GitLab project to use.
 
-When no project name is specified (default behaviour), ChangeLog will attempt to determine the name from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
+When no project name is specified (default behavior), ChangeLog will attempt to determine the name from the git repository's remote URL (see also [*GitLab Remote Name* setting](#gitlab-remote-name)).
 
 ## See Also
 

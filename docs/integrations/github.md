@@ -27,7 +27,7 @@ https://github.com/example-owner/example-repo.git
             └── Host: "github.com"
 ```
 
-Version 0.3 of ChangeLog introduced settings to customize this behaviour:
+Version 0.3 of ChangeLog introduced settings to customize this behavior:
 
 - [GitHub Remote Name](../configuration/settings/github-integration.md#github-remote-name)
   - Specifies the name of the git remote which's URL to parse.

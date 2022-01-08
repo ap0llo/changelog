@@ -1,6 +1,6 @@
 # Configuration Overview
 
-The behaviour of ChangeLog can be customized by changing the configuration.
+The behavior of ChangeLog can be customized by changing the configuration.
 All settings are optional and ChangeLog aims to use sensible default values for all of them.
 
 Settings are loaded from a number of *setting sources*:

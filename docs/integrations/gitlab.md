@@ -26,7 +26,7 @@ https://gitlab.com/group/subgroup/example-project.git
             └── Host: "gitlab.com"
 ```
 
-Version 0.3 of ChangeLog introduced settings to customize this behaviour:
+Version 0.3 of ChangeLog introduced settings to customize this behavior:
 
 - [GitLab Remote Name](../configuration/settings/gitlab-integration.md#gitlab-remote-name)
   - Specifies the name of the git remote which's URL to parse.
