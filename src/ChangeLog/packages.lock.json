@@ -46,11 +46,11 @@
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Direct",
-        "requested": "[1.6.11-pre, )",
-        "resolved": "1.6.11-pre",
-        "contentHash": "COA4bt4+NN9aBXf+u188T7NrpDC77OMRnZsWOgtLoLpSHfWyC/7RYYl73zlKdGKLuk6/jOm/EfZWflGokHpOuA==",
+        "requested": "[1.6.122, )",
+        "resolved": "1.6.122",
+        "contentHash": "e/8Dt4EGZrQmyxyS7rKYVP5YyNP62PfV3mfPFg+cYc2pGRut3QMKfYCA6JAqkiJtoQOh3akguC8JwjRl5o61Jg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.2.0"
+          "Microsoft.Extensions.Configuration": "6.0.0"
         }
       },
       "Grynwald.Utilities.Logging": {
@@ -370,11 +370,11 @@
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Direct",
-        "requested": "[1.6.11-pre, )",
-        "resolved": "1.6.11-pre",
-        "contentHash": "COA4bt4+NN9aBXf+u188T7NrpDC77OMRnZsWOgtLoLpSHfWyC/7RYYl73zlKdGKLuk6/jOm/EfZWflGokHpOuA==",
+        "requested": "[1.6.122, )",
+        "resolved": "1.6.122",
+        "contentHash": "e/8Dt4EGZrQmyxyS7rKYVP5YyNP62PfV3mfPFg+cYc2pGRut3QMKfYCA6JAqkiJtoQOh3akguC8JwjRl5o61Jg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.2.0"
+          "Microsoft.Extensions.Configuration": "6.0.0"
         }
       },
       "Grynwald.Utilities.Logging": {
@@ -679,11 +679,11 @@
       },
       "Grynwald.Utilities.Configuration": {
         "type": "Direct",
-        "requested": "[1.6.11-pre, )",
-        "resolved": "1.6.11-pre",
-        "contentHash": "COA4bt4+NN9aBXf+u188T7NrpDC77OMRnZsWOgtLoLpSHfWyC/7RYYl73zlKdGKLuk6/jOm/EfZWflGokHpOuA==",
+        "requested": "[1.6.122, )",
+        "resolved": "1.6.122",
+        "contentHash": "e/8Dt4EGZrQmyxyS7rKYVP5YyNP62PfV3mfPFg+cYc2pGRut3QMKfYCA6JAqkiJtoQOh3akguC8JwjRl5o61Jg==",
         "dependencies": {
-          "Microsoft.Extensions.Configuration": "2.2.0"
+          "Microsoft.Extensions.Configuration": "6.0.0"
         }
       },
       "Grynwald.Utilities.Logging": {
