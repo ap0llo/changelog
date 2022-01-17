@@ -21,6 +21,7 @@ using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 - [Templates](./docs/templates/README.md)
 - [Commandline Reference](./docs/commandline-reference/index.md)
 - [Automatic References](./docs/auto-references.md)
+- [Commit Message Overrides](./docs/message-overrides.md)
 
 ## Building from source
 
