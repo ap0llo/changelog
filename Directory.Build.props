@@ -46,7 +46,7 @@
     <PackageProjectUrl>https://github.com/ap0llo/changelog</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>A tool to generate a change log from a project's git history using Conventional Commits.</Description>
-    <Copyright>Copyright (c) 2020-2021, Andreas Gruenwald</Copyright>
+    <Copyright>Copyright (c) 2020-2022, Andreas Gruenwald</Copyright>
   </PropertyGroup>
 
   <!-- Use NuGet lock file -->
