@@ -1,7 +1,6 @@
 {
-    "$schema": "./schemas/configuration/schema.json",
+    "$schema": "../../schemas/configuration/schema.json",
     "changelog": {
-
         "scopes": {
             "github" : { "displayName": "GitHub Integration" },
             "gitlab" :  { "displayName": "GitLab Integration" },
