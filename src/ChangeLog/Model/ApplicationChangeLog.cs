@@ -8,15 +8,17 @@ namespace Grynwald.ChangeLog.Model
 {
     public sealed class ApplicationChangeLog : IEnumerable<SingleVersionChangeLog>
     {
-        private readonly HashSet<NuGetVersion> m_Versions = new HashSet<NuGetVersion>();
-        private readonly Dictionary<VersionInfo, SingleVersionChangeLog> m_ChangeLogs = new Dictionary<VersionInfo, SingleVersionChangeLog>();
+        private readonly Dictionary<NuGetVersion, SingleVersionChangeLog> m_ChangeLogsByVersion = new();
+        private readonly Dictionary<VersionInfo, SingleVersionChangeLog> m_ChangeLogsByVersionInfo = new();
 
 
-        public SingleVersionChangeLog this[VersionInfo version] => m_ChangeLogs[version];
+        public SingleVersionChangeLog this[VersionInfo versionInfo] => m_ChangeLogsByVersionInfo[versionInfo];
 
-        public IEnumerable<VersionInfo> Versions => m_ChangeLogs.Keys;
+        public SingleVersionChangeLog this[NuGetVersion version] => m_ChangeLogsByVersion[version];
 
-        public IEnumerable<SingleVersionChangeLog> ChangeLogs => m_ChangeLogs.Values.OrderByDescending(x => x.Version.Version);
+        public IEnumerable<VersionInfo> Versions => m_ChangeLogsByVersionInfo.Keys;
+
+        public IEnumerable<SingleVersionChangeLog> ChangeLogs => m_ChangeLogsByVersionInfo.Values.OrderByDescending(x => x.Version.Version);
 
 
         public void Add(SingleVersionChangeLog versionChangeLog)
@@ -24,16 +26,16 @@ namespace Grynwald.ChangeLog.Model
             if (versionChangeLog is null)
                 throw new ArgumentNullException(nameof(versionChangeLog));
 
-            if (m_Versions.Contains(versionChangeLog.Version.Version))
+            if (m_ChangeLogsByVersion.ContainsKey(versionChangeLog.Version.Version))
                 throw new InvalidOperationException($"Changelog already contains version '{versionChangeLog.Version.Version}'");
 
-            m_ChangeLogs.Add(versionChangeLog.Version, versionChangeLog);
-            m_Versions.Add(versionChangeLog.Version.Version);
+            m_ChangeLogsByVersionInfo.Add(versionChangeLog.Version, versionChangeLog);
+            m_ChangeLogsByVersion.Add(versionChangeLog.Version.Version, versionChangeLog);
         }
 
-        public void Remove(SingleVersionChangeLog versionChangeLog) => m_ChangeLogs.Remove(versionChangeLog.Version);
+        public void Remove(SingleVersionChangeLog versionChangeLog) => m_ChangeLogsByVersionInfo.Remove(versionChangeLog.Version);
 
-        public bool ContainsVersion(NuGetVersion version) => m_Versions.Contains(version);
+        public bool ContainsVersion(NuGetVersion version) => m_ChangeLogsByVersion.ContainsKey(version);
 
         public IEnumerator<SingleVersionChangeLog> GetEnumerator() => ChangeLogs.GetEnumerator();
 

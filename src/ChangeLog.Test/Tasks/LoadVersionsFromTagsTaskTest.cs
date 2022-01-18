@@ -180,7 +180,6 @@ namespace Grynwald.ChangeLog.Test.Tasks
             Assert.Equal(ChangeLogTaskResult.Success, result);
         }
 
-
         [Fact]
         public async Task Task_fails_if_version_was_already_added_by_a_previous_task()
         {
@@ -207,6 +206,5 @@ namespace Grynwald.ChangeLog.Test.Tasks
             Assert.Equal(ChangeLogTaskResult.Error, result);
             Assert.DoesNotContain(changeLog.Versions, x => x.Version == NuGetVersion.Parse("1.2.3") && x.Commit == TestGitIds.Id1);
         }
-
     }
 }

@@ -36,13 +36,21 @@ namespace Grynwald.ChangeLog.Tasks
                 return ChangeLogTaskResult.Error;
             }
 
+            var head = m_Repository.Head;
+
             if (changeLog.ContainsVersion(version))
             {
+                var existingEntry = changeLog[version];
+                if (existingEntry.Version.Commit == head.Id)
+                {
+                    m_Logger.LogError($"Skipping adding of current version '{version}' because the changelog already contains the version and references the same commit.");
+                    return ChangeLogTaskResult.Success;
+                }
+
                 m_Logger.LogError($"Cannot add current version '{version}' because the changelog already contains this version.");
                 return ChangeLogTaskResult.Error;
             }
 
-            var head = m_Repository.Head;
             m_Logger.LogDebug($"Adding version '{version.ToNormalizedString()}' (commit '{head.Id}', current repository HEAD)");
             var versionInfo = new VersionInfo(version, head.Id);
             changeLog.Add(new SingleVersionChangeLog(versionInfo));

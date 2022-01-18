@@ -145,7 +145,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         }
 
         [Fact]
-        public async Task Run_fails_if_the_current_version_already_exists_in_the_change_log()
+        public async Task Run_fails_if_the_current_version_already_exists_and_points_to_a_different_commit()
         {
             // ARRANGE
             var config = new ChangeLogConfiguration()
@@ -158,7 +158,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var changeLog = new ApplicationChangeLog()
             {
-                GetSingleVersionChangeLog(version: "1.2.3")
+                GetSingleVersionChangeLog(version: "1.2.3", commitId: TestGitIds.Id2)
             };
 
             var sut = new LoadCurrentVersionTask(m_Logger, config, m_RepositoryMock.Object);
@@ -170,5 +170,32 @@ namespace Grynwald.ChangeLog.Test.Tasks
             Assert.Equal(ChangeLogTaskResult.Error, result);
         }
 
+        [Fact]
+        public async Task Run_succeeds_if_the_current_version_already_exists_and_points_to_the_same_commit()
+        {
+            // ARRANGE
+            var config = new ChangeLogConfiguration()
+            {
+                CurrentVersion = "1.2.3"
+            };
+
+            var head = GetGitCommit(id: TestGitIds.Id1);
+            m_RepositoryMock.Setup(x => x.Head).Returns(head);
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(version: "1.2.3", commitId: head.Id)
+            };
+
+            var sut = new LoadCurrentVersionTask(m_Logger, config, m_RepositoryMock.Object);
+
+            // ACT 
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+            var singleVersionChangeLog = Assert.Single(changeLog.ChangeLogs);
+            Assert.Equal(NuGetVersion.Parse("1.2.3"), singleVersionChangeLog.Version.Version);
+        }
     }
 }
