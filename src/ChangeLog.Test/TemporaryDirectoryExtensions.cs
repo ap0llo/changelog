@@ -16,5 +16,18 @@ namespace Grynwald.ChangeLog.Test
 
             return absolutePath;
         }
+
+        public static string AddFile(this TemporaryDirectory temporaryDirectory, string relativePath, string contents)
+        {
+            if (Path.IsPathRooted(relativePath))
+                throw new ArgumentException("Path must not be rooted", nameof(relativePath));
+
+            var absolutePath = Path.Combine(temporaryDirectory, relativePath);
+            Directory.CreateDirectory(Path.GetDirectoryName(absolutePath)!);
+
+            File.WriteAllText(absolutePath, contents);
+
+            return absolutePath;
+        }
     }
 }

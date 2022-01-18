@@ -324,6 +324,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
             assertion.Compile()(config);
         }
 
+        [Theory]
+        [MemberData(nameof(DefaultConfigAssertions))]
+        public void GetConfiguration_returns_default_configuration_if_config_file_path_is_null(Expression<Action<ChangeLogConfiguration>> assertion)
+        {
+            var config = ChangeLogConfigurationLoader.GetConfiguration(null);
+            assertion.Compile()(config);
+        }
+
         [Fact]
         public void Value_from_environment_variables_overrides_value_from_config_file()
         {

@@ -33,7 +33,11 @@ namespace Grynwald.ChangeLog
         }
 
 
-        private const string s_DefaultConfigurationFileName = "changelog.settings.json";
+        private static readonly string[] s_DefaultConfigurationFilePaths =
+        {
+            "changelog.settings.json",
+            ".config/changelog/settings.json"
+        };
 
 
         private static async Task<int> Main(string[] args)
@@ -73,16 +77,19 @@ namespace Grynwald.ChangeLog
             if (!TryOpenRepository(repositoryPath, logger, out var gitRepository))
                 return 1;
 
-            var configurationFilePath = !String.IsNullOrEmpty(commandlineParameters.ConfigurationFilePath)
-                ? commandlineParameters.ConfigurationFilePath
-                : Path.Combine(repositoryPath, s_DefaultConfigurationFileName);
+            var configurationFilePath = GetConfigurationFilePath(commandlineParameters, repositoryPath);
+            if (File.Exists(configurationFilePath))
+                logger.LogDebug($"Using configuration file '{configurationFilePath}'");
+            else
+                logger.LogDebug("Continuing without loading a configuration file, because no configuration file was wound");
 
-            // pass repository path to configuration loader to make it available
-            // through the configuration system
+
+            // pass repository path to configuration loader to make it available through the configuration system
             var dynamicSettings = new DynamicallyDeterminedSettings()
             {
                 RepositoryPath = repositoryPath
             };
+
             var configuration = ChangeLogConfigurationLoader.GetConfiguration(configurationFilePath, commandlineParameters, dynamicSettings);
 
             using (gitRepository)
@@ -154,6 +161,22 @@ namespace Grynwald.ChangeLog
                     return result.Success ? 0 : 1;
                 }
             }
+        }
+
+        private static string? GetConfigurationFilePath(CommandLineParameters commandlineParameters, string repositoryPath)
+        {
+            if (!String.IsNullOrEmpty(commandlineParameters.ConfigurationFilePath))
+                return commandlineParameters.ConfigurationFilePath;
+
+            foreach (var path in s_DefaultConfigurationFilePaths)
+            {
+                var absolutePath = Path.GetFullPath(Path.Combine(repositoryPath, path));
+
+                if (File.Exists(absolutePath))
+                    return absolutePath;
+            }
+
+            return null;
         }
 
         private static bool ValidateCommandlineParameters(CommandLineParameters parameters, ILogger logger)

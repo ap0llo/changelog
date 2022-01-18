@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -226,10 +227,75 @@ namespace Grynwald.ChangeLog.Test.E2E
         }
 
 
+        [Theory]
+        // When no confguration file exists on disk and the configurationFilePath commandline parameter is not set, use default settings
+        [InlineData(new string[0], null, null)]
+        // When a configuration file exists at one of the default locations, this file is used
+        [InlineData(new string[] { "changelog.settings.json" }, null, "changelog.settings.json")]
+        [InlineData(new string[] { ".config/changelog/settings.json" }, null, ".config/changelog/settings.json")]
+        // When a configuration file exists at a default location and an additional config file exists, the file at the default location is used
+        [InlineData(new string[] { "changelog.settings.json", "custom.settings.json" }, null, "changelog.settings.json")]
+        [InlineData(new string[] { ".config/changelog/settings.json", "custom.settings.json" }, null, ".config/changelog/settings.json")]
+        // When files at multiple default locations exists, "changelog.settings.json" takes precedence (for backwards compatibility)
+        [InlineData(new string[] { ".config/changelog/settings.json", "changelog.settings.json" }, null, "changelog.settings.json")]
+        // When the configurationFilePath commandline parameter is set, the value from commandline is used
+        [InlineData(new string[] { "changelog.settings.json", "custom.settings.json" }, "custom.settings.json", "custom.settings.json")]
+        [InlineData(new string[] { ".config/changelog/settings.json", "custom.settings.json" }, "custom.settings.json", "custom.settings.json")]
+        [InlineData(new string[] { "changelog.settings.json", ".config/changelog/settings.json", "custom.settings.json" }, "custom.settings.json", "custom.settings.json")]
+        public async Task The_expected_configuration_file_is_used(string[] configurationFilesOnDisk, string? configurationFileParameter, string expectedConfigurationFile)
+        {
+            // ARRANGE
+            using var temporaryDirectory = new TemporaryDirectory();
+
+            var git = new GitWrapper(temporaryDirectory, m_TestOutputHelper);
+            await git.InitAsync();
+            await git.ConfigAsync("user.name", "Example");
+            await git.ConfigAsync("user.email", "user@example.com");
+
+            // Create all configuration files with distinct output path settings
+            var outputNames = new Dictionary<string, string>();
+            foreach (var configurationFilePath in configurationFilesOnDisk)
+            {
+                var outputName = $"{Guid.NewGuid()}.md";
+                temporaryDirectory.AddFile(
+                    configurationFilePath,
+                    $@"{{ ""changelog"" : {{ ""outputPath"" : ""{outputName}"" }} }}"
+                );
+
+                outputNames.Add(configurationFilePath, outputName);
+            }
+
+            // Determine the expected output path (based on the output path we can determine which configuration file was used).
+            // If none of the configuration file is expected to be used (expectedConfigurationFile is null), expect the changelog to be written to the default location
+            var expectedOutputPath = expectedConfigurationFile is null
+                ? Path.Combine(temporaryDirectory, "changelog.md")
+                : Path.Combine(temporaryDirectory, outputNames[expectedConfigurationFile]);
+
+            var args = new List<string>() { "--verbose" };
+            // When specified, append the configurationFilePath commandline parameter
+            if (configurationFileParameter is not null)
+            {
+                args.Add("--configurationFilePath");
+                args.Add(configurationFileParameter);
+            }
+
+            // ACT
+            var result = await RunApplicationAsync(
+                args: args,
+                workingDirectory: temporaryDirectory,
+                commandId: $"{nameof(The_expected_configuration_file_is_used)}([{String.Join(",", configurationFilesOnDisk)}], \"{configurationFileParameter}\", \"{expectedConfigurationFile}\")"
+            );
+
+            // ASSERT
+            Assert.Equal(0, result.ExitCode);
+            Assert.True(File.Exists(expectedOutputPath));
+        }
+
+
         /// <summary>
         /// Runs changelog with the specified command line parameters
         /// </summary>
-        private async Task<BufferedCommandResult> RunApplicationAsync(string[] args, string? workingDirectory = null, string? commandId = null)
+        private async Task<BufferedCommandResult> RunApplicationAsync(IReadOnlyList<string> args, string? workingDirectory = null, string? commandId = null)
         {
             var applicationAssembly = typeof(Program).Assembly;
 

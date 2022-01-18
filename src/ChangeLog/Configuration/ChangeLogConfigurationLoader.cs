@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using Grynwald.Utilities.Configuration;
@@ -10,7 +11,7 @@ namespace Grynwald.ChangeLog.Configuration
 {
     internal static class ChangeLogConfigurationLoader
     {
-        public static ChangeLogConfiguration GetConfiguration(string configurationFilePath, params object[] settingsObjects)
+        public static ChangeLogConfiguration GetConfiguration(string? configurationFilePath, params object[] settingsObjects)
         {
             using var defaultSettingsStream = GetDefaultSettingsStream();
             using var configurationFileStream = GetFileStreamOrEmpty(configurationFilePath);
@@ -47,11 +48,11 @@ namespace Grynwald.ChangeLog.Configuration
         private static Stream? GetDefaultSettingsStream() =>
             Assembly.GetExecutingAssembly().GetManifestResourceStream("Grynwald.ChangeLog.Configuration.defaultSettings.json");
 
-        private static Stream GetFileStreamOrEmpty(string path)
+        private static Stream GetFileStreamOrEmpty(string? path)
         {
-            return File.Exists(path)
+            return !String.IsNullOrEmpty(path) && File.Exists(path)
                 ? File.Open(path, FileMode.Open, FileAccess.Read)
-                : (Stream)new MemoryStream(Encoding.ASCII.GetBytes("{ }"));
+                : new MemoryStream(Encoding.ASCII.GetBytes("{ }"));
         }
 
         private static ChangeLogConfiguration Load(this IConfigurationBuilder builder)
