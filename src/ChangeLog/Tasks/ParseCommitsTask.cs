@@ -16,14 +16,12 @@ namespace Grynwald.ChangeLog.Tasks
     {
         private readonly ILogger<ParseCommitsTask> m_Logger;
         private readonly ChangeLogConfiguration m_Configuration;
-        private readonly IGitRepository m_Repository;
 
 
-        public ParseCommitsTask(ILogger<ParseCommitsTask> logger, ChangeLogConfiguration configuration, IGitRepository repository)
+        public ParseCommitsTask(ILogger<ParseCommitsTask> logger, ChangeLogConfiguration configuration)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
 
@@ -58,8 +56,7 @@ namespace Grynwald.ChangeLog.Tasks
             var strictMode = m_Configuration.Parser.Mode == ChangeLogConfiguration.ParserMode.Strict;
             try
             {
-                var commitMessage = GetCommitMessage(commit);
-                var parsed = CommitMessageParser.Parse(commitMessage, strictMode);
+                var parsed = CommitMessageParser.Parse(commit.CommitMessage, strictMode);
                 entry = ChangeLogEntry.FromCommitMessage(commit, parsed);
                 return true;
             }
@@ -69,27 +66,6 @@ namespace Grynwald.ChangeLog.Tasks
                 entry = default;
                 return false;
             }
-        }
-
-
-        private string GetCommitMessage(GitCommit commit)
-        {
-            if (!m_Configuration.MessageOverrides.Enabled)
-            {
-                return commit.CommitMessage;
-            }
-
-            var notes = m_Repository
-                .GetNotes(commit.Id)
-                .Where(n => n.Namespace == m_Configuration.MessageOverrides.GitNotesNamespace);
-
-            if (notes.Any())
-            {
-                m_Logger.LogInformation($"Commit message for commit '{commit.Id}' was overridden through git-notes. Using message from git-notes instead of commit message.");
-                return notes.Single().Message;
-            }
-
-            return commit.CommitMessage;
         }
     }
 }

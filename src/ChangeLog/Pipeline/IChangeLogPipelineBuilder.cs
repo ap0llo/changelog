@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Autofac;
-using Grynwald.ChangeLog.Tasks;
 
 namespace Grynwald.ChangeLog.Pipeline
 {

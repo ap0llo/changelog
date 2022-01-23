@@ -107,6 +107,7 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<LoadCurrentVersionTask>();
                 containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
                 containerBuilder.RegisterType<LoadCommitsTask>();
+                containerBuilder.RegisterType<LoadMessageOverridesTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
                 containerBuilder.RegisterType<ParseCommitReferencesTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
@@ -148,6 +149,7 @@ namespace Grynwald.ChangeLog
                         .AddTask<LoadCurrentVersionTask>()
                         .AddTask<LoadVersionsFromTagsTask>()
                         .AddTask<LoadCommitsTask>()
+                        .AddTaskIf<LoadMessageOverridesTask>(configuration.MessageOverrides.Enabled)
                         .AddTask<ParseCommitsTask>()
                         .AddTask<ParseCommitReferencesTask>()
                         .AddTask<ParseWebLinksTask>()

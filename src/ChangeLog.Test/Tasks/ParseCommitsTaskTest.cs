@@ -3,12 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
-using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Microsoft.Extensions.Logging;
-using Moq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -36,7 +34,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new ParseCommitsTask(logger: null!, configuration: m_DefaultConfiguration, repository: Mock.Of<IGitRepository>(MockBehavior.Strict)));
+            var ex = Record.Exception(() => new ParseCommitsTask(logger: null!, configuration: m_DefaultConfiguration));
 
             // ASSERT
             var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
@@ -49,7 +47,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new ParseCommitsTask(logger: m_Logger, configuration: null!, repository: Mock.Of<IGitRepository>(MockBehavior.Strict)));
+            var ex = Record.Exception(() => new ParseCommitsTask(logger: m_Logger, configuration: null!));
 
             // ASSERT
             var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
@@ -57,26 +55,10 @@ namespace Grynwald.ChangeLog.Test.Tasks
         }
 
         [Fact]
-        public void Repository_must_not_be_null()
-        {
-            // ARRANGE
-
-            // ACT 
-            var ex = Record.Exception(() => new ParseCommitsTask(logger: m_Logger, configuration: m_DefaultConfiguration, repository: null!));
-
-            // ASSERT
-            var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
-            Assert.Equal("repository", argumentNullException.ParamName);
-        }
-
-
-        [Fact]
         public async Task Run_does_nothing_for_empty_changelog()
         {
             // ARRANGE
-            var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
-
-            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo);
+            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration);
 
             // ACT
             var changelog = new ApplicationChangeLog();
@@ -89,22 +71,21 @@ namespace Grynwald.ChangeLog.Test.Tasks
         [Fact]
         public async Task Run_adds_all_parsable_changes_if_no_previous_version_exists()
         {
-            // ARRANGE
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            {
-                repo.Setup(x => x.GetNotes(It.IsAny<GitId>())).Returns(Array.Empty<GitNote>());
-            }
-
-            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
+            // ARRANGE            
+            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
-            versionChangeLog.Add(GetGitCommit(TestGitIds.Id1, "feat: Some new feature"));
-            versionChangeLog.Add(GetGitCommit(TestGitIds.Id2, "fix: Some bugfix"));
-
-            var changelog = new ApplicationChangeLog() { versionChangeLog };
+            {
+                versionChangeLog.Add(
+                    GetGitCommit(TestGitIds.Id1, "feat: Some new feature")
+                );
+                versionChangeLog.Add(
+                    GetGitCommit(TestGitIds.Id2, "fix: Some bugfix")
+                );
+            }
 
             // ACT
-            var result = await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(new ApplicationChangeLog() { versionChangeLog });
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
@@ -133,19 +114,20 @@ namespace Grynwald.ChangeLog.Test.Tasks
         [Fact]
         public async Task Run_adds_the_expected_entries_if_a_previous_version_exists()
         {
-            // ARRANGE
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            {
-                repo.Setup(x => x.GetNotes(It.IsAny<GitId>())).Returns(Array.Empty<GitNote>());
-            }
-
-            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
+            // ARRANGE            
+            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration);
 
             var versionChangeLog1 = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
 
             var versionChangeLog2 = GetSingleVersionChangeLog("2.4.5", TestGitIds.Id2);
-            versionChangeLog2.Add(GetGitCommit(TestGitIds.Id1, "feat: Some new feature"));
-            versionChangeLog2.Add(GetGitCommit(TestGitIds.Id2, "fix: Some bugfix"));
+            {
+                versionChangeLog2.Add(
+                    GetGitCommit(TestGitIds.Id1, "feat: Some new feature")
+                );
+                versionChangeLog2.Add(
+                    GetGitCommit(TestGitIds.Id2, "fix: Some bugfix")
+                );
+            }
 
             var changelog = new ApplicationChangeLog()
             {
@@ -186,20 +168,17 @@ namespace Grynwald.ChangeLog.Test.Tasks
         public async Task Run_ignores_unparsable_commit_messages()
         {
             // ARRANGE
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            {
-                repo.Setup(x => x.GetNotes(It.IsAny<GitId>())).Returns(Array.Empty<GitNote>());
-            }
-
-            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration, repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, m_DefaultConfiguration);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
-            versionChangeLog.Add(GetGitCommit(commitMessage: "Not a conventional commit"));
-
-            var changelog = new ApplicationChangeLog() { versionChangeLog };
+            {
+                versionChangeLog.Add(
+                    GetGitCommit(commitMessage: "Not a conventional commit")
+                );
+            }
 
             // ACT
-            var result = await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(new ApplicationChangeLog() { versionChangeLog });
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
@@ -214,19 +193,17 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Parser.Mode = ChangeLogConfiguration.ParserMode.Loose;
 
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            {
-                repo.Setup(x => x.GetNotes(It.IsAny<GitId>())).Returns(Array.Empty<GitNote>());
-            }
-
-            var sut = new ParseCommitsTask(m_Logger, config, repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, config);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
-            versionChangeLog.Add(GetGitCommit(commitMessage: "feat: Some Description\r\n" + "\r\n" + "\r\n" + "Message Body\r\n"));
-            var changelog = new ApplicationChangeLog() { versionChangeLog };
+            {
+                versionChangeLog.Add(
+                    GetGitCommit(commitMessage: "feat: Some Description\r\n" + "\r\n" + "\r\n" + "Message Body\r\n")
+                );
+            }
 
             // ACT
-            var result = await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(new ApplicationChangeLog() { versionChangeLog });
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
@@ -241,138 +218,22 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             config.Parser.Mode = ChangeLogConfiguration.ParserMode.Strict;
 
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            {
-                repo.Setup(x => x.GetNotes(It.IsAny<GitId>())).Returns(Array.Empty<GitNote>());
-            }
-
-            var sut = new ParseCommitsTask(m_Logger, config, repo.Object);
+            var sut = new ParseCommitsTask(m_Logger, config);
 
             var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
-            versionChangeLog.Add(GetGitCommit(commitMessage: "feat: Some Description\r\n" + "\r\n" + "\r\n" + "Message Body\r\n"));
-            var changelog = new ApplicationChangeLog() { versionChangeLog };
+            {
+                versionChangeLog.Add(
+                    GetGitCommit(commitMessage: "feat: Some Description\r\n" + "\r\n" + "\r\n" + "Message Body\r\n")
+                );
+            }
 
             // ACT
-            var result = await sut.RunAsync(changelog);
+            var result = await sut.RunAsync(new ApplicationChangeLog() { versionChangeLog });
 
             // ASSERT
             Assert.Equal(ChangeLogTaskResult.Success, result);
             Assert.NotNull(versionChangeLog.AllEntries);
             Assert.Empty(versionChangeLog.AllEntries);
-        }
-
-        [Theory]
-        [InlineData(true, null)]
-        [InlineData(false, null)]
-        [InlineData(null, null)]
-        [InlineData(true, "changelog/message-overrides")]
-        [InlineData(false, "changelog/message-overrides")]
-        [InlineData(null, "changelog/message-overrides")]
-        [InlineData(true, "custom-namespace")]
-        [InlineData(false, "custom-namespace")]
-        [InlineData(null, "custom-namespace")]
-        public async Task Run_uses_override_messages_from_git_notes_if_they_exist_and_message_overrides_are_enabled(bool? enableMessageOverrides, string? gitNotesNamespace)
-        {
-            // ARRANGE
-            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-
-            if (enableMessageOverrides.HasValue)
-                config.MessageOverrides.Enabled = enableMessageOverrides.Value;
-
-            if (gitNotesNamespace is not null)
-                config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
-
-            var shouldOverrideMessage = enableMessageOverrides == null || enableMessageOverrides == true;
-
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            {
-                repo.Setup(x => x.GetNotes(TestGitIds.Id1)).Returns(Array.Empty<GitNote>());
-
-                repo
-                    .Setup(x => x.GetNotes(TestGitIds.Id2))
-                    .Returns(new[]
-                    {
-                        new GitNote(TestGitIds.Id2, "commits", "some text"),
-                        new GitNote(TestGitIds.Id2, gitNotesNamespace ?? "changelog/message-overrides", "feat: New Description"),
-                    });
-            }
-
-            var sut = new ParseCommitsTask(m_Logger, config, repo.Object);
-
-            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
-            versionChangeLog.Add(GetGitCommit(id: TestGitIds.Id1, commitMessage: "feat: Some Description"));
-            versionChangeLog.Add(GetGitCommit(id: TestGitIds.Id2, commitMessage: "fix: Original Description"));
-
-            var changelog = new ApplicationChangeLog() { versionChangeLog };
-
-            // ACT
-            var result = await sut.RunAsync(changelog);
-
-            // ASSERT
-            Assert.Equal(ChangeLogTaskResult.Success, result);
-            Assert.Collection(
-                versionChangeLog.AllEntries,
-                entry =>
-                {
-                    Assert.Equal(TestGitIds.Id1, entry.Commit);
-                    Assert.Equal(CommitType.Feature, entry.Type);
-                    Assert.Equal("Some Description", entry.Summary);
-                },
-                entry =>
-                {
-                    Assert.Equal(TestGitIds.Id2, entry.Commit);
-                    if (shouldOverrideMessage)
-                    {
-                        Assert.Equal(CommitType.Feature, entry.Type);
-                        Assert.Equal("New Description", entry.Summary);
-                    }
-                    else
-                    {
-                        Assert.Equal(CommitType.BugFix, entry.Type);
-                        Assert.Equal("Original Description", entry.Summary);
-                    }
-                });
-        }
-
-        [Fact]
-        public async Task Run_ignores_entry_if_override_message_cannot_be_parsed()
-        {
-            // ARRANGE
-            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-
-            var repo = new Mock<IGitRepository>(MockBehavior.Strict);
-            {
-                repo.Setup(x => x.GetNotes(TestGitIds.Id1)).Returns(Array.Empty<GitNote>());
-                repo
-                    .Setup(x => x.GetNotes(TestGitIds.Id2))
-                    .Returns(new[]
-                    {
-                        new GitNote(TestGitIds.Id2, "changelog/message-overrides", "Not a conventioal commit message"),
-                    });
-            }
-
-
-            var sut = new ParseCommitsTask(m_Logger, config, repo.Object);
-
-            var versionChangeLog = GetSingleVersionChangeLog("1.2.3", TestGitIds.Id1);
-            versionChangeLog.Add(GetGitCommit(id: TestGitIds.Id1, commitMessage: "feat: Some Description"));
-            versionChangeLog.Add(GetGitCommit(id: TestGitIds.Id2, commitMessage: "fix: Original Description"));
-
-            var changelog = new ApplicationChangeLog() { versionChangeLog };
-
-            // ACT
-            var result = await sut.RunAsync(changelog);
-
-            // ASSERT
-            Assert.Equal(ChangeLogTaskResult.Success, result);
-            Assert.Collection(
-                versionChangeLog.AllEntries,
-                entry =>
-                {
-                    Assert.Equal(TestGitIds.Id1, entry.Commit);
-                    Assert.Equal(CommitType.Feature, entry.Type);
-                    Assert.Equal("Some Description", entry.Summary);
-                });
         }
 
         //TODO: Scope, footers, body

@@ -62,8 +62,18 @@ namespace Grynwald.ChangeLog.Model
             m_AllCommits.Add(commit.Id, commit);
         }
 
+        public void Remove(GitCommit commit)
+        {
+            if (commit is null)
+                throw new ArgumentNullException(nameof(commit));
+
+            m_AllCommits.Remove(commit.Id);
+        }
+
+        /// <inheritdoc />
         public IEnumerator<ChangeLogEntry> GetEnumerator() => AllEntries.GetEnumerator();
 
+        /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => AllEntries.GetEnumerator();
     }
 }

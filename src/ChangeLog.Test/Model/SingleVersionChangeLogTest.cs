@@ -105,10 +105,53 @@ namespace Grynwald.ChangeLog.Test.Model
         }
 
         [Fact]
-        public void Remove_checks_argument_for_null()
+        public void Remove_checks_ChangeLogEntry_argument_for_null()
         {
             var sut = GetSingleVersionChangeLog("1.2.3");
-            Assert.Throws<ArgumentNullException>(() => sut.Remove(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.Remove((ChangeLogEntry)null!));
+        }
+
+        [Fact]
+        public void Remove_removes_a_ChangeLogEntry_from_the_changelog()
+        {
+            // ARRANGE
+            var sut = GetSingleVersionChangeLog("1.2.3");
+            var entry1 = GetChangeLogEntry(summary: "Entry 1");
+            var entry2 = GetChangeLogEntry(summary: "Entry 2");
+            sut.Add(entry1);
+            sut.Add(entry2);
+
+            // ACT
+            sut.Remove(entry1);
+
+            // ASSERT
+            var remainingEntry = Assert.Single(sut.AllEntries);
+            Assert.Same(entry2, remainingEntry);
+        }
+
+        [Fact]
+        public void Remove_checks_GitCommit_argument_for_null()
+        {
+            var sut = GetSingleVersionChangeLog("1.2.3");
+            Assert.Throws<ArgumentNullException>(() => sut.Remove((GitCommit)null!));
+        }
+
+        [Fact]
+        public void Remove_removes_a_GitCommit_from_the_changelog()
+        {
+            // ARRANGE
+            var sut = GetSingleVersionChangeLog("1.2.3");
+            var commit1 = GetGitCommit(commitMessage: "Commit 1");
+            var commit2 = GetGitCommit(commitMessage: "Commit 2");
+            sut.Add(commit1);
+            sut.Add(commit2);
+
+            // ACT
+            sut.Remove(commit1);
+
+            // ASSERT
+            var remainingEntry = Assert.Single(sut.AllCommits);
+            Assert.Same(commit2, remainingEntry);
         }
     }
 }
