@@ -10,8 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Grynwald.ChangeLog.Tasks
 {
-    [AfterTask(typeof(LoadVersionsFromTagsTask))]
-    [AfterTask(typeof(LoadCurrentVersionTask))]
+    [AfterTask(typeof(LoadCommitsTask))]
     [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed class ParseCommitsTask : SynchronousChangeLogTask
     {
@@ -38,23 +37,14 @@ namespace Grynwald.ChangeLog.Tasks
 
             m_Logger.LogInformation("Parsing commit messages");
 
-            var sortedVersions = changeLog.Versions
-                .OrderByDescending(x => x.Version)
-                .ToArray();
-
-            for (var i = 0; i < sortedVersions.Length; i++)
+            foreach (var versionChangeLog in changeLog.ChangeLogs)
             {
-                var current = sortedVersions[i];
-                var previous = i + 1 < sortedVersions.Length ? sortedVersions[i + 1] : null;
-
-                var commits = m_Repository.GetCommits(previous?.Commit, current.Commit);
-
-                foreach (var commit in commits)
+                foreach (var commit in versionChangeLog.AllCommits)
                 {
                     if (TryGetChangeLogEntry(commit, out var entry))
                     {
-                        m_Logger.LogDebug($"Adding changelog entry for commit '{commit.Id}' to version '{current.Version}'");
-                        changeLog[current].Add(entry);
+                        m_Logger.LogDebug($"Adding changelog entry for commit '{commit.Id}' to version '{versionChangeLog.Version.Version}'");
+                        versionChangeLog.Add(entry);
                     }
                 }
             }

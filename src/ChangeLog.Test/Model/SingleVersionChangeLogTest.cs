@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Grynwald.ChangeLog.ConventionalCommits;
+using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Xunit;
 
@@ -74,10 +75,33 @@ namespace Grynwald.ChangeLog.Test.Model
         }
 
         [Fact]
-        public void Add_checks_argument_for_null()
+        public void Add_checks_ChangeLogEntry_argument_for_null()
         {
             var sut = GetSingleVersionChangeLog("1.2.3");
-            Assert.Throws<ArgumentNullException>(() => sut.Add(null!));
+            Assert.Throws<ArgumentNullException>(() => sut.Add((ChangeLogEntry)null!));
+        }
+
+        [Fact]
+        public void Add_checks_GitCommit_argument_for_null()
+        {
+            var sut = GetSingleVersionChangeLog("1.2.3");
+            Assert.Throws<ArgumentNullException>(() => sut.Add((GitCommit)null!));
+        }
+
+        [Fact]
+        public void Add_throws_InvalidOperationException_when_commit_already_exists()
+        {
+            // ARRANGE
+            var commit = GetGitCommit(TestGitIds.Id1);
+            var sut = GetSingleVersionChangeLog("1.2.3");
+            sut.Add(commit);
+
+            // ACT 
+            var ex = Record.Exception(() => sut.Add(commit));
+
+            // ASSERT
+            Assert.IsType<InvalidOperationException>(ex);
+            Assert.Contains("already contains commit", ex.Message);
         }
 
         [Fact]
