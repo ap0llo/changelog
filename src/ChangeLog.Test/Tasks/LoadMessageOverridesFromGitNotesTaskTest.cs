@@ -13,16 +13,16 @@ using Xunit.Abstractions;
 namespace Grynwald.ChangeLog.Test.Tasks
 {
     /// <summary>
-    /// Tests for <see cref="LoadMessageOverridesTask"/>
+    /// Tests for <see cref="LoadMessageOverridesFromGitNotesTask"/>
     /// </summary>
-    public class LoadMessageOverridesTaskTest : TestBase
+    public class LoadMessageOverridesFromGitNotesTaskTest : TestBase
     {
-        private readonly ILogger<LoadMessageOverridesTask> m_Logger;
+        private readonly ILogger<LoadMessageOverridesFromGitNotesTask> m_Logger;
 
 
-        public LoadMessageOverridesTaskTest(ITestOutputHelper testOutputHelper)
+        public LoadMessageOverridesFromGitNotesTaskTest(ITestOutputHelper testOutputHelper)
         {
-            m_Logger = new XunitLogger<LoadMessageOverridesTask>(testOutputHelper);
+            m_Logger = new XunitLogger<LoadMessageOverridesFromGitNotesTask>(testOutputHelper);
         }
 
 
@@ -32,7 +32,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new LoadMessageOverridesTask(logger: null!, configuration: new ChangeLogConfiguration(), repository: Mock.Of<IGitRepository>(MockBehavior.Strict)));
+            var ex = Record.Exception(() => new LoadMessageOverridesFromGitNotesTask(logger: null!, configuration: new ChangeLogConfiguration(), repository: Mock.Of<IGitRepository>(MockBehavior.Strict)));
 
             // ASSERT
             var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
@@ -45,7 +45,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new LoadMessageOverridesTask(logger: m_Logger, configuration: null!, repository: Mock.Of<IGitRepository>(MockBehavior.Strict)));
+            var ex = Record.Exception(() => new LoadMessageOverridesFromGitNotesTask(logger: m_Logger, configuration: null!, repository: Mock.Of<IGitRepository>(MockBehavior.Strict)));
 
             // ASSERT
             var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
@@ -58,7 +58,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new LoadMessageOverridesTask(logger: m_Logger, configuration: new ChangeLogConfiguration(), repository: null!));
+            var ex = Record.Exception(() => new LoadMessageOverridesFromGitNotesTask(logger: m_Logger, configuration: new ChangeLogConfiguration(), repository: null!));
 
             // ASSERT
             var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
@@ -72,7 +72,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
 
-            var sut = new LoadMessageOverridesTask(m_Logger, config, repo);
+            var sut = new LoadMessageOverridesFromGitNotesTask(m_Logger, config, repo);
 
             // ACT
             var changelog = new ApplicationChangeLog();
@@ -115,7 +115,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                     });
             }
 
-            var sut = new LoadMessageOverridesTask(m_Logger, config, repo.Object);
+            var sut = new LoadMessageOverridesFromGitNotesTask(m_Logger, config, repo.Object);
 
             // ACT
             var result = await sut.RunAsync(new ApplicationChangeLog() { versionChangeLog });
