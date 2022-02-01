@@ -4,7 +4,7 @@
     {{~ ~}}<a href="#{{~ referencedId ~}}">{{~ include "/helpers/entry-title.scriban-html" entry: referencedEntry ~}}</a>{{~ ~}}
 {{~ else ~}}
     {{~ if textelement.is_link($.element) ~}}
-        {{~ ~}}<a href="{{~ $.element.uri ~}}">{{~ ~}}
+        {{~ ~}}<a href="{{~ $.element.uri.absolute_uri ~}}">{{~ ~}}
     {{~ end ~}}
     {{~ if template_settings.normalize_references && textelement.is_normalizable($.element) ~}}
         {{~ if $.element.normalized_style == "Code" ~}}

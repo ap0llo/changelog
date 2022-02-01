@@ -1,0 +1,20 @@
+﻿# Change Log
+
+## 1.2.3
+
+### New Features
+
+- [Some feature](#changelog-heading-efgh5678efgh5678efgh5678efgh5678efgh5678)
+
+### Bug Fixes
+
+- [Some bug fix](#changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234)
+
+### Details
+
+#### <a id="changelog-heading-efgh5678efgh5678efgh5678efgh5678efgh5678"></a> Some feature
+
+- See Also: [Example](https://example.com/name%20with%20space)
+
+#### <a id="changelog-heading-abcd1234abcd1234abcd1234abcd1234abcd1234"></a> Some bug fix
+

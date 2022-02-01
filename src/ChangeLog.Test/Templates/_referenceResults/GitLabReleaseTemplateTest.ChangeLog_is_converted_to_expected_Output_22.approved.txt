@@ -1,0 +1,16 @@
+﻿#### New Features
+
+- [Some feature](#some-feature)
+
+#### Bug Fixes
+
+- [Some bug fix](#some-bug-fix)
+
+#### Details
+
+##### Some feature
+
+- See Also: [Example](https://example.com/name%20with%20space)
+
+##### Some bug fix
+

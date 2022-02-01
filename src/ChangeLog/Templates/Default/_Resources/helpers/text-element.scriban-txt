@@ -20,6 +20,6 @@
         {{~ end ~}}
     {{~ end ~}}
     {{~ if textelement.is_link($.element) ~}}
-        {{~ ~}}]({{~ $.element.uri ~}}){{~ ~}}
+        {{~ ~}}]({{~ $.element.uri.absolute_uri ~}}){{~ ~}}
     {{~ end ~}}
 {{~ end ~}}

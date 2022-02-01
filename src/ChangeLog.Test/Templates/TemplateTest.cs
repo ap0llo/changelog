@@ -10,7 +10,6 @@ using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Test.Tasks;
 using Grynwald.Utilities.IO;
-using Moq;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Templates
@@ -526,10 +525,12 @@ namespace Grynwald.ChangeLog.Test.Templates
 
             public TextStyle Style => TextStyle.None;
 
-            public Uri Uri { get; } = new Uri("https://example.com");
+            public Uri Uri { get; }
 
-            public CustomTextElementWithLink()
-            { }
+            public CustomTextElementWithLink(string url)
+            {
+                Uri = new Uri(url);
+            }
         }
 
         [Fact]
@@ -548,7 +549,7 @@ namespace Grynwald.ChangeLog.Test.Templates
                     {
                         new ChangeLogEntryFooter(
                             new CommitMessageFooterName("See-Also"),
-                            new CustomTextElementWithLink())
+                            new CustomTextElementWithLink("https://example.com"))
                     });
 
             var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
@@ -573,6 +574,30 @@ namespace Grynwald.ChangeLog.Test.Templates
                         new ChangeLogEntryFooter(
                             new CommitMessageFooterName("See-Also"),
                             new CommitReferenceTextElement(TestGitIds.Id1.ToString(), TestGitIds.Id1))
+                    });
+
+            var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
+
+            Approve(changeLog, config);
+        }
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Output_22()
+        {
+            // Footers which's value is a instance of IWebLinkTextElement are rendered as links
+
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+
+            var entry1 = GetChangeLogEntry(type: "fix", summary: "Some bug fix", commit: TestGitIds.Id1);
+            var entry2 = GetChangeLogEntry(
+                    type: "feat",
+                    summary: "Some feature",
+                    commit: TestGitIds.Id2,
+                    footers: new[]
+                    {
+                        new ChangeLogEntryFooter(
+                            new CommitMessageFooterName("See-Also"),
+                            new CustomTextElementWithLink("https://example.com/name%20with%20space"))
                     });
 
             var changeLog = new ApplicationChangeLog() { GetSingleVersionChangeLog("1.2.3", entries: new[] { entry1, entry2 }) };
