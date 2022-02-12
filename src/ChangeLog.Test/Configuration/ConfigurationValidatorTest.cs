@@ -227,7 +227,6 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Contains("'Entry Type'", error.ErrorMessage);
         }
 
-
         [Theory]
         [InlineData("feat")]
         public void Entry_types_must_not_be_unique(string entryType)
@@ -249,6 +248,25 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
             Assert.Contains("'Entry Type' must be unique", error.ErrorMessage);
+        }
+
+        [Fact]
+        public void Integrations_Provider_must_be_defined_value()
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Integrations.Provider = (ChangeLogConfiguration.IntegrationProvider)(-1);
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Integration Provider'", error.ErrorMessage)
+            );
         }
 
         [Theory]
@@ -739,6 +757,24 @@ namespace Grynwald.ChangeLog.Test.Configuration
             );
         }
 
+        [Fact]
+        public void Template_Name_must_be_defined_value()
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Template.Name = (ChangeLogConfiguration.TemplateName)(-1);
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Template Name'", error.ErrorMessage)
+            );
+        }
 
         [Theory]
         [CombinatorialData]
@@ -840,6 +876,24 @@ namespace Grynwald.ChangeLog.Test.Configuration
             Assert.Empty(result.Errors);
         }
 
+        [Fact]
+        public void Parser_Mode_must_be_defined_value()
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.Parser.Mode = (ChangeLogConfiguration.ParserMode)(-1);
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Parser Mode'", error.ErrorMessage)
+            );
+        }
 
         [Fact]
         public void MessageOverrides_Provider_must_be_defined_value()

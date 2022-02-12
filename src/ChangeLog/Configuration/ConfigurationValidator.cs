@@ -52,6 +52,8 @@ namespace Grynwald.ChangeLog.Configuration
             RuleFor(x => x.CurrentVersion).NotWhitespace();
             RuleFor(x => x.CurrentVersion).IsNuGetVersion().UnlessNullOrEmpty();
 
+            RuleFor(x => x.Integrations.Provider).IsInEnum();
+
             RuleFor(x => x.Integrations.GitHub.AccessToken).NotWhitespace();
             RuleFor(x => x.Integrations.GitHub.RemoteName).NotEmpty();
             RuleFor(x => x.Integrations.GitHub.Host).NotWhitespace();
@@ -71,6 +73,8 @@ namespace Grynwald.ChangeLog.Configuration
             RuleForEach(x => x.Filter.Exclude)
                 .ChildRules(filter => filter.RuleFor(f => f.Type).NotWhitespace())
                 .ChildRules(filter => filter.RuleFor(f => f.Scope).NotWhitespace());
+
+            RuleFor(x => x.Template.Name).IsInEnum();
 
             RuleFor(x => x.Template.Default.CustomDirectory).NotWhitespace();
             RuleFor(x => x.Template.Default.CustomDirectory)
@@ -95,6 +99,8 @@ namespace Grynwald.ChangeLog.Configuration
                 .Must(Directory.Exists)
                 .UnlessNullOrWhiteSpace()
                 .WithMessage("Directory '{PropertyValue}' specified as '{PropertyName}' does not exists");
+
+            RuleFor(x => x.Parser.Mode).IsInEnum();
 
             RuleFor(x => x.MessageOverrides.Provider).IsInEnum();
 
