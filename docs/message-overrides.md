@@ -7,46 +7,57 @@
 -->
 # Commit Message Overrides
 
-**Supported versions:** 0.5+
+**Supported versions:** 1.0+
 
 By default, changelog parses commit messages to generate the change log.
 Since the commit message in git cannot (easily) be changed after committing, the change log entry cannot be changed afterwards either.
-To allow editing the message used for generating the change log, version 0.5 introduced the concept of "Commit Message Overrides".
 
-It uses ["git notes"](https://git-scm.com/docs/git-notes) to set a message that takes precedence over a commit's message.
+To allow editing the message used for generating the change log, changelog supports "Commit Message Overrides" which allow specifying a message that will be user by changelog instead of the commit message.
 
-By default, the "override message" is read from the `changelog/message-overrides` namespace.
-This can be customized through the [Git Notes Namespace setting](./configuration/settings/message-overrides.md#git-notes-namespace).
+There are two ways to provide an alternate message for a commit:
 
-Note that when a git note is present, it **always** takes precedence over the commit message, regardless of whether the commit message and/or the override message can be parsed as conventional commit.
+- [Git Notes](#overriding-commit-messages-through-git-notes), added in version 1.0 (**default**)
+- [Message Override Files](#overriding-commit-messages-through-override-files), added in version 1.1
+
+By default, the Git Notes are used.
+This can be customized through the [Message Override Provider setting](./configuration/settings/message-overrides.md#message-override-provider).
+
+Both approaches have different advantages and downsides:
+
+- [Git notes](https://git-scm.com/docs/git-notes) are a little difficult to handle as git will not fetch them by default but can be accessed independently of the currently checked out commit.
+- Placing override files in the repository is more straight-forward but it may clutter the repository and you need to make sure to have the right branch checked out when generating the change log.
+
+Note that when a override message is found, it **always** takes precedence over the commit message, regardless of whether the commit message and/or the override message can be parsed as conventional commit.
 
 ## Use Cases:
 
 - **Modifying a change log entry:**
 
-  Assuming a commit's message is a valid conventional commit, the resulting change log entry can be modified, by adding a git note that is a valid conventional commit message as well.
+  Assuming a commit's message is a valid conventional commit, the resulting change log entry can be modified, by adding a override message that is a valid conventional commit message as well.
 
 - **Adding a change log entry:**
 
   Commit messages which do not follow the conventional commits format will be ignored when generating the change log.
-  To include the commit in the change log, add a git note which follows the conventional commits format.
+  To include the commit in the change log, add a override message which follows the conventional commits format.
 
 - **Removing a change log entry**
 
-  To remove a commit from the change log, add a git note that does *not* follow the conventional commits format.
+  To remove a commit from the change log, add a override message that does *not* follow the conventional commits format.
   When generating the changelog, the commit will be ignored.
 
 ## Disabling Message Overrides
 
 The commit message overrides are enabled by default. 
-Overrides can be disabled by setting the ["Enable Message Overrides"](./configuration/settings/message-overrides.md#enable-message-overrides) setting to `false`.
+Overrides can be disabled by setting the [Enable Message Overrides](./configuration/settings/message-overrides.md#enable-message-overrides) setting to `false`.
 
-## Working with Git Notes
+## Overriding Commit Messages through Git Notes
+
+When commit message overrides are configured to use git notes (see [Message Override Provider setting](./configuration/settings/message-overrides.md#message-override-provider)), override messages are read from the git notes namespace `changelog/message-overrides` .
+This can be customized through the [Git Notes Namespace setting](./configuration/settings/message-overrides.md#git-notes-namespace).
+
+### Working with Git Notes
 
 For more information on git notes, please refer to the [Git Documentation](https://git-scm.com/docs/git-notes).
-
-By default, changelog looks for override messages in the namespace `changelog/message-overrides`.
-This can be customized through the [Git Notes Namespace setting](./configuration/settings/message-overrides.md#git-notes-namespace).
 
 To add an override message, run
 
@@ -81,7 +92,7 @@ git log --show-notes=*
 ```
 
 
-## Pushing
+### Pushing
 
 **⚠️ Note that git does not include notes by default in push or pull operations**
 
@@ -105,6 +116,40 @@ git fetch origin "refs/notes/changelog/message-overrides:refs/notes/changelog/me
 git fetch origin "refs/notes/*:refs/notes/*"
 ```
 
+## Overriding Commit Messages through Override Files
+
+As an alternative to using git-notes, version 1.1 added the option to load override messages from the file system.
+
+To use the file system, set the [Message Override Provider setting](./configuration/settings/message-overrides.md#message-override-provider) to `FileSystem`.
+
+When enabled, changelog will search the directory `.config/changelog/message-overrides` (in the repository) for override files.
+In this directory, place one or more text files which are named after the id of the git commit you wish to override the message for (without a file extension).
+
+You can use the abbreviated commit id instead of the full 40-character id, but changelog will throw an error if multiple files in the directory resolve to the same commit
+(e.g. when files for both the abbreviated and the full commit id are present).
+
+For example, your repository with override files could look something like this:
+
+```txt
+<root>
+ └─.config
+    └─changelog
+       └─message-overrides
+          ├─ff186833f7a546173e77b43951bd94d57f4ccd82
+          ├─3963110882b7e85dd4de9cfb4b140a9ad661b754
+          └─a11f9b7
+```
+
+You can customize the directory to use for message overrides through the [Source Directory Path setting](./configuration/settings/message-overrides.md#source-directory-path).
+
+💡Tip: To initialize a override file with the commit's original message, you can run
+
+```ps1
+git show -s --format=%B <COMMIT> > .\.config\changelog\message-overrides\<COMMIT>
+```
+
+where `<COMMIT>` is the SHA1 of the commit to set the message for.
+<COMMIT>
 ## See Also
 
 - [Commit Message Override Settings](./configuration/settings/message-overrides.md)
