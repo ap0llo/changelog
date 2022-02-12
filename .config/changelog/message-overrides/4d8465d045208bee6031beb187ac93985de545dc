@@ -1,0 +1,4 @@
+ci: Remove .NET SDK version from "Update NuGet lock files" GitHub Action
+
+When no version is specified, the 'setup-dotnet' action falls back to the global.json.
+This way there is only a single place in the repo that specifies the SDK version.

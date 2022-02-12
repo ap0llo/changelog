@@ -6,6 +6,9 @@
             "gitlab" :  { "displayName": "GitLab Integration" },
             "templates" : { "displayName": "Templates" },
             "parser" : { "displayName" : "Commit Message Parser" }
+        },        
+        "messageOverrides": {
+            "provider": "FileSystem"
         }
     }
 }

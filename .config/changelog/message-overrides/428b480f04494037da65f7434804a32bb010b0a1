@@ -1,0 +1,3 @@
+build(deps): Update GitLabApiClient submodule to latest version from upstream
+
+Updates-dependency: GitLabApiClient

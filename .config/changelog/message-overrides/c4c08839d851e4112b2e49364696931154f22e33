@@ -1,0 +1,7 @@
+build: Upgrade to Cake 2.0
+
+Upgrade Cake to version 2.0 and update shared build tasks and cake modules to versions compatible with Cake 2.0
+
+Co-authored-by: Renovate Bot <bot@renovateapp.com>
+Co-authored-by: Andreas Grünwald <andreas@grynwald.net>
+Pull-Request: #295

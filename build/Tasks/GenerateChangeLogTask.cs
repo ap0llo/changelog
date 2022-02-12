@@ -11,7 +11,6 @@ namespace Build
 {
     [TaskName(TaskNames.GenerateChangeLog)]
     [TaskDescription("Generates a change log for the current repository")]
-    [IsDependentOn(typeof(FetchGitNotesTask))]
     public class GenerateChangeLogTask : FrostingTask<IBuildContext>
     {
         public override void Run(IBuildContext context)

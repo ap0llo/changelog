@@ -1,0 +1,3 @@
+build(deps): Get GitLabApiClient via NuGet instead of using a git submodule
+
+Remove GitLabApiClient submodule and use the NuGet package instead since a package containing the fix included in the submodule was released.
