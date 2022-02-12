@@ -11,6 +11,8 @@ if ($env:TF_BUILD) {
 # Install SDK and runtime as specified in global.json
 ./build/dotnet-install.ps1 -JsonFile "$PSScriptRoot/global.json"
 
+Invoke-Expression "dotnet --info"
+
 if ($env:TF_BUILD) {
     Write-Host "##[endgroup]"
 }
