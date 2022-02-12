@@ -1,13 +1,13 @@
 <div class="changelog-entry-list">
 
-    {{~ include "/partials/version/summary/entry-list-header.scriban-html" entry_group: $.entry_group ~}}
+    {{ include "/partials/version/summary/entry-list-header.scriban-html" entry_group: $.entry_group }}
 
     <div class="changelog-entry-list-content">
         <ul>
-            {{~ for entry in $.entry_group.entries ~}}
-                {{~ id = include "/helpers/entry-id.scriban-html" entry: entry ~}}
-                <li><a href="#{{~ id ~}}">{{~ include "/helpers/entry-title.scriban-html" entry: entry ~}}</a></li>
-            {{~ end ~}}
+        {{~ for entry in $.entry_group.entries ~}}
+            {{~ id = include "/helpers/entry-id.scriban-html" entry: entry ~}}
+            <li><a href="#{{~ id ~}}">{{~ include "/helpers/entry-title.scriban-html" entry: entry ~}}</a></li>
+        {{~ end ~}}
         </ul>
     </div>
 

@@ -1,18 +1,19 @@
 <div class="changelog-version">
 
-    {{~ include "/partials/version/version-header.scriban-html" version_change_log: $.version_change_log~}}
+    {{ include "/partials/version/version-header.scriban-html" version_change_log: $.version_change_log }}
 
     <div class="changelog-version-content">
-        {{~ entryCount = enumerable.count($.version_change_log.all_entries) ~}}
-        {{~ if entryCount == 0 ~}}
-            <i>No changes found.</i>
-        {{~ else if entryCount == 1 ~}}
-            {{~ entry = enumerable.single($.version_change_log.all_entries) ~}}
-            {{ include "/partials/version/details/entry.scriban-html" entry: entry }}
-        {{~ else ~}}
-            {{ include "/partials/version/summary/version-summary.scriban-html" version_change_log: $.version_change_log }}
-            {{ include "/partials/version/details/version-details.scriban-html" version_change_log: $.version_change_log }}
-        {{~ end ~}}
+    {{~ entryCount = enumerable.count($.version_change_log.all_entries) ~}}
+    {{~ if entryCount == 0 ~}}
+        <i>No changes found.</i>
+    {{~ else if entryCount == 1 ~}}
+        {{~ entry = enumerable.single($.version_change_log.all_entries) ~}}
+        {{ include "/partials/version/details/entry.scriban-html" entry: entry }}
+    {{~ else ~}}
+        {{ include "/partials/version/summary/version-summary.scriban-html" version_change_log: $.version_change_log }}
+        
+        {{ include "/partials/version/details/version-details.scriban-html" version_change_log: $.version_change_log }}
+    {{~ end ~}}
     </div>
 
 </div>

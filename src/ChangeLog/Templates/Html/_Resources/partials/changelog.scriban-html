@@ -1,9 +1,9 @@
 <div class="changelog">
 
-    {{ include "/partials/header.scriban-html" model: $.model}}
+    {{ include "/partials/header.scriban-html" model: $.model }}
 
-    {{ include "/partials/toc.scriban-html" model: $.model}}
+    {{ include "/partials/toc.scriban-html" model: $.model }}
 
-    {{ include "/partials/content.scriban-html" model: $.model}}
+    {{ include "/partials/content.scriban-html" model: $.model }}
 
 </div>

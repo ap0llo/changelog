@@ -1,4 +1,4 @@
-﻿<div class="changelog-entry-header">
-    {{~ id = include "/helpers/entry-id.scriban-html" entry: $.entry ~}}
+﻿{{~ id = include "/helpers/entry-id.scriban-html" entry: $.entry ~}}
+<div class="changelog-entry-header">
     <h4 id="{{~ id ~}}">{{~ include "/helpers/entry-title.scriban-html" entry: $.entry ~}}</h4>
 </div>

@@ -1,7 +1,7 @@
 ﻿<div class="changelog-version-summary">
 
     {{~ for entry_group in $.version_change_log.entry_groups ~}}
-        {{ include "/partials/version/summary/entry-list.scriban-html" entry_group: entry_group}}
+    {{ include "/partials/version/summary/entry-list.scriban-html" entry_group: entry_group }}
     {{~ end ~}}
 
     {{ include "/partials/version/summary/breakingchanges-list.scriban-html" version_change_log: version_change_log }}

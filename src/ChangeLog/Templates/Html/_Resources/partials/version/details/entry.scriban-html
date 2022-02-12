@@ -1,40 +1,37 @@
 ﻿<div class="changelog-entry">
 
-    {{~ include "/partials/version/details/entry-header.scriban-html" entry: entry ~}}
+    {{ include "/partials/version/details/entry-header.scriban-html" entry: entry }}
 
     <div class="changelog-entry-content">
 
-        {{~ if $.entry.contains_breaking_changes ~}}
-            {{~ if enumerable.any($.entry.breaking_change_descriptions) ~}}
-                {{~ if enumerable.count($.entry.breaking_change_descriptions) == 1 ~}}
-                    <p><b>Breaking Change:</b> {{ html.escape(enumerable.single($.entry.breaking_change_descriptions)) ~}}</p>
-                {{~ else ~}}
-                    <ul>
-                        {{~ for description in $.entry.breaking_change_descriptions ~}}
-                        <li>
-                            <b>Breaking Change:</b> {{ html.escape(description) }}
-                        </li>
-                        {{~ end ~}}
-                    </ul>
-                {{~ end ~}}
-            {{~ else ~}}
-                <p><b>Breaking Change</b></p>
-            {{~ end ~}}
-        {{~ end ~}}
-
-        {{~ for paragraph in $.entry.body ~}}
-        <p>{{ html.escape(paragraph) }}</p>
-        {{~ end ~}}
-
-        {{~ if enumerable.any($.entry.footers) ~}}
+{{~ if $.entry.contains_breaking_changes ~}}
+    {{~ if enumerable.any($.entry.breaking_change_descriptions) ~}}
+        {{~ if enumerable.count($.entry.breaking_change_descriptions) == 1 ~}}
+        <p><b>Breaking Change:</b> {{ html.escape(enumerable.single($.entry.breaking_change_descriptions)) ~}}</p>
+        {{~ else ~}}
         <ul>
-            {{~ for footer in $.entry.footers ~}}
-                <li>
-                    {{ html.escape(footer.display_name) }}: {{ include "/helpers/text-element.scriban-html" element: footer.value }}
-                </li>
+            {{~ for description in $.entry.breaking_change_descriptions ~}}
+            <li>
+                <b>Breaking Change:</b> {{ html.escape(description) }}
+            </li>
             {{~ end ~}}
         </ul>
         {{~ end ~}}
+    {{~ else ~}}
+        <p><b>Breaking Change</b></p>
+    {{~ end ~}}
+{{~ end ~}}
 
+    {{~ for paragraph in $.entry.body ~}}
+        <p>{{ html.escape(paragraph) }}</p>
+    {{~ end ~}}
+
+    {{~ if enumerable.any($.entry.footers) ~}}
+        <ul>
+            {{~ for footer in $.entry.footers ~}}
+            <li>{{ html.escape(footer.display_name) }}: {{ include "/helpers/text-element.scriban-html" element: footer.value }}</li>
+            {{~ end ~}}
+        </ul>
+    {{~ end ~}}
     </div>
 </div>
