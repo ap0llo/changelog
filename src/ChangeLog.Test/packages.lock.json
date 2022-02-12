@@ -737,8 +737,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "5.0.0",
-        "contentHash": "/kqARxHaYytWngSOqwHvXZkvTGgh6gbFgUiMrg1jbxATSkmHAB1KAfr+d6Dy92rloAynUPveAJBqijL1Vr2Ttw==",
+        "resolved": "5.4.0",
+        "contentHash": "gx+ArfJeanLPO2b5mnSsK8FqgMvhrRqqOOisRPhofWU44qfuCQU4G0GJfJziauu4PLMdMg2ArnhD7CMHaFwzLQ==",
         "dependencies": {
           "Microsoft.CSharp": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.0"
@@ -2004,7 +2004,7 @@
           "Microsoft.Extensions.Logging": "6.0.0",
           "NuGet.Versioning": "6.0.0",
           "Octokit": "0.50.0",
-          "Scriban": "5.0.0",
+          "Scriban": "5.4.0",
           "Zio": "0.14.0"
         }
       }
@@ -2740,8 +2740,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "5.0.0",
-        "contentHash": "/kqARxHaYytWngSOqwHvXZkvTGgh6gbFgUiMrg1jbxATSkmHAB1KAfr+d6Dy92rloAynUPveAJBqijL1Vr2Ttw=="
+        "resolved": "5.4.0",
+        "contentHash": "gx+ArfJeanLPO2b5mnSsK8FqgMvhrRqqOOisRPhofWU44qfuCQU4G0GJfJziauu4PLMdMg2ArnhD7CMHaFwzLQ=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -3997,7 +3997,7 @@
           "Microsoft.Extensions.Logging": "6.0.0",
           "NuGet.Versioning": "6.0.0",
           "Octokit": "0.50.0",
-          "Scriban": "5.0.0",
+          "Scriban": "5.4.0",
           "Zio": "0.14.0"
         }
       }
@@ -4729,8 +4729,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "5.0.0",
-        "contentHash": "/kqARxHaYytWngSOqwHvXZkvTGgh6gbFgUiMrg1jbxATSkmHAB1KAfr+d6Dy92rloAynUPveAJBqijL1Vr2Ttw=="
+        "resolved": "5.4.0",
+        "contentHash": "gx+ArfJeanLPO2b5mnSsK8FqgMvhrRqqOOisRPhofWU44qfuCQU4G0GJfJziauu4PLMdMg2ArnhD7CMHaFwzLQ=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -5993,7 +5993,7 @@
           "Microsoft.Extensions.Logging": "6.0.0",
           "NuGet.Versioning": "6.0.0",
           "Octokit": "0.50.0",
-          "Scriban": "5.0.0",
+          "Scriban": "5.4.0",
           "Zio": "0.14.0"
         }
       }
