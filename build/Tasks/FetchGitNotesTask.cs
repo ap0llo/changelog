@@ -18,7 +18,7 @@ namespace Build
             var exitCode = context.StartProcess(fileName, args);
 
             if (exitCode != 0)
-                throw new CakeException($"Command '{fileName} {args}' failed with exist code {exitCode}");
+                throw new CakeException($"Command '{fileName} {args}' failed with exit code {exitCode}");
         }
     }
 }
