@@ -159,6 +159,12 @@ namespace Grynwald.ChangeLog.Configuration
             public string Scope { get; set; } = "*";
         }
 
+        public enum MessageOverrideProvider
+        {
+            GitNotes,
+            FileSystem
+        }
+
         public class MessageOverrideConfiguration
         {
             [JsonSchemaDefaultValue]
@@ -166,8 +172,16 @@ namespace Grynwald.ChangeLog.Configuration
             public bool Enabled { get; set; }
 
             [JsonSchemaDefaultValue]
+            [SettingDisplayName("Commit Message Override Provider")]
+            public MessageOverrideProvider Provider { get; set; }
+
+            [JsonSchemaDefaultValue]
             [SettingDisplayName("Commit Message Overide Git Notes Namespace")]
             public string GitNotesNamespace { get; set; } = "";
+
+            [JsonSchemaDefaultValue]
+            [SettingDisplayName("Commit Message Override Source Directory")]
+            public string SourceDirectoryPath { get; set; } = "";
         }
 
 

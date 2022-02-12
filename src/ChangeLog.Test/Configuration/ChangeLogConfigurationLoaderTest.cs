@@ -291,7 +291,9 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Message override settings
             //
             yield return TestCase(config => Assert.True(config.MessageOverrides.Enabled));
+            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.MessageOverrideProvider.GitNotes, config.MessageOverrides.Provider));
             yield return TestCase(config => Assert.Equal("changelog/message-overrides", config.MessageOverrides.GitNotesNamespace));
+            yield return TestCase(config => Assert.Equal(".config/changelog/message-overrides", config.MessageOverrides.SourceDirectoryPath));
         }
 
         [Theory]
@@ -701,7 +703,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase("messageOverrides:enabled", config => config.MessageOverrides.Enabled, true);
             yield return TestCase("messageOverrides:enabled", config => config.MessageOverrides.Enabled, false);
 
+            foreach (var value in GetEnumValues<ChangeLogConfiguration.MessageOverrideProvider>())
+            {
+                yield return TestCase("messageOverrides:provider", config => config.MessageOverrides.Provider, value);
+            }
+
             yield return TestCase("messageOverrides:gitNotesNamespace", config => config.MessageOverrides.GitNotesNamespace, "some-namespace");
+            yield return TestCase("messageOverrides:sourceDirectoryPath", config => config.MessageOverrides.SourceDirectoryPath, "custom-source-directory");
         }
 
         public static IEnumerable<object?[]> ConfigurationFileSetValueTestCases() =>

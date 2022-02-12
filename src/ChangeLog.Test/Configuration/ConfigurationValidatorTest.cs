@@ -841,6 +841,25 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
 
+        [Fact]
+        public void MessageOverrides_Provider_must_be_defined_value()
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.MessageOverrides.Provider = (ChangeLogConfiguration.MessageOverrideProvider)(-1);
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Commit Message Override Provider'", error.ErrorMessage)
+            );
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -866,16 +885,82 @@ namespace Grynwald.ChangeLog.Test.Configuration
         }
 
         [Theory]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, null)]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "\t")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "  ")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, null)]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "\t")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "  ")]
+        [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, null)]
+        [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "")]
+        [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "\t")]
+        [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "  ")]
+        public void MessageOverrides_GitNotesNamespace_may_be_null_or_whitespace_when_message_overrides_are_disabled_or_another_provider_is_used(bool enabled, ChangeLogConfiguration.MessageOverrideProvider provider, string gitNotesNamespace)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.MessageOverrides.Enabled = enabled;
+            config.MessageOverrides.Provider = provider;
+            config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.True(result.IsValid);
+            Assert.Empty(result.Errors);
+        }
+
+
+        [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData("\t")]
         [InlineData("  ")]
-        public void MessageOverrides_GitNotesNamespace_may_be_null_or_whitespace_when_message_overrides_are_disabled(string gitNotesNamespace)
+        public void MessageOverrides_SourceDirectoryPath_must_not_be_null_or_whitespace_when_message_overrides_are_enabled(string sourceDirectoryPath)
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.MessageOverrides.Enabled = false;
-            config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+            config.MessageOverrides.Enabled = true;
+            config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
+            config.MessageOverrides.SourceDirectoryPath = sourceDirectoryPath;
+
+            var sut = new ConfigurationValidator();
+
+            // ACT 
+            var result = sut.Validate(config);
+
+            // ASSERT
+            Assert.False(result.IsValid);
+            Assert.Collection(result.Errors,
+                error => Assert.Contains("'Commit Message Override Source Directory'", error.ErrorMessage)
+            );
+        }
+
+        [Theory]
+        [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, null)]
+        [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "")]
+        [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "\t")]
+        [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "  ")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, null)]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "\t")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.GitNotes, "  ")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, null)]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "\t")]
+        [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "  ")]
+        public void MessageOverrides_SourceDirectoryPath_may_be_null_or_whitespace_when_message_overrides_are_disabled_or_another_provider_is_used(bool enabled, ChangeLogConfiguration.MessageOverrideProvider provider, string sourceDirectoryPath)
+        {
+            // ARRANGE
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            config.MessageOverrides.Enabled = enabled;
+            config.MessageOverrides.Provider = provider;
+            config.MessageOverrides.SourceDirectoryPath = sourceDirectoryPath;
 
             var sut = new ConfigurationValidator();
 

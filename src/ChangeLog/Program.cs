@@ -108,6 +108,7 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
                 containerBuilder.RegisterType<LoadCommitsTask>();
                 containerBuilder.RegisterType<LoadMessageOverridesFromGitNotesTask>();
+                containerBuilder.RegisterType<LoadMessageOverridesFromFileSystemTask>();
                 containerBuilder.RegisterType<ParseCommitsTask>();
                 containerBuilder.RegisterType<ParseCommitReferencesTask>();
                 containerBuilder.RegisterType<FilterVersionsTask>();
@@ -149,7 +150,12 @@ namespace Grynwald.ChangeLog
                         .AddTask<LoadCurrentVersionTask>()
                         .AddTask<LoadVersionsFromTagsTask>()
                         .AddTask<LoadCommitsTask>()
-                        .AddTaskIf<LoadMessageOverridesFromGitNotesTask>(configuration.MessageOverrides.Enabled)
+                        .AddTaskIf<LoadMessageOverridesFromGitNotesTask>(
+                            configuration.MessageOverrides.Enabled && configuration.MessageOverrides.Provider == ChangeLogConfiguration.MessageOverrideProvider.GitNotes
+                        )
+                        .AddTaskIf<LoadMessageOverridesFromFileSystemTask>(
+                            configuration.MessageOverrides.Enabled && configuration.MessageOverrides.Provider == ChangeLogConfiguration.MessageOverrideProvider.FileSystem
+                        )
                         .AddTask<ParseCommitsTask>()
                         .AddTask<ParseCommitReferencesTask>()
                         .AddTask<ParseWebLinksTask>()

@@ -127,7 +127,9 @@
 
     "messageOverrides": {
       "enabled": true,
-      "gitNotesNamespace": "changelog/message-overrides"
+      "provider": "GitNotes",
+      "gitNotesNamespace": "changelog/message-overrides",
+      "sourceDirectoryPath": ".config/changelog/message-overrides"
     }
   }
 }
