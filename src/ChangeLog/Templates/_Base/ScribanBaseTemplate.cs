@@ -135,7 +135,8 @@ namespace Grynwald.ChangeLog.Templates
 
             var templateContext = new TemplateContext()
             {
-                TemplateLoader = templateLoader
+                TemplateLoader = templateLoader,
+                AutoIndent = false
             };
             var rootScriptObject = new ScriptObject()
             {
