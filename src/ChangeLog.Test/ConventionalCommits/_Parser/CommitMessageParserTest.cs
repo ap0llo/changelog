@@ -458,6 +458,32 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
                 " ",
                 "Footer4: Footer Description4"
             );
+
+            // Parser retains whitespace in footer values
+            yield return MultiLineTestCase(
+                "T42",
+                new CommitMessage(
+                    header: new CommitMessageHeader(
+                        type: new CommitType("type"),
+                        description: "Description",
+                        scope: null,
+                        isBreakingChange: false
+                    ),
+                    body: new[] { "Message Body\r\n" },
+                    footers: new[]
+                    {
+                        new CommitMessageFooter(name: new CommitMessageFooterName("Footer1"), value: "Some Value with trailing whitespace   \t"),
+                        new CommitMessageFooter(name: new CommitMessageFooterName("Footer2"), value: "  Some Value with leading whitespace"),
+                    }
+                ),
+                strictMode: false,
+                "type: Description",
+                "",
+                "Message Body",
+                "",
+                "Footer1: Some Value with trailing whitespace   \t",
+                "Footer2:   Some Value with leading whitespace"
+            );
         }
 
         public static IEnumerable<object[]> InvalidParserTestCases()

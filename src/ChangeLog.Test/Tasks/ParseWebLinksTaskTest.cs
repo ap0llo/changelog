@@ -15,14 +15,16 @@ namespace Grynwald.ChangeLog.Test.Tasks
     public class ParseWebLinksTaskTest
     {
         [Theory]
-        [InlineData("http://example.com")]
-        [InlineData("https://example.com")]
-        [InlineData("https://example.com/some-page")]
-        [InlineData("https://github.com/user/repo")]
-        [InlineData("HTTPS://github.com/user/repo")]
-        [InlineData("HTTP://example.com")]
-        [InlineData("htTP://example.com")]
-        public async Task Plain_text_footer_values_that_are_web_urls_are_replaced(string url)
+        [InlineData("http://example.com", "http://example.com")]
+        [InlineData("https://example.com", "https://example.com")]
+        [InlineData("https://example.com/some-page", "https://example.com/some-page")]
+        [InlineData("https://github.com/user/repo", "https://github.com/user/repo")]
+        [InlineData("HTTPS://github.com/user/repo", "HTTPS://github.com/user/repo")]
+        [InlineData("HTTP://example.com", "HTTP://example.com")]
+        [InlineData("htTP://example.com", "htTP://example.com")]
+        [InlineData("  http://example.com", "http://example.com")]
+        [InlineData("http://example.com  ", "http://example.com")]
+        public async Task Plain_text_footer_values_that_are_web_urls_are_replaced(string footerText, string expectedUrl)
         {
             // ARRANGE
             var testData = new TestDataFactory();
@@ -32,7 +34,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
                 {
                     testData.GetChangeLogEntry(footers: new[]
                     {
-                        new ChangeLogEntryFooter(new("name"), new PlainTextElement(url))
+                        new ChangeLogEntryFooter(new("name"), new PlainTextElement(footerText))
                     })
                 })
             };
@@ -46,7 +48,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
             Assert.Equal(ChangeLogTaskResult.Success, result);
             var footer = Assert.Single(changeLog.ChangeLogs.SelectMany(x => x.AllEntries).SelectMany(x => x.Footers));
             var weblinkTextElement = Assert.IsType<WebLinkTextElement>(footer.Value);
-            Assert.Equal(new Uri(url), weblinkTextElement.Uri);
+            Assert.Equal(new Uri(expectedUrl), weblinkTextElement.Uri);
         }
 
         [Theory]
