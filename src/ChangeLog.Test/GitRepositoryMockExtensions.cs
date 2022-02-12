@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Grynwald.ChangeLog.Git;
 using Moq;
@@ -29,6 +30,16 @@ namespace Grynwald.ChangeLog.Test
         public static IReturnsResult<IGitRepository> SetupEmptyRemotes(this Mock<IGitRepository> mock)
         {
             return mock.Setup(x => x.Remotes).Returns(Enumerable.Empty<GitRemote>());
+        }
+
+        public static IReturnsResult<IGitRepository> SetupTryGetCommit(this Mock<IGitRepository> mock)
+        {
+            return mock.Setup(x => x.TryGetCommit(It.IsAny<string>())).Returns((GitCommit?)null);
+        }
+
+        public static IReturnsResult<IGitRepository> SetupTryGetCommit(this Mock<IGitRepository> mock, GitCommit commit)
+        {
+            return mock.Setup(x => x.TryGetCommit(It.Is<string>(str => commit.Id.Id.StartsWith(str, StringComparison.OrdinalIgnoreCase)))).Returns(commit);
         }
     }
 }

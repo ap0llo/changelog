@@ -64,7 +64,9 @@ For example setting `key:subkey` to `value` would need to be specified in the co
   - [Normalize References](./configuration/settings/html-template.md#normalize-references)
 - [Commit Message Overrides](./configuration/settings/message-overrides.md)
   - [Enable Message Overrides](./configuration/settings/message-overrides.md#enable-message-overrides)
+  - [Message Override Provider](./configuration/settings/message-overrides.md#message-override-provider)
   - [Git Notes Namespace](./configuration/settings/message-overrides.md#git-notes-namespace)
+  - [Source Directory Path](./configuration/settings/message-overrides.md#source-directory-path)
 
 
 ## See Also

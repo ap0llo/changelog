@@ -666,10 +666,24 @@
               "default": true,
               "title": "Enable Commit Message Overrides"
             },
+            "provider": {
+              "type": "string",
+              "enum": [
+                "GitNotes",
+                "FileSystem"
+              ],
+              "default": "GitNotes",
+              "title": "Commit Message Override Provider"
+            },
             "gitNotesNamespace": {
               "type": "string",
               "default": "changelog/message-overrides",
               "title": "Commit Message Overide Git Notes Namespace"
+            },
+            "sourceDirectoryPath": {
+              "type": "string",
+              "default": ".config/changelog/message-overrides",
+              "title": "Commit Message Override Source Directory"
             }
           }
         }
