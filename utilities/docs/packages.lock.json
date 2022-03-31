@@ -247,8 +247,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "5.4.1",
-        "contentHash": "4+VTat3TjBYLs2fwkgRg1ERuLashApP3XI/uAi5lgWQZFJbhZzKvCjZVInISVtmiaEH1wEc05nwLOUCc2YlTrw=="
+        "resolved": "5.4.2",
+        "contentHash": "LK7dRpkeQjSVPUGZFuwHnDeXtVHQrRKhf1CYPYe0gME8JmzM+DJjYiOEkl6FY+VxSfMpo9xingqx8i6WxycZ8Q=="
       },
       "System.Diagnostics.DiagnosticSource": {
         "type": "Transitive",
@@ -303,7 +303,7 @@
           "Microsoft.Extensions.Logging": "6.0.0",
           "NuGet.Versioning": "6.1.0",
           "Octokit": "0.50.0",
-          "Scriban": "5.4.1",
+          "Scriban": "5.4.2",
           "Zio": "0.14.0"
         }
       }
