@@ -1613,8 +1613,12 @@
       },
       "Zio": {
         "type": "Transitive",
-        "resolved": "0.14.0",
-        "contentHash": "6J0jEgrNLlcxUshz8cDHQfCDxRxlINEROJByGt3/3FAEY7xZZPheeXSuagFjrNG9LXbkasnIknQkKLGIZtwRaA=="
+        "resolved": "0.15.0",
+        "contentHash": "tBxkD9ZEXkVBwGZPvsb/8HoQRTFGHXn2HWL2UO9V4gmzKbGEf9SB48i78oC+2JfTYtWe/H/eASSapNz7WTd4pg==",
+        "dependencies": {
+          "System.IO.Compression": "4.3.0",
+          "System.IO.Compression.ZipFile": "4.3.0"
+        }
       },
       "grynwald.changelog": {
         "type": "Project",
@@ -1635,7 +1639,7 @@
           "NuGet.Versioning": "6.1.0",
           "Octokit": "0.50.0",
           "Scriban": "5.4.4",
-          "Zio": "0.14.0"
+          "Zio": "0.15.0"
         }
       }
     },
@@ -3238,8 +3242,12 @@
       },
       "Zio": {
         "type": "Transitive",
-        "resolved": "0.14.0",
-        "contentHash": "6J0jEgrNLlcxUshz8cDHQfCDxRxlINEROJByGt3/3FAEY7xZZPheeXSuagFjrNG9LXbkasnIknQkKLGIZtwRaA=="
+        "resolved": "0.15.0",
+        "contentHash": "tBxkD9ZEXkVBwGZPvsb/8HoQRTFGHXn2HWL2UO9V4gmzKbGEf9SB48i78oC+2JfTYtWe/H/eASSapNz7WTd4pg==",
+        "dependencies": {
+          "System.IO.Compression": "4.3.0",
+          "System.IO.Compression.ZipFile": "4.3.0"
+        }
       },
       "grynwald.changelog": {
         "type": "Project",
@@ -3260,7 +3268,7 @@
           "NuGet.Versioning": "6.1.0",
           "Octokit": "0.50.0",
           "Scriban": "5.4.4",
-          "Zio": "0.14.0"
+          "Zio": "0.15.0"
         }
       }
     },
@@ -4865,8 +4873,8 @@
       },
       "Zio": {
         "type": "Transitive",
-        "resolved": "0.14.0",
-        "contentHash": "6J0jEgrNLlcxUshz8cDHQfCDxRxlINEROJByGt3/3FAEY7xZZPheeXSuagFjrNG9LXbkasnIknQkKLGIZtwRaA=="
+        "resolved": "0.15.0",
+        "contentHash": "tBxkD9ZEXkVBwGZPvsb/8HoQRTFGHXn2HWL2UO9V4gmzKbGEf9SB48i78oC+2JfTYtWe/H/eASSapNz7WTd4pg=="
       },
       "grynwald.changelog": {
         "type": "Project",
@@ -4887,7 +4895,7 @@
           "NuGet.Versioning": "6.1.0",
           "Octokit": "0.50.0",
           "Scriban": "5.4.4",
-          "Zio": "0.14.0"
+          "Zio": "0.15.0"
         }
       }
     }
