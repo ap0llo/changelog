@@ -17,9 +17,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.4.3, )",
-        "resolved": "3.4.3",
-        "contentHash": "BDRKs3RzPwYlnKEVTJ7nX5RefF3/xDfXGGcVw66jIHZU19SnKTJTN+AtkR+F0XKe71QFh3ZsJssM4u8iO2gy/Q=="
+        "requested": "[3.4.4, )",
+        "resolved": "3.4.4",
+        "contentHash": "+lMDilJviKVrrk1vUFpZNYdEYH3aIrVx1t3DRgSOuSKB0JSzxhx2YREL4hXNIAgcHaMi2rXa6UYj8PXcjJCJpQ=="
       },
       "coverlet.collector": {
         "type": "Direct",
@@ -1659,9 +1659,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.4.3, )",
-        "resolved": "3.4.3",
-        "contentHash": "BDRKs3RzPwYlnKEVTJ7nX5RefF3/xDfXGGcVw66jIHZU19SnKTJTN+AtkR+F0XKe71QFh3ZsJssM4u8iO2gy/Q=="
+        "requested": "[3.4.4, )",
+        "resolved": "3.4.4",
+        "contentHash": "+lMDilJviKVrrk1vUFpZNYdEYH3aIrVx1t3DRgSOuSKB0JSzxhx2YREL4hXNIAgcHaMi2rXa6UYj8PXcjJCJpQ=="
       },
       "coverlet.collector": {
         "type": "Direct",
@@ -3288,9 +3288,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.4.3, )",
-        "resolved": "3.4.3",
-        "contentHash": "BDRKs3RzPwYlnKEVTJ7nX5RefF3/xDfXGGcVw66jIHZU19SnKTJTN+AtkR+F0XKe71QFh3ZsJssM4u8iO2gy/Q=="
+        "requested": "[3.4.4, )",
+        "resolved": "3.4.4",
+        "contentHash": "+lMDilJviKVrrk1vUFpZNYdEYH3aIrVx1t3DRgSOuSKB0JSzxhx2YREL4hXNIAgcHaMi2rXa6UYj8PXcjJCJpQ=="
       },
       "coverlet.collector": {
         "type": "Direct",
