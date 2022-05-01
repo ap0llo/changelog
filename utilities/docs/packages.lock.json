@@ -242,8 +242,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "0.50.0",
-        "contentHash": "J5vqespSvjxIAAtjG1Tc6ghBqyfRgDJtKnk/ifi4N0hD/f3JbPwyEDRT+Eelu/bS4C4M6mu5gt1WJqar+fByzg=="
+        "resolved": "0.51.0",
+        "contentHash": "p+8/X9y340TaqJCHGdizDqJ7EbAkGZU0cLeIgVByokdZs6I8VKXQ+f2g6992mMm5m+LHevTKcW5879AfrQ8nQg=="
       },
       "Scriban": {
         "type": "Transitive",
@@ -302,7 +302,7 @@
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
           "Microsoft.Extensions.Logging": "6.0.0",
           "NuGet.Versioning": "6.1.0",
-          "Octokit": "0.50.0",
+          "Octokit": "0.51.0",
           "Scriban": "5.4.4",
           "Zio": "0.15.0"
         }
