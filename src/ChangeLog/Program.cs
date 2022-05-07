@@ -42,7 +42,7 @@ namespace Grynwald.ChangeLog
 
         private static async Task<int> Main(string[] args)
         {
-            return await CommandLineParameters.Parse(args)
+            return await CommandLineParser.Parse(args)
                 .MapResult(
                     (CommandLineParameters parsed) => RunAsync(parsed),
                     (IEnumerable<Error> errors) =>

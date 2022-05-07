@@ -59,18 +59,5 @@ namespace Grynwald.ChangeLog
         [Option("integrationProvider", Required = false, Default = null, HelpText = "Sets the integration provider to use")]
         [ConfigurationValue("changelog:integrations:provider")]
         public string? IntegrationProvider { get; set; }
-
-
-        public static ParserResult<CommandLineParameters> Parse(string[] args)
-        {
-            using var commandlineParser = new Parser(settings =>
-            {
-                settings.CaseInsensitiveEnumValues = true;
-                settings.CaseSensitive = false;
-                settings.HelpWriter = Console.Out;
-            });
-
-            return commandlineParser.ParseArguments<CommandLineParameters>(args);
-        }
     }
 }
