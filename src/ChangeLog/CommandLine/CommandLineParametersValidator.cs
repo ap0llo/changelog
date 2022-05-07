@@ -2,7 +2,7 @@
 using FluentValidation;
 using Grynwald.ChangeLog.Validation;
 
-namespace Grynwald.ChangeLog
+namespace Grynwald.ChangeLog.CommandLine
 {
     /// <summary>
     /// Validator for <see cref="CommandLineParameters"/>

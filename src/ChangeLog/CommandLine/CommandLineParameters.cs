@@ -4,7 +4,7 @@ using CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.Utilities.Configuration;
 
-namespace Grynwald.ChangeLog
+namespace Grynwald.ChangeLog.CommandLine
 {
     public class CommandLineParameters
     {

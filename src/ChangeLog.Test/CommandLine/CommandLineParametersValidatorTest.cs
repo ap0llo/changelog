@@ -1,9 +1,13 @@
 ﻿using System.IO;
+using Grynwald.ChangeLog.CommandLine;
 using Grynwald.Utilities.IO;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test
+namespace Grynwald.ChangeLog.Test.CommandLine
 {
+    /// <summary>
+    /// Tests for <see cref="CommandLineParametersValidator"/>
+    /// </summary>
     public class CommandLineParametersValidatorTest
     {
         [Theory]

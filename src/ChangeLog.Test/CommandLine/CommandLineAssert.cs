@@ -1,7 +1,8 @@
 ﻿using CommandLine;
+using Grynwald.ChangeLog.CommandLine;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test
+namespace Grynwald.ChangeLog.Test.CommandLine
 {
     internal static class CommandLineAssert
     {

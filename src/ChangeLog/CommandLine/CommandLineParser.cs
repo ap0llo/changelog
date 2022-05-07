@@ -1,7 +1,7 @@
 ﻿using System;
 using CommandLine;
 
-namespace Grynwald.ChangeLog
+namespace Grynwald.ChangeLog.CommandLine
 {
     internal static class CommandLineParser
     {

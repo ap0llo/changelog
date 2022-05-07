@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using CommandLine;
+using Grynwald.ChangeLog.CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Filtering;
 using Grynwald.ChangeLog.Git;

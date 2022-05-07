@@ -4,10 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CommandLine;
+using Grynwald.ChangeLog.CommandLine;
 using Grynwald.Utilities.Configuration;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test
+namespace Grynwald.ChangeLog.Test.CommandLine
 {
     /// <summary>
     /// Tests for <see cref="CommandLineParameters"/>

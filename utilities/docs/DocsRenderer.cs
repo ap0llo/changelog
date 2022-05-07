@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using CommandLine;
 using Grynwald.ChangeLog;
+using Grynwald.ChangeLog.CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Default;

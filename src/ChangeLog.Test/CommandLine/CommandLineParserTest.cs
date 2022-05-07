@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Grynwald.ChangeLog.CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Xunit;
 
-namespace Grynwald.ChangeLog.Test
+namespace Grynwald.ChangeLog.Test.CommandLine
 {
     public class CommandLineParserTest
     {
