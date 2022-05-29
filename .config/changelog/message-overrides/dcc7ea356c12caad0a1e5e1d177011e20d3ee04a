@@ -1,0 +1,6 @@
+feat: Add additional default location for the configuration file
+
+Read configuration file from '.config/changelog/settings.json' if it exists.
+If a configuration file exists at the already supported default location (changelog.settings.json) exists, it takes precedence and the file under .config is ignored.
+
+See-Also: https://github.com/ap0llo/changelog/blob/master/docs/configuration/sources.md#configuration-file

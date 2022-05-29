@@ -1,0 +1,5 @@
+fix: Ignore duplicate version if it refers to the same commit
+
+When a "current version" is specified that also exists in the versions loaded from git tags, do not abort with an error if it refers to the same git commit as the version loaded from tags.
+
+If the version refers to a different commit, continue to abort with an error.

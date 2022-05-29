@@ -1,4 +1,5 @@
 deps: Update Nerdbank.GitVersioning to version 3.5.107
+
 Updates-dependency: Nerdbank.GitVersioning
 Updates-dependency-from-version: 3.5.103
 Updates-dependency-to-version: 3.5.107
