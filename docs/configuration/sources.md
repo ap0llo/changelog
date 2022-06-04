@@ -62,10 +62,8 @@ See [Settings list](../configuration.md#settings-list) for details.
 
 ### Commandline parameters
 
-A subset of all settings can also be specified as commandline parameters.
-Commandline parameters are considered to be the "most specific" setting
-for an execution of ChangeLog and can override settings from all other
-sources.
+A subset of all settings can also be specified as commandline parameters for the `generate` command.
+Commandline parameters are considered to be the "most specific" setting for an execution of ChangeLog and can override settings from all other sources.
 
 The name of the commandline parameters are documented with the individual settings.
 See [Settings list](../configuration.md#settings-list) for details.

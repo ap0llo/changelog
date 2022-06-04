@@ -4,9 +4,13 @@ using CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.Utilities.Configuration;
 
-namespace Grynwald.ChangeLog
+namespace Grynwald.ChangeLog.CommandLine
 {
-    public class CommandLineParameters
+    /// <summary>
+    /// Defines the command line parameters for the "generate" sub-command
+    /// </summary>
+    [Verb(CommandNames.Generate, isDefault: true, aliases: new string[] { "g" }, HelpText = "Generate a change log from a git repository")]
+    public class GenerateCommandLineParameters
     {
         private string? m_OutputPath;
 
@@ -59,18 +63,5 @@ namespace Grynwald.ChangeLog
         [Option("integrationProvider", Required = false, Default = null, HelpText = "Sets the integration provider to use")]
         [ConfigurationValue("changelog:integrations:provider")]
         public string? IntegrationProvider { get; set; }
-
-
-        public static ParserResult<CommandLineParameters> Parse(string[] args)
-        {
-            using var commandlineParser = new Parser(settings =>
-            {
-                settings.CaseInsensitiveEnumValues = true;
-                settings.CaseSensitive = false;
-                settings.HelpWriter = Console.Out;
-            });
-
-            return commandlineParser.ParseArguments<CommandLineParameters>(args);
-        }
     }
 }

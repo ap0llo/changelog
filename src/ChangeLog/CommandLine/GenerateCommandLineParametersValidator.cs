@@ -2,14 +2,14 @@
 using FluentValidation;
 using Grynwald.ChangeLog.Validation;
 
-namespace Grynwald.ChangeLog
+namespace Grynwald.ChangeLog.CommandLine
 {
     /// <summary>
-    /// Validator for <see cref="CommandLineParameters"/>
+    /// Validator for <see cref="GenerateCommandLineParameters"/>
     /// </summary>
-    internal class CommandLineParametersValidator : AbstractValidator<CommandLineParameters>
+    internal class GenerateCommandLineParametersValidator : AbstractValidator<GenerateCommandLineParameters>
     {
-        public CommandLineParametersValidator()
+        public GenerateCommandLineParametersValidator()
         {
             ValidatorOptions.Global.UseCustomDisplayNameResolver();
 
