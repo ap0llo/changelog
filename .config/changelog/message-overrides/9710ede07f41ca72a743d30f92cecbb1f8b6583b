@@ -1,0 +1,7 @@
+feat: Add 'generate' subcommand
+
+Add a 'generate' sub command that generates a change log from a git repository (corresponding to the only function of the application up until now) to enable adding further sub commands in the future.
+
+For backwards-compatibility, the generate command will also be run when no command name is specified.
+
+Pull-Request: #363
