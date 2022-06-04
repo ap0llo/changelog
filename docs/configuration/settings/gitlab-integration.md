@@ -19,30 +19,31 @@ See also [Integrations - GitLab](../../integrations/gitlab.md).
 ## GitLab Access Token
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:accessToken</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            <code>gitlabAccessToken</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.1+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:gitlab:accessToken</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITLAB__ACCESSTOKEN</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        <code>gitlabAccessToken</code>
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        -
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.1+</td>
+</tr>
 </table>
 
 The *GitLab Access Token* setting configures the access token to use for
@@ -55,30 +56,31 @@ accessing the GitLab  API when the GitLab integration is enabled.
 ## GitLab Remote Name
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:remoteName</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__REMOTENAME</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            <code>origin</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:gitlab:remoteName</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITLAB__REMOTENAME</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>origin</code>
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The GitLab integration requires information about the repository on GitLab in order to function.
@@ -96,30 +98,31 @@ For details on how the remote URL is parsed, see [Integrations - GitLab](../../i
 ## GitLab Host
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:host</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__HOST</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:gitlab:host</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITLAB__HOST</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        -
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The *GitLab Host* setting specifies the host-name of the GitLab server to communicate with.
@@ -129,30 +132,31 @@ When no host name is specified (default behavior), ChangeLog will attempt to det
 ## GitLab Namespace
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:namespace</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__NAMESPACE</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:gitlab:namespace</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITLAB__NAMESPACE</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        -
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The *GitLab Namespace* setting specifies the namespace of the GitLab project to use.
@@ -163,30 +167,31 @@ When no namespace is specified (default behavior), ChangeLog will attempt to det
 ## GitLab Project Name
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:gitlab:project</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITLAB__PROJECT</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:gitlab:project</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITLAB__PROJECT</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        -
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The *GitLab Project Name* setting specifies the name of the GitLab project to use.

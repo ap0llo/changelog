@@ -1,0 +1,11 @@
+{{~
+    environment_variable_name = configuration.get_environment_variable_name($.settings_key)
+~}}
+<tr>
+    <td><b>Environment Variable</b></td>
+    {{~ if environment_variable_name ~}}
+    <td><code>{{ environment_variable_name }}</code></td>
+    {{~ else ~}}
+    <td>-</td>
+    {{~ end ~}}
+</tr>

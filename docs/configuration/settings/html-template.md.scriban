@@ -3,44 +3,8 @@
 This pages describes the configuration options of the [Html Template](../../templates/html.md).
 
 ## Normalize References
-{{~
-    settingskey = "changelog:template:html:normalizeReferences"
-~}}
 
-<table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>{{ configuration.get_environment_variable_name settingskey }}</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey ~}}
-            <code>{{configuration.get_commandline_parameter settingskey | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey ~}}
-            <code>{{configuration.get_scalar settingskey | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.4+</td>
-    </tr>
-</table>
+{{ include("_partials/settings-table.md.scriban", settings_key: "changelog:template:html:normalizeReferences", version_support: "0.4+") }}
 
 The *Normalize References* settings controls whether references in the change log are normalized when using the Html template.
 
@@ -48,44 +12,7 @@ See [Reference Normalization](../../auto-references.md#normalization) for detail
 
 ## Custom Directory
 
-{{~
-    settingskey = "changelog:template:html:customDirectory"
-~}}
-
-<table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>{{ configuration.get_environment_variable_name settingskey }}</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey ~}}
-            <code>{{configuration.get_commandline_parameter settingskey | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey ~}}
-            <code>{{configuration.get_scalar settingskey | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.4+</td>
-    </tr>
-</table>
+{{ include("_partials/settings-table.md.scriban", settings_key: "changelog:template:html:customDirectory", version_support: "0.4+") }}
 
 The "Custom Directory" settings allows specifying the path for a directory that contains customizations for the template.
 For details see [Customization (Html Template)](../../templates/html.md#customization)

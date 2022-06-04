@@ -19,30 +19,31 @@ See also [Integrations - GitHub](../../integrations/github.md).
 ## GitHub Access Token
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:accessToken</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            <code>githubAccessToken</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.1+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:github:accessToken</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITHUB__ACCESSTOKEN</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        <code>githubAccessToken</code>
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        -
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.1+</td>
+</tr>
 </table>
 
 The *GitHub Access Token* setting configures the access token to use for
@@ -55,30 +56,31 @@ accessing the GitHub API when the GitHub integration is enabled.
 ## GitHub Remote Name
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:remoteName</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITHUB__REMOTENAME</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            <code>origin</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:github:remoteName</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITHUB__REMOTENAME</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>origin</code>
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The GitHub integration requires information about the repository on GitHub in order to function.
@@ -96,30 +98,31 @@ For details on how the remote URL is parsed, see [Integrations - GitHub](../../i
 ## GitHub Host
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:host</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITHUB__HOST</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:github:host</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITHUB__HOST</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        -
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The *GitHub Host* setting specifies the host-name of the GitHub server to communicate with.
@@ -131,30 +134,31 @@ When no host name is specified (default behavior), ChangeLog will attempt to det
 ## GitHub Repository Owner
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:owner</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITHUB__OWNER</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:github:owner</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITHUB__OWNER</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        -
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The *GitHub Repository Owner* setting specifies the name of the owner (user or organization) of the GitHub repository to use .
@@ -164,30 +168,31 @@ When no owner is specified (default behavior), ChangeLog will attempt to determi
 ## GitHub Repository Name
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:github:repository</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__GITHUB__REPOSITORY</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:github:repository</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__GITHUB__REPOSITORY</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        -
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The *GitHub Repository Name* setting specifies the name of the GitHub repository to use.

@@ -1,0 +1,10 @@
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+    {{~ if configuration.get_commandline_parameter($.settings_key) ~}}
+        <code>{{ configuration.get_commandline_parameter($.settings_key) | html.escape }}</code>
+    {{~ else ~}}
+        -
+    {{~ end ~}}
+    </td>
+</tr>

@@ -8,45 +8,46 @@
 # Integration Provider Setting
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:integrations:provider</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__INTEGRATIONS__PROVIDER</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            <code>integrationProvider</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            <code>None</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Allowed values</b></td>
-        <td>
-            <ul>
-                <li><code>None</code></li>
-                <li><code>GitHub</code></li>
-                <li><code>GitLab</code></li>
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>
-            <ul>
-                <li>0.1+: Setting supported through environment variables and configuration file.</li>
-                <li>0.4+: Setting supported through environment variables, configuration file and commandline parameter.</li>
-            </ul>
-        </td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:integrations:provider</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__INTEGRATIONS__PROVIDER</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        <code>integrationProvider</code>
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>None</code>
+    </td>
+</tr>
+<tr>
+    <td><b>Allowed values</b></td>
+    <td>
+        <ul>
+            <li><code>None</code></li>
+            <li><code>GitHub</code></li>
+            <li><code>GitLab</code></li>
+        </ul>
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>
+        <ul>
+            <li>0.1+: Setting supported through environment variables and configuration file.</li>
+            <li>0.4+: Setting supported through environment variables, configuration file and commandline parameter.</li>
+        </ul>
+    </td>
+</tr>
 </table>
 
 Sets the *Integration Provider* to use.

@@ -1,0 +1,12 @@
+{{~ if (configuration.get_allowed_values($.settings_key) | array.size) > 0 ~}}
+<tr>
+    <td><b>Allowed values</b></td>
+    <td>
+        <ul>
+            {{~ for item in configuration.get_allowed_values($.settings_key) ~}}
+            <li><code>{{ item }}</code></li>
+            {{~ end ~}}
+        </ul>
+    </td>
+</tr>
+{{~ end ~}}

@@ -16,6 +16,9 @@ namespace docs.Validation
             if (!IO.HasExtension(path, IO.FileExtensions.Scriban))
                 return;
 
+            if (IO.IsScribanPartial(path))
+                return;
+
             var outputPath = IO.GetTemplateOutputPath(path);
 
             if (File.Exists(outputPath))

@@ -24,13 +24,7 @@ For documentation on the "Entry Types" setting in version 0.2, see [Entry Types 
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey ~}}
-            <code>{{configuration.get_commandline_parameter settingskey | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
+        <td>-</td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -94,13 +88,7 @@ The following example shows how to define a display name for entries of type `do
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey ~}}
-        <code>{{configuration.get_commandline_parameter settingskey | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
+        <td>-</td>
     </tr>
     <tr>
         <td><b>Default value</b></td>

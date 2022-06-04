@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using CommandLine;
 using Grynwald.ChangeLog;
 using Grynwald.ChangeLog.CommandLine;
@@ -18,6 +19,7 @@ using Grynwald.Utilities.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Scriban;
+using Scriban.Parsing;
 using Scriban.Runtime;
 
 namespace docs
@@ -72,7 +74,27 @@ namespace docs
                 };
             }
 
-            public static string GetEnvironmentVariableName(string settingsKey) => settingsKey.Replace(":", "__").ToUpper();
+            public static string? GetEnvironmentVariableName(string settingsKey)
+            {
+                var rootObject = new
+                {
+                    ChangeLog = ChangeLogConfigurationLoader.GetDefaultConfiguration()
+                };
+
+                var settingType = GetPropertyType(rootObject, settingsKey, ':');
+
+                var isEnvironmentVariable = settingType is not null &&
+                    (
+                        settingType == typeof(string) ||
+                        settingType == typeof(int) ||
+                        settingType == typeof(bool) ||
+                        settingType.IsEnum
+                    );
+
+                return isEnvironmentVariable
+                    ? settingsKey.Replace(":", "__").ToUpper()
+                    : null;
+            }
 
             public static string? GetCommandlineParameter(string settingsKey)
             {
@@ -137,6 +159,43 @@ namespace docs
             }
         }
 
+
+        private class TemplateLoader : ITemplateLoader
+        {
+            private readonly string m_InputPath;
+
+            public TemplateLoader(string inputPath)
+            {
+                if (String.IsNullOrWhiteSpace(inputPath))
+                    throw new ArgumentException("Value must not be null or whitespace", nameof(inputPath));
+
+                m_InputPath = inputPath;
+            }
+
+            public string GetPath(TemplateContext context, SourceSpan callerSpan, string templateName)
+            {
+                var inputPath = callerSpan.FileName.Equals("<input>", StringComparison.OrdinalIgnoreCase) ? m_InputPath : callerSpan.FileName;
+                var directory = Path.GetDirectoryName(inputPath);
+
+                var templatePath = Path.Combine(directory!, templateName);
+                templatePath = Path.GetFullPath(templatePath);
+
+                return templatePath;
+            }
+
+            public string Load(TemplateContext context, SourceSpan callerSpan, string templatePath)
+            {
+                var path = GetPath(context, callerSpan, templatePath);
+                return File.ReadAllText(path);
+            }
+
+            public async ValueTask<string> LoadAsync(TemplateContext context, SourceSpan callerSpan, string templatePath)
+            {
+                var path = GetPath(context, callerSpan, templatePath);
+                return await File.ReadAllTextAsync(path);
+            }
+        }
+
         public static string RenderTemplate(string inputPath)
         {
             if (!IO.HasExtension(inputPath, IO.FileExtensions.Scriban))
@@ -144,7 +203,10 @@ namespace docs
 
             var input = File.ReadAllText(inputPath);
 
-            var context = new TemplateContext();
+            var context = new TemplateContext()
+            {
+                TemplateLoader = new TemplateLoader(inputPath)
+            };
             var rootScriptObject = new ScriptObject()
             {
                 { "configuration", new ConfigurationFunctions() },
@@ -185,5 +247,27 @@ namespace docs
 
             return currentObject;
         }
+
+        private static Type? GetPropertyType(object configuration, string propertyPath, char separator)
+        {
+            var propertyNames = propertyPath.Split(separator);
+
+            var currentObject = configuration;
+            foreach (var propertyName in propertyNames.Take(propertyNames.Length - 1))
+            {
+                currentObject = currentObject
+                    ?.GetType()
+                    ?.GetProperties()
+                    ?.SingleOrDefault(p => StringComparer.OrdinalIgnoreCase.Equals(p.Name, propertyName))
+                    ?.GetValue(currentObject);
+            }
+
+            return currentObject
+                ?.GetType()
+                ?.GetProperties()
+                ?.SingleOrDefault(p => StringComparer.OrdinalIgnoreCase.Equals(p.Name, propertyNames.Last()))
+                ?.PropertyType;
+        }
+
     }
 }
