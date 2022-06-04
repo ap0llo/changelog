@@ -1,17 +1,15 @@
 ﻿using CommandLine;
-using Grynwald.ChangeLog.CommandLine;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.CommandLine
 {
     internal static class CommandLineAssert
     {
-        public static T Parsed<T>(ParserResult<T> parserResult)
+        public static T Parsed<T>(ParserResult<object> parserResult)
         {
             Assert.Equal(ParserResultType.Parsed, parserResult.Tag);
-            Assert.Equal(typeof(CommandLineParameters), parserResult.TypeInfo.Current);
-            var parsed = (Parsed<T>)parserResult;
-            return parsed!.Value;
+            var value = Assert.IsType<T>(parserResult.Value);
+            return value;
         }
     }
 }

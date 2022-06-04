@@ -5,7 +5,7 @@ namespace Grynwald.ChangeLog.CommandLine
 {
     internal static class CommandLineParser
     {
-        public static ParserResult<CommandLineParameters> Parse(string[] args)
+        public static ParserResult<object> Parse(string[] args)
         {
             using var commandlineParser = new Parser(settings =>
             {
@@ -14,7 +14,7 @@ namespace Grynwald.ChangeLog.CommandLine
                 settings.HelpWriter = Console.Out;
             });
 
-            return commandlineParser.ParseArguments<CommandLineParameters>(args);
+            return commandlineParser.ParseArguments<GenerateCommandLineParameters, DummyCommandLineParameters>(args);
         }
     }
 }

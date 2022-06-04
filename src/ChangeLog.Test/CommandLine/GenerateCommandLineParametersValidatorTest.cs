@@ -6,9 +6,9 @@ using Xunit;
 namespace Grynwald.ChangeLog.Test.CommandLine
 {
     /// <summary>
-    /// Tests for <see cref="CommandLineParametersValidator"/>
+    /// Tests for <see cref="GenerateCommandLineParametersValidator"/>
     /// </summary>
-    public class CommandLineParametersValidatorTest
+    public class GenerateCommandLineParametersValidatorTest
     {
         [Theory]
         [InlineData("")]
@@ -16,12 +16,12 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         public void RepositoryPath_may_be_empty(string repositoryPath)
         {
             // ARRANGE
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryPath
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -37,12 +37,12 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         public void RepositoryPath_must__not_be_whitespace(string repositoryPath)
         {
             // ARRANGE
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryPath
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -50,7 +50,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // ASSERT
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
-            Assert.Equal(nameof(CommandLineParameters.RepositoryPath), error.PropertyName);
+            Assert.Equal(nameof(GenerateCommandLineParameters.RepositoryPath), error.PropertyName);
 
             // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
             Assert.Contains("'repository'", error.ErrorMessage);
@@ -63,12 +63,12 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             using var temporaryDirectory = new TemporaryDirectory();
             var nonExistingDirectory = Path.Combine(temporaryDirectory, "someDir");
 
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = nonExistingDirectory
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -76,7 +76,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // ASSERT
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
-            Assert.Equal(nameof(CommandLineParameters.RepositoryPath), error.PropertyName);
+            Assert.Equal(nameof(GenerateCommandLineParameters.RepositoryPath), error.PropertyName);
 
             // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
             Assert.Contains("'repository'", error.ErrorMessage);
@@ -90,13 +90,13 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryDirectory,
                 CurrentVersion = value
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -113,13 +113,13 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
 
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryDirectory,
                 CurrentVersion = version
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -127,7 +127,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // ASSERT
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
-            Assert.Equal(nameof(CommandLineParameters.CurrentVersion), error.PropertyName);
+            Assert.Equal(nameof(GenerateCommandLineParameters.CurrentVersion), error.PropertyName);
 
             // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
             Assert.Contains("'currentVersion'", error.ErrorMessage);
@@ -140,13 +140,13 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryDirectory,
                 VersionRange = value
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -163,13 +163,13 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
 
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryDirectory,
                 VersionRange = version
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -177,7 +177,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // ASSERT
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
-            Assert.Equal(nameof(CommandLineParameters.VersionRange), error.PropertyName);
+            Assert.Equal(nameof(GenerateCommandLineParameters.VersionRange), error.PropertyName);
 
             // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
             Assert.Contains("'versionRange'", error.ErrorMessage);
@@ -190,13 +190,13 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryDirectory,
                 GitHubAccessToken = value
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -213,13 +213,13 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryDirectory,
                 GitLabAccessToken = value
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -236,13 +236,13 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryDirectory,
                 ConfigurationFilePath = path
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -259,13 +259,13 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             using var repositoryDirectory = new TemporaryDirectory();
             var configurationFilePath = Path.Combine(repositoryDirectory, "config.json");
 
-            var parameters = new CommandLineParameters()
+            var parameters = new GenerateCommandLineParameters()
             {
                 RepositoryPath = repositoryDirectory,
                 ConfigurationFilePath = configurationFilePath
             };
 
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
 
             // ACT 
             var result = validator.Validate(parameters);
@@ -273,7 +273,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // ASSERT
             Assert.False(result.IsValid);
             var error = Assert.Single(result.Errors);
-            Assert.Equal(nameof(CommandLineParameters.ConfigurationFilePath), error.PropertyName);
+            Assert.Equal(nameof(GenerateCommandLineParameters.ConfigurationFilePath), error.PropertyName);
 
             // error message should contain commandline parameter name (specified using the Option attribute) instead of the property name
             Assert.Contains("'configurationFilePath'", error.ErrorMessage);

@@ -5,7 +5,7 @@ Furthermore it assumes you're using [Semantic Versioning](https://semver.org/) f
 
 ## Installation
 
-ChangeLog is distributed as .NET (global) tool and requires either the .NET Core SDK 2.1 or 3.1 to be installed.
+ChangeLog is distributed as [.NET (global) tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires at least the .NET Core 3.1 SDK to be installed (the .NET 5 and .NET 6 SDKs are suppored as well).
 
 ChangeLog is available on [NuGet.org](https://www.nuget.org/packages/Grynwald.ChangeLog).
 Prerelease builds on are available on [MyGet](https://www.myget.org/feed/ap0llo-changelog/package/nuget/Grynwald.ChangeLog).
@@ -26,10 +26,10 @@ Versions need to follow the [Semantic Versioning](https://semver.org/) format.
 By default all tag names that are semantic versions and tag names that are semantic versions prefixed with `v` are recognized (e.g. `1.2.3-alpha` or `v1.2`).
 Parsing of tags can be customized using the [Tag Patterns Setting](./configuration/settings/tag-patterns.md).
 
-To generate a change log from a git repository, run ChangeLog and specify the path to the git repository.
+To generate a change log from a git repository, run the `changelog generate` command and specify the path to the git repository.
 
 ```sh
-changelog --repository <LOCALPATH>
+changelog generate --repository <LOCALPATH>
 ```
 
 ℹ The repository path can be omitted when `changelog` is run from a directory within the git repository.

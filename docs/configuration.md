@@ -3,7 +3,7 @@
 The behavior of ChangeLog can be customized by changing the configuration.
 All settings are optional and ChangeLog aims to use sensible default values for all of them.
 
-Settings are loaded from a number of *setting sources*:
+Settings are loaded from a number of *configuration sources*:
 
 1. [Default settings](./configuration/sources.md#default-settings)
 2. [Configuration file](./configuration/sources.md#configuration-file)

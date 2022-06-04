@@ -29,15 +29,40 @@ namespace Grynwald.ChangeLog.Test.E2E
         }
 
 
-        [Fact]
-        public async Task Requesting_help_succeeds()
+        [Theory]
+        [InlineData("--help")]
+        [InlineData("help")]
+        public async Task Requesting_help_succeeds(string helpCommand)
         {
             // ARRANGE
             var applicationVersion = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
 
             // ACT 
             var result = await RunApplicationAsync(
-                args: new[] { "--help" },
+                args: new[] { helpCommand },
+                commandId: nameof(Requesting_help_succeeds)
+            );
+
+            // ASSERT
+            Assert.Equal(0, result.ExitCode);
+            Assert.Contains($"changelog {applicationVersion}{Environment.NewLine}", result.StandardOutput);
+            Assert.Contains("generate, g", result.StandardOutput);
+            Assert.Contains("help", result.StandardOutput);
+            Assert.Contains("version", result.StandardOutput);
+            Assert.Empty(result.StandardError);
+        }
+
+        [Theory]
+        [InlineData(new object[] { new string[] { "help", "generate" } })]
+        [InlineData(new object[] { new string[] { "generate", "--help" } })]
+        public async Task Requesting_help_for_the_generate_command_succeeds(string[] helpCommand)
+        {
+            // ARRANGE
+            var applicationVersion = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+
+            // ACT 
+            var result = await RunApplicationAsync(
+                args: helpCommand,
                 commandId: nameof(Requesting_help_succeeds)
             );
 
@@ -57,15 +82,18 @@ namespace Grynwald.ChangeLog.Test.E2E
             Assert.Empty(result.StandardError);
         }
 
-        [Fact]
-        public async Task Requesting_version_succeeds()
+
+        [Theory]
+        [InlineData("version")]
+        [InlineData("--version")]
+        public async Task Requesting_version_succeeds(string versionCommand)
         {
             // ARRANGE
             var expectedVersion = typeof(Program).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
 
             // ACT 
             var result = await RunApplicationAsync(
-                args: new[] { "--version" },
+                args: new[] { versionCommand },
                 commandId: nameof(Requesting_version_succeeds)
             );
 

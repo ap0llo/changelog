@@ -24,7 +24,7 @@ namespace Grynwald.ChangeLog
     internal static class Program
     {
         /// <summary>
-        /// Collects settings that are determined dynamically (in <see cref="RunAsync(CommandLineParameters)"/>
+        /// Collects settings that are determined dynamically (in <see cref="RunAsync(GenerateCommandLineParameters)"/>
         /// that need to be passed into the configuration system.
         /// </summary>
         private class DynamicallyDeterminedSettings
@@ -45,10 +45,15 @@ namespace Grynwald.ChangeLog
         {
             return await CommandLineParser.Parse(args)
                 .MapResult(
-                    (CommandLineParameters parsed) => RunAsync(parsed),
+                    (GenerateCommandLineParameters parsed) => RunAsync(parsed),
+                    (DummyCommandLineParameters dummy) =>
+                    {
+                        Console.Error.WriteLine("Invalid arguments");
+                        return Task.FromResult(1);
+                    },
                     (IEnumerable<Error> errors) =>
                     {
-                        if (errors.All(e => e is HelpRequestedError || e is VersionRequestedError))
+                        if (errors.All(e => e is HelpRequestedError || e is HelpVerbRequestedError || e is VersionRequestedError))
                             return Task.FromResult(0);
 
                         Console.Error.WriteLine("Invalid arguments");
@@ -58,7 +63,7 @@ namespace Grynwald.ChangeLog
         }
 
 
-        private static async Task<int> RunAsync(CommandLineParameters commandlineParameters)
+        private static async Task<int> RunAsync(GenerateCommandLineParameters commandlineParameters)
         {
             var loggerOptions = commandlineParameters.Verbose
                 ? new SimpleConsoleLoggerConfiguration(LogLevel.Debug, true, true)
@@ -174,7 +179,7 @@ namespace Grynwald.ChangeLog
             }
         }
 
-        private static string? GetConfigurationFilePath(CommandLineParameters commandlineParameters, string repositoryPath)
+        private static string? GetConfigurationFilePath(GenerateCommandLineParameters commandlineParameters, string repositoryPath)
         {
             if (!String.IsNullOrEmpty(commandlineParameters.ConfigurationFilePath))
                 return commandlineParameters.ConfigurationFilePath;
@@ -190,9 +195,9 @@ namespace Grynwald.ChangeLog
             return null;
         }
 
-        private static bool ValidateCommandlineParameters(CommandLineParameters parameters, ILogger logger)
+        private static bool ValidateCommandlineParameters(GenerateCommandLineParameters parameters, ILogger logger)
         {
-            var validator = new CommandLineParametersValidator();
+            var validator = new GenerateCommandLineParametersValidator();
             var result = validator.Validate(parameters);
 
             foreach (var error in result.Errors)
@@ -203,7 +208,7 @@ namespace Grynwald.ChangeLog
             return result.IsValid;
         }
 
-        private static bool TryGetRepositoryPath(CommandLineParameters parameters, ILogger logger, [NotNullWhen(true)] out string? repositoryPath)
+        private static bool TryGetRepositoryPath(GenerateCommandLineParameters parameters, ILogger logger, [NotNullWhen(true)] out string? repositoryPath)
         {
             if (!String.IsNullOrEmpty(parameters.RepositoryPath))
             {

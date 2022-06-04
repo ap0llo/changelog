@@ -7,6 +7,10 @@ using Xunit;
 
 namespace Grynwald.ChangeLog.Test.CommandLine
 {
+
+    /// <summary>
+    /// Tests for <see cref="CommandLineParser"/>
+    /// </summary>
     public class CommandLineParserTest
     {
         [Fact]
@@ -19,7 +23,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             var result = CommandLineParser.Parse(args);
 
             // ASSERT
-            var parsed = CommandLineAssert.Parsed(result);
+            var parsed = CommandLineAssert.Parsed<GenerateCommandLineParameters>(result);
             Assert.Null(parsed.Template!);
         }
 
@@ -48,8 +52,40 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             var result = CommandLineParser.Parse(args);
 
             // ASSERT
-            var parsed = CommandLineAssert.Parsed(result);
+            var parsed = CommandLineAssert.Parsed<GenerateCommandLineParameters>(result);
             Assert.Equal(expected, parsed.Template);
         }
+
+
+        [Theory]
+        [InlineData(new object[] { new string[] { } })]
+        [InlineData(new object[] { new string[] { "--repository", "some-path" } })]
+        public void The_generate_command_is_the_default_command(string[] args)
+        {
+            // ARRANGE
+
+            // ACT
+            var result = CommandLineParser.Parse(args);
+
+            // ASSERT
+            CommandLineAssert.Parsed<GenerateCommandLineParameters>(result);
+        }
+
+        [Theory]
+        [InlineData(new object[] { new string[] { "generate" } })]
+        [InlineData(new object[] { new string[] { "generate", "--repository", "some-path" } })]
+        [InlineData(new object[] { new string[] { "g" } })]
+        [InlineData(new object[] { new string[] { "g", "--repository", "some-path" } })]
+        public void The_generate_command_is_parsed_correctly(string[] args)
+        {
+            // ARRANGE
+
+            // ACT
+            var result = CommandLineParser.Parse(args);
+
+            // ASSERT
+            CommandLineAssert.Parsed<GenerateCommandLineParameters>(result);
+        }
+
     }
 }

@@ -11,12 +11,12 @@ using Xunit;
 namespace Grynwald.ChangeLog.Test.CommandLine
 {
     /// <summary>
-    /// Tests for <see cref="CommandLineParameters"/>
+    /// Tests for <see cref="GenerateCommandLineParameters"/>
     /// </summary>
-    public class CommandLineParametersTest
+    public class GenerateCommandLineParametersTest
     {
         public static IEnumerable<object[]> Properties() =>
-            typeof(CommandLineParameters).GetProperties().Select(p => new[] { p.Name });
+            typeof(GenerateCommandLineParameters).GetProperties().Select(p => new[] { p.Name });
 
         [Theory]
         [MemberData(nameof(Properties))]
@@ -26,9 +26,9 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // switches have no corresponding configuration setting and are
             // processed before the configuration system is initialized
 
-            if (propertyName == nameof(CommandLineParameters.Verbose) ||
-                propertyName == nameof(CommandLineParameters.ConfigurationFilePath) ||
-                propertyName == nameof(CommandLineParameters.RepositoryPath))
+            if (propertyName == nameof(GenerateCommandLineParameters.Verbose) ||
+                propertyName == nameof(GenerateCommandLineParameters.ConfigurationFilePath) ||
+                propertyName == nameof(GenerateCommandLineParameters.RepositoryPath))
             {
                 return;
             }
@@ -36,7 +36,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
             // All other properties in CommandLineParameters should have a ConfigurationValue attribute
             // so the value can be used in the configuration system.
 
-            var property = typeof(CommandLineParameters).GetProperty(propertyName)!;
+            var property = typeof(GenerateCommandLineParameters).GetProperty(propertyName)!;
 
             var attribute = property.GetCustomAttribute<ConfigurationValueAttribute>();
 
@@ -50,7 +50,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         public void CommandLineParameters_returns_a_rooted_output_path()
         {
             // ARRANGE
-            var sut = new CommandLineParameters()
+            var sut = new GenerateCommandLineParameters()
             {
                 OutputPath = "somePath"
             };
@@ -68,7 +68,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         public void CommandLineParameters_returns_null_if_output_path_is_null_or_empty(string outputPath)
         {
             // ARRANGE
-            var sut = new CommandLineParameters()
+            var sut = new GenerateCommandLineParameters()
             {
                 OutputPath = outputPath
             };
@@ -83,7 +83,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         {
             // All properties in CommandLineParameters should have a OptionAttribute so the value can be set by the commandline parser
 
-            var property = typeof(CommandLineParameters).GetProperty(propertyName)!;
+            var property = typeof(GenerateCommandLineParameters).GetProperty(propertyName)!;
 
             var attribute = property.GetCustomAttribute<OptionAttribute>();
 
@@ -94,7 +94,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         [MemberData(nameof(Properties))]
         public void Properties_with_a_Option_or_Value_attribute_have_a_getter_and_a_setter(string propertyName)
         {
-            var property = typeof(CommandLineParameters).GetProperty(propertyName)!;
+            var property = typeof(GenerateCommandLineParameters).GetProperty(propertyName)!;
 
             if (property.GetCustomAttribute<OptionAttribute>() != null || property.GetCustomAttribute<ValueAttribute>() != null)
             {

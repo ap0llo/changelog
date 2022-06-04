@@ -6,7 +6,11 @@ using Grynwald.Utilities.Configuration;
 
 namespace Grynwald.ChangeLog.CommandLine
 {
-    public class CommandLineParameters
+    /// <summary>
+    /// Defines the command line parameters for the "generate" sub-command
+    /// </summary>
+    [Verb(CommandNames.Generate, isDefault: true, aliases: new string[] { "g" }, HelpText = "Generate a change log from a git repository")]
+    public class GenerateCommandLineParameters
     {
         private string? m_OutputPath;
 

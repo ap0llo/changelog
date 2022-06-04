@@ -76,7 +76,7 @@ namespace docs
 
             public static string? GetCommandlineParameter(string settingsKey)
             {
-                var property = typeof(CommandLineParameters).GetProperties()
+                var property = typeof(GenerateCommandLineParameters).GetProperties()
                     .SingleOrDefault(x =>
                         x.GetCustomAttribute<OptionAttribute>() is not null &&
                         x.GetCustomAttribute<ConfigurationValueAttribute>() is ConfigurationValueAttribute configurationAttribute &&
