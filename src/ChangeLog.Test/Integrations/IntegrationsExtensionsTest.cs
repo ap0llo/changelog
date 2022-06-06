@@ -44,13 +44,11 @@ namespace Grynwald.ChangeLog.Test.Integrations
             AutofacAssert.CanResolveType<GitLabLinkTask>(container);
         }
 
-        [Theory]
-        [CombinatorialData]
-        public void AddIntegrationTasks_adds_expected_tasks(ChangeLogConfiguration.IntegrationProvider integrationProvider)
+        [Fact]
+        public void AddIntegrationTasks_adds_expected_tasks()
         {
             // ARRANGE            
             var configuration = new ChangeLogConfiguration();
-            configuration.Integrations.Provider = integrationProvider;
 
             using var container = BuildContainer(b => b.RegisterInstance(configuration));
 
@@ -63,16 +61,8 @@ namespace Grynwald.ChangeLog.Test.Integrations
             pipelineBuilderMock.Object.AddIntegrationTasks();
 
             // ASSERT
-            pipelineBuilderMock.Verify(
-                x => x.AddTask<GitHubLinkTask>(),
-                integrationProvider == ChangeLogConfiguration.IntegrationProvider.GitHub ? Times.Once() : Times.Never()
-            );
-            pipelineBuilderMock.Verify(
-                x => x.AddTask<GitLabLinkTask>(),
-                integrationProvider == ChangeLogConfiguration.IntegrationProvider.GitLab ? Times.Once() : Times.Never()
-            );
+            pipelineBuilderMock.Verify(x => x.AddTask<GitHubLinkTask>(), Times.Once);
+            pipelineBuilderMock.Verify(x => x.AddTask<GitHubLinkTask>(), Times.Once);
         }
-
-
     }
 }
