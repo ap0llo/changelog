@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommandLine;
 using Grynwald.ChangeLog.CommandLine;
-using Grynwald.ChangeLog.Commands;
 
 namespace Grynwald.ChangeLog
 {
@@ -12,13 +11,11 @@ namespace Grynwald.ChangeLog
     {
         private static async Task<int> Main(string[] args)
         {
+            using var compositionRoot = new CompositionRoot();
+
             return await CommandLineParser.Parse(args)
                 .MapResult(
-                    (GenerateCommandLineParameters parsed) =>
-                    {
-                        var command = new GenerateCommand(parsed);
-                        return command.RunAsync();
-                    },
+                    async (GenerateCommandLineParameters generateParameters) => await compositionRoot.CreateGenerateCommand(generateParameters).RunAsync(),
                     (DummyCommandLineParameters dummy) =>
                     {
                         Console.Error.WriteLine("Invalid arguments");

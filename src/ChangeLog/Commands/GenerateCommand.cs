@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using Autofac;
+using FluentValidation;
 using Grynwald.ChangeLog.CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Filtering;
@@ -13,7 +14,6 @@ using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.Utilities.Configuration;
-using Grynwald.Utilities.Logging;
 using Microsoft.Extensions.Logging;
 
 
@@ -39,59 +39,42 @@ namespace Grynwald.ChangeLog.Commands
 
 
         private readonly GenerateCommandLineParameters m_CommandLineParameters;
+        private readonly ILogger<GenerateCommand> m_Logger;
+        private readonly IValidator<GenerateCommandLineParameters> m_CommandLineValidator;
+        private readonly IValidator<ChangeLogConfiguration> m_ConfigurationValidator;
 
-
-        public GenerateCommand(GenerateCommandLineParameters commandLineParameters)
+        public GenerateCommand(GenerateCommandLineParameters commandLine, ILogger<GenerateCommand> logger, IValidator<GenerateCommandLineParameters> commandLineValidator, IValidator<ChangeLogConfiguration> configurationValidator)
         {
-            m_CommandLineParameters = commandLineParameters ?? throw new ArgumentNullException(nameof(commandLineParameters));
+            m_CommandLineParameters = commandLine ?? throw new ArgumentNullException(nameof(commandLine));
+            m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            m_CommandLineValidator = commandLineValidator ?? throw new ArgumentNullException(nameof(commandLineValidator));
+            m_ConfigurationValidator = configurationValidator ?? throw new ArgumentNullException(nameof(configurationValidator));
         }
 
 
 
         public async Task<int> RunAsync()
         {
-            var loggerOptions = m_CommandLineParameters.Verbose
-                ? new SimpleConsoleLoggerConfiguration(LogLevel.Debug, true, true)
-                : new SimpleConsoleLoggerConfiguration(LogLevel.Information, false, true);
-
-            // for validation of command line parameters, directly create a console logger
-            // bypassing the DI container because we need to validate the parameters
-            // before setting up DI
-            var logger = new SimpleConsoleLogger(loggerOptions, "");
-
-            if (!ValidateCommandlineParameters(m_CommandLineParameters, logger))
+            if (!ValidateCommandlineParameters(m_CommandLineParameters))
                 return 1;
 
-            if (!TryGetRepositoryPath(m_CommandLineParameters, logger, out var repositoryPath))
+            if (!TryGetRepositoryPath(m_CommandLineParameters, out var repositoryPath))
                 return 1;
 
-            if (!TryOpenRepository(repositoryPath, logger, out var gitRepository))
+            if (!TryLoadConfiguration(repositoryPath, out var configuration))
                 return 1;
 
-            var configurationFilePath = GetConfigurationFilePath(m_CommandLineParameters, repositoryPath);
-            if (File.Exists(configurationFilePath))
-                logger.LogDebug($"Using configuration file '{configurationFilePath}'");
-            else
-                logger.LogDebug("Continuing without loading a configuration file, because no configuration file was wound");
-
-
-            // pass repository path to configuration loader to make it available through the configuration system
-            var dynamicSettings = new DynamicallyDeterminedSettings()
-            {
-                RepositoryPath = repositoryPath
-            };
-
-            var configuration = ChangeLogConfigurationLoader.GetConfiguration(configurationFilePath, m_CommandLineParameters, dynamicSettings);
+            if (!TryOpenRepository(repositoryPath, out var gitRepository))
+                return 1;
 
             using (gitRepository)
             {
                 var containerBuilder = new ContainerBuilder();
 
-                containerBuilder.RegisterType<ConfigurationValidator>();
                 containerBuilder.RegisterInstance(configuration).SingleInstance();
                 containerBuilder.RegisterInstance(gitRepository).SingleInstance().As<IGitRepository>();
 
-                containerBuilder.RegisterLogging(loggerOptions);
+                containerBuilder.RegisterLogging(CompositionRoot.CreateLoggerConfiguration(m_CommandLineParameters.Verbose));
 
                 containerBuilder.RegisterType<ChangeLogPipeline>();
 
@@ -115,20 +98,6 @@ namespace Grynwald.ChangeLog.Commands
 
                 using (var container = containerBuilder.Build())
                 {
-                    var configurationValidator = container.Resolve<ConfigurationValidator>();
-                    var validationResult = configurationValidator.Validate(configuration);
-
-                    if (!validationResult.IsValid)
-                    {
-                        foreach (var error in validationResult.Errors)
-                        {
-                            logger.LogError($"Invalid configuration: {error.ErrorMessage}");
-                        }
-
-                        logger.LogError($"Validation of configuration failed");
-                        return 1;
-                    }
-
                     var pipeline = container.Resolve<ChangeLogPipeline>();
 
                     var result = await pipeline.RunAsync();
@@ -136,6 +105,7 @@ namespace Grynwald.ChangeLog.Commands
                 }
             }
         }
+
 
         private static string? GetConfigurationFilePath(GenerateCommandLineParameters commandlineParameters, string repositoryPath)
         {
@@ -153,20 +123,19 @@ namespace Grynwald.ChangeLog.Commands
             return null;
         }
 
-        private static bool ValidateCommandlineParameters(GenerateCommandLineParameters parameters, ILogger logger)
+        private bool ValidateCommandlineParameters(GenerateCommandLineParameters parameters)
         {
-            var validator = new GenerateCommandLineParametersValidator();
-            var result = validator.Validate(parameters);
+            var result = m_CommandLineValidator.Validate(parameters);
 
             foreach (var error in result.Errors)
             {
-                logger.LogError(error.ToString());
+                m_Logger.LogError(error.ToString());
             }
 
             return result.IsValid;
         }
 
-        private static bool TryGetRepositoryPath(GenerateCommandLineParameters parameters, ILogger logger, [NotNullWhen(true)] out string? repositoryPath)
+        private bool TryGetRepositoryPath(GenerateCommandLineParameters parameters, [NotNullWhen(true)] out string? repositoryPath)
         {
             if (!String.IsNullOrEmpty(parameters.RepositoryPath))
             {
@@ -176,18 +145,18 @@ namespace Grynwald.ChangeLog.Commands
 
             if (RepositoryLocator.TryGetRepositoryPath(Environment.CurrentDirectory, out repositoryPath))
             {
-                logger.LogInformation($"Found git repository at '{repositoryPath}'");
+                m_Logger.LogInformation($"Found git repository at '{repositoryPath}'");
                 return true;
             }
             else
             {
-                logger.LogError($"No git repository found in '{Environment.CurrentDirectory}' or any of its parent directories");
+                m_Logger.LogError($"No git repository found in '{Environment.CurrentDirectory}' or any of its parent directories");
                 repositoryPath = default;
                 return false;
             }
         }
 
-        private static bool TryOpenRepository(string repositoryPath, ILogger logger, [NotNullWhen(true)] out IGitRepository? repository)
+        private bool TryOpenRepository(string repositoryPath, [NotNullWhen(true)] out IGitRepository? repository)
         {
             try
             {
@@ -196,12 +165,45 @@ namespace Grynwald.ChangeLog.Commands
             }
             catch (RepositoryNotFoundException ex)
             {
-                logger.LogDebug(ex, $"Failed to open repository at '{repositoryPath}'");
-                logger.LogError($"'{repositoryPath}' is not a git repository");
+                m_Logger.LogDebug(ex, $"Failed to open repository at '{repositoryPath}'");
+                m_Logger.LogError($"'{repositoryPath}' is not a git repository");
                 repository = default;
                 return false;
             }
         }
 
+        private bool TryLoadConfiguration(string repositoryPath, [NotNullWhen(true)] out ChangeLogConfiguration? configuration)
+        {
+            var configurationFilePath = GetConfigurationFilePath(m_CommandLineParameters, repositoryPath);
+            if (File.Exists(configurationFilePath))
+                m_Logger.LogDebug($"Using configuration file '{configurationFilePath}'");
+            else
+                m_Logger.LogDebug("Continuing without loading a configuration file, because no configuration file was wound");
+
+
+            // pass repository path to configuration loader to make it available through the configuration system
+            var dynamicSettings = new DynamicallyDeterminedSettings()
+            {
+                RepositoryPath = repositoryPath
+            };
+
+            configuration = ChangeLogConfigurationLoader.GetConfiguration(configurationFilePath, m_CommandLineParameters, dynamicSettings);
+
+            var validationResult = m_ConfigurationValidator.Validate(configuration);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    m_Logger.LogError($"Invalid configuration: {error.ErrorMessage}");
+                }
+
+                m_Logger.LogError($"Validation of configuration failed");
+                return false;
+            }
+
+            return true;
+
+        }
     }
 }
