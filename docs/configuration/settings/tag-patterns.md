@@ -8,33 +8,34 @@
 # Tag Patterns Setting
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:tagPatterns</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td>-</td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value (JSON)</b></td>
-        <td>
-            <code>[
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:tagPatterns</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td>-</td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>[
   &quot;^(?&lt;version&gt;\\d+\\.\\d+(\\.\\d+)?.*)&quot;,
   &quot;^v(?&lt;version&gt;\\d+\\.\\d+(\\.\\d+)?.*)&quot;
 ]</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.1+</td>
-    </tr>
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.1+</td>
+</tr>
 </table>
 
 The *Tag Patterns* setting controls how versions are read from a git repository's tags.

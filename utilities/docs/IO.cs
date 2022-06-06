@@ -37,5 +37,16 @@ namespace docs
 
             return StringComparer.OrdinalIgnoreCase.Equals(extension, Path.GetExtension(path));
         }
+
+        public static bool IsScribanPartial(string path)
+        {
+            if (String.IsNullOrEmpty(path))
+                throw new ArgumentException($"'{nameof(path)}' cannot be null or empty", nameof(path));
+
+            var directoryPath = Path.GetDirectoryName(path);
+            var directoryName = Path.GetFileName(directoryPath);
+
+            return StringComparer.OrdinalIgnoreCase.Equals(directoryName, "_partials");
+        }
     }
 }

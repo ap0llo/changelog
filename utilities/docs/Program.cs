@@ -60,7 +60,9 @@ namespace docs
 
             Console.WriteLine($"Generating documentation from templates");
 
-            var inputFiles = GetAllInputFiles(parameters).Where(x => IO.HasExtension(x, IO.FileExtensions.Scriban));
+            var inputFiles = GetAllInputFiles(parameters)
+                .Where(x => IO.HasExtension(x, IO.FileExtensions.Scriban))
+                .Where(x => !IO.IsScribanPartial(x));
 
             foreach (var inputPath in inputFiles)
             {
@@ -92,8 +94,10 @@ namespace docs
                 .AddColumn(new TableColumn("[u]RuleId[/]").LeftAligned())
                 .AddColumn(new TableColumn("[u]Message[/]").LeftAligned());
 
+            var inputFiles = GetAllInputFiles(parameters);
 
-            foreach (var path in GetAllInputFiles(parameters))
+
+            foreach (var path in inputFiles)
             {
                 var outputPath = Path.ChangeExtension(path, "").TrimEnd('.');
 

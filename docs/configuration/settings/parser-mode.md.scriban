@@ -1,52 +1,6 @@
-{{~
-    settingskey = "changelog:parser:mode"
-~}}
 # Parser Mode Setting
 
-<table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td>-</td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey ~}}
-            <code>{{configuration.get_commandline_parameter settingskey | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey ~}}
-            <code>{{configuration.get_scalar settingskey | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Allowed values</b></td>
-        <td>
-            <ul>
-                {{~ for item in (configuration.get_allowed_values settingskey) ~}}
-                <li><code>{{item}}</code></li>
-                {{~ end ~}}
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.2+</td>
-    </tr>
-</table>
+{{ include("_partials/settings-table.md.scriban", settings_key: "changelog:parser:mode", version_support: "0.2+") }}
 
 The "Parser Mode" setting controls how lenient the commit message parser treats commit messages.
 

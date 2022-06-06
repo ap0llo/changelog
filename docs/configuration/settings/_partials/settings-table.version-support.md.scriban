@@ -1,0 +1,4 @@
+<tr>
+    <td><b>Version Support</b></td>
+    <td>{{ $.version_support }}</td>
+</tr>

@@ -1,56 +1,23 @@
+# Integration Provider Setting
 {{~
     settingskey = "changelog:integrations:provider"
 ~}}
-# Integration Provider Setting
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>{{ configuration.get_environment_variable_name settingskey }}</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey ~}}
-            <code>{{configuration.get_commandline_parameter settingskey | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey ~}}
-            <code>{{configuration.get_scalar settingskey | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Allowed values</b></td>
-        <td>
-            <ul>
-                {{~ for item in (configuration.get_allowed_values settingskey) ~}}
-                <li><code>{{item}}</code></li>
-                {{~ end ~}}
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>
-            <ul>
-                <li>0.1+: Setting supported through environment variables and configuration file.</li>
-                <li>0.4+: Setting supported through environment variables, configuration file and commandline parameter.</li>
-            </ul>
-        </td>
-    </tr>
+{{ include("_partials/settings-table.name.md.scriban", settings_key: settingskey) }}
+{{ include("_partials/settings-table.environment-variable.md.scriban", settings_key: settingskey) }}
+{{ include("_partials/settings-table.commandline-parameter.md.scriban", settings_key: settingskey) }}
+{{ include("_partials/settings-table.default-value.md.scriban", settings_key: settingskey) }}
+{{ include("_partials/settings-table.allowed-values.md.scriban", settings_key: settingskey) }}
+<tr>
+    <td><b>Version Support</b></td>
+    <td>
+        <ul>
+            <li>0.1+: Setting supported through environment variables and configuration file.</li>
+            <li>0.4+: Setting supported through environment variables, configuration file and commandline parameter.</li>
+        </ul>
+    </td>
+</tr>
 </table>
 
 Sets the *Integration Provider* to use.

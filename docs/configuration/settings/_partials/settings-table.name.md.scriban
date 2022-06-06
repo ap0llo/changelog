@@ -1,0 +1,4 @@
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>{{ $.settings_key }}</code></td>
+</tr>

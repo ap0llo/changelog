@@ -1,10 +1,3 @@
-{{~
-    settingskey_accesstoken = "changelog:integrations:gitlab:accessToken"
-    settingskey_remotename = "changelog:integrations:gitlab:remoteName"
-    settingskey_host = "changelog:integrations:gitlab:host"
-    settingskey_namespace = "changelog:integrations:gitlab:namespace"
-    settingskey_project = "changelog:integrations:gitlab:project"
-~}}
 # GitLab Integration Settings
 
 The *GitLab Integration* settings control the behavior of the GitLab integration.
@@ -18,40 +11,7 @@ See also [Integrations - GitLab](../../integrations/gitlab.md).
 
 ## GitLab Access Token
 
-<table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey_accesstoken}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>{{ configuration.get_environment_variable_name settingskey_accesstoken }}</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey_accesstoken ~}}
-            <code>{{configuration.get_commandline_parameter settingskey_accesstoken | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey_accesstoken ~}}
-            <code>{{configuration.get_scalar settingskey_accesstoken | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.1+</td>
-    </tr>
-</table>
+{{ include("_partials/settings-table.md.scriban", settings_key: "changelog:integrations:gitlab:accessToken", version_support: "0.1+") }}
 
 The *GitLab Access Token* setting configures the access token to use for
 accessing the GitLab  API when the GitLab integration is enabled.
@@ -62,40 +22,7 @@ accessing the GitLab  API when the GitLab integration is enabled.
 
 ## GitLab Remote Name
 
-<table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey_remotename}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>{{ configuration.get_environment_variable_name settingskey_remotename }}</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey_remotename ~}}
-            <code>{{configuration.get_commandline_parameter settingskey_remotename | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey_remotename ~}}
-            <code>{{configuration.get_scalar settingskey_remotename | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
-</table>
+{{ include("_partials/settings-table.md.scriban", settings_key: "changelog:integrations:gitlab:remoteName", version_support: "0.3+") }}
 
 The GitLab integration requires information about the repository on GitLab in order to function.
 This information includes the host name of the GitLab server, the namespace of the project (GitLab user or group/subgroup) as well as the name of the project.
@@ -111,40 +38,7 @@ For details on how the remote URL is parsed, see [Integrations - GitLab](../../i
 
 ## GitLab Host
 
-<table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey_host}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>{{ configuration.get_environment_variable_name settingskey_host }}</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey_host ~}}
-            <code>{{configuration.get_commandline_parameter settingskey_host | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey_host ~}}
-            <code>{{configuration.get_scalar settingskey_host | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
-</table>
+{{ include("_partials/settings-table.md.scriban", settings_key: "changelog:integrations:gitlab:host", version_support: "0.3+") }}
 
 The *GitLab Host* setting specifies the host-name of the GitLab server to communicate with.
 
@@ -152,40 +46,7 @@ When no host name is specified (default behavior), ChangeLog will attempt to det
 
 ## GitLab Namespace
 
-<table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey_namespace}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>{{ configuration.get_environment_variable_name settingskey_namespace }}</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey_namespace ~}}
-            <code>{{configuration.get_commandline_parameter settingskey_namespace | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey_namespace ~}}
-            <code>{{configuration.get_scalar settingskey_namespace | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
-</table>
+{{ include("_partials/settings-table.md.scriban", settings_key: "changelog:integrations:gitlab:namespace", version_support: "0.3+") }}
 
 The *GitLab Namespace* setting specifies the namespace of the GitLab project to use.
 This can be a GitLab user name or the name of a group/subgroup.
@@ -194,40 +55,7 @@ When no namespace is specified (default behavior), ChangeLog will attempt to det
 
 ## GitLab Project Name
 
-<table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>{{settingskey_project}}</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>{{ configuration.get_environment_variable_name settingskey_project }}</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-        {{~ if configuration.get_commandline_parameter settingskey_project ~}}
-            <code>{{configuration.get_commandline_parameter settingskey_project | html.escape}}</code>
-        {{~ else ~}}
-            -
-        {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            {{~ if configuration.get_scalar settingskey_project ~}}
-            <code>{{configuration.get_scalar settingskey_project | html.escape}}</code>
-            {{~ else ~}}
-            -
-            {{~ end ~}}
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
-</table>
+{{ include("_partials/settings-table.md.scriban", settings_key: "changelog:integrations:gitlab:project", version_support: "0.3+") }}
 
 The *GitLab Project Name* setting specifies the name of the GitLab project to use.
 

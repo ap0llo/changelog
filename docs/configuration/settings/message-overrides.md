@@ -11,107 +11,104 @@ Commit Message Override Settings control the behavior of the ["Commit Message Ov
 
 ## Enable Message Overrides
 
-
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:messageOverrides:enabled</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__MESSAGEOVERRIDES__ENABLED</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            <code>true</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>1.0+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:messageOverrides:enabled</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__MESSAGEOVERRIDES__ENABLED</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>true</code>
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>1.0+</td>
+</tr>
 </table>
 
 Enabled/disables the ["Commit Message Overrides" feature](../../message-overrides.md).
 
 ## Message Override Provider
 
-
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:messageOverrides:provider</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__MESSAGEOVERRIDES__PROVIDER</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            <code>GitNotes</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Allowed values</b></td>
-        <td>
-            <ul>
-                <li><code>GitNotes</code></li>
-                <li><code>FileSystem</code></li>
-            </ul>
-        </td>
-    </tr>    
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>1.1+</td>
-    </tr>
-</table>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:messageOverrides:provider</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__MESSAGEOVERRIDES__PROVIDER</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>GitNotes</code>
+    </td>
+</tr>
+<tr>
+    <td><b>Allowed values</b></td>
+    <td>
+        <ul>
+            <li><code>GitNotes</code></li>
+            <li><code>FileSystem</code></li>
+        </ul>
+    </td>
+</tr>
 
+<tr>
+    <td><b>Version Support</b></td>
+    <td>1.1+</td>
+</tr>
+</table>
 
 ## Git Notes Namespace
 
-
-
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:messageOverrides:gitNotesNamespace</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__MESSAGEOVERRIDES__GITNOTESNAMESPACE</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            <code>changelog/message-overrides</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>1.0+</td>
-    </tr>
-</table>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:messageOverrides:gitNotesNamespace</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__MESSAGEOVERRIDES__GITNOTESNAMESPACE</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>changelog/message-overrides</code>
+    </td>
+</tr>
 
+<tr>
+    <td><b>Version Support</b></td>
+    <td>1.0+</td>
+</tr>
+</table>
 
 Configures the "git notes namespace" to search for override messages when the [provider](#message-override-provider) is set to `GitNotes`.
 
@@ -119,32 +116,32 @@ By default, override messages are read from the `changelog/message-overrides` na
 
 ## Source Directory Path
 
-
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:messageOverrides:sourceDirectoryPath</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td><code>CHANGELOG__MESSAGEOVERRIDES__SOURCEDIRECTORYPATH</code></td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            <code>.config/changelog/message-overrides</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>1.1+</td>
-    </tr>
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:messageOverrides:sourceDirectoryPath</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td><code>CHANGELOG__MESSAGEOVERRIDES__SOURCEDIRECTORYPATH</code></td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>.config/changelog/message-overrides</code>
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>1.1+</td>
+</tr>
 </table>
 
 Sets the path of the directory to load message overrides from, if the [provider](#message-override-provider) is set to `FileSystem`.

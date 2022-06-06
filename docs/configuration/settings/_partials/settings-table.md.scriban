@@ -1,0 +1,8 @@
+<table>
+{{ include("settings-table.name.md.scriban", settings_key: $.settings_key) }}
+{{ include("settings-table.environment-variable.md.scriban", settings_key: $.settings_key) }}
+{{ include("settings-table.commandline-parameter.md.scriban", settings_key: $.settings_key) }}
+{{ include("settings-table.default-value.md.scriban", settings_key: $.settings_key) }}
+{{ include("settings-table.allowed-values.md.scriban", settings_key: $.settings_key) }}
+{{ include("settings-table.version-support.md.scriban", settings_key: $.settings_key, version_support: $.version_support) }}
+</table>

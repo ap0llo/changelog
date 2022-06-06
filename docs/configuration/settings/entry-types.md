@@ -28,9 +28,7 @@ For documentation on the "Entry Types" setting in version 0.2, see [Entry Types 
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
+        <td>-</td>
     </tr>
     <tr>
         <td><b>Default value</b></td>
@@ -101,9 +99,7 @@ The following example shows how to define a display name for entries of type `do
     </tr>
     <tr>
         <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
+        <td>-</td>
     </tr>
     <tr>
         <td><b>Default value</b></td>

@@ -8,24 +8,24 @@
 # Filter Setting
 
 <table>
-    <tr>
-        <td><b>Setting</b></td>
-        <td><code>changelog:filter</code></td>
-    </tr>
-    <tr>
-        <td><b>Environment Variable</b></td>
-        <td>-</td>
-    </tr>
-    <tr>
-        <td><b>Commandline Parameter</b></td>
-        <td>
-            -
-        </td>
-    </tr>
-    <tr>
-        <td><b>Default value</b></td>
-        <td>
-            <code>{
+<tr>
+    <td><b>Setting</b></td>
+    <td><code>changelog:filter</code></td>
+</tr>
+<tr>
+    <td><b>Environment Variable</b></td>
+    <td>-</td>
+</tr>
+<tr>
+    <td><b>Commandline Parameter</b></td>
+    <td>
+        -
+    </td>
+</tr>
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+        <code>{
   &quot;include&quot;: [
     {
       &quot;type&quot;: &quot;feat&quot;,
@@ -38,12 +38,13 @@
   ],
   &quot;exclude&quot;: []
 }</code>
-        </td>
-    </tr>
-    <tr>
-        <td><b>Version Support</b></td>
-        <td>0.3+</td>
-    </tr>
+    </td>
+</tr>
+
+<tr>
+    <td><b>Version Support</b></td>
+    <td>0.3+</td>
+</tr>
 </table>
 
 The "Filter" setting controls which entries of a change log are included in the output.

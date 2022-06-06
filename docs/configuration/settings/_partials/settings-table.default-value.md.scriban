@@ -1,0 +1,10 @@
+<tr>
+    <td><b>Default value</b></td>
+    <td>
+    {{~ if configuration.get_scalar($.settings_key) ~}}
+        <code>{{ configuration.get_scalar($.settings_key) | html.escape }}</code>
+    {{~ else ~}}
+        -
+    {{~ end ~}}
+    </td>
+</tr>
