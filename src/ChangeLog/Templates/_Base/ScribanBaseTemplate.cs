@@ -104,6 +104,9 @@ namespace Grynwald.ChangeLog.Templates
 
         public IFileSystem FileSystem => m_Filesystem.Value;
 
+        /// <inheritdoc />
+        public abstract TemplateName Name { get; }
+
 
         public ScribanBaseTemplate(ChangeLogConfiguration configuration)
         {
@@ -127,6 +130,7 @@ namespace Grynwald.ChangeLog.Templates
         }
 
 
+        /// <inheritdoc />
         public virtual void SaveChangeLog(ApplicationChangeLog changeLog, string outputPath)
         {
             var viewModel = new ApplicationChangeLogViewModel(m_Configuration, changeLog);

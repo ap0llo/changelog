@@ -16,6 +16,20 @@ namespace Grynwald.ChangeLog.Test.Templates.Html
             configuration.Template.Html.CustomDirectory = customDirectory;
         }
 
+
+        [Fact]
+        public void Name_returns_expected_value()
+        {
+            // ARRANGE
+            var sut = GetTemplateInstance(ChangeLogConfigurationLoader.GetDefaultConfiguration());
+
+            // ACT 
+            var actual = sut.Name;
+
+            // ASSERT
+            Assert.Equal(TemplateName.Html, actual);
+        }
+
         private class CustomTextElement : INormalizedTextElement
         {
             public string NormalizedText { get; set; } = "";

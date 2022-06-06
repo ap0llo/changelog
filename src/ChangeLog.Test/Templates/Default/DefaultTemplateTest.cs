@@ -20,6 +20,20 @@ namespace Grynwald.ChangeLog.Test.Templates.Default
         }
 
 
+
+        [Fact]
+        public void Name_returns_expected_value()
+        {
+            // ARRANGE
+            var sut = GetTemplateInstance(ChangeLogConfigurationLoader.GetDefaultConfiguration());
+
+            // ACT 
+            var actual = sut.Name;
+
+            // ASSERT
+            Assert.Equal(TemplateName.Default, actual);
+        }
+
         [Fact]
         public void ChangeLog_with_multiple_versions_is_converted_to_expected_Output()
         {

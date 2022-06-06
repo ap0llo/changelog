@@ -1,58 +1,41 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Autofac;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Templates;
 using Grynwald.ChangeLog.Templates.Default;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using Grynwald.ChangeLog.Templates.GitHubRelease;
+using Grynwald.ChangeLog.Templates.GitLabRelease;
+using Grynwald.ChangeLog.Templates.Html;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.Templates
 {
     public class TemplateContainerBuildExtensionsTest
     {
-        [Theory]
-        [CombinatorialData]
-        public void RegisterTemplate_can_register_a_template_for_every_supported_template_name(ChangeLogConfiguration.TemplateName templateName)
+        [Fact]
+        public void RegisterTemplates_registers_the_expected_template_instances()
         {
             // ARRANGE
-            var configuration = new ChangeLogConfiguration()
-            {
-                Template = new ChangeLogConfiguration.TemplateConfiguration() { Name = templateName }
-            };
+            var configuration = new ChangeLogConfiguration();
 
             var containerBuilder = new ContainerBuilder();
             containerBuilder.RegisterInstance(configuration).SingleInstance();
-            containerBuilder.RegisterInstance(NullLogger<DefaultTemplate>.Instance).As<ILogger<DefaultTemplate>>();
 
             // ACT
-            containerBuilder.RegisterTemplate(configuration.Template);
+            containerBuilder.RegisterTemplates();
 
             // ASSERT
             var container = containerBuilder.Build();
-            var template = container.Resolve<ITemplate>();
-            Assert.NotNull(template);
-        }
+            var templates = container.Resolve<IEnumerable<ITemplate>>();
 
-        [Fact]
-        public void RegisterTemplate_throws_InvalidTemplateConfigurationException_for_invalid_template_Swetting()
-        {
-            // ARRANGE
-            var templateName = (ChangeLogConfiguration.TemplateName)
-                Enum.GetValues(typeof(ChangeLogConfiguration.TemplateName))
-                    .Cast<int>()
-                    .Max() + 2;
-
-            var configuration = new ChangeLogConfiguration()
-            {
-                Template = new ChangeLogConfiguration.TemplateConfiguration() { Name = templateName }
-            };
-
-            var containerBuilder = new ContainerBuilder();
-
-            // ACT / ASSERT
-            Assert.Throws<InvalidTemplateConfigurationException>(() => containerBuilder.RegisterTemplate(configuration.Template));
+            Assert.Collection(
+                templates.OrderBy(x => x.Name),
+                x => Assert.IsType<DefaultTemplate>(x),
+                x => Assert.IsType<GitLabReleaseTemplate>(x),
+                x => Assert.IsType<GitHubReleaseTemplate>(x),
+                x => Assert.IsType<HtmlTemplate>(x)
+            );
         }
     }
 }

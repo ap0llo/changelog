@@ -111,15 +111,7 @@ namespace Grynwald.ChangeLog.Commands
 
                 containerBuilder.RegisterIntegrations();
 
-                try
-                {
-                    containerBuilder.RegisterTemplate(configuration.Template);
-                }
-                catch (InvalidTemplateConfigurationException ex)
-                {
-                    logger.LogError($"Failed to load template: {ex.Message}");
-                    return 1;
-                }
+                containerBuilder.RegisterTemplates();
 
                 using (var container = containerBuilder.Build())
                 {

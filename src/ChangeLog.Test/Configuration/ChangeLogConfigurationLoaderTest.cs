@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.ConventionalCommits;
+using Grynwald.ChangeLog.Templates;
 using Grynwald.Utilities.Configuration;
 using Grynwald.Utilities.IO;
 using Newtonsoft.Json;
@@ -224,7 +225,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // Template settings
             //
             yield return TestCase(config => Assert.NotNull(config.Template));
-            yield return TestCase(config => Assert.Equal(ChangeLogConfiguration.TemplateName.Default, config.Template.Name));
+            yield return TestCase(config => Assert.Equal(TemplateName.Default, config.Template.Name));
 
             //
             // Default Template settings
@@ -491,7 +492,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             //
             // Template setting
             //
-            foreach (var value in GetEnumValues<ChangeLogConfiguration.TemplateName>())
+            foreach (var value in GetEnumValues<TemplateName>())
             {
                 yield return TestCase("template:name", config => config.Template.Name, value);
             }

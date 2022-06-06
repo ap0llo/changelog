@@ -8,6 +8,11 @@ namespace Grynwald.ChangeLog.Templates
     public interface ITemplate
     {
         /// <summary>
+        /// Gets the template's name
+        /// </summary>
+        TemplateName Name { get; }
+
+        /// <summary>
         /// Saves the changelog to the specified path
         /// </summary>
         /// <param name="changeLog">The changelog to save to disk.</param>

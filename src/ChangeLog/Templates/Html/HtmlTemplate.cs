@@ -11,6 +11,9 @@ namespace Grynwald.ChangeLog.Templates.Html
         /// <inheritdoc />
         protected override string TemplateFileExtension => ".scriban-html";
 
+        /// <inheritdoc />
+        public override TemplateName Name => TemplateName.Html;
+
 
         public HtmlTemplate(ChangeLogConfiguration configuration) : base(configuration)
         { }

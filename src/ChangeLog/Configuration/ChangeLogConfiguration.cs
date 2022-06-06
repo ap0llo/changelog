@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Grynwald.ChangeLog.Templates;
 
 namespace Grynwald.ChangeLog.Configuration
 {
@@ -82,14 +83,6 @@ namespace Grynwald.ChangeLog.Configuration
 
             [JsonSchemaPropertyName("gitlab")]
             public GitLabIntegrationConfiguration GitLab { get; set; } = new GitLabIntegrationConfiguration();
-        }
-
-        public enum TemplateName
-        {
-            Default,
-            GitLabRelease,
-            GitHubRelease,
-            Html,
         }
 
         public class TemplateConfiguration

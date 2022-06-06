@@ -18,6 +18,19 @@ namespace Grynwald.ChangeLog.Test.Templates.GitLabRelease
 
 
         [Fact]
+        public void Name_returns_expected_value()
+        {
+            // ARRANGE
+            var sut = GetTemplateInstance(ChangeLogConfigurationLoader.GetDefaultConfiguration());
+
+            // ACT 
+            var actual = sut.Name;
+
+            // ASSERT
+            Assert.Equal(TemplateName.GitLabRelease, actual);
+        }
+
+        [Fact]
         public void SaveChangeLog_throws_TemplateExecutionException_when_changelog_contains_multiple_versions()
         {
             // ARRANGE

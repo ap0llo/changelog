@@ -12,6 +12,9 @@ namespace Grynwald.ChangeLog.Templates.GitHubRelease
         /// <inheritdoc />
         protected override ChangeLogConfiguration.TemplateSettings TemplateSettings => m_Configuration.Template.GitHubRelease;
 
+        /// <inheritdoc />
+        public override TemplateName Name => TemplateName.GitHubRelease;
+
 
         public GitHubReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
         { }

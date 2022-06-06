@@ -11,7 +11,11 @@ namespace Grynwald.ChangeLog.Templates.Default
         /// <inheritdoc />
         protected override ChangeLogConfiguration.TemplateSettings TemplateSettings => m_Configuration.Template.Default;
 
+        /// <inheritdoc />
         protected override string TemplateFileExtension => ".scriban-txt";
+
+        /// <inheritdoc />
+        public override TemplateName Name => TemplateName.Default;
 
 
         public DefaultTemplate(ChangeLogConfiguration configuration) : base(configuration)
