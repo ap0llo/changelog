@@ -13,7 +13,7 @@ namespace Grynwald.ChangeLog.Test.Templates
     public class TemplateContainerBuildExtensionsTest
     {
         [Theory]
-        [EnumData]
+        [CombinatorialData]
         public void RegisterTemplate_can_register_a_template_for_every_supported_template_name(ChangeLogConfiguration.TemplateName templateName)
         {
             // ARRANGE

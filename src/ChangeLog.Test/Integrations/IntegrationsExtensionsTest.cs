@@ -45,7 +45,7 @@ namespace Grynwald.ChangeLog.Test.Integrations
         }
 
         [Theory]
-        [EnumData]
+        [CombinatorialData]
         public void AddIntegrationTasks_adds_expected_tasks(ChangeLogConfiguration.IntegrationProvider integrationProvider)
         {
             // ARRANGE            
