@@ -10,16 +10,10 @@ namespace Grynwald.ChangeLog.Integrations
         public static void RegisterIntegrations(this ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<GitHubClientFactory>().As<IGitHubClientFactory>();
-            containerBuilder.RegisterType<GitHubLinkTask>();
+            containerBuilder.RegisterType<GitHubLinkTask>().As<IChangeLogTask>();
 
             containerBuilder.RegisterType<GitLabClientFactory>().As<IGitLabClientFactory>();
-            containerBuilder.RegisterType<GitLabLinkTask>();
+            containerBuilder.RegisterType<GitLabLinkTask>().As<IChangeLogTask>();
         }
-
-
-        public static IChangeLogPipelineBuilder AddIntegrationTasks(this IChangeLogPipelineBuilder pipelineBuilder) =>
-            pipelineBuilder
-                .AddTask<GitHubLinkTask>()
-                .AddTask<GitLabLinkTask>();
     }
 }

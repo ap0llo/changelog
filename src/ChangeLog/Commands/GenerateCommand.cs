@@ -95,19 +95,19 @@ namespace Grynwald.ChangeLog.Commands
 
                 containerBuilder.RegisterType<ChangeLogPipeline>();
 
-                containerBuilder.RegisterType<LoadCurrentVersionTask>();
-                containerBuilder.RegisterType<LoadVersionsFromTagsTask>();
-                containerBuilder.RegisterType<LoadCommitsTask>();
-                containerBuilder.RegisterType<LoadMessageOverridesFromGitNotesTask>();
-                containerBuilder.RegisterType<LoadMessageOverridesFromFileSystemTask>();
-                containerBuilder.RegisterType<ParseCommitsTask>();
-                containerBuilder.RegisterType<ParseCommitReferencesTask>();
-                containerBuilder.RegisterType<FilterVersionsTask>();
-                containerBuilder.RegisterType<FilterEntriesTask>();
-                containerBuilder.RegisterType<ResolveEntryReferencesTask>();
-                containerBuilder.RegisterType<AddCommitFooterTask>();
-                containerBuilder.RegisterType<ParseWebLinksTask>();
-                containerBuilder.RegisterType<RenderTemplateTask>();
+                containerBuilder.RegisterType<LoadCurrentVersionTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<LoadVersionsFromTagsTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<LoadCommitsTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<LoadMessageOverridesFromGitNotesTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<LoadMessageOverridesFromFileSystemTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<ParseCommitsTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<ParseCommitReferencesTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<FilterVersionsTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<FilterEntriesTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<ResolveEntryReferencesTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<AddCommitFooterTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<ParseWebLinksTask>().As<IChangeLogTask>();
+                containerBuilder.RegisterType<RenderTemplateTask>().As<IChangeLogTask>();
 
                 containerBuilder.RegisterIntegrations();
 
@@ -129,22 +129,7 @@ namespace Grynwald.ChangeLog.Commands
                         return 1;
                     }
 
-                    var pipeline = new ChangeLogPipelineBuilder(container)
-                        .AddTask<LoadCurrentVersionTask>()
-                        .AddTask<LoadVersionsFromTagsTask>()
-                        .AddTask<LoadCommitsTask>()
-                        .AddTask<LoadMessageOverridesFromGitNotesTask>()
-                        .AddTask<LoadMessageOverridesFromFileSystemTask>()
-                        .AddTask<ParseCommitsTask>()
-                        .AddTask<ParseCommitReferencesTask>()
-                        .AddTask<ParseWebLinksTask>()
-                        .AddTask<FilterVersionsTask>()
-                        .AddTask<FilterEntriesTask>()
-                        .AddTask<ResolveEntryReferencesTask>()
-                        .AddTask<AddCommitFooterTask>()
-                        .AddIntegrationTasks()
-                        .AddTask<RenderTemplateTask>()
-                        .Build();
+                    var pipeline = container.Resolve<ChangeLogPipeline>();
 
                     var result = await pipeline.RunAsync();
                     return result.Success ? 0 : 1;

@@ -30,7 +30,7 @@ namespace Grynwald.ChangeLog.Test.Pipeline
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new ChangeLogPipeline(null!, Array.Empty<IChangeLogTask>()));
+            var ex = Record.Exception(() => new ChangeLogPipeline(logger: null!, tasks: new[] { Mock.Of<IChangeLogTask>() }));
 
             // ASSERT
             var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
@@ -43,15 +43,29 @@ namespace Grynwald.ChangeLog.Test.Pipeline
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new ChangeLogPipeline(m_Logger, null!));
+            var ex = Record.Exception(() => new ChangeLogPipeline(logger: m_Logger, tasks: null!));
 
             // ASSERT
             var argumentNullException = Assert.IsType<ArgumentNullException>(ex);
             Assert.Equal("tasks", argumentNullException.ParamName);
         }
 
+        [Fact]
+        public void Tasks_must_not_be_empty()
+        {
+            // ARRANGE
+
+            // ACT 
+            var ex = Record.Exception(() => new ChangeLogPipeline(logger: m_Logger, tasks: Array.Empty<IChangeLogTask>()));
+
+            // ASSERT
+            var argumentException = Assert.IsType<ArgumentException>(ex);
+            Assert.Equal("tasks", argumentException.ParamName);
+            Assert.Contains("Task list must not be empty", ex.Message);
+        }
+
+
         [Theory]
-        [InlineData(0)]
         [InlineData(1)]
         [InlineData(10)]
         public async Task Run_executes_all_tasks_in_the_insertion_order(int numberOfTasks)
@@ -66,7 +80,7 @@ namespace Grynwald.ChangeLog.Test.Pipeline
                 })
                 .ToArray();
 
-            var sut = new ChangeLogPipeline(m_Logger, tasks.Select(x => x.Object));
+            var sut = new ChangeLogPipeline(m_Logger, tasks.Select(x => x.Object).ToArray());
 
             // ACT 
             var result = await sut.RunAsync();
@@ -102,7 +116,7 @@ namespace Grynwald.ChangeLog.Test.Pipeline
 
             tasks[1].Setup(x => x.RunAsync(It.IsAny<ApplicationChangeLog>())).Returns(Task.FromResult(ChangeLogTaskResult.Error));
 
-            var sut = new ChangeLogPipeline(m_Logger, tasks.Select(x => x.Object));
+            var sut = new ChangeLogPipeline(m_Logger, tasks.Select(x => x.Object).ToArray());
 
             // ACT 
             var result = await sut.RunAsync();
@@ -149,7 +163,7 @@ namespace Grynwald.ChangeLog.Test.Pipeline
 
             tasks[1].Setup(x => x.RunAsync(It.IsAny<ApplicationChangeLog>())).Returns(Task.FromResult(ChangeLogTaskResult.Skipped));
 
-            var sut = new ChangeLogPipeline(m_Logger, tasks.Select(x => x.Object));
+            var sut = new ChangeLogPipeline(m_Logger, tasks.Select(x => x.Object).ToArray());
 
             // ACT 
             var result = await sut.RunAsync();

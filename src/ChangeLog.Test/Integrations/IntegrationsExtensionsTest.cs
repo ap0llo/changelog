@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Autofac;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
@@ -37,32 +38,12 @@ namespace Grynwald.ChangeLog.Test.Integrations
             });
 
             // ASSERT
-            AutofacAssert.CanResolveType<IGitHubClientFactory>(container);
-            AutofacAssert.CanResolveType<GitHubLinkTask>(container);
-
-            AutofacAssert.CanResolveType<IGitLabClientFactory>(container);
-            AutofacAssert.CanResolveType<GitLabLinkTask>(container);
-        }
-
-        [Fact]
-        public void AddIntegrationTasks_adds_expected_tasks()
-        {
-            // ARRANGE            
-            var configuration = new ChangeLogConfiguration();
-
-            using var container = BuildContainer(b => b.RegisterInstance(configuration));
-
-            var pipelineBuilderMock = new Mock<IChangeLogPipelineBuilder>(MockBehavior.Strict);
-            pipelineBuilderMock.Setup(x => x.Container).Returns(container);
-            pipelineBuilderMock.Setup(x => x.AddTask<GitHubLinkTask>()).Returns(pipelineBuilderMock.Object);
-            pipelineBuilderMock.Setup(x => x.AddTask<GitLabLinkTask>()).Returns(pipelineBuilderMock.Object);
-
-            // ACT
-            pipelineBuilderMock.Object.AddIntegrationTasks();
-
-            // ASSERT
-            pipelineBuilderMock.Verify(x => x.AddTask<GitHubLinkTask>(), Times.Once);
-            pipelineBuilderMock.Verify(x => x.AddTask<GitHubLinkTask>(), Times.Once);
+            var tasks = container.Resolve<IEnumerable<IChangeLogTask>>();
+            Assert.Collection(
+                tasks.OrderBy(x => x.GetType().Name),
+                x => Assert.IsType<GitHubLinkTask>(x),
+                x => Assert.IsType<GitLabLinkTask>(x)
+            );
         }
     }
 }
