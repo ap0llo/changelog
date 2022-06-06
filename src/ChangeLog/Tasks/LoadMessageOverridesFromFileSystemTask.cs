@@ -24,7 +24,7 @@ namespace Grynwald.ChangeLog.Tasks
         private Lazy<IReadOnlyDictionary<GitId, string>> m_OverrideMessages;
 
 
-        public LoadMessageOverridesFromFileSystemTask(ILogger<LoadMessageOverridesFromFileSystemTask> logger, ChangeLogConfiguration configuration, IGitRepository repository) : base(logger)
+        public LoadMessageOverridesFromFileSystemTask(ILogger<LoadMessageOverridesFromFileSystemTask> logger, ChangeLogConfiguration configuration, IGitRepository repository) : base(logger, configuration)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
@@ -35,6 +35,9 @@ namespace Grynwald.ChangeLog.Tasks
 
         protected override ChangeLogTaskResult Run(ApplicationChangeLog changelog)
         {
+            if (m_Configuration.MessageOverrides.Provider != ChangeLogConfiguration.MessageOverrideProvider.FileSystem)
+                return ChangeLogTaskResult.Skipped;
+
             try
             {
                 return base.Run(changelog);

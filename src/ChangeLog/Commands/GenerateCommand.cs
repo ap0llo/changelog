@@ -133,12 +133,8 @@ namespace Grynwald.ChangeLog.Commands
                         .AddTask<LoadCurrentVersionTask>()
                         .AddTask<LoadVersionsFromTagsTask>()
                         .AddTask<LoadCommitsTask>()
-                        .AddTaskIf<LoadMessageOverridesFromGitNotesTask>(
-                            configuration.MessageOverrides.Enabled && configuration.MessageOverrides.Provider == ChangeLogConfiguration.MessageOverrideProvider.GitNotes
-                        )
-                        .AddTaskIf<LoadMessageOverridesFromFileSystemTask>(
-                            configuration.MessageOverrides.Enabled && configuration.MessageOverrides.Provider == ChangeLogConfiguration.MessageOverrideProvider.FileSystem
-                        )
+                        .AddTask<LoadMessageOverridesFromGitNotesTask>()
+                        .AddTask<LoadMessageOverridesFromFileSystemTask>()
                         .AddTask<ParseCommitsTask>()
                         .AddTask<ParseCommitReferencesTask>()
                         .AddTask<ParseWebLinksTask>()

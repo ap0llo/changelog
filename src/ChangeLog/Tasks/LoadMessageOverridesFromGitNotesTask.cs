@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
+using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
 
@@ -17,13 +18,21 @@ namespace Grynwald.ChangeLog.Tasks
         private readonly IGitRepository m_Repository;
 
 
-        public LoadMessageOverridesFromGitNotesTask(ILogger<LoadMessageOverridesFromGitNotesTask> logger, ChangeLogConfiguration configuration, IGitRepository repository) : base(logger)
+        public LoadMessageOverridesFromGitNotesTask(ILogger<LoadMessageOverridesFromGitNotesTask> logger, ChangeLogConfiguration configuration, IGitRepository repository) : base(logger, configuration)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
             m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             m_Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
+
+        protected override ChangeLogTaskResult Run(ApplicationChangeLog changelog)
+        {
+            if (m_Configuration.MessageOverrides.Provider != ChangeLogConfiguration.MessageOverrideProvider.GitNotes)
+                return ChangeLogTaskResult.Skipped;
+
+            return base.Run(changelog);
+        }
 
         protected override bool TryGetOverrideMessage(GitCommit commit, [NotNullWhen(true)] out string? message)
         {

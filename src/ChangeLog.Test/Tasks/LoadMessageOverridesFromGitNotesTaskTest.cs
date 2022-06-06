@@ -66,11 +66,64 @@ namespace Grynwald.ChangeLog.Test.Tasks
         }
 
         [Fact]
+        public async Task Task_is_skipped_if_message_overrides_are_disabled()
+        {
+            // ARRANGE
+            var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                config.MessageOverrides.Enabled = false;
+            }
+
+            var sut = new LoadMessageOverridesFromGitNotesTask(m_Logger, config, repo);
+
+            // ACT
+            var changelog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog("1.2"),
+                GetSingleVersionChangeLog("3.3")
+            };
+            var result = await sut.RunAsync(changelog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
+        }
+
+        [Fact]
+        public async Task Task_is_skipped_if_a_different_MessageOverrideProvider_is_configured()
+        {
+            // ARRANGE
+            var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
+            }
+
+            var sut = new LoadMessageOverridesFromGitNotesTask(m_Logger, config, repo);
+
+            // ACT
+            var changelog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog("1.2"),
+                GetSingleVersionChangeLog("3.3")
+            };
+            var result = await sut.RunAsync(changelog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
+        }
+
+        [Fact]
         public async Task Run_does_nothing_for_empty_changelog()
         {
             // ARRANGE
             var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.GitNotes;
+            }
 
             var sut = new LoadMessageOverridesFromGitNotesTask(m_Logger, config, repo);
 
@@ -90,9 +143,13 @@ namespace Grynwald.ChangeLog.Test.Tasks
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.GitNotes;
 
-            if (gitNotesNamespace is not null)
-                config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+                if (gitNotesNamespace is not null)
+                    config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+            }
 
             var commit1 = GetGitCommit(id: TestGitIds.Id1, commitMessage: "Original Message 1");
             var commit2 = GetGitCommit(id: TestGitIds.Id2, commitMessage: "Original Message 2");
