@@ -487,8 +487,8 @@
       },
       "NuGet.Versioning": {
         "type": "Transitive",
-        "resolved": "6.2.0",
-        "contentHash": "OfVyJe7GkvNLLGyRXw8UQT5cGK9A0a97wcG6xDfoOqeeefWOYKqz7rtMTFwi0XBwADYhe36JRDr5HkbdFmEkLg=="
+        "resolved": "6.2.1",
+        "contentHash": "+o507LXjsN1YVAgmpqKCQZ70cLsXDoVmR8H0Wgy0muiFnOhkXN2+a6PGFBAIuA7qJch/umTYu1hp7Dlh1Qcrgg=="
       },
       "Octokit": {
         "type": "Transitive",
@@ -1515,7 +1515,7 @@
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "6.0.1",
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
           "Microsoft.Extensions.Logging": "6.0.0",
-          "NuGet.Versioning": "6.2.0",
+          "NuGet.Versioning": "6.2.1",
           "Octokit": "0.51.0",
           "Scriban": "5.4.6",
           "Zio": "0.15.0"
@@ -2003,8 +2003,8 @@
       },
       "NuGet.Versioning": {
         "type": "Transitive",
-        "resolved": "6.2.0",
-        "contentHash": "OfVyJe7GkvNLLGyRXw8UQT5cGK9A0a97wcG6xDfoOqeeefWOYKqz7rtMTFwi0XBwADYhe36JRDr5HkbdFmEkLg=="
+        "resolved": "6.2.1",
+        "contentHash": "+o507LXjsN1YVAgmpqKCQZ70cLsXDoVmR8H0Wgy0muiFnOhkXN2+a6PGFBAIuA7qJch/umTYu1hp7Dlh1Qcrgg=="
       },
       "Octokit": {
         "type": "Transitive",
@@ -3023,7 +3023,7 @@
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "6.0.1",
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
           "Microsoft.Extensions.Logging": "6.0.0",
-          "NuGet.Versioning": "6.2.0",
+          "NuGet.Versioning": "6.2.1",
           "Octokit": "0.51.0",
           "Scriban": "5.4.6",
           "Zio": "0.15.0"
@@ -3507,8 +3507,8 @@
       },
       "NuGet.Versioning": {
         "type": "Transitive",
-        "resolved": "6.2.0",
-        "contentHash": "OfVyJe7GkvNLLGyRXw8UQT5cGK9A0a97wcG6xDfoOqeeefWOYKqz7rtMTFwi0XBwADYhe36JRDr5HkbdFmEkLg=="
+        "resolved": "6.2.1",
+        "contentHash": "+o507LXjsN1YVAgmpqKCQZ70cLsXDoVmR8H0Wgy0muiFnOhkXN2+a6PGFBAIuA7qJch/umTYu1hp7Dlh1Qcrgg=="
       },
       "Octokit": {
         "type": "Transitive",
@@ -4524,7 +4524,7 @@
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "6.0.1",
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
           "Microsoft.Extensions.Logging": "6.0.0",
-          "NuGet.Versioning": "6.2.0",
+          "NuGet.Versioning": "6.2.1",
           "Octokit": "0.51.0",
           "Scriban": "5.4.6",
           "Zio": "0.15.0"
