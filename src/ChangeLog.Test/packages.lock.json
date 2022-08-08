@@ -159,8 +159,8 @@
       },
       "FluentValidation": {
         "type": "Transitive",
-        "resolved": "11.0.2",
-        "contentHash": "ik/xogKqBmZWIURMXNEbugJlKka6iV9a4qckmKDp7sHSwIfgkZ/ewzCuAeUTkFdVZujfDW6mCLMjrrR6GG4xLQ=="
+        "resolved": "11.2.0",
+        "contentHash": "KV1YBM8T4plLKmShjxfmHMF6X1lDuXgyqE+t8NYNxb7jmMbPnA3u30RsuXAf2NYMv0TBCUQguI2Z6W17c/Dh1A=="
       },
       "GitLabApiClient": {
         "type": "Transitive",
@@ -1503,7 +1503,7 @@
         "dependencies": {
           "Autofac": "6.4.0",
           "CommandLineParser": "2.9.1",
-          "FluentValidation": "11.0.2",
+          "FluentValidation": "11.2.0",
           "GitLabApiClient": "1.8.0",
           "Grynwald.Utilities": "1.6.122",
           "Grynwald.Utilities.Configuration": "1.6.122",
@@ -1679,8 +1679,8 @@
       },
       "FluentValidation": {
         "type": "Transitive",
-        "resolved": "11.0.2",
-        "contentHash": "ik/xogKqBmZWIURMXNEbugJlKka6iV9a4qckmKDp7sHSwIfgkZ/ewzCuAeUTkFdVZujfDW6mCLMjrrR6GG4xLQ=="
+        "resolved": "11.2.0",
+        "contentHash": "KV1YBM8T4plLKmShjxfmHMF6X1lDuXgyqE+t8NYNxb7jmMbPnA3u30RsuXAf2NYMv0TBCUQguI2Z6W17c/Dh1A=="
       },
       "GitLabApiClient": {
         "type": "Transitive",
@@ -3010,7 +3010,7 @@
         "dependencies": {
           "Autofac": "6.4.0",
           "CommandLineParser": "2.9.1",
-          "FluentValidation": "11.0.2",
+          "FluentValidation": "11.2.0",
           "GitLabApiClient": "1.8.0",
           "Grynwald.Utilities": "1.6.122",
           "Grynwald.Utilities.Configuration": "1.6.122",
@@ -3186,8 +3186,8 @@
       },
       "FluentValidation": {
         "type": "Transitive",
-        "resolved": "11.0.2",
-        "contentHash": "ik/xogKqBmZWIURMXNEbugJlKka6iV9a4qckmKDp7sHSwIfgkZ/ewzCuAeUTkFdVZujfDW6mCLMjrrR6GG4xLQ=="
+        "resolved": "11.2.0",
+        "contentHash": "KV1YBM8T4plLKmShjxfmHMF6X1lDuXgyqE+t8NYNxb7jmMbPnA3u30RsuXAf2NYMv0TBCUQguI2Z6W17c/Dh1A=="
       },
       "GitLabApiClient": {
         "type": "Transitive",
@@ -4510,7 +4510,7 @@
         "dependencies": {
           "Autofac": "6.4.0",
           "CommandLineParser": "2.9.1",
-          "FluentValidation": "11.0.2",
+          "FluentValidation": "11.2.0",
           "GitLabApiClient": "1.8.0",
           "Grynwald.Utilities": "1.6.122",
           "Grynwald.Utilities.Configuration": "1.6.122",
