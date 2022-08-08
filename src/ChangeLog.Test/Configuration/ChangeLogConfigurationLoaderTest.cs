@@ -176,18 +176,18 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub));
 
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.AccessToken));
-            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.AccessToken));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.AccessToken!));
 
             yield return TestCase(config => Assert.Equal("origin", config.Integrations.GitHub.RemoteName));
 
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.Host));
-            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Host));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Host!));
 
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.Owner));
-            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Owner));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Owner!));
 
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitHub.Repository));
-            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Repository));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitHub.Repository!));
 
             //
             // GitLab Integration settings
@@ -195,30 +195,30 @@ namespace Grynwald.ChangeLog.Test.Configuration
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab));
 
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.AccessToken));
-            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.AccessToken));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.AccessToken!));
 
             yield return TestCase(config => Assert.Equal("origin", config.Integrations.GitLab.RemoteName));
 
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Host));
-            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Host));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Host!));
 
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Namespace));
-            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Namespace));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Namespace!));
 
             yield return TestCase(config => Assert.NotNull(config.Integrations.GitLab.Project));
-            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Project));
+            yield return TestCase(config => Assert.Empty(config.Integrations.GitLab.Project!));
 
             //
             // Version Range setting
             //
             yield return TestCase(config => Assert.NotNull(config.VersionRange));
-            yield return TestCase(config => Assert.Empty(config.VersionRange));
+            yield return TestCase(config => Assert.Empty(config.VersionRange!));
 
             //
             // Current Version setting
             //
             yield return TestCase(config => Assert.NotNull(config.CurrentVersion));
-            yield return TestCase(config => Assert.Empty(config.CurrentVersion));
+            yield return TestCase(config => Assert.Empty(config.CurrentVersion!));
 
             //
             // Template settings
@@ -231,25 +231,29 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // 
             yield return TestCase(config => Assert.NotNull(config.Template.Default));
             yield return TestCase(config => Assert.True(config.Template.Default.NormalizeReferences));
-            yield return TestCase(config => Assert.Empty(config.Template.Default.CustomDirectory));
+            yield return TestCase(config => Assert.NotNull(config.Template.Default.CustomDirectory));
+            yield return TestCase(config => Assert.Empty(config.Template.Default.CustomDirectory!));
 
             //
             // GitHubRelease Template settings
             // 
             yield return TestCase(config => Assert.True(config.Template.GitHubRelease.NormalizeReferences));
-            yield return TestCase(config => Assert.Empty(config.Template.GitHubRelease.CustomDirectory));
+            yield return TestCase(config => Assert.NotNull(config.Template.GitHubRelease.CustomDirectory));
+            yield return TestCase(config => Assert.Empty(config.Template.GitHubRelease.CustomDirectory!));
 
             //
             // GitLabRelease Template settings
             // 
             yield return TestCase(config => Assert.True(config.Template.GitLabRelease.NormalizeReferences));
-            yield return TestCase(config => Assert.Empty(config.Template.GitLabRelease.CustomDirectory));
+            yield return TestCase(config => Assert.NotNull(config.Template.GitLabRelease.CustomDirectory));
+            yield return TestCase(config => Assert.Empty(config.Template.GitLabRelease.CustomDirectory!));
 
             //
             // Html template settings
             //
             yield return TestCase(config => Assert.True(config.Template.Html.NormalizeReferences));
-            yield return TestCase(config => Assert.Empty(config.Template.Html.CustomDirectory));
+            yield return TestCase(config => Assert.NotNull(config.Template.Html.CustomDirectory));
+            yield return TestCase(config => Assert.Empty(config.Template.Html.CustomDirectory!));
 
             //
             // Entry Types settings
