@@ -150,9 +150,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[0.51.0, )",
-        "resolved": "0.51.0",
-        "contentHash": "p+8/X9y340TaqJCHGdizDqJ7EbAkGZU0cLeIgVByokdZs6I8VKXQ+f2g6992mMm5m+LHevTKcW5879AfrQ8nQg=="
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "J6Z7HlYizLGivSsVesd4QgNysGJdwd3Z0hU0jkUaY9yCUSYitk87VJi2558MuXn3laRZfY1vaTod1nKqkg3W5w=="
       },
       "Scriban": {
         "type": "Direct",
@@ -714,9 +714,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[0.51.0, )",
-        "resolved": "0.51.0",
-        "contentHash": "p+8/X9y340TaqJCHGdizDqJ7EbAkGZU0cLeIgVByokdZs6I8VKXQ+f2g6992mMm5m+LHevTKcW5879AfrQ8nQg=="
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "J6Z7HlYizLGivSsVesd4QgNysGJdwd3Z0hU0jkUaY9yCUSYitk87VJi2558MuXn3laRZfY1vaTod1nKqkg3W5w=="
       },
       "Scriban": {
         "type": "Direct",
@@ -1263,9 +1263,9 @@
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[0.51.0, )",
-        "resolved": "0.51.0",
-        "contentHash": "p+8/X9y340TaqJCHGdizDqJ7EbAkGZU0cLeIgVByokdZs6I8VKXQ+f2g6992mMm5m+LHevTKcW5879AfrQ8nQg=="
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "J6Z7HlYizLGivSsVesd4QgNysGJdwd3Z0hU0jkUaY9yCUSYitk87VJi2558MuXn3laRZfY1vaTod1nKqkg3W5w=="
       },
       "Scriban": {
         "type": "Direct",
