@@ -491,8 +491,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "J6Z7HlYizLGivSsVesd4QgNysGJdwd3Z0hU0jkUaY9yCUSYitk87VJi2558MuXn3laRZfY1vaTod1nKqkg3W5w=="
+        "resolved": "2.0.1",
+        "contentHash": "JVlfUY+sfItl6RSyVKDJTutuy28cDydUwKKfzcelwNMor2Sa18pYVKna6phO8lug1b+ep+pcuFh/FPayuImsQw=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -1515,7 +1515,7 @@
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
           "Microsoft.Extensions.Logging": "6.0.0",
           "NuGet.Versioning": "6.2.1",
-          "Octokit": "2.0.0",
+          "Octokit": "2.0.1",
           "Scriban": "5.5.0",
           "Zio": "0.15.0"
         }
@@ -2006,8 +2006,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "J6Z7HlYizLGivSsVesd4QgNysGJdwd3Z0hU0jkUaY9yCUSYitk87VJi2558MuXn3laRZfY1vaTod1nKqkg3W5w=="
+        "resolved": "2.0.1",
+        "contentHash": "JVlfUY+sfItl6RSyVKDJTutuy28cDydUwKKfzcelwNMor2Sa18pYVKna6phO8lug1b+ep+pcuFh/FPayuImsQw=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -3022,7 +3022,7 @@
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
           "Microsoft.Extensions.Logging": "6.0.0",
           "NuGet.Versioning": "6.2.1",
-          "Octokit": "2.0.0",
+          "Octokit": "2.0.1",
           "Scriban": "5.5.0",
           "Zio": "0.15.0"
         }
@@ -3509,8 +3509,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "2.0.0",
-        "contentHash": "J6Z7HlYizLGivSsVesd4QgNysGJdwd3Z0hU0jkUaY9yCUSYitk87VJi2558MuXn3laRZfY1vaTod1nKqkg3W5w=="
+        "resolved": "2.0.1",
+        "contentHash": "JVlfUY+sfItl6RSyVKDJTutuy28cDydUwKKfzcelwNMor2Sa18pYVKna6phO8lug1b+ep+pcuFh/FPayuImsQw=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -4522,7 +4522,7 @@
           "Microsoft.Extensions.Configuration.Json": "6.0.0",
           "Microsoft.Extensions.Logging": "6.0.0",
           "NuGet.Versioning": "6.2.1",
-          "Octokit": "2.0.0",
+          "Octokit": "2.0.1",
           "Scriban": "5.5.0",
           "Zio": "0.15.0"
         }
