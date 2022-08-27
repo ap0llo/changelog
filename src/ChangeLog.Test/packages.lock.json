@@ -17,9 +17,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.4.4, )",
-        "resolved": "3.4.4",
-        "contentHash": "+lMDilJviKVrrk1vUFpZNYdEYH3aIrVx1t3DRgSOuSKB0JSzxhx2YREL4hXNIAgcHaMi2rXa6UYj8PXcjJCJpQ=="
+        "requested": "[3.5.0, )",
+        "resolved": "3.5.0",
+        "contentHash": "JhC8xnY2uVPD8/o/wj8o+5uYQ8jiWJ9rrgTI6i5QqZco++nelZ8RgBjcLmPMJMQMvAXu39obUA/aeEEaYdQUhw=="
       },
       "coverlet.collector": {
         "type": "Direct",
@@ -1537,9 +1537,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.4.4, )",
-        "resolved": "3.4.4",
-        "contentHash": "+lMDilJviKVrrk1vUFpZNYdEYH3aIrVx1t3DRgSOuSKB0JSzxhx2YREL4hXNIAgcHaMi2rXa6UYj8PXcjJCJpQ=="
+        "requested": "[3.5.0, )",
+        "resolved": "3.5.0",
+        "contentHash": "JhC8xnY2uVPD8/o/wj8o+5uYQ8jiWJ9rrgTI6i5QqZco++nelZ8RgBjcLmPMJMQMvAXu39obUA/aeEEaYdQUhw=="
       },
       "coverlet.collector": {
         "type": "Direct",
@@ -3044,9 +3044,9 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.4.4, )",
-        "resolved": "3.4.4",
-        "contentHash": "+lMDilJviKVrrk1vUFpZNYdEYH3aIrVx1t3DRgSOuSKB0JSzxhx2YREL4hXNIAgcHaMi2rXa6UYj8PXcjJCJpQ=="
+        "requested": "[3.5.0, )",
+        "resolved": "3.5.0",
+        "contentHash": "JhC8xnY2uVPD8/o/wj8o+5uYQ8jiWJ9rrgTI6i5QqZco++nelZ8RgBjcLmPMJMQMvAXu39obUA/aeEEaYdQUhw=="
       },
       "coverlet.collector": {
         "type": "Direct",
