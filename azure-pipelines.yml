@@ -17,7 +17,7 @@ jobs:
     
 
   steps:
-  - task: PowerShell@2
+  - task: PowerShell@2.210.0
     displayName: Cake Build
     inputs:
       filePath: ./build.ps1
