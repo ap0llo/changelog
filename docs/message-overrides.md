@@ -12,7 +12,7 @@
 By default, changelog parses commit messages to generate the change log.
 Since the commit message in git cannot (easily) be changed after committing, the change log entry cannot be changed afterwards either.
 
-To allow editing the message used for generating the change log, changelog supports "Commit Message Overrides" which allow specifying a message that will be user by changelog instead of the commit message.
+To allow editing the message used for generating the change log, changelog supports "Commit Message Overrides" which allow specifying a message that will be used by changelog instead of the commit message.
 
 There are two ways to provide an alternate message for a commit:
 
@@ -25,24 +25,24 @@ This can be customized through the [Message Override Provider setting](./configu
 Both approaches have different advantages and downsides:
 
 - [Git notes](https://git-scm.com/docs/git-notes) are a little difficult to handle as git will not fetch them by default but can be accessed independently of the currently checked out commit.
-- Placing override files in the repository is more straight-forward but it may clutter the repository and you need to make sure to have the right branch checked out when generating the change log.
+- Placing override files in the repository is more straight-forward, but it may clutter the repository, and you need to make sure to have the right branch checked out when generating the change log.
 
-Note that when a override message is found, it **always** takes precedence over the commit message, regardless of whether the commit message and/or the override message can be parsed as conventional commit.
+Note that when an override message is found, it **always** takes precedence over the commit message, regardless of whether the commit message and/or the override message can be parsed as conventional commit.
 
 ## Use Cases:
 
 - **Modifying a change log entry:**
 
-  Assuming a commit's message is a valid conventional commit, the resulting change log entry can be modified, by adding a override message that is a valid conventional commit message as well.
+  Assuming a commit's message is a valid conventional commit, the resulting change log entry can be modified, by adding an override message that is a valid conventional commit message as well.
 
 - **Adding a change log entry:**
 
   Commit messages which do not follow the conventional commits format will be ignored when generating the change log.
-  To include the commit in the change log, add a override message which follows the conventional commits format.
+  To include the commit in the change log, add an override message which follows the conventional commits format.
 
 - **Removing a change log entry**
 
-  To remove a commit from the change log, add a override message that does *not* follow the conventional commits format.
+  To remove a commit from the change log, add an override message that does *not* follow the conventional commits format.
   When generating the changelog, the commit will be ignored.
 
 ## Disabling Message Overrides
@@ -52,7 +52,7 @@ Overrides can be disabled by setting the [Enable Message Overrides](./configurat
 
 ## Overriding Commit Messages through Git Notes
 
-When commit message overrides are configured to use git notes (see [Message Override Provider setting](./configuration/settings/message-overrides.md#message-override-provider)), override messages are read from the git notes namespace `changelog/message-overrides` .
+When commit message overrides are configured to use git notes (see [Message Override Provider setting](./configuration/settings/message-overrides.md#message-override-provider)), override messages are read from the git notes namespace `changelog/message-overrides`.
 This can be customized through the [Git Notes Namespace setting](./configuration/settings/message-overrides.md#git-notes-namespace).
 
 ### Working with Git Notes
@@ -142,7 +142,7 @@ For example, your repository with override files could look something like this:
 
 You can customize the directory to use for message overrides through the [Source Directory Path setting](./configuration/settings/message-overrides.md#source-directory-path).
 
-💡Tip: To initialize a override file with the commit's original message, you can run
+💡Tip: To initialize an override file with the commit's original message, you can run
 
 ```ps1
 git show -s --format=%B <COMMIT> > .\.config\changelog\message-overrides\<COMMIT>
