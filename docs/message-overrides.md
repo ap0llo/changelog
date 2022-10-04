@@ -12,7 +12,7 @@
 By default, changelog parses commit messages to generate the change log.
 Since the commit message in git cannot (easily) be changed after committing, the change log entry cannot be changed afterwards either.
 
-To allow editing the message used for generating the change log, changelog supports "Commit Message Overrides" which allow specifying a message that will be user by changelog instead of the commit message.
+To allow editing the message used for generating the change log, changelog supports "Commit Message Overrides" which allow specifying a message that will be used by changelog instead of the commit message.
 
 There are two ways to provide an alternate message for a commit:
 
