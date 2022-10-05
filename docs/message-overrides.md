@@ -154,3 +154,4 @@ where `<COMMIT>` is the SHA1 of the commit to set the message for.
 
 - [Commit Message Override Settings](./configuration/settings/message-overrides.md)
 - [Git Notes Documentation](https://git-scm.com/docs/git-notes)
+
