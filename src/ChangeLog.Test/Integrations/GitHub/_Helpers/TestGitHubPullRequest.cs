@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using Octokit;
 
 namespace Grynwald.ChangeLog.Test.Integrations.GitHub
@@ -9,7 +11,11 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
         public TestGitHubPullRequest(string htmlUrl)
         {
-            HtmlUrl = htmlUrl;
+            // No really a good idea but probably okay for test code
+            typeof(PullRequest)
+                .GetProperty(nameof(HtmlUrl))!
+                .SetMethod!
+                .Invoke(this, new[] { htmlUrl });
         }
 
         public static TestGitHubPullRequest FromPullRequestNumber(int prNumber)
