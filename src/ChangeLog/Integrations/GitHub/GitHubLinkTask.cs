@@ -57,7 +57,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
             var githubClient = m_GitHubClientFactory.CreateClient(projectInfo.Host);
 
-            var rateLimit = await githubClient.Miscellaneous.GetRateLimits();
+            var rateLimit = await githubClient.RateLimit.GetRateLimits();
             m_Logger.LogDebug($"GitHub rate limit: {rateLimit.Rate.Remaining} requests of {rateLimit.Rate.Limit} remaining");
 
 

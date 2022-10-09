@@ -30,21 +30,21 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
         public Mock<IPullRequestsClient> PullRequest { get; } = new(MockBehavior.Strict);
 
-        public Mock<IMiscellaneousClient> Miscellaneous { get; } = new(MockBehavior.Strict);
+        public Mock<IRateLimitClient> RateLimit { get; } = new(MockBehavior.Strict);
 
         public RepositoriesClientMock Repository { get; } = new();
 
 
         public GitHubClientMock()
         {
-            Miscellaneous
+            RateLimit
                 .Setup(x => x.GetRateLimits())
                 .ReturnsAsync(new MiscellaneousRateLimit(new ResourceRateLimit(), new RateLimit()));
 
             m_Mock.Setup(x => x.Repository).Returns(Repository.Object);
             m_Mock.Setup(x => x.Issue).Returns(Issue.Object);
             m_Mock.Setup(x => x.PullRequest).Returns(PullRequest.Object);
-            m_Mock.Setup(x => x.Miscellaneous).Returns(Miscellaneous.Object);
+            m_Mock.Setup(x => x.RateLimit).Returns(RateLimit.Object);
         }
     }
 }
