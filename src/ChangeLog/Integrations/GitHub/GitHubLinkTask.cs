@@ -76,7 +76,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             catch (RateLimitExceededException rateLimitExceededException)
             {
                 var messageBuilder = new StringBuilder();
-                messageBuilder.Append($"GitHub API rate limit exceeded (limit { rateLimitExceededException.Limit}). ");
+                messageBuilder.Append($"GitHub API rate limit exceeded (limit {rateLimitExceededException.Limit}). ");
                 if (githubClient.Connection.Credentials.AuthenticationType == AuthenticationType.Anonymous)
                 {
                     messageBuilder.Append("Consider using an Access Token for GitHub. Authenticated requests are given a higher rate limit.");
