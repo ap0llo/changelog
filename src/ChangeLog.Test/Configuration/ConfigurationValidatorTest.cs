@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.ChangeLog.Templates;
 using Grynwald.Utilities.IO;
 using Xunit;
 
@@ -792,7 +793,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-                config.Template.Name = (ChangeLogConfiguration.TemplateName)(-1);
+                config.Template.Name = (TemplateName)(-1);
 
                 var sut = new ConfigurationValidator();
 
@@ -809,7 +810,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [Theory]
             [CombinatorialData]
             public void Custom_directory_can_be_null_or_empty(
-                ChangeLogConfiguration.TemplateName template,
+                TemplateName template,
                 [CombinatorialValues(null, "")] string customDirectory)
             {
                 // ARRANGE
@@ -832,7 +833,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [Theory]
             [CombinatorialData]
             public void Custom_directory_must_not_be_whitespace(
-                ChangeLogConfiguration.TemplateName template,
+                TemplateName template,
                 [CombinatorialValues("\t", " ")] string customDirectory)
             {
                 // ARRANGE
@@ -857,7 +858,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             [Theory]
             [CombinatorialData]
-            public void Custom_directory_must_exist_when_it_is_not_null_or_empty(ChangeLogConfiguration.TemplateName template)
+            public void Custom_directory_must_exist_when_it_is_not_null_or_empty(TemplateName template)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -884,7 +885,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
 
             [Theory]
             [CombinatorialData]
-            public void Custom_directory_is_valid_when_directory_exists(ChangeLogConfiguration.TemplateName template)
+            public void Custom_directory_is_valid_when_directory_exists(TemplateName template)
             {
                 // ARRANGE
                 using var temporaryDirectory = new TemporaryDirectory();

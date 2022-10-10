@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Grynwald.ChangeLog.CommandLine;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.ChangeLog.Templates;
 using Xunit;
 
 namespace Grynwald.ChangeLog.Test.CommandLine
@@ -30,9 +31,9 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         public static IEnumerable<object[]> TemplateNames()
         {
 #if NETCOREAPP3_1
-            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.TemplateName)).Cast<ChangeLogConfiguration.TemplateName>())
+            foreach (var value in Enum.GetValues(typeof(TemplateName)).Cast<TemplateName>())
 #else
-            foreach (var value in Enum.GetValues<ChangeLogConfiguration.TemplateName>())
+            foreach (var value in Enum.GetValues<TemplateName>())
 #endif
             {
                 yield return new object[] { value.ToString(), value };
@@ -43,7 +44,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
 
         [Theory]
         [MemberData(nameof(TemplateNames))]
-        public void Template_parameter_is_parsed_correctly(string template, ChangeLogConfiguration.TemplateName expected)
+        public void Template_parameter_is_parsed_correctly(string template, TemplateName expected)
         {
             // ARRANGE
             var args = new[] { "--repository", "some-path", "--template", template };

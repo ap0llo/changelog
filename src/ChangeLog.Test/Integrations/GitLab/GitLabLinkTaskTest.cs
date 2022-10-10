@@ -85,7 +85,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         }
 
         private readonly ILogger<GitLabLinkTask> m_Logger;
-        private readonly ChangeLogConfiguration m_DefaultConfiguration;
         private readonly Mock<IGitLabClientFactory> m_ClientFactoryMock;
         private readonly GitLabClientMock m_ClientMock;
         private readonly Mock<IGitRepository> m_RepositoryMock;
@@ -94,7 +93,6 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         public GitLabLinkTaskTest(ITestOutputHelper testOutputHelper)
         {
             m_Logger = new XunitLogger<GitLabLinkTask>(testOutputHelper);
-            m_DefaultConfiguration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             m_ClientFactoryMock = new(MockBehavior.Strict);
             m_ClientMock = new();
             m_ClientFactoryMock.Setup(x => x.CreateClient(It.IsAny<string>())).Returns(m_ClientMock.Object);
@@ -143,17 +141,54 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             return true;
         }
 
+        [Theory]
+        [InlineData(ChangeLogConfiguration.IntegrationProvider.None)]
+        [InlineData(ChangeLogConfiguration.IntegrationProvider.GitHub)]
+        public async Task Task_is_skipped_if_GitLab_integration_is_disabled(ChangeLogConfiguration.IntegrationProvider integrationProvider)
+        {
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = integrationProvider;
+            }
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    version: "1.2.3",
+                    entries: new []
+                    {
+                        GetChangeLogEntry()
+                    })
+            };
+
+
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+
+            // ACT
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
+            m_RepositoryMock.Verify(x => x.Remotes, Times.Never);
+            m_ClientFactoryMock.Verify(x => x.CreateClient(It.IsAny<string>()), Times.Never);
+        }
 
         [Fact]
         public async Task Run_does_nothing_if_repository_does_not_have_remotes()
         {
-            // ARRANGE            
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupEmptyRemotes();
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
@@ -167,13 +202,18 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("http://not-a-gitlab-url.com")]
         public async Task Run_does_nothing_if_remote_url_cannot_be_parsed(string url)
         {
-            // ARRANGE            
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", url);
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
             var changeLog = new ApplicationChangeLog();
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
@@ -187,12 +227,17 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("example.com")]
         public async Task Run_creates_client_through_client_factory(string hostName)
         {
-            // ARRANGE          
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", $"http://{hostName}/owner/repo.git");
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(new ApplicationChangeLog());
 
             // ASSERT
@@ -208,7 +253,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("anotherOwner/anotherRepo#42", 42, "anotherOwner/anotherRepo")]
         public async Task Run_adds_issue_links_to_footers(string footerText, int id, string projectPath)
         {
-            // ARRANGE            
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/owner/repo.git");
 
             m_ClientMock.Commits
@@ -221,7 +271,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     new Issue() { WebUrl = $"https://example.com/{projectPath}/issues/{id}" }
                 );
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -235,7 +285,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 )
             };
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
@@ -269,7 +319,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("anotherOwner/anotherRepo#42", 42, "anotherOwner/anotherRepo")]
         public async Task Run_does_not_add_link_if_issue_cannot_be_found(string footerText, int id, string projectPath)
         {
-            // ARRANGE            
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/owner/repo.git");
 
             m_ClientMock.Commits
@@ -280,7 +335,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 .SetupGetAsync()
                 .ThrowsNotFound();
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -294,7 +349,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 )
             };
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
@@ -321,7 +376,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("anotherOwner/anotherRepo!42", 42, "anotherOwner/anotherRepo")]
         public async Task Run_adds_merge_request_links_to_footers(string footerText, int id, string projectPath)
         {
-            // ARRANGE            
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/owner/repo.git");
 
             m_ClientMock.Commits
@@ -334,7 +394,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     new List<MergeRequest>() { new MergeRequest() { WebUrl = $"https://example.com/{projectPath}/merge_requests/{id}" } }
                 );
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -348,7 +408,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 )
             };
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
@@ -394,7 +454,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("anotherOwner/anotherRepo!42", "anotherOwner/anotherRepo")]
         public async Task Run_does_not_add_link_if_merge_request_cannot_be_found(string footerText, string projectPath)
         {
-            // ARRANGE            
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/owner/repo.git");
 
             m_ClientMock.Commits
@@ -405,7 +470,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 .Setup(x => x.GetAsync(It.IsAny<ProjectId>(), It.IsAny<Action<ProjectMergeRequestsQueryOptions>>()))
                 .ThrowsNotFound();
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -419,7 +484,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 )
             };
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
@@ -446,7 +511,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("anotherOwner/anotherRepo%42", 42, "anotherOwner/anotherRepo")]
         public async Task Run_adds_milestone_links_to_footers(string footerText, int id, string projectPath)
         {
-            // ARRANGE            
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/owner/repo.git");
 
             m_ClientMock.Commits
@@ -459,7 +529,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                     new List<Milestone>() { new() { WebUrl = $"https://example.com/{projectPath}/milestones/{id}" } }
                 );
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -473,7 +543,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 )
             };
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
@@ -518,7 +588,12 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("anotherOwner/anotherRepo%42", "anotherOwner/anotherRepo")]
         public async Task Run_does_not_add_link_if_milestone_cannot_be_found(string footerText, string projectPath)
         {
-            // ARRANGE            
+            // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/owner/repo.git");
 
             m_ClientMock.Commits
@@ -529,7 +604,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 .SetupGetMilestonesAsync()
                 .ThrowsNotFound();
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -543,7 +618,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 )
             };
 
-            // ACT 
+            // ACT
             var result = await sut.RunAsync(changeLog);
 
             // ASSERT
@@ -812,10 +887,14 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                             })
                     })
             };
-            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
-            config.Integrations.GitLab = testCase.Configuration;
 
-            var sut = new GitLabLinkTask(m_Logger, config, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+                configuration.Integrations.GitLab = testCase.Configuration;
+            }
+
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             //
             // ACT
@@ -838,13 +917,18 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         public async Task Run_adds_web_links_to_commit_references()
         {
             // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/user/repo.git");
 
             m_ClientMock.Commits
                 .Setup(x => x.GetAsync(MatchProjectId("user/repo"), It.IsAny<string>()))
                 .ReturnsTestCommit(sha => $"https://example.com/commit/{sha}");
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {
@@ -884,13 +968,18 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         public async Task Run_ignores_commit_references_that_cannot_be_found()
         {
             // ARRANGE
+            var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                configuration.Integrations.Provider = ChangeLogConfiguration.IntegrationProvider.GitLab;
+            }
+
             m_RepositoryMock.SetupRemotes("origin", "http://gitlab.com/user/repo.git");
 
             m_ClientMock.Commits
                 .Setup(x => x.GetAsync(MatchProjectId("user/repo"), It.IsAny<string>()))
                 .ThrowsNotFound();
 
-            var sut = new GitLabLinkTask(m_Logger, m_DefaultConfiguration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
+            var sut = new GitLabLinkTask(m_Logger, configuration, m_RepositoryMock.Object, m_ClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
             {

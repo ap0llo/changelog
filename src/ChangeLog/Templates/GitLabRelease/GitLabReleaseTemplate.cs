@@ -15,6 +15,9 @@ namespace Grynwald.ChangeLog.Templates.GitLabRelease
         /// <inheritdoc />
         protected override ChangeLogConfiguration.TemplateSettings TemplateSettings => m_Configuration.Template.GitLabRelease;
 
+        /// <inheritdoc />
+        public override TemplateName Name => TemplateName.GitLabRelease;
+
 
         public GitLabReleaseTemplate(ChangeLogConfiguration configuration) : base(configuration)
         { }

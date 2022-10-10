@@ -17,7 +17,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
 {
     [BeforeTask(typeof(RenderTemplateTask))]
     [AfterTask(typeof(ParseCommitsTask))]
-    // AddCommitFooterTask must run before eGitHubLinkTask so a web link can be added to the "Commit" footer
+    // AddCommitFooterTask must run before GitHubLinkTask so a web link can be added to the "Commit" footer
     [AfterTask(typeof(AddCommitFooterTask))]
     internal sealed class GitLabLinkTask : IChangeLogTask
     {
@@ -39,6 +39,9 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         /// <inheritdoc />
         public async Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog)
         {
+            if (m_Configuration.Integrations.Provider != ChangeLogConfiguration.IntegrationProvider.GitLab)
+                return ChangeLogTaskResult.Skipped;
+
             var projectInfo = GetProjectInfo();
             if (projectInfo != null)
             {

@@ -17,9 +17,15 @@ namespace Grynwald.ChangeLog.Pipeline
         public IEnumerable<IChangeLogTask> Tasks => m_Tasks;
 
 
-        public ChangeLogPipeline(ILogger<ChangeLogPipeline> logger, IEnumerable<IChangeLogTask> tasks)
+        public ChangeLogPipeline(ILogger<ChangeLogPipeline> logger, IReadOnlyList<IChangeLogTask> tasks)
         {
-            m_Tasks = (tasks ?? throw new ArgumentNullException(nameof(tasks))).ToList();
+            if (tasks is null)
+                throw new ArgumentNullException(nameof(tasks));
+
+            if (tasks.Count == 0)
+                throw new ArgumentException("Task list must not be empty", nameof(tasks));
+
+            m_Tasks = tasks;
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 

@@ -67,10 +67,65 @@ namespace Grynwald.ChangeLog.Test.Tasks
         }
 
         [Fact]
+        public async Task Task_is_skipped_if_message_overrides_are_disabled()
+        {
+            // ARRANGE
+            var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                config.MessageOverrides.Enabled = false;
+            }
+
+            var sut = new LoadMessageOverridesFromFileSystemTask(m_Logger, config, repo);
+
+            // ACT
+            var changelog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog("1.2"),
+                GetSingleVersionChangeLog("3.3")
+            };
+            var result = await sut.RunAsync(changelog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
+        }
+
+        [Fact]
+        public async Task Task_is_skipped_if_a_different_MessageOverrideProvider_is_configured()
+        {
+            // ARRANGE
+            var repo = Mock.Of<IGitRepository>(MockBehavior.Strict);
+            var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.GitNotes;
+            }
+
+            var sut = new LoadMessageOverridesFromFileSystemTask(m_Logger, config, repo);
+
+            // ACT
+            var changelog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog("1.2"),
+                GetSingleVersionChangeLog("3.3")
+            };
+            var result = await sut.RunAsync(changelog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Skipped, result);
+        }
+
+
+        [Fact]
         public async Task Task_does_nothing_for_empty_changelog()
         {
             // ARRANGE
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
+            {
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
+            }
+
             var repo = new Mock<IGitRepository>(MockBehavior.Strict);
 
             var sut = new LoadMessageOverridesFromFileSystemTask(m_Logger, config, repo.Object);
@@ -95,6 +150,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             {
                 config.RepositoryPath = repositoryDirectory;
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
                 config.MessageOverrides.SourceDirectoryPath = sourceDirectoryPath;
             }
 
@@ -135,6 +192,9 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             {
                 config.RepositoryPath = repositoryDirectory;
+
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
 
                 if (sourceDirectoryPath is not null)
                     config.MessageOverrides.SourceDirectoryPath = sourceDirectoryPath;
@@ -185,6 +245,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             {
                 config.RepositoryPath = repositoryDirectory;
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
                 config.MessageOverrides.SourceDirectoryPath = overridesDirectory;
             }
 
@@ -230,6 +292,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             {
                 config.RepositoryPath = temporaryDirectory;
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
             }
 
             var commit1 = GetGitCommit(id: TestGitIds.Id1, commitMessage: "Original Message 1");
@@ -275,6 +339,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             {
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
                 config.MessageOverrides.SourceDirectoryPath = overrideDirectory;
             }
 
@@ -319,6 +385,8 @@ namespace Grynwald.ChangeLog.Test.Tasks
 
             var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
             {
+                config.MessageOverrides.Enabled = true;
+                config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
                 config.MessageOverrides.SourceDirectoryPath = overrideDirectory;
             }
 

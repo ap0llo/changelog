@@ -2,6 +2,7 @@
 using System.IO;
 using CommandLine;
 using Grynwald.ChangeLog.Configuration;
+using Grynwald.ChangeLog.Templates;
 using Grynwald.Utilities.Configuration;
 
 namespace Grynwald.ChangeLog.CommandLine
@@ -58,7 +59,7 @@ namespace Grynwald.ChangeLog.CommandLine
 
         [Option("template", Required = false, Default = null, HelpText = "Sets the template to use for generating the changelog.")]
         [ConfigurationValue("changelog:template:name")]
-        public ChangeLogConfiguration.TemplateName? Template { get; set; }
+        public TemplateName? Template { get; set; }
 
         [Option("integrationProvider", Required = false, Default = null, HelpText = "Sets the integration provider to use")]
         [ConfigurationValue("changelog:integrations:provider")]

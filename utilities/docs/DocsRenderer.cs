@@ -137,21 +137,21 @@ namespace docs
         private class TemplateFunctions : ScriptObject
         {
             public static IEnumerable<string> GetTemplateNames() =>
-                Enum.GetValues<ChangeLogConfiguration.TemplateName>().Select(x => x.ToString());
+                Enum.GetValues<TemplateName>().Select(x => x.ToString());
 
             public static string GetFileTree(string templateName)
             {
                 var configuration = ChangeLogConfigurationLoader.GetDefaultConfiguration();
 
-                if (!Enum.TryParse<ChangeLogConfiguration.TemplateName>(templateName, ignoreCase: true, out var parsed))
+                if (!Enum.TryParse<TemplateName>(templateName, ignoreCase: true, out var parsed))
                     throw new ArgumentException($"Unknown template name '{templateName}'", nameof(templateName));
 
                 ScribanBaseTemplate template = parsed switch
                 {
-                    ChangeLogConfiguration.TemplateName.Default => new DefaultTemplate(configuration),
-                    ChangeLogConfiguration.TemplateName.GitHubRelease => new GitHubReleaseTemplate(configuration),
-                    ChangeLogConfiguration.TemplateName.GitLabRelease => new GitLabReleaseTemplate(configuration),
-                    ChangeLogConfiguration.TemplateName.Html => new HtmlTemplate(configuration),
+                    TemplateName.Default => new DefaultTemplate(configuration),
+                    TemplateName.GitHubRelease => new GitHubReleaseTemplate(configuration),
+                    TemplateName.GitLabRelease => new GitLabReleaseTemplate(configuration),
+                    TemplateName.Html => new HtmlTemplate(configuration),
                     _ => throw new NotImplementedException()
                 };
 

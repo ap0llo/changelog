@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Grynwald.ChangeLog.Configuration;
 using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
@@ -11,16 +12,22 @@ namespace Grynwald.ChangeLog.Tasks
     internal abstract class LoadMessageOverridesTask : SynchronousChangeLogTask
     {
         private readonly ILogger<LoadMessageOverridesTask> m_Logger;
+        private readonly ChangeLogConfiguration m_Configuration;
 
-
-        public LoadMessageOverridesTask(ILogger<LoadMessageOverridesTask> logger)
+        public LoadMessageOverridesTask(ILogger<LoadMessageOverridesTask> logger, ChangeLogConfiguration configuration)
         {
             m_Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            m_Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
 
         protected override ChangeLogTaskResult Run(ApplicationChangeLog changelog)
         {
+            if (!m_Configuration.MessageOverrides.Enabled)
+            {
+                return ChangeLogTaskResult.Skipped;
+            }
+
             if (!changelog.Versions.Any())
             {
                 return ChangeLogTaskResult.Skipped;
