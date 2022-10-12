@@ -99,11 +99,10 @@
       },
       "Xunit.Combinatorial": {
         "type": "Direct",
-        "requested": "[1.4.1, )",
-        "resolved": "1.4.1",
-        "contentHash": "Dw9JIVL7LwSul0i8ugsZcImGMSUS2IbWjI1rjT1lwJn80VDJXPc1ECRdLtF9P3nkov2Xm/3IgMapNd6R2AeHJw==",
+        "requested": "[1.5.25, )",
+        "resolved": "1.5.25",
+        "contentHash": "wB5Knl4YznMl/vtfk3fv5OiTO5lKG2xjsk4kKjsvYPxNxYA4gR8rL0SKSJqhGOxUQGqAmkRragIK+sgMO5I61g==",
         "dependencies": {
-          "NETStandard.Library": "1.6.1",
           "xunit.extensibility.core": "2.2.0"
         }
       },
@@ -1505,23 +1504,23 @@
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
-          "Autofac": "6.4.0",
-          "CommandLineParser": "2.9.1",
-          "FluentValidation": "11.2.2",
-          "GitLabApiClient": "1.8.0",
-          "Grynwald.Utilities": "1.6.122",
-          "Grynwald.Utilities.Configuration": "1.6.122",
-          "Grynwald.Utilities.Logging": "1.6.122",
-          "LibGit2Sharp": "0.27.0-preview-0182",
-          "Microsoft.Extensions.Configuration": "6.0.1",
-          "Microsoft.Extensions.Configuration.Binder": "6.0.0",
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": "6.0.1",
-          "Microsoft.Extensions.Configuration.Json": "6.0.0",
-          "Microsoft.Extensions.Logging": "6.0.0",
-          "NuGet.Versioning": "6.3.0",
-          "Octokit": "3.0.1",
-          "Scriban": "5.5.0",
-          "Zio": "0.15.0"
+          "Autofac": "[6.4.0, )",
+          "CommandLineParser": "[2.9.1, )",
+          "FluentValidation": "[11.2.2, )",
+          "GitLabApiClient": "[1.8.0, )",
+          "Grynwald.Utilities": "[1.6.122, )",
+          "Grynwald.Utilities.Configuration": "[1.6.122, )",
+          "Grynwald.Utilities.Logging": "[1.6.122, )",
+          "LibGit2Sharp": "[0.27.0-preview-0182, )",
+          "Microsoft.Extensions.Configuration": "[6.0.1, )",
+          "Microsoft.Extensions.Configuration.Binder": "[6.0.0, )",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "[6.0.1, )",
+          "Microsoft.Extensions.Configuration.Json": "[6.0.0, )",
+          "Microsoft.Extensions.Logging": "[6.0.0, )",
+          "NuGet.Versioning": "[6.3.0, )",
+          "Octokit": "[3.0.1, )",
+          "Scriban": "[5.5.0, )",
+          "Zio": "[0.15.0, )"
         }
       }
     },
@@ -1623,11 +1622,10 @@
       },
       "Xunit.Combinatorial": {
         "type": "Direct",
-        "requested": "[1.4.1, )",
-        "resolved": "1.4.1",
-        "contentHash": "Dw9JIVL7LwSul0i8ugsZcImGMSUS2IbWjI1rjT1lwJn80VDJXPc1ECRdLtF9P3nkov2Xm/3IgMapNd6R2AeHJw==",
+        "requested": "[1.5.25, )",
+        "resolved": "1.5.25",
+        "contentHash": "wB5Knl4YznMl/vtfk3fv5OiTO5lKG2xjsk4kKjsvYPxNxYA4gR8rL0SKSJqhGOxUQGqAmkRragIK+sgMO5I61g==",
         "dependencies": {
-          "NETStandard.Library": "1.6.1",
           "xunit.extensibility.core": "2.2.0"
         }
       },
@@ -3016,23 +3014,23 @@
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
-          "Autofac": "6.4.0",
-          "CommandLineParser": "2.9.1",
-          "FluentValidation": "11.2.2",
-          "GitLabApiClient": "1.8.0",
-          "Grynwald.Utilities": "1.6.122",
-          "Grynwald.Utilities.Configuration": "1.6.122",
-          "Grynwald.Utilities.Logging": "1.6.122",
-          "LibGit2Sharp": "0.27.0-preview-0182",
-          "Microsoft.Extensions.Configuration": "6.0.1",
-          "Microsoft.Extensions.Configuration.Binder": "6.0.0",
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": "6.0.1",
-          "Microsoft.Extensions.Configuration.Json": "6.0.0",
-          "Microsoft.Extensions.Logging": "6.0.0",
-          "NuGet.Versioning": "6.3.0",
-          "Octokit": "3.0.1",
-          "Scriban": "5.5.0",
-          "Zio": "0.15.0"
+          "Autofac": "[6.4.0, )",
+          "CommandLineParser": "[2.9.1, )",
+          "FluentValidation": "[11.2.2, )",
+          "GitLabApiClient": "[1.8.0, )",
+          "Grynwald.Utilities": "[1.6.122, )",
+          "Grynwald.Utilities.Configuration": "[1.6.122, )",
+          "Grynwald.Utilities.Logging": "[1.6.122, )",
+          "LibGit2Sharp": "[0.27.0-preview-0182, )",
+          "Microsoft.Extensions.Configuration": "[6.0.1, )",
+          "Microsoft.Extensions.Configuration.Binder": "[6.0.0, )",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "[6.0.1, )",
+          "Microsoft.Extensions.Configuration.Json": "[6.0.0, )",
+          "Microsoft.Extensions.Logging": "[6.0.0, )",
+          "NuGet.Versioning": "[6.3.0, )",
+          "Octokit": "[3.0.1, )",
+          "Scriban": "[5.5.0, )",
+          "Zio": "[0.15.0, )"
         }
       }
     },
@@ -3134,11 +3132,10 @@
       },
       "Xunit.Combinatorial": {
         "type": "Direct",
-        "requested": "[1.4.1, )",
-        "resolved": "1.4.1",
-        "contentHash": "Dw9JIVL7LwSul0i8ugsZcImGMSUS2IbWjI1rjT1lwJn80VDJXPc1ECRdLtF9P3nkov2Xm/3IgMapNd6R2AeHJw==",
+        "requested": "[1.5.25, )",
+        "resolved": "1.5.25",
+        "contentHash": "wB5Knl4YznMl/vtfk3fv5OiTO5lKG2xjsk4kKjsvYPxNxYA4gR8rL0SKSJqhGOxUQGqAmkRragIK+sgMO5I61g==",
         "dependencies": {
-          "NETStandard.Library": "1.6.1",
           "xunit.extensibility.core": "2.2.0"
         }
       },
@@ -4519,23 +4516,23 @@
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
-          "Autofac": "6.4.0",
-          "CommandLineParser": "2.9.1",
-          "FluentValidation": "11.2.2",
-          "GitLabApiClient": "1.8.0",
-          "Grynwald.Utilities": "1.6.122",
-          "Grynwald.Utilities.Configuration": "1.6.122",
-          "Grynwald.Utilities.Logging": "1.6.122",
-          "LibGit2Sharp": "0.27.0-preview-0182",
-          "Microsoft.Extensions.Configuration": "6.0.1",
-          "Microsoft.Extensions.Configuration.Binder": "6.0.0",
-          "Microsoft.Extensions.Configuration.EnvironmentVariables": "6.0.1",
-          "Microsoft.Extensions.Configuration.Json": "6.0.0",
-          "Microsoft.Extensions.Logging": "6.0.0",
-          "NuGet.Versioning": "6.3.0",
-          "Octokit": "3.0.1",
-          "Scriban": "5.5.0",
-          "Zio": "0.15.0"
+          "Autofac": "[6.4.0, )",
+          "CommandLineParser": "[2.9.1, )",
+          "FluentValidation": "[11.2.2, )",
+          "GitLabApiClient": "[1.8.0, )",
+          "Grynwald.Utilities": "[1.6.122, )",
+          "Grynwald.Utilities.Configuration": "[1.6.122, )",
+          "Grynwald.Utilities.Logging": "[1.6.122, )",
+          "LibGit2Sharp": "[0.27.0-preview-0182, )",
+          "Microsoft.Extensions.Configuration": "[6.0.1, )",
+          "Microsoft.Extensions.Configuration.Binder": "[6.0.0, )",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "[6.0.1, )",
+          "Microsoft.Extensions.Configuration.Json": "[6.0.0, )",
+          "Microsoft.Extensions.Logging": "[6.0.0, )",
+          "NuGet.Versioning": "[6.3.0, )",
+          "Octokit": "[3.0.1, )",
+          "Scriban": "[5.5.0, )",
+          "Zio": "[0.15.0, )"
         }
       }
     }
