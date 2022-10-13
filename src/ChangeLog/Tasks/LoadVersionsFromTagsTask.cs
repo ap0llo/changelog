@@ -54,7 +54,7 @@ namespace Grynwald.ChangeLog.Tasks
                     return ChangeLogTaskResult.Error;
                 }
 
-                m_Logger.LogDebug($"Adding version '{versionInfo.Version}' to changelog");
+                m_Logger.LogDebug($"Adding version '{versionInfo.Version}' to change log");
                 var versionChangeLog = new SingleVersionChangeLog(versionInfo);
                 changeLog.Add(versionChangeLog);
             }

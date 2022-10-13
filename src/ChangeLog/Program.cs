@@ -87,7 +87,7 @@ namespace Grynwald.ChangeLog
             if (File.Exists(configurationFilePath))
                 logger.LogDebug($"Using configuration file '{configurationFilePath}'");
             else
-                logger.LogDebug("Continuing without loading a configuration file, because no configuration file was wound");
+                logger.LogDebug("Continuing without loading a configuration file, because no configuration file was found");
 
 
             // pass repository path to configuration loader to make it available through the configuration system
