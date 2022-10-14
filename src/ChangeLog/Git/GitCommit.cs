@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Grynwald.ChangeLog.Git
 {
@@ -31,7 +30,7 @@ namespace Grynwald.ChangeLog.Git
 
         public override bool Equals(object? obj) => Equals(obj as GitCommit);
 
-        public bool Equals([AllowNull] GitCommit other) =>
+        public bool Equals(GitCommit? other) =>
             other is not null &&
             Id.Equals(other.Id) &&
             StringComparer.Ordinal.Equals(CommitMessage, other.CommitMessage) &&

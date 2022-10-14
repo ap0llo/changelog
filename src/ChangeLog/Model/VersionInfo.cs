@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Grynwald.ChangeLog.Git;
 using NuGet.Versioning;
 
@@ -26,7 +25,7 @@ namespace Grynwald.ChangeLog.Model
 
         public override bool Equals(object? obj) => Equals(obj as VersionInfo);
 
-        public bool Equals([AllowNull] VersionInfo other) =>
+        public bool Equals(VersionInfo? other) =>
             other is not null &&
             Version.Equals(other.Version) &&
             Commit.Equals(other.Commit);

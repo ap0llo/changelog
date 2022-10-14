@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Grynwald.ChangeLog.Integrations.GitHub
 {
@@ -42,7 +41,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
         public override bool Equals(object? obj) => Equals(obj as GitHubProjectInfo);
 
-        public bool Equals([AllowNull] GitHubProjectInfo other)
+        public bool Equals(GitHubProjectInfo? other)
         {
             return other is not null &&
                 StringComparer.OrdinalIgnoreCase.Equals(Host, other.Host) &&

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Grynwald.ChangeLog.Git
 {
@@ -52,7 +51,7 @@ namespace Grynwald.ChangeLog.Git
         public override bool Equals(object? obj) => Equals(obj as GitNote);
 
         /// <inheritdoc />
-        public bool Equals([AllowNull] GitNote other)
+        public bool Equals(GitNote? other)
         {
             if (other is null)
                 return false;

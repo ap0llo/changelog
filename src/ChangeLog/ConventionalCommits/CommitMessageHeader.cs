@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Grynwald.ChangeLog.ConventionalCommits
 {
@@ -95,7 +94,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
         public override bool Equals(object? obj) => Equals(obj as CommitMessageHeader);
 
-        public bool Equals([AllowNull] CommitMessageHeader other) =>
+        public bool Equals(CommitMessageHeader? other) =>
             other is not null &&
             StringComparer.OrdinalIgnoreCase.Equals(Type, other.Type) &&
             StringComparer.OrdinalIgnoreCase.Equals(Scope, other.Scope) &&

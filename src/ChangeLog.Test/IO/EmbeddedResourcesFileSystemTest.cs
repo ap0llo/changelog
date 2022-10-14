@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -334,10 +333,10 @@ namespace Grynwald.ChangeLog.Test.IO
         {
             private class FileSystemItemComparer : IEqualityComparer<FileSystemItem>
             {
-                public bool Equals([AllowNull] FileSystemItem x, [AllowNull] FileSystemItem y) =>
+                public bool Equals(FileSystemItem x, FileSystemItem y) =>
                     x.Path.Equals(y.Path) && x.IsDirectory == y.IsDirectory;
 
-                public int GetHashCode([DisallowNull] FileSystemItem obj) => obj.Path.GetHashCode();
+                public int GetHashCode(FileSystemItem obj) => obj.Path.GetHashCode();
             }
 
             public static IEnumerable<object?[]> ExpectedItems()

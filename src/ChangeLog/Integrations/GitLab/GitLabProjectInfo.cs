@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Grynwald.ChangeLog.Integrations.GitLab
 {
@@ -66,7 +65,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         }
 
         /// <inheritdoc />
-        public bool Equals([AllowNull] GitLabProjectInfo other)
+        public bool Equals(GitLabProjectInfo? other)
         {
             return other is not null &&
                 StringComparer.OrdinalIgnoreCase.Equals(Host, other.Host) &&

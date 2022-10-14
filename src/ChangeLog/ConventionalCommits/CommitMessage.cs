@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Grynwald.ChangeLog.ConventionalCommits
@@ -73,7 +72,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         public override bool Equals(object? obj) => Equals(obj as CommitMessage);
 
         /// <inheritdoc />
-        public bool Equals([AllowNull] CommitMessage other) =>
+        public bool Equals(CommitMessage? other) =>
             other is not null &&
             Header.Equals(other.Header) &&
             Body.SequenceEqual(other.Body) &&

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Grynwald.ChangeLog.Git
 {
@@ -27,7 +26,7 @@ namespace Grynwald.ChangeLog.Git
 
         public override int GetHashCode() => HashCode.Combine(Name, Email);
 
-        public bool Equals([AllowNull] GitAuthor other) =>
+        public bool Equals(GitAuthor? other) =>
             other is not null &&
             StringComparer.Ordinal.Equals(Name, other.Name) &&
             StringComparer.Ordinal.Equals(Email, other.Email);
