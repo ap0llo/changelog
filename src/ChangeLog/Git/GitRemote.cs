@@ -28,7 +28,7 @@ namespace Grynwald.ChangeLog.Git
         public override int GetHashCode() => HashCode.Combine(Name, Url);
 
         public bool Equals([AllowNull] GitRemote other) =>
-            other != null &&
+            other is not null &&
             StringComparer.Ordinal.Equals(Name, other.Name) &&
             StringComparer.Ordinal.Equals(Url, other.Url);
     }

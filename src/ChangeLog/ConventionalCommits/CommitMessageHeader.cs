@@ -87,7 +87,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
             unchecked
             {
                 var hash = StringComparer.OrdinalIgnoreCase.GetHashCode(Type) * 397;
-                hash ^= (Scope == null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(Scope));
+                hash ^= (Scope is null ? 0 : StringComparer.OrdinalIgnoreCase.GetHashCode(Scope));
                 hash ^= StringComparer.Ordinal.GetHashCode(Description);
                 return hash;
             }
@@ -96,7 +96,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         public override bool Equals(object? obj) => Equals(obj as CommitMessageHeader);
 
         public bool Equals([AllowNull] CommitMessageHeader other) =>
-            other != null &&
+            other is not null &&
             StringComparer.OrdinalIgnoreCase.Equals(Type, other.Type) &&
             StringComparer.OrdinalIgnoreCase.Equals(Scope, other.Scope) &&
             IsBreakingChange == other.IsBreakingChange &&

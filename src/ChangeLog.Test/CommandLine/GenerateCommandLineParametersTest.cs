@@ -96,7 +96,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         {
             var property = typeof(GenerateCommandLineParameters).GetProperty(propertyName)!;
 
-            if (property.GetCustomAttribute<OptionAttribute>() != null || property.GetCustomAttribute<ValueAttribute>() != null)
+            if (property.GetCustomAttribute<OptionAttribute>() is not null || property.GetCustomAttribute<ValueAttribute>() is not null)
             {
                 Assert.NotNull(property.GetGetMethod());
                 Assert.NotNull(property.GetSetMethod());

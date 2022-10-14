@@ -74,7 +74,7 @@ namespace Grynwald.ChangeLog.Test
             IReadOnlyList<CommitMessageFooter>? footers = null)
         {
             var header = new CommitMessageHeader(
-                type == null ? CommitType.Feature : new CommitType(type),
+                type is null ? CommitType.Feature : new CommitType(type),
                 description ?? "Example Summary",
                 scope,
                 isBreakingChange ?? false);

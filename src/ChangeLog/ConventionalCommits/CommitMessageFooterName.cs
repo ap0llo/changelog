@@ -15,7 +15,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
         /// <summary>
         /// Gets whether this struct is the default instance/not initialized.
         /// </summary>
-        public bool IsEmpty => Value == null;
+        public bool IsEmpty => Value is null;
 
         public string Value { get; }
 

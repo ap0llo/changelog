@@ -86,7 +86,7 @@ namespace Grynwald.ChangeLog.Configuration
                 // remove the array from the JSON if it is present.
                 {
                     var footersProperty = changelogSetingsObject?.Property("footers");
-                    if (footersProperty != null && footersProperty.Value.Type == JTokenType.Array)
+                    if (footersProperty is not null && footersProperty.Value.Type == JTokenType.Array)
                     {
                         footersProperty.Remove();
                     }
@@ -99,7 +99,7 @@ namespace Grynwald.ChangeLog.Configuration
                 // remove the array from the JSON if it is present.
                 {
                     var scopesProperty = changelogSetingsObject?.Property("scopes");
-                    if (scopesProperty != null && scopesProperty.Value.Type == JTokenType.Array)
+                    if (scopesProperty is not null && scopesProperty.Value.Type == JTokenType.Array)
                     {
                         scopesProperty.Remove();
                     }
@@ -112,7 +112,7 @@ namespace Grynwald.ChangeLog.Configuration
                 // remove the array from the JSON if it is present.
                 {
                     var entryTypesProperty = changelogSetingsObject?.Property("entryTypes");
-                    if (entryTypesProperty != null && entryTypesProperty.Value.Type == JTokenType.Array)
+                    if (entryTypesProperty is not null && entryTypesProperty.Value.Type == JTokenType.Array)
                     {
                         entryTypesProperty.Remove();
                     }

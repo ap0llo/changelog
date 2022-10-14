@@ -40,7 +40,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
         public async Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog)
         {
             var projectInfo = GetProjectInfo();
-            if (projectInfo != null)
+            if (projectInfo is not null)
             {
                 m_Logger.LogDebug($"Enabling GitHub integration with settings: " +
                     $"{nameof(projectInfo.Host)} = '{projectInfo.Host}', " +
@@ -117,7 +117,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                     StringComparer.OrdinalIgnoreCase.Equals(r.Name, remoteName)
                 );
 
-                if (remote == null)
+                if (remote is null)
                 {
                     m_Logger.LogWarning($"Remote '{remoteName}' does not exist in the git repository.");
                     return null;
@@ -211,7 +211,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             var uri = await TryGetIssueWebUriAsync(githubClient, reference);
 
             // if it is not an issue, check if it is a Pull Request Id
-            if (uri == null)
+            if (uri is null)
             {
                 uri = await TryGetPullRequestWebUriAsync(githubClient, reference);
             }

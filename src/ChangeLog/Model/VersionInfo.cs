@@ -27,7 +27,7 @@ namespace Grynwald.ChangeLog.Model
         public override bool Equals(object? obj) => Equals(obj as VersionInfo);
 
         public bool Equals([AllowNull] VersionInfo other) =>
-            other != null &&
+            other is not null &&
             Version.Equals(other.Version) &&
             Commit.Equals(other.Commit);
     }

@@ -74,7 +74,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
         /// <inheritdoc />
         public bool Equals([AllowNull] CommitMessage other) =>
-            other != null &&
+            other is not null &&
             Header.Equals(other.Header) &&
             Body.SequenceEqual(other.Body) &&
             Footers.SequenceEqual(other.Footers);

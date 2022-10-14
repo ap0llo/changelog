@@ -58,14 +58,14 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
 
         /// <inheritdoc />
-        public override int GetHashCode() => Value == null ? 0 : StringComparer.Ordinal.GetHashCode(Value);
+        public override int GetHashCode() => Value is null ? 0 : StringComparer.Ordinal.GetHashCode(Value);
 
         /// <inheritdoc />
         public override bool Equals(object? obj) => Equals(obj as Token<TTokenKind>);
 
         /// <inheritdoc />
         public bool Equals(Token<TTokenKind>? other) =>
-            other != null &&
+            other is not null &&
             StringComparer.Ordinal.Equals(Value, other.Value) &&
             LineNumber == other.LineNumber &&
             ColumnNumber == other.ColumnNumber &&

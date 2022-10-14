@@ -16,7 +16,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
         private HeaderParser(LineToken input)
         {
-            if (input == null)
+            if (input is null)
                 throw new ArgumentNullException(nameof(input));
 
             if (input.Kind != LineTokenKind.Line)

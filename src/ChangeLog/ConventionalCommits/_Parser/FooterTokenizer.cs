@@ -59,7 +59,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
                 _ => null
             };
 
-            return token != null;
+            return token is not null;
         }
     }
 }

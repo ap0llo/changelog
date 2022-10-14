@@ -9,7 +9,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
     {
         public IEnumerable<T> GetTokens(LineToken input)
         {
-            if (input == null)
+            if (input is null)
                 throw new ArgumentNullException(nameof(input));
 
             if (input.Kind != LineTokenKind.Line)

@@ -50,7 +50,7 @@ namespace Grynwald.ChangeLog.ConventionalCommits
 
         /// <inheritdoc />
         public bool Equals([AllowNull] CommitMessageFooter other) =>
-            other != null &&
+            other is not null &&
             Name.Equals(other.Name) &&
             StringComparer.Ordinal.Equals(Value, other.Value);
     }

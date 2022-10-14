@@ -68,7 +68,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         /// <inheritdoc />
         public bool Equals([AllowNull] GitLabProjectInfo other)
         {
-            return other != null &&
+            return other is not null &&
                 StringComparer.OrdinalIgnoreCase.Equals(Host, other.Host) &&
                 StringComparer.OrdinalIgnoreCase.Equals(Namespace, other.Namespace) &&
                 StringComparer.OrdinalIgnoreCase.Equals(Project, other.Project);

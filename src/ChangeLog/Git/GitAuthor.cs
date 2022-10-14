@@ -28,7 +28,7 @@ namespace Grynwald.ChangeLog.Git
         public override int GetHashCode() => HashCode.Combine(Name, Email);
 
         public bool Equals([AllowNull] GitAuthor other) =>
-            other != null &&
+            other is not null &&
             StringComparer.Ordinal.Equals(Name, other.Name) &&
             StringComparer.Ordinal.Equals(Email, other.Email);
     }

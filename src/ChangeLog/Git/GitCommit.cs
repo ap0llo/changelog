@@ -32,7 +32,7 @@ namespace Grynwald.ChangeLog.Git
         public override bool Equals(object? obj) => Equals(obj as GitCommit);
 
         public bool Equals([AllowNull] GitCommit other) =>
-            other != null &&
+            other is not null &&
             Id.Equals(other.Id) &&
             StringComparer.Ordinal.Equals(CommitMessage, other.CommitMessage) &&
             Date == other.Date &&

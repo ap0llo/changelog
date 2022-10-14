@@ -36,7 +36,7 @@ namespace Grynwald.ChangeLog.Git
         public override bool Equals(object? obj) => Equals(obj as GitTag);
 
         public bool Equals([AllowNull] GitTag other) =>
-            other != null &&
+            other is not null &&
             StringComparer.Ordinal.Equals(Name, other.Name) &&
             Commit.Equals(other.Commit);
     }

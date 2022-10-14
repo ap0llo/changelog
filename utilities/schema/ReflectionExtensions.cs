@@ -55,6 +55,6 @@ namespace schema
             return true;
         }
 
-        public static bool HasCustomAttribute<T>(this MemberInfo member) where T : Attribute => member.GetCustomAttribute<T>() != null;
+        public static bool HasCustomAttribute<T>(this MemberInfo member) where T : Attribute => member.GetCustomAttribute<T>() is not null;
     }
 }

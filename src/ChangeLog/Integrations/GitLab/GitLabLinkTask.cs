@@ -40,7 +40,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
         public async Task<ChangeLogTaskResult> RunAsync(ApplicationChangeLog changeLog)
         {
             var projectInfo = GetProjectInfo();
-            if (projectInfo != null)
+            if (projectInfo is not null)
             {
                 m_Logger.LogDebug($"Enabling GitLab integration with settings: " +
                     $"{nameof(projectInfo.Host)} = '{projectInfo.Host}', " +
@@ -94,7 +94,7 @@ namespace Grynwald.ChangeLog.Integrations.GitLab
                     StringComparer.OrdinalIgnoreCase.Equals(r.Name, remoteName)
                 );
 
-                if (remote == null)
+                if (remote is null)
                 {
                     m_Logger.LogWarning($"Remote '{remoteName}' does not exist in the git repository.");
                     return null;

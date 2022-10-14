@@ -44,7 +44,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
 
         public bool Equals([AllowNull] GitHubProjectInfo other)
         {
-            return other != null &&
+            return other is not null &&
                 StringComparer.OrdinalIgnoreCase.Equals(Host, other.Host) &&
                 StringComparer.OrdinalIgnoreCase.Equals(Owner, other.Owner) &&
                 StringComparer.OrdinalIgnoreCase.Equals(Repository, other.Repository);

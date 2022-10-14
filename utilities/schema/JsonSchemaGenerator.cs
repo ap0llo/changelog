@@ -245,7 +245,7 @@ namespace schema
             // - 2: property is nullable
 
             var isNullable = false;
-            if (nullabeContext != null)
+            if (nullabeContext is not null)
             {
                 var flag = (byte)nullabeContext.GetType().GetField("Flag")!.GetValue(nullabeContext)!;
 
@@ -258,7 +258,7 @@ namespace schema
                 };
             }
 
-            if (nullable != null)
+            if (nullable is not null)
             {
                 var flags = (byte[])nullable.GetType().GetField("NullableFlags")!.GetValue(nullable)!;
                 if (flags.Length == 1)
@@ -302,7 +302,7 @@ namespace schema
         private static string GetPropertyName(PropertyInfo runtimeProperty)
         {
             var nameAttribute = runtimeProperty.GetCustomAttribute<JsonSchemaPropertyNameAttribute>();
-            if (nameAttribute != null)
+            if (nameAttribute is not null)
                 return nameAttribute.Name;
 
             return Char.ToLower(runtimeProperty.Name[0]) + runtimeProperty.Name.Substring(1);

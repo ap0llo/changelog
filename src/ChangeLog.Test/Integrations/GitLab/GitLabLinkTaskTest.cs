@@ -128,7 +128,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
                 BindingFlags.Instance | BindingFlags.NonPublic,
                 null, null, null, null)!;
 
-            if (instance == null)
+            if (instance is null)
                 throw new InvalidOperationException($"Failed to create instance of '{type.FullName}'");
 
             // Apply the action we want to verify

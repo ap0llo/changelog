@@ -52,7 +52,7 @@ namespace Grynwald.ChangeLog.Test
 
 
         private static bool TesteeImplementsEqualitsOperators =>
-            typeof(TTestee).GetMethod("op_Equality", BindingFlags.Static | BindingFlags.Public) != null;
+            typeof(TTestee).GetMethod("op_Equality", BindingFlags.Static | BindingFlags.Public) is not null;
 
 
         [Theory]
