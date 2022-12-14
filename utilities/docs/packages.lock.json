@@ -41,8 +41,8 @@
       },
       "Autofac": {
         "type": "Transitive",
-        "resolved": "6.4.0",
-        "contentHash": "tkFxl6wAPuwVhrlN8wuNADnd+k2tv4ReP7ZZSL0vjfcN0RcfC9v25ogxK6b03HC7D4NwWjSLf1G/zTG8Bw43wQ==",
+        "resolved": "6.5.0",
+        "contentHash": "sm6HWWBDEoTPGXeyOchMygJ/7L89VxmVH72BFxakG88J34AVjA8RMi5jbv3PdpUtXI/d9ZLKOaxCmOSIo2K4aA==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "4.7.1"
         }
@@ -296,7 +296,7 @@
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
-          "Autofac": "[6.4.0, )",
+          "Autofac": "[6.5.0, )",
           "CommandLineParser": "[2.9.1, )",
           "FluentValidation": "[11.2.2, )",
           "GitLabApiClient": "[1.8.0, )",
