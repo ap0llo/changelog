@@ -4,8 +4,7 @@ if ($env:TF_BUILD) {
     Write-Host "##[group]Install .NET SDK"
 }
 
-# Install .NET Core 3.1 and .NET 6 runtimes (requried for running tests on these platforms)
-./build/dotnet-install.ps1 -Channel 3.1 -Runtime dotnet
+# Install .NET 6 runtime (requried for running tests on this platform)
 ./build/dotnet-install.ps1 -Channel 6.0 -Runtime dotnet
 
 # Install SDK and runtime as specified in global.json

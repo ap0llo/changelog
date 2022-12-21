@@ -142,8 +142,6 @@ namespace Grynwald.ChangeLog.Configuration
         {
             var outputStream = new MemoryStream();
 
-            // On .NET Core 3.1 (and later), we can just set encoding and buffer size to null/-1
-            // and StreamWriter will use the default values without the need to hard-code them here.
             using (var streamWriter = new StreamWriter(outputStream, null, -1, leaveOpen: true))
             using (var writer = new JsonTextWriter(streamWriter))
             {

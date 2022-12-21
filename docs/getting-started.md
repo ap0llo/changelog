@@ -5,7 +5,7 @@ Furthermore it assumes you're using [Semantic Versioning](https://semver.org/) f
 
 ## Installation
 
-ChangeLog is distributed as [.NET (global) tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires at least the .NET Core 3.1 SDK to be installed (the .NET 5 and .NET 6 SDKs are suppored as well).
+ChangeLog is distributed as [.NET (global) tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) and requires at least the .NET 6 SDK to be installed (.NET 7 is suppored as well).
 
 ChangeLog is available on [NuGet.org](https://www.nuget.org/packages/Grynwald.ChangeLog).
 Prerelease builds on are available on [MyGet](https://www.myget.org/feed/ap0llo-changelog/package/nuget/Grynwald.ChangeLog).
