@@ -25,7 +25,7 @@ namespace Grynwald.ChangeLog.Test
         }
 
         /// <inheritdoc />
-        public IDisposable BeginScope<TState>(TState state) => new LoggerScope();
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull => new LoggerScope();
 
         /// <inheritdoc />
         public bool IsEnabled(LogLevel logLevel) => true;
