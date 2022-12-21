@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
     <RootNamespace>Grynwald.ChangeLog</RootNamespace>
     <PackageId>Grynwald.ChangeLog</PackageId>
     <AssemblyName>changelog</AssemblyName>
@@ -60,8 +60,8 @@
   </ItemGroup>
   <PropertyGroup>
     <CommandLineDocumentationOutputPath>$(MSBuildThisFileDirectory)..\..\docs\commandline-reference\</CommandLineDocumentationOutputPath>
-    <!-- Generate docs only for net6.0, otherwise there would be race-conditions between the buidls for the different target frameworks-->
-    <GenerateCommandLineDocumentationOnBuild Condition=" '$(TargetFramework)' == 'net6.0' ">true</GenerateCommandLineDocumentationOnBuild>
+    <!-- Generate docs only for net7.0, otherwise there would be race-conditions between the buidls for the different target frameworks-->
+    <GenerateCommandLineDocumentationOnBuild Condition=" '$(TargetFramework)' == 'net7.0' ">true</GenerateCommandLineDocumentationOnBuild>
   </PropertyGroup>
 
 </Project>
