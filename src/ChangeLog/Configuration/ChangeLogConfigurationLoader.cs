@@ -21,9 +21,6 @@ namespace Grynwald.ChangeLog.Configuration
 
             var configurationBuilder = new ConfigurationBuilder()
                 .AddJsonStream(defaultSettingsStream)
-                // Use AddJsonStream() because AddJsonFile() assumes the file name
-                // is relative to the ConfigurationBuilder's base directory and does not seem to properly
-                // handle absolute paths
                 .AddJsonStream(preparedStream)
                 .AddEnvironmentVariables();
 
@@ -45,8 +42,13 @@ namespace Grynwald.ChangeLog.Configuration
         }
 
 
-        private static Stream? GetDefaultSettingsStream() =>
-            Assembly.GetExecutingAssembly().GetManifestResourceStream("Grynwald.ChangeLog.Configuration.defaultSettings.json");
+        private static Stream GetDefaultSettingsStream()
+        {
+            var resourceName = "Grynwald.ChangeLog.Configuration.defaultSettings.json";
+            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+            return stream ?? throw new InvalidOperationException($"Failed to load default settings from embedded resource '{resourceName}'");
+        }
+
 
         private static Stream GetFileStreamOrEmpty(string? path)
         {
