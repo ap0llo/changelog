@@ -1494,8 +1494,8 @@
       },
       "Zio": {
         "type": "Transitive",
-        "resolved": "0.15.0",
-        "contentHash": "tBxkD9ZEXkVBwGZPvsb/8HoQRTFGHXn2HWL2UO9V4gmzKbGEf9SB48i78oC+2JfTYtWe/H/eASSapNz7WTd4pg==",
+        "resolved": "0.16.1",
+        "contentHash": "zFeGSXKKULgWEYApummsXX4+xCVLOZAoMQDTIPmDDQ8bm50tcH1a/IfOy6tVgywL6UOPJ4Dgoed5ex8HNCB/7A==",
         "dependencies": {
           "System.IO.Compression": "4.3.0",
           "System.IO.Compression.ZipFile": "4.3.0"
@@ -1520,7 +1520,7 @@
           "NuGet.Versioning": "[6.4.0, )",
           "Octokit": "[4.0.3, )",
           "Scriban": "[5.5.1, )",
-          "Zio": "[0.15.0, )"
+          "Zio": "[0.16.1, )"
         }
       }
     },
@@ -3000,8 +3000,8 @@
       },
       "Zio": {
         "type": "Transitive",
-        "resolved": "0.15.0",
-        "contentHash": "tBxkD9ZEXkVBwGZPvsb/8HoQRTFGHXn2HWL2UO9V4gmzKbGEf9SB48i78oC+2JfTYtWe/H/eASSapNz7WTd4pg=="
+        "resolved": "0.16.1",
+        "contentHash": "zFeGSXKKULgWEYApummsXX4+xCVLOZAoMQDTIPmDDQ8bm50tcH1a/IfOy6tVgywL6UOPJ4Dgoed5ex8HNCB/7A=="
       },
       "grynwald.changelog": {
         "type": "Project",
@@ -3022,7 +3022,7 @@
           "NuGet.Versioning": "[6.4.0, )",
           "Octokit": "[4.0.3, )",
           "Scriban": "[5.5.1, )",
-          "Zio": "[0.15.0, )"
+          "Zio": "[0.16.1, )"
         }
       }
     }

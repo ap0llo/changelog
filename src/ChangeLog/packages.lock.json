@@ -166,9 +166,9 @@
       },
       "Zio": {
         "type": "Direct",
-        "requested": "[0.15.0, )",
-        "resolved": "0.15.0",
-        "contentHash": "tBxkD9ZEXkVBwGZPvsb/8HoQRTFGHXn2HWL2UO9V4gmzKbGEf9SB48i78oC+2JfTYtWe/H/eASSapNz7WTd4pg==",
+        "requested": "[0.16.1, )",
+        "resolved": "0.16.1",
+        "contentHash": "zFeGSXKKULgWEYApummsXX4+xCVLOZAoMQDTIPmDDQ8bm50tcH1a/IfOy6tVgywL6UOPJ4Dgoed5ex8HNCB/7A==",
         "dependencies": {
           "System.IO.Compression": "4.3.0",
           "System.IO.Compression.ZipFile": "4.3.0"
@@ -726,9 +726,9 @@
       },
       "Zio": {
         "type": "Direct",
-        "requested": "[0.15.0, )",
-        "resolved": "0.15.0",
-        "contentHash": "tBxkD9ZEXkVBwGZPvsb/8HoQRTFGHXn2HWL2UO9V4gmzKbGEf9SB48i78oC+2JfTYtWe/H/eASSapNz7WTd4pg=="
+        "requested": "[0.16.1, )",
+        "resolved": "0.16.1",
+        "contentHash": "zFeGSXKKULgWEYApummsXX4+xCVLOZAoMQDTIPmDDQ8bm50tcH1a/IfOy6tVgywL6UOPJ4Dgoed5ex8HNCB/7A=="
       },
       "LibGit2Sharp.NativeBinaries": {
         "type": "Transitive",
