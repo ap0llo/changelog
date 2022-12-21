@@ -1,0 +1,5 @@
+feat: Add .NET 7 Support
+
+Add .NET 7 target to make changelog run if only the .NET 7 runtime is installed
+
+Pull-Request: #428
