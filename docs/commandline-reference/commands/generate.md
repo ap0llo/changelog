@@ -13,7 +13,7 @@ Generate a change log from a git repository
 
 ## Usage
 
-```
+```txt
 changelog generate [--configurationFilePath|-c <VALUE>]
                    [--currentVersion <VALUE>]
                    [--githubAccessToken <VALUE>]
