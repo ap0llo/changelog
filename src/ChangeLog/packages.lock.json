@@ -155,9 +155,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[5.5.1, )",
-        "resolved": "5.5.1",
-        "contentHash": "ZGCDgKwyx0pPp5p8lsqBDLlOQR5qTVhD/hgVmdL1K8ReyCDdPxhvUUmzdFhBsPxGEqyDwG8dIEQ8BynzR3trpw=="
+        "requested": "[5.5.2, )",
+        "resolved": "5.5.2",
+        "contentHash": "gnIfL3dLVriuYd+LnSvCVSOUn1AtflaLomEont5OAQE6DYw62Jj8pFl9/8C+pw47RuwWLGCA9SLwcgvPUObgKw=="
       },
       "Zio": {
         "type": "Direct",
@@ -445,9 +445,9 @@
       },
       "Scriban": {
         "type": "Direct",
-        "requested": "[5.5.1, )",
-        "resolved": "5.5.1",
-        "contentHash": "ZGCDgKwyx0pPp5p8lsqBDLlOQR5qTVhD/hgVmdL1K8ReyCDdPxhvUUmzdFhBsPxGEqyDwG8dIEQ8BynzR3trpw=="
+        "requested": "[5.5.2, )",
+        "resolved": "5.5.2",
+        "contentHash": "gnIfL3dLVriuYd+LnSvCVSOUn1AtflaLomEont5OAQE6DYw62Jj8pFl9/8C+pw47RuwWLGCA9SLwcgvPUObgKw=="
       },
       "Zio": {
         "type": "Direct",
