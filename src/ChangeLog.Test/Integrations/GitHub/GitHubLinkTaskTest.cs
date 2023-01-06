@@ -679,17 +679,24 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         }
 
         [Theory]
-        [InlineData("some-file.md", "https://example.com/owner/repo/default-branch/some-file.md", "owner", "repo")]
-        [InlineData("dir/some-file.md", "https://example.com/owner/repo/default-branch/dir/some-file.md", "owner", "repo")]
-        [InlineData("dir/../some-file.md", "https://example.com/owner/repo/default-branch/some-file.md", "owner", "repo")]
-        public async Task Run_adds_link_to_repository_file_references(string footerText, string expectedLink, string owner, string repo)
+        [InlineData("some-file.md", "some-file.md", "some-file.md", "https://example.com/owner/repo/default-branch/some-file.md")]
+        [InlineData("./some-file.md", "./some-file.md", "./some-file.md", "https://example.com/owner/repo/default-branch/some-file.md")]
+        [InlineData("dir/some-file.md", "dir/some-file.md", "dir/some-file.md", "https://example.com/owner/repo/default-branch/dir/some-file.md")]
+        [InlineData("dir/../some-file.md", "dir/../some-file.md", "dir/../some-file.md", "https://example.com/owner/repo/default-branch/some-file.md")]
+        [InlineData("[Link Text](some-file.md)", "some-file.md", "Link Text", "https://example.com/owner/repo/default-branch/some-file.md")]
+        [InlineData("[Link Text](./dir/../some-file.md)", "./dir/../some-file.md", "Link Text", "https://example.com/owner/repo/default-branch/some-file.md")]
+        [InlineData("[](some-file.md)", "some-file.md", "some-file.md", "https://example.com/owner/repo/default-branch/some-file.md")]
+        [InlineData("[  ](some-file.md)", "some-file.md", "some-file.md", "https://example.com/owner/repo/default-branch/some-file.md")]
+        public async Task Run_adds_link_to_repository_file_references(string footerText, string filePath, string expectedText, string expectedLink)
         {
             // ARRANGE
+            var owner = "owner";
+            var repoName = "repo";
             var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
-            repoMock.SetupRemotes("origin", $"http://github.com/{owner}/{repo}.git");
+            repoMock.SetupRemotes("origin", $"http://github.com/{owner}/{repoName}.git");
 
             m_GithubClientMock.Repository.Content
-                .Setup(x => x.GetAllContents(owner, repo, footerText))
+                .Setup(x => x.GetAllContents(owner, repoName, filePath))
                 .ReturnsTestRepositoryContent(
                     new TestRepositoryContent(expectedLink, "File Content")
                 );
@@ -720,14 +727,14 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("See-Also")), footer =>
                 {
                     var fileReferenceElement = Assert.IsType<GitHubFileReferenceTextElement>(footer.Value);
-                    Assert.Equal(footerText, fileReferenceElement.Text);
+                    Assert.Equal(expectedText, fileReferenceElement.Text);
                     Assert.Equal(expectedLink, fileReferenceElement.Uri.ToString());
                 });
 
             });
 
             m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents(owner, repo, footerText), Times.Once);
+            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents(owner, repoName, filePath), Times.Once);
         }
 
         [Theory]

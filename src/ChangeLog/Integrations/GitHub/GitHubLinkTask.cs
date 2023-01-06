@@ -8,6 +8,7 @@ using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Model.Text;
 using Grynwald.ChangeLog.Pipeline;
 using Grynwald.ChangeLog.Tasks;
+using Grynwald.ChangeLog.Utilities;
 using Microsoft.Extensions.Logging;
 using Octokit;
 
@@ -187,16 +188,34 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                 }
                 // Detect references to files from the reppository.
                 // Inspired by GiLab's "repository file references", see https://docs.gitlab.com/ee/user/markdown.html#gitlab-specific-references
-                else if (footer.Value is PlainTextElement && Uri.TryCreate(footer.Value.Text, UriKind.Relative, out var relativeUri))
+                // A repository file reference can either be
+                //  - A plain, relative path to a file in the repository - or -
+                //  - A Markdown link with a relative path to a file in the reposiory
+                else if (footer.Value is PlainTextElement)
                 {
-                    var relativePath = relativeUri.ToString();
-                    var uri = await TryGetRepositoryFileLink(githubClient, projectInfo, relativePath);
-                    if (uri is not null)
+                    string text;
+                    string path;
+
+                    if (MarkdownLinkParser.TryParseMarkdownLink(footer.Value.Text, out var linkText, out var linkDestination))
                     {
-                        footer.Value = new GitHubFileReferenceTextElement(footer.Value.Text, uri, relativeUri.ToString());
+                        text = String.IsNullOrWhiteSpace(linkText) ? linkDestination : linkText;
+                        path = linkDestination;
+                    }
+                    else
+                    {
+                        text = footer.Value.Text;
+                        path = footer.Value.Text;
+                    }
+
+                    if (Uri.TryCreate(path, UriKind.Relative, out var relativeUri))
+                    {
+                        var uri = await TryGetRepositoryFileLink(githubClient, projectInfo, relativeUri.ToString());
+                        if (uri is not null)
+                        {
+                            footer.Value = new GitHubFileReferenceTextElement(text, uri, relativeUri.ToString());
+                        }
                     }
                 }
-                // TODO: Also detect file references in Markdown links (like [Description](./docs/some-docs.md)
             }
         }
 
