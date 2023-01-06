@@ -585,6 +585,10 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
                 .SetupGet()
                 .ReturnsTestCommit();
 
+            m_GithubClientMock.Repository.Content
+                .SetupGetAllContents()
+                .ThrowsNotFound();
+
             var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
 
             var changeLog = new ApplicationChangeLog()
@@ -672,6 +676,202 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
             m_GithubClientMock.Issue.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
             m_GithubClientMock.PullRequest.Verify(x => x.Get(owner, repo, It.IsAny<int>()), Times.Once);
+        }
+
+        [Theory]
+        [InlineData("some-file.md", "https://example.com/owner/repo/default-branch/some-file.md", "owner", "repo")]
+        [InlineData("dir/some-file.md", "https://example.com/owner/repo/default-branch/dir/some-file.md", "owner", "repo")]
+        [InlineData("dir/../some-file.md", "https://example.com/owner/repo/default-branch/some-file.md", "owner", "repo")]
+        public async Task Run_adds_link_to_repository_file_references(string footerText, string expectedLink, string owner, string repo)
+        {
+            // ARRANGE
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.SetupRemotes("origin", $"http://github.com/{owner}/{repo}.git");
+
+            m_GithubClientMock.Repository.Content
+                .Setup(x => x.GetAllContents(owner, repo, footerText))
+                .ReturnsTestRepositoryContent(
+                    new TestRepositoryContent(expectedLink, "File Content")
+                );
+
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
+
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    "1.2.3",
+                    null,
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
+                    {
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), new PlainTextElement(footerText))
+                    })
+                )
+            };
+
+            // ACT 
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
+            var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
+            Assert.All(entries, entry =>
+            {
+                Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("See-Also")), footer =>
+                {
+                    var fileReferenceElement = Assert.IsType<GitHubFileReferenceTextElement>(footer.Value);
+                    Assert.Equal(footerText, fileReferenceElement.Text);
+                    Assert.Equal(expectedLink, fileReferenceElement.Uri.ToString());
+                });
+
+            });
+
+            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents(owner, repo, footerText), Times.Once);
+        }
+
+        [Theory]
+        [InlineData("https://example.com/some-file.md")]
+        public async Task Run_does_not_add_link_to_absolute_paths(string footerText)
+        {
+            // ARRANGE
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
+
+            m_GithubClientMock.Repository.Content
+                .Setup(x => x.GetAllContents("owner", "repo", footerText))
+                .ThrowsNotFound();
+
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
+
+            var originalFooterValue = new PlainTextElement(footerText);
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    "1.2.3",
+                    null,
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
+                    {
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), originalFooterValue)
+                    })
+                )
+            };
+
+            // ACT 
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
+            var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
+            Assert.All(entries, entry =>
+            {
+                Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("See-Also")), footer =>
+                {
+                    Assert.Same(originalFooterValue, footer.Value);
+                });
+
+            });
+
+            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData("some-file.md")]
+        public async Task Run_does_not_add_link_to_repository_file_references_if_file_does_not_exist(string footerText)
+        {
+            // ARRANGE
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
+
+            m_GithubClientMock.Repository.Content
+                .Setup(x => x.GetAllContents("owner", "repo", footerText))
+                .ThrowsNotFound();
+
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
+
+            var originalFooterValue = new PlainTextElement(footerText);
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    "1.2.3",
+                    null,
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
+                    {
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), originalFooterValue)
+                    })
+                )
+            };
+
+            // ACT 
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
+            var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
+            Assert.All(entries, entry =>
+            {
+                Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("See-Also")), footer =>
+                {
+                    Assert.Same(originalFooterValue, footer.Value);
+                });
+
+            });
+
+            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents("owner", "repo", footerText), Times.Once);
+        }
+
+        [Theory]
+        [InlineData("some-directory", 0)]
+        [InlineData("some-directory", 1)]
+        [InlineData("some-directory", 5)]
+        public async Task Run_does_not_add_link_to_repository_file_references_if_path_is_a_directory(string footerText, int fileCount)
+        {
+            // ARRANGE
+            var repoMock = new Mock<IGitRepository>(MockBehavior.Strict);
+            repoMock.SetupRemotes("origin", "http://github.com/owner/repo.git");
+
+            m_GithubClientMock.Repository.Content
+                .Setup(x => x.GetAllContents("owner", "repo", footerText))
+                .ReturnsTestRepositoryContent(
+                    Enumerable.Range(0, fileCount).Select(x => new TestRepositoryContent("https://example.com", content: null))
+                );
+
+            var sut = new GitHubLinkTask(m_Logger, m_DefaultConfiguration, repoMock.Object, m_GitHubClientFactoryMock.Object);
+
+            var originalFooterValue = new PlainTextElement(footerText);
+            var changeLog = new ApplicationChangeLog()
+            {
+                GetSingleVersionChangeLog(
+                    "1.2.3",
+                    null,
+                    GetChangeLogEntry(summary: "Entry1", commit: TestGitIds.Id1, footers: new []
+                    {
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), originalFooterValue)
+                    })
+                )
+            };
+
+            // ACT 
+            var result = await sut.RunAsync(changeLog);
+
+            // ASSERT
+            Assert.Equal(ChangeLogTaskResult.Success, result);
+
+            var entries = changeLog.ChangeLogs.SelectMany(x => x.AllEntries).ToArray();
+            Assert.All(entries, entry =>
+            {
+                Assert.All(entry.Footers.Where(x => x.Name == new CommitMessageFooterName("See-Also")), footer =>
+                {
+                    Assert.Same(originalFooterValue, footer.Value);
+                });
+
+            });
+
+            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            m_GithubClientMock.Repository.Content.Verify(x => x.GetAllContents("owner", "repo", footerText), Times.Once);
         }
 
         [Theory]

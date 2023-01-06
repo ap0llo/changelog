@@ -18,7 +18,7 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
     /// </summary>
     [BeforeTask(typeof(RenderTemplateTask))]
     [AfterTask(typeof(ParseCommitsTask))]
-    // AddCommitFooterTask must run before eGitHubLinkTask so a web link can be added to the "Commit" footer
+    // AddCommitFooterTask must run before GitHubLinkTask so a web link can be added to the "Commit" footer
     [AfterTask(typeof(AddCommitFooterTask))]
     internal sealed class GitHubLinkTask : IChangeLogTask
     {
@@ -185,6 +185,18 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
                         m_Logger.LogWarning($"Failed to determine web uri for reference '{reference}'");
                     }
                 }
+                // Detect references to files from the reppository.
+                // Inspired by GiLab's "repository file references", see https://docs.gitlab.com/ee/user/markdown.html#gitlab-specific-references
+                else if (footer.Value is PlainTextElement && Uri.TryCreate(footer.Value.Text, UriKind.Relative, out var relativeUri))
+                {
+                    var relativePath = relativeUri.ToString();
+                    var uri = await TryGetRepositoryFileLink(githubClient, projectInfo, relativePath);
+                    if (uri is not null)
+                    {
+                        footer.Value = new GitHubFileReferenceTextElement(footer.Value.Text, uri, relativeUri.ToString());
+                    }
+                }
+                // TODO: Also detect file references in Markdown links (like [Description](./docs/some-docs.md)
             }
         }
 
@@ -245,5 +257,30 @@ namespace Grynwald.ChangeLog.Integrations.GitHub
             }
         }
 
+        private async Task<Uri?> TryGetRepositoryFileLink(IGitHubClient gitHubClient, GitHubProjectInfo project, string relativePath)
+        {
+            //TODO: Recognize links to file numbers
+            //TODO: Normalize file paths?
+            try
+            {
+                var files = await gitHubClient.Repository.Content.GetAllContents(project.Owner, project.Repository, relativePath);
+
+                // relativePath can be a path to either a file or a directory in the GitHub repository
+                // - If the path is a file, GetAllContents() will return a single item with a non-null Content
+                // - If there are multiple items in the response, relativePath is a directory path => ignore
+                // - If the response is a single item and Content is null, relativePath is path to a directory that contains a single file => ignore
+                if (files is [{ Content: not null } file])
+                {
+                    return new Uri(file.HtmlUrl);
+                }
+            }
+            // Not found => ignore link
+            catch (NotFoundException)
+            {
+                return null;
+            }
+
+            return null;
+        }
     }
 }
