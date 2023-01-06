@@ -17,10 +17,11 @@ The following types of references are supported:
 - [Change Log Entry References](#change-log-entry-references)
 - [GitHub References](./integrations/github.md#references)
 - [GitLab References](./integrations/gitlab.md#references)
+- [Markdown links](#markdown-links)
 
 ### Web Urls
 
-If a footer's value is va valid `http` or `https` url, the footer will be included in the generated change log as link.
+If a footer's value is a valid `http` or `https` url, the footer will be included in the generated change log as link.
 
 ### Commit References
 
@@ -88,7 +89,23 @@ This is the description of the second feature.
 See Also: [Implemented a new feature](implemented-a-new-feature)
 ```
 
-If no change log entry that matches a commit hash can be found, the footer vaöue is treated as [commit reference](#commit-references).
+If no change log entry that matches a commit hash can be found, the footer value is treated as [commit reference](#commit-references).
+
+### Markdown Links
+
+**Supported versions:** 1.3+
+
+If a footer's value is a valid [Markdown link](https://spec.commonmark.org/0.30/#links) which's destination is a `http` or `https` address, the footer's value will be replaced with a link with in the output.
+If the Markdown link does not specify a link text, the url will be used.
+
+#### Examples
+
+| Footer Value                       | Output (Markdown)                            | Output (HTML)                                           |
+|------------------------------------|----------------------------------------------|---------------------------------------------------------|
+| `[Link Text](https://example.com)` | `[Link Text](https://example.com)`           | `<a href="https://example.com">Link Text</a>`           |
+| `[](https://example.com)`          | `[https://example.com](https://example.com)` | `<a href="https://example.com">https://example.com</a>` |
+
+
 
 ## Normalization
 
@@ -119,3 +136,4 @@ For example, a footer `See-Also: cd73d01418587529acbae4233580b7ea0cc01819` will 
 - [Integrations](./integrations.md)
 - [GitHub Integration](./integrations/github.md)
 - [GitLab Integration](./integrations/gitlab.md)
+- [Links (CommonMark Spec, version 0.30)](https://spec.commonmark.org/0.30/#links)

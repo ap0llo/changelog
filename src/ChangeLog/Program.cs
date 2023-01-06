@@ -122,6 +122,7 @@ namespace Grynwald.ChangeLog
                 containerBuilder.RegisterType<ResolveEntryReferencesTask>();
                 containerBuilder.RegisterType<AddCommitFooterTask>();
                 containerBuilder.RegisterType<ParseWebLinksTask>();
+                containerBuilder.RegisterType<ParseMarkdownWebLinksTask>();
                 containerBuilder.RegisterType<RenderTemplateTask>();
 
                 containerBuilder.RegisterIntegrations();
@@ -165,6 +166,7 @@ namespace Grynwald.ChangeLog
                         .AddTask<ParseCommitsTask>()
                         .AddTask<ParseCommitReferencesTask>()
                         .AddTask<ParseWebLinksTask>()
+                        .AddTask<ParseMarkdownWebLinksTask>()
                         .AddTask<FilterVersionsTask>()
                         .AddTask<FilterEntriesTask>()
                         .AddTask<ResolveEntryReferencesTask>()

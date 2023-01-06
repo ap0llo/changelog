@@ -7,7 +7,7 @@ using Grynwald.ChangeLog.Pipeline;
 namespace Grynwald.ChangeLog.Tasks
 {
     /// <summary>
-    /// Detects footer values that are web links.
+    /// Detects footer values that are web (http/https) links.
     /// When a valid url is found, replaces  the footer's value (see <see cref="ChangeLogEntryFooter.Value"/>) with a <see cref="WebLinkTextElement"/>.
     /// </summary>
     [AfterTask(typeof(ParseCommitsTask))]
@@ -21,7 +21,7 @@ namespace Grynwald.ChangeLog.Tasks
             {
                 if (footer.Value is PlainTextElement plainText &&
                    Uri.TryCreate(plainText.Text, UriKind.Absolute, out var uri) &&
-                   IsWebLink(uri))
+                   uri.IsWebLink())
                 {
                     footer.Value = new WebLinkTextElement(plainText.Text, uri);
                 }
@@ -30,11 +30,5 @@ namespace Grynwald.ChangeLog.Tasks
             return ChangeLogTaskResult.Success;
         }
 
-        private bool IsWebLink(Uri uri) => uri.Scheme.ToLower() switch
-        {
-            "http" => true,
-            "https" => true,
-            _ => false
-        };
     }
 }
