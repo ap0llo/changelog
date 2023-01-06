@@ -49,7 +49,7 @@ namespace Grynwald.ChangeLog.Tasks
         {
             if (m_OverrideMessages.Value.TryGetValue(commit.Id, out message))
             {
-                m_Logger.LogInformation($"Commit message for commit '{commit.Id}' was overridden through filesystem. Using message from filesystem instead of commit message.");
+                m_Logger.LogDebug($"Commit message for commit '{commit.Id}' was overridden through filesystem. Using message from filesystem instead of commit message.");
                 return true;
             }
 

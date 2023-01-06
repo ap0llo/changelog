@@ -33,7 +33,7 @@ namespace Grynwald.ChangeLog.Tasks
 
             if (notes.Any())
             {
-                m_Logger.LogInformation($"Commit message for commit '{commit.Id}' was overridden through git-notes. Using message from git-notes instead of commit message.");
+                m_Logger.LogDebug($"Commit message for commit '{commit.Id}' was overridden through git-notes. Using message from git-notes instead of commit message.");
                 message = notes.Single().Message;
                 return true;
             }
