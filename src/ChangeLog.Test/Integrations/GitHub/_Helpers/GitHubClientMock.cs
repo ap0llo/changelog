@@ -13,11 +13,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
 
             public Mock<IRepositoryCommitsClient> Commit { get; } = new(MockBehavior.Strict);
 
+            public Mock<IRepositoryContentsClient> Content { get; } = new(MockBehavior.Strict);
+
 
             public RepositoriesClientMock()
             {
                 m_Mock.Setup(x => x.Commit).Returns(Commit.Object);
-
+                m_Mock.Setup(x => x.Content).Returns(Content.Object);
             }
         }
 
