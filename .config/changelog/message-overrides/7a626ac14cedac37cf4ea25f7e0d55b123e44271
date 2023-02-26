@@ -1,0 +1,5 @@
+fix: Escape html tags in change log entry titles
+
+If the title of a change log entry contains a HTML tag (e.g. <code>), escape the element in the output of all Markdown templates and the Html template
+
+Pull-Request: #450
