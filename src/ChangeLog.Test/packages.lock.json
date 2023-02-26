@@ -232,6 +232,11 @@
         "resolved": "17.4.1",
         "contentHash": "T21KxaiFawbrrjm0uXjxAStXaBm5P9H6Nnf8BUtBTvIpd8q57lrChVBCY2dnazmSu9/kuX4z5+kAOT78Dod7vA=="
       },
+      "Microsoft.CSharp": {
+        "type": "Transitive",
+        "resolved": "4.5.0",
+        "contentHash": "kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ=="
+      },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
         "resolved": "7.0.0",
@@ -616,8 +621,12 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "5.5.2",
-        "contentHash": "gnIfL3dLVriuYd+LnSvCVSOUn1AtflaLomEont5OAQE6DYw62Jj8pFl9/8C+pw47RuwWLGCA9SLwcgvPUObgKw=="
+        "resolved": "5.7.0",
+        "contentHash": "sSjmrKmvin85FDVb2W63IDkUK5BgKY+ZnuCuwF8KRfcREB9f3dJZA58TgV052vzYxadlro4kAZv4jBP1tonaaQ==",
+        "dependencies": {
+          "Microsoft.CSharp": "4.5.0",
+          "System.Threading.Tasks.Extensions": "4.5.0"
+        }
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -1493,7 +1502,7 @@
           "Microsoft.Extensions.Logging": "[7.0.0, )",
           "NuGet.Versioning": "[6.4.0, )",
           "Octokit": "[4.0.3, )",
-          "Scriban": "[5.5.2, )",
+          "Scriban": "[5.7.0, )",
           "Zio": "[0.16.1, )"
         }
       }
@@ -2110,8 +2119,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "5.5.2",
-        "contentHash": "gnIfL3dLVriuYd+LnSvCVSOUn1AtflaLomEont5OAQE6DYw62Jj8pFl9/8C+pw47RuwWLGCA9SLwcgvPUObgKw=="
+        "resolved": "5.7.0",
+        "contentHash": "sSjmrKmvin85FDVb2W63IDkUK5BgKY+ZnuCuwF8KRfcREB9f3dJZA58TgV052vzYxadlro4kAZv4jBP1tonaaQ=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -2983,7 +2992,7 @@
           "Microsoft.Extensions.Logging": "[7.0.0, )",
           "NuGet.Versioning": "[6.4.0, )",
           "Octokit": "[4.0.3, )",
-          "Scriban": "[5.5.2, )",
+          "Scriban": "[5.7.0, )",
           "Zio": "[0.16.1, )"
         }
       }
