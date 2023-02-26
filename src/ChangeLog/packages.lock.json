@@ -143,9 +143,9 @@
       },
       "NuGet.Versioning": {
         "type": "Direct",
-        "requested": "[6.4.0, )",
-        "resolved": "6.4.0",
-        "contentHash": "YE8p3TpX4jIw+Gb24maE8YRDoqWA4imLmCbdOj5IvslLrZJXQ8akeFOGOplxICNVevON1g1SFYT2+cq4yy0nQQ=="
+        "requested": "[6.5.0, )",
+        "resolved": "6.5.0",
+        "contentHash": "a2j4bDoSBVagDZ+Q61kAmxs/kY8q16cgNDdZuo867j5ip2F4yInjy1v8Ec9LslbP7QBtMzGDWw7rfBlFt6qofg=="
       },
       "Octokit": {
         "type": "Direct",
@@ -447,9 +447,9 @@
       },
       "NuGet.Versioning": {
         "type": "Direct",
-        "requested": "[6.4.0, )",
-        "resolved": "6.4.0",
-        "contentHash": "YE8p3TpX4jIw+Gb24maE8YRDoqWA4imLmCbdOj5IvslLrZJXQ8akeFOGOplxICNVevON1g1SFYT2+cq4yy0nQQ=="
+        "requested": "[6.5.0, )",
+        "resolved": "6.5.0",
+        "contentHash": "a2j4bDoSBVagDZ+Q61kAmxs/kY8q16cgNDdZuo867j5ip2F4yInjy1v8Ec9LslbP7QBtMzGDWw7rfBlFt6qofg=="
       },
       "Octokit": {
         "type": "Direct",
