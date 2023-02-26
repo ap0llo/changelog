@@ -604,5 +604,39 @@ namespace Grynwald.ChangeLog.Test.Templates
 
             Approve(changeLog, config);
         }
+
+        [Fact]
+        public void ChangeLog_is_converted_to_expected_Output_23()
+        {
+            // HTML is entry titles is escaped 
+
+            var versionChangeLog = GetSingleVersionChangeLog(
+                "1.2.3",
+                null,
+                GetChangeLogEntry(
+                    scope: "api",
+                    type: "feat",
+                    summary: "Some change with <code> tag in title",
+                    body: new[] { "Content with <code> tag " },
+                    footers: new[]
+                    {
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), new PlainTextElement("Text with <code> tag"))
+                    }
+                ),
+                GetChangeLogEntry(
+                    type: "feat",
+                    summary: "Some other change with <code> tag in title",
+                    body: new[] { "Content with <code> tag " },
+                    footers: new[]
+                    {
+                        new ChangeLogEntryFooter(new CommitMessageFooterName("See-Also"), new PlainTextElement("Text with <code> tag"))
+                    }
+                )
+            );
+
+            var changeLog = new ApplicationChangeLog() { versionChangeLog };
+
+            Approve(changeLog);
+        }
     }
 }
