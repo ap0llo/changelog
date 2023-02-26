@@ -1,0 +1,17 @@
+﻿#### New Features
+
+- [**api:** Some change with &lt;code&gt; tag in title](#api-some-change-with-ltcodegt-tag-in-title)
+- [Some other change with &lt;code&gt; tag in title](#some-other-change-with-ltcodegt-tag-in-title)
+
+#### Details
+
+##### **api:** Some change with &lt;code&gt; tag in title
+
+Content with &lt;code&gt; tag 
+- See Also: Text with &lt;code&gt; tag
+
+##### Some other change with &lt;code&gt; tag in title
+
+Content with &lt;code&gt; tag 
+- See Also: Text with &lt;code&gt; tag
+
