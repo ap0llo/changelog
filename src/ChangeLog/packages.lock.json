@@ -19,9 +19,9 @@
       },
       "FluentValidation": {
         "type": "Direct",
-        "requested": "[11.5.2, )",
-        "resolved": "11.5.2",
-        "contentHash": "kj/hW/iusp2zq1Vt1YPLgDj6UG0DhoJXGkLwjLwm3j7vUtRF8DVA5vHJfItG3BxDjLWJUR2pvw8fK7rnuysZNA=="
+        "requested": "[11.6.0, )",
+        "resolved": "11.6.0",
+        "contentHash": "DWKd0jHA33d7BXVWytSoN5Oafj9nYuiLUyyFoaUboOZZiaN5tlXdcJpkRbmrrWBUTWdSxjTwIoyUs38KSU/7OQ=="
       },
       "GitLabApiClient": {
         "type": "Direct",
@@ -323,9 +323,9 @@
       },
       "FluentValidation": {
         "type": "Direct",
-        "requested": "[11.5.2, )",
-        "resolved": "11.5.2",
-        "contentHash": "kj/hW/iusp2zq1Vt1YPLgDj6UG0DhoJXGkLwjLwm3j7vUtRF8DVA5vHJfItG3BxDjLWJUR2pvw8fK7rnuysZNA=="
+        "requested": "[11.6.0, )",
+        "resolved": "11.6.0",
+        "contentHash": "DWKd0jHA33d7BXVWytSoN5Oafj9nYuiLUyyFoaUboOZZiaN5tlXdcJpkRbmrrWBUTWdSxjTwIoyUs38KSU/7OQ=="
       },
       "GitLabApiClient": {
         "type": "Direct",
