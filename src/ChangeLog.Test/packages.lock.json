@@ -488,8 +488,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "5.1.0",
-        "contentHash": "+N+tmQ9kZPUFLIlCg7zPJHc4HhPpGzwIQeWIboWaqoK7hFevkHVkcwaGqV0lKpPn9uQp7bITKQXc26PJ34/+tQ=="
+        "resolved": "7.0.1",
+        "contentHash": "LS0xXFj94I1RL/m54ris9Yp5A8qCoJ2WyLOggSld6z9qH6B2JKoEwdizzqIRPPBQQ2Y2HvRXNYo8ZSPcx6emEA=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -1498,7 +1498,7 @@
           "Microsoft.Extensions.Configuration.Json": "[7.0.0, )",
           "Microsoft.Extensions.Logging": "[7.0.0, )",
           "NuGet.Versioning": "[6.6.1, )",
-          "Octokit": "[5.1.0, )",
+          "Octokit": "[7.0.1, )",
           "Scriban": "[5.7.0, )",
           "Zio": "[0.16.2, )"
         }
@@ -1983,8 +1983,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "5.1.0",
-        "contentHash": "+N+tmQ9kZPUFLIlCg7zPJHc4HhPpGzwIQeWIboWaqoK7hFevkHVkcwaGqV0lKpPn9uQp7bITKQXc26PJ34/+tQ=="
+        "resolved": "7.0.1",
+        "contentHash": "LS0xXFj94I1RL/m54ris9Yp5A8qCoJ2WyLOggSld6z9qH6B2JKoEwdizzqIRPPBQQ2Y2HvRXNYo8ZSPcx6emEA=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -2979,7 +2979,7 @@
           "Microsoft.Extensions.Configuration.Json": "[7.0.0, )",
           "Microsoft.Extensions.Logging": "[7.0.0, )",
           "NuGet.Versioning": "[6.6.1, )",
-          "Octokit": "[5.1.0, )",
+          "Octokit": "[7.0.1, )",
           "Scriban": "[5.7.0, )",
           "Zio": "[0.16.2, )"
         }
