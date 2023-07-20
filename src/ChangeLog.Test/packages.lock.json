@@ -260,8 +260,8 @@
       },
       "Microsoft.Extensions.Configuration.Binder": {
         "type": "Transitive",
-        "resolved": "7.0.1",
-        "contentHash": "vAuFMOvK68JIW0NlLp1mJkQxsJ2hGmLKRE2rOyIffZ/L0Xvr6hsPMF8thxPGTcgOM6eezisSTTVVHdByY6ejbQ==",
+        "resolved": "7.0.4",
+        "contentHash": "8+XPvJnHZsYgHOQlcMuQe7QNF5KdVKHH1F/wW3nd8/u81Gk/XFAYMDP0Lpz18h7/AM95M662vvqMorcYxCBB4w==",
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "7.0.0"
         }
@@ -1493,7 +1493,7 @@
           "Grynwald.Utilities.Logging": "[1.6.122, )",
           "LibGit2Sharp": "[0.27.2, )",
           "Microsoft.Extensions.Configuration": "[7.0.0, )",
-          "Microsoft.Extensions.Configuration.Binder": "[7.0.1, )",
+          "Microsoft.Extensions.Configuration.Binder": "[7.0.4, )",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "[7.0.0, )",
           "Microsoft.Extensions.Configuration.Json": "[7.0.0, )",
           "Microsoft.Extensions.Logging": "[7.0.0, )",
@@ -1758,8 +1758,8 @@
       },
       "Microsoft.Extensions.Configuration.Binder": {
         "type": "Transitive",
-        "resolved": "7.0.1",
-        "contentHash": "vAuFMOvK68JIW0NlLp1mJkQxsJ2hGmLKRE2rOyIffZ/L0Xvr6hsPMF8thxPGTcgOM6eezisSTTVVHdByY6ejbQ==",
+        "resolved": "7.0.4",
+        "contentHash": "8+XPvJnHZsYgHOQlcMuQe7QNF5KdVKHH1F/wW3nd8/u81Gk/XFAYMDP0Lpz18h7/AM95M662vvqMorcYxCBB4w==",
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "7.0.0"
         }
@@ -2974,7 +2974,7 @@
           "Grynwald.Utilities.Logging": "[1.6.122, )",
           "LibGit2Sharp": "[0.27.2, )",
           "Microsoft.Extensions.Configuration": "[7.0.0, )",
-          "Microsoft.Extensions.Configuration.Binder": "[7.0.1, )",
+          "Microsoft.Extensions.Configuration.Binder": "[7.0.4, )",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "[7.0.0, )",
           "Microsoft.Extensions.Configuration.Json": "[7.0.0, )",
           "Microsoft.Extensions.Logging": "[7.0.0, )",
