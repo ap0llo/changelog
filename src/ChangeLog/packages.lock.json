@@ -4,9 +4,9 @@
     "net6.0": {
       "Autofac": {
         "type": "Direct",
-        "requested": "[7.0.1, )",
-        "resolved": "7.0.1",
-        "contentHash": "J9Iz0Q+YU3uf82i8Lee0NpQOlRYfwHxwVV26jdG3zH3LFE5Y9Rx97Mju7Nswwzh/C7kVJALkTL860Y7e+mcLaw==",
+        "requested": "[7.1.0, )",
+        "resolved": "7.1.0",
+        "contentHash": "XCXmpxhOnuztTTRkzG+8B8KU8SR8WjBYwSntndjlsFR5lM3K/g43r9hUwewIPDBJwDrmZU3TjmNdH6s8IF3VFQ==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "4.7.1"
         }
@@ -308,9 +308,9 @@
     "net7.0": {
       "Autofac": {
         "type": "Direct",
-        "requested": "[7.0.1, )",
-        "resolved": "7.0.1",
-        "contentHash": "J9Iz0Q+YU3uf82i8Lee0NpQOlRYfwHxwVV26jdG3zH3LFE5Y9Rx97Mju7Nswwzh/C7kVJALkTL860Y7e+mcLaw==",
+        "requested": "[7.1.0, )",
+        "resolved": "7.1.0",
+        "contentHash": "XCXmpxhOnuztTTRkzG+8B8KU8SR8WjBYwSntndjlsFR5lM3K/g43r9hUwewIPDBJwDrmZU3TjmNdH6s8IF3VFQ==",
         "dependencies": {
           "System.Diagnostics.DiagnosticSource": "4.7.1"
         }
