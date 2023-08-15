@@ -82,7 +82,7 @@ namespace Grynwald.ChangeLog.Validation
         public static IRuleBuilderOptions<T, string?> IsVersionRange<T>(this IRuleBuilder<T, string?> ruleBuilder)
         {
             return ruleBuilder
-                .Must(x => VersionRange.TryParse(x, out _))
+                .Must(x => x is not null && VersionRange.TryParse(x, out _))
                 .WithMessage("Value '{PropertyValue}' of '{PropertyName}' is not a valid version range.");
         }
 
