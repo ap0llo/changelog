@@ -4,9 +4,9 @@
     "net7.0": {
       "Markdig": {
         "type": "Direct",
-        "requested": "[0.32.0, )",
-        "resolved": "0.32.0",
-        "contentHash": "+e6YobdcPgV5AsSgGqOi9B7biDgw2Fi4ZHRamwecvDeCEh5WFTlIClmKQP+CMkYUP9jwz7NANuwN2HC79kll4Q=="
+        "requested": "[0.33.0, )",
+        "resolved": "0.33.0",
+        "contentHash": "wwjLxuVZyzOUpQkwMnP2eVOgCZzjHqSNsTOWxLQ1S9J5UIk43vsrgwyUBg1x7AX1MlxWH65Uyfsojm4LBwN6iw=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
