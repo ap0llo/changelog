@@ -625,8 +625,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "5.7.0",
-        "contentHash": "sSjmrKmvin85FDVb2W63IDkUK5BgKY+ZnuCuwF8KRfcREB9f3dJZA58TgV052vzYxadlro4kAZv4jBP1tonaaQ==",
+        "resolved": "5.8.0",
+        "contentHash": "o9fkw6Aul8qkIa7dSJi0eKnaFsBQLQSulguxTqoSCc4ZiNdVEa/9W3pusR8KetvdK+Hu24NChhNTH4nZefVlbg==",
         "dependencies": {
           "Microsoft.CSharp": "4.5.0",
           "System.Threading.Tasks.Extensions": "4.5.0"
@@ -1499,7 +1499,7 @@
           "Microsoft.Extensions.Logging": "[7.0.0, )",
           "NuGet.Versioning": "[6.7.0, )",
           "Octokit": "[7.1.0, )",
-          "Scriban": "[5.7.0, )",
+          "Scriban": "[5.8.0, )",
           "Zio": "[0.16.2, )"
         }
       }
@@ -2120,8 +2120,8 @@
       },
       "Scriban": {
         "type": "Transitive",
-        "resolved": "5.7.0",
-        "contentHash": "sSjmrKmvin85FDVb2W63IDkUK5BgKY+ZnuCuwF8KRfcREB9f3dJZA58TgV052vzYxadlro4kAZv4jBP1tonaaQ=="
+        "resolved": "5.8.0",
+        "contentHash": "o9fkw6Aul8qkIa7dSJi0eKnaFsBQLQSulguxTqoSCc4ZiNdVEa/9W3pusR8KetvdK+Hu24NChhNTH4nZefVlbg=="
       },
       "System.AppContext": {
         "type": "Transitive",
@@ -2980,7 +2980,7 @@
           "Microsoft.Extensions.Logging": "[7.0.0, )",
           "NuGet.Versioning": "[6.7.0, )",
           "Octokit": "[7.1.0, )",
-          "Scriban": "[5.7.0, )",
+          "Scriban": "[5.8.0, )",
           "Zio": "[0.16.2, )"
         }
       }
