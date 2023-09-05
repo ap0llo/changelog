@@ -26,7 +26,7 @@ public class BuildContext : DefaultBuildContext
         new PushTarget(
             PushTargetType.MyGet,
             "https://www.myget.org/F/ap0llo-changelog/api/v3/index.json",
-            context => context.Git.IsMasterBranch || context.Git.IsReleaseBranch
+            context => context.Git.IsMainBranch || context.Git.IsReleaseBranch
         ),
         KnownPushTargets.NuGetOrg(isActive: context => context.Git.IsReleaseBranch)
     };
