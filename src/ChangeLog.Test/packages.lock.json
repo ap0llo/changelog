@@ -105,9 +105,9 @@
       },
       "Xunit.Combinatorial": {
         "type": "Direct",
-        "requested": "[1.5.25, )",
-        "resolved": "1.5.25",
-        "contentHash": "wB5Knl4YznMl/vtfk3fv5OiTO5lKG2xjsk4kKjsvYPxNxYA4gR8rL0SKSJqhGOxUQGqAmkRragIK+sgMO5I61g==",
+        "requested": "[1.6.24, )",
+        "resolved": "1.6.24",
+        "contentHash": "iqoQxBOE78VFwD9hYcxiAsJML4lAsbPNQ4lFLsyXNmr5/0W2RTM8sojUFU7rGrbUWY6VaA1E6NROI4e4lLmfIw==",
         "dependencies": {
           "xunit.extensibility.core": "2.2.0"
         }
@@ -1599,9 +1599,9 @@
       },
       "Xunit.Combinatorial": {
         "type": "Direct",
-        "requested": "[1.5.25, )",
-        "resolved": "1.5.25",
-        "contentHash": "wB5Knl4YznMl/vtfk3fv5OiTO5lKG2xjsk4kKjsvYPxNxYA4gR8rL0SKSJqhGOxUQGqAmkRragIK+sgMO5I61g==",
+        "requested": "[1.6.24, )",
+        "resolved": "1.6.24",
+        "contentHash": "iqoQxBOE78VFwD9hYcxiAsJML4lAsbPNQ4lFLsyXNmr5/0W2RTM8sojUFU7rGrbUWY6VaA1E6NROI4e4lLmfIw==",
         "dependencies": {
           "xunit.extensibility.core": "2.2.0"
         }
