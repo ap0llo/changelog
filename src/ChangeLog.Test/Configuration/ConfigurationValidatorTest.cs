@@ -137,7 +137,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [Theory]
             [InlineData("")]
             [InlineData(null)]
-            public void Can_be_null_or_empty(string versionRange)
+            public void Can_be_null_or_empty(string? versionRange)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -179,7 +179,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [Theory]
             [InlineData("")]
             [InlineData(null)]
-            public void Can_be_null_or_empty(string currentVersion)
+            public void Can_be_null_or_empty(string? currentVersion)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -292,7 +292,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [Theory]
                 [InlineData("")]
                 [InlineData(null)]
-                public void AccessToken_can_be_null_or_empty(string accessToken)
+                public void AccessToken_can_be_null_or_empty(string? accessToken)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -333,7 +333,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [InlineData(null)]
                 [InlineData("\t")]
                 [InlineData("  ")]
-                public void RemoteName_must_not_be_null_or_whitespace(string remoteName)
+                public void RemoteName_must_not_be_null_or_whitespace(string? remoteName)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -353,7 +353,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [Theory]
                 [InlineData("")]
                 [InlineData(null)]
-                public void Host_can_be_null_or_empty(string host)
+                public void Host_can_be_null_or_empty(string? host)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -392,7 +392,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [Theory]
                 [InlineData("")]
                 [InlineData(null)]
-                public void Owner_can_be_null_or_empty(string owner)
+                public void Owner_can_be_null_or_empty(string? owner)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -431,7 +431,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [Theory]
                 [InlineData("")]
                 [InlineData(null)]
-                public void Repository_can_be_null_or_empty(string repository)
+                public void Repository_can_be_null_or_empty(string? repository)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -473,7 +473,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [Theory]
                 [InlineData("")]
                 [InlineData(null)]
-                public void AccessToken_can_be_null_or_empty(string accessToken)
+                public void AccessToken_can_be_null_or_empty(string? accessToken)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -514,7 +514,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [InlineData(null)]
                 [InlineData("\t")]
                 [InlineData("  ")]
-                public void RemoteName_must_not_be_null_or_whitespace(string remoteName)
+                public void RemoteName_must_not_be_null_or_whitespace(string? remoteName)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -534,7 +534,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [Theory]
                 [InlineData("")]
                 [InlineData(null)]
-                public void Host_can_be_null_or_empty(string host)
+                public void Host_can_be_null_or_empty(string? host)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -573,7 +573,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [Theory]
                 [InlineData("")]
                 [InlineData(null)]
-                public void Namespace_can_be_null_or_empty(string @namespace)
+                public void Namespace_can_be_null_or_empty(string? @namespace)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -612,7 +612,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 [Theory]
                 [InlineData("")]
                 [InlineData(null)]
-                public void Project_can_be_null_or_empty(string project)
+                public void Project_can_be_null_or_empty(string? project)
                 {
                     // ARRANGE
                     var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -655,7 +655,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [Theory]
             [InlineData(null)]
             [InlineData("")]
-            public void Type_expression_can_be_null_or_empty(string filterType)
+            public void Type_expression_can_be_null_or_empty(string? filterType)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -663,14 +663,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 {
                     new ChangeLogConfiguration.FilterExpressionConfiguration()
                     {
-                        Type = filterType
+                        Type = filterType!
                     }
                 };
                 config.Filter.Exclude = new[]
                 {
                     new ChangeLogConfiguration.FilterExpressionConfiguration()
                     {
-                        Type = filterType
+                        Type = filterType!
                     }
                 };
 
@@ -721,7 +721,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [Theory]
             [InlineData(null)]
             [InlineData("")]
-            public void Scope_expression_can_be_null_or_empty(string filterType)
+            public void Scope_expression_can_be_null_or_empty(string? filterType)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
@@ -729,14 +729,14 @@ namespace Grynwald.ChangeLog.Test.Configuration
                 {
                     new ChangeLogConfiguration.FilterExpressionConfiguration()
                 {
-                    Scope = filterType
+                    Scope = filterType!
                 }
                 };
                 config.Filter.Exclude = new[]
                 {
                     new ChangeLogConfiguration.FilterExpressionConfiguration()
                 {
-                    Scope = filterType
+                    Scope = filterType!
                 }
                 };
 
@@ -954,12 +954,12 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [InlineData("")]
             [InlineData("\t")]
             [InlineData("  ")]
-            public void GitNotesNamespace_must_not_be_null_or_whitespace_when_message_overrides_are_enabled(string gitNotesNamespace)
+            public void GitNotesNamespace_must_not_be_null_or_whitespace_when_message_overrides_are_enabled(string? gitNotesNamespace)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
                 config.MessageOverrides.Enabled = true;
-                config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+                config.MessageOverrides.GitNotesNamespace = gitNotesNamespace!;
 
                 var sut = new ConfigurationValidator();
 
@@ -986,13 +986,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "")]
             [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "\t")]
             [InlineData(true, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "  ")]
-            public void GitNotesNamespace_may_be_null_or_whitespace_when_message_overrides_are_disabled_or_another_provider_is_used(bool enabled, ChangeLogConfiguration.MessageOverrideProvider provider, string gitNotesNamespace)
+            public void GitNotesNamespace_may_be_null_or_whitespace_when_message_overrides_are_disabled_or_another_provider_is_used(bool enabled, ChangeLogConfiguration.MessageOverrideProvider provider, string? gitNotesNamespace)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
                 config.MessageOverrides.Enabled = enabled;
                 config.MessageOverrides.Provider = provider;
-                config.MessageOverrides.GitNotesNamespace = gitNotesNamespace;
+                config.MessageOverrides.GitNotesNamespace = gitNotesNamespace!;
 
                 var sut = new ConfigurationValidator();
 
@@ -1009,13 +1009,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [InlineData("")]
             [InlineData("\t")]
             [InlineData("  ")]
-            public void SourceDirectoryPath_must_not_be_null_or_whitespace_when_message_overrides_are_enabled(string sourceDirectoryPath)
+            public void SourceDirectoryPath_must_not_be_null_or_whitespace_when_message_overrides_are_enabled(string? sourceDirectoryPath)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
                 config.MessageOverrides.Enabled = true;
                 config.MessageOverrides.Provider = ChangeLogConfiguration.MessageOverrideProvider.FileSystem;
-                config.MessageOverrides.SourceDirectoryPath = sourceDirectoryPath;
+                config.MessageOverrides.SourceDirectoryPath = sourceDirectoryPath!;
 
                 var sut = new ConfigurationValidator();
 
@@ -1042,13 +1042,13 @@ namespace Grynwald.ChangeLog.Test.Configuration
             [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "")]
             [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "\t")]
             [InlineData(false, ChangeLogConfiguration.MessageOverrideProvider.FileSystem, "  ")]
-            public void SourceDirectoryPath_may_be_null_or_whitespace_when_message_overrides_are_disabled_or_another_provider_is_used(bool enabled, ChangeLogConfiguration.MessageOverrideProvider provider, string sourceDirectoryPath)
+            public void SourceDirectoryPath_may_be_null_or_whitespace_when_message_overrides_are_disabled_or_another_provider_is_used(bool enabled, ChangeLogConfiguration.MessageOverrideProvider provider, string? sourceDirectoryPath)
             {
                 // ARRANGE
                 var config = ChangeLogConfigurationLoader.GetDefaultConfiguration();
                 config.MessageOverrides.Enabled = enabled;
                 config.MessageOverrides.Provider = provider;
-                config.MessageOverrides.SourceDirectoryPath = sourceDirectoryPath;
+                config.MessageOverrides.SourceDirectoryPath = sourceDirectoryPath!;
 
                 var sut = new ConfigurationValidator();
 

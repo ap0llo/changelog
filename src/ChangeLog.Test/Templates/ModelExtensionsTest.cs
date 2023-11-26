@@ -16,7 +16,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void GetScopeDisplayName_returns_scope_if_scope_is_null_or_empty(string scope)
+        public void GetScopeDisplayName_returns_scope_if_scope_is_null_or_empty(string? scope)
         {
             // ARRANGE
             var changeLogEntry = GetChangeLogEntry(scope: scope);
@@ -56,7 +56,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         [InlineData("\t")]
         [InlineData("  ")]
         [InlineData(null)]
-        public void GetScopeDisplayName_returns_scope_if_display_name_is_empty(string displayName)
+        public void GetScopeDisplayName_returns_scope_if_display_name_is_empty(string? displayName)
         {
             // ARRANGE
             var config = new ChangeLogConfiguration()
@@ -148,7 +148,7 @@ namespace Grynwald.ChangeLog.Test.Templates
         [InlineData("\t")]
         [InlineData("  ")]
         [InlineData(null)]
-        public void GetFooterDisplayName_returns_footer_name_if_display_name_is_empty(string configuredDisplayName)
+        public void GetFooterDisplayName_returns_footer_name_if_display_name_is_empty(string? configuredDisplayName)
         {
             // ARRANGE
             var footerName = "footerName";

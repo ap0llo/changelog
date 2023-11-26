@@ -14,13 +14,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("\t")]
-        public void Text_must_not_be_null_or_whitespace(string text)
+        public void Text_must_not_be_null_or_whitespace(string? text)
         {
             // ARRANGE
 
             // ACT 
             var ex = Record.Exception(() => new GitHubReferenceTextElement(
-                text,
+                text!,
                 new("http://example.com"),
                 new("example.com", "owner", "repo"),
                 new(new("example.com", "owner", "repo"), 23)));

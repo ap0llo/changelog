@@ -18,9 +18,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("not-a-url")]
         [InlineData("http://github.com/owner/another-name/repo.git")] // to many segments in the path
         [InlineData("ftp://github.com/owner/repo.git")] // unsupported scheme
-        public void ParseRemoteUrl_throws_ArgumentException_for_invalid_input(string url)
+        public void ParseRemoteUrl_throws_ArgumentException_for_invalid_input(string? url)
         {
-            Assert.ThrowsAny<ArgumentException>(() => GitHubUrlParser.ParseRemoteUrl(url));
+            Assert.ThrowsAny<ArgumentException>(() => GitHubUrlParser.ParseRemoteUrl(url!));
         }
 
         [Theory]
@@ -50,9 +50,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("not-a-url")]
         [InlineData("http://github.com/owner/another-name/repo.git")] // to many segments in the path
         [InlineData("ftp://github.com/owner/repo.git")] // unsupported scheme
-        public void TryParseRemoteUrl_returns_false_for_invalid_input(string url)
+        public void TryParseRemoteUrl_returns_false_for_invalid_input(string? url)
         {
-            Assert.False(GitHubUrlParser.TryParseRemoteUrl(url, out var uri));
+            Assert.False(GitHubUrlParser.TryParseRemoteUrl(url!, out var uri));
         }
 
         [Theory]

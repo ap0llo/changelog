@@ -201,13 +201,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             [InlineData("Not a/reference#xyz")]
             [InlineData("#xyz")]
             [InlineData("#1 2 3")]
-            public void TryParse_fails_for_invalid_references(string input)
+            public void TryParse_fails_for_invalid_references(string? input)
             {
                 // ARRANGE
                 var currentProject = new GitLabProjectInfo("example.com", "namespace", "project");
 
                 // ACT 
-                var success = GitLabReference.TryParse(input, currentProject, out var result);
+                var success = GitLabReference.TryParse(input!, currentProject, out var result);
 
                 // ASSERT
                 Assert.False(success);

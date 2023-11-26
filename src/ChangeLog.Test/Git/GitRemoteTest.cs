@@ -27,9 +27,9 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Name_must_not_be_null_or_whitespace(string name)
+        public void Name_must_not_be_null_or_whitespace(string? name)
         {
-            Assert.Throws<ArgumentException>(() => new GitRemote(name, "http://example.com"));
+            Assert.Throws<ArgumentException>(() => new GitRemote(name!, "http://example.com"));
         }
 
         [Theory]
@@ -37,9 +37,9 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Url_must_not_be_null_or_whitespace(string url)
+        public void Url_must_not_be_null_or_whitespace(string? url)
         {
-            Assert.Throws<ArgumentException>(() => new GitRemote("origin", url));
+            Assert.Throws<ArgumentException>(() => new GitRemote("origin", url!));
         }
     }
 }

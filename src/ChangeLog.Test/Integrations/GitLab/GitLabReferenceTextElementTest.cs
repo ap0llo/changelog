@@ -16,13 +16,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
             [InlineData("")]
             [InlineData(" ")]
             [InlineData("\t")]
-            public void Text_must_not_be_null_or_whitespace(string text)
+            public void Text_must_not_be_null_or_whitespace(string? text)
             {
                 // ARRANGE
 
                 // ACT 
                 var ex = Record.Exception(() => new GitLabReferenceTextElement(
-                    text,
+                    text!,
                     new("http://example.com"),
                     new("example.com", "namespace", "project"),
                     new(new("example.com", "namespace", "project"), GitLabReferenceType.Issue, 23)));

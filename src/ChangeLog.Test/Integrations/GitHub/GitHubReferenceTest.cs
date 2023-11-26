@@ -143,13 +143,13 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
             [InlineData("GH-xyz")]
             [InlineData("#1 2 3")]
             [InlineData("GH-1 2 3")]
-            public void TryParse_fails_for_invalid_references(string input)
+            public void TryParse_fails_for_invalid_references(string? input)
             {
                 // ARRANGE
                 var currentProject = new GitHubProjectInfo("example.com", "owner", "repo");
 
                 // ACT 
-                var success = GitHubReference.TryParse(input, currentProject, out var result);
+                var success = GitHubReference.TryParse(input!, currentProject, out var result);
 
                 // ASSERT
                 Assert.False(success);

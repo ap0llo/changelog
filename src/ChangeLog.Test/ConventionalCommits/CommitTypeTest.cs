@@ -28,9 +28,9 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Type_must_not_be_null_or_whitespace(string type)
+        public void Type_must_not_be_null_or_whitespace(string? type)
         {
-            Assert.Throws<ArgumentException>(() => new CommitType(type));
+            Assert.Throws<ArgumentException>(() => new CommitType(type!));
         }
 
         [Theory]

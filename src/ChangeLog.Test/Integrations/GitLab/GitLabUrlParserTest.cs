@@ -18,9 +18,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("ftp://gitlab.com/owner/repo.git")] // unsupported scheme
         [InlineData("http://gitlab.com")]               // missing project path
         [InlineData("http://gitlab.com/user")]          // missing project name
-        public void ParseRemoteUrl_throws_ArgumentException_for_invalid_input(string url)
+        public void ParseRemoteUrl_throws_ArgumentException_for_invalid_input(string? url)
         {
-            Assert.ThrowsAny<ArgumentException>(() => GitLabUrlParser.ParseRemoteUrl(url));
+            Assert.ThrowsAny<ArgumentException>(() => GitLabUrlParser.ParseRemoteUrl(url!));
         }
 
         [Theory]
@@ -52,9 +52,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("ftp://gitlab.com/owner/repo.git")] // unsupported scheme
         [InlineData("http://gitlab.com")]               // missing project path
         [InlineData("http://gitlab.com/user")]          // missing project name
-        public void TryParseRemoteUrl_returns_false_for_invalid_input(string url)
+        public void TryParseRemoteUrl_returns_false_for_invalid_input(string? url)
         {
-            Assert.False(GitLabUrlParser.TryParseRemoteUrl(url, out var uri));
+            Assert.False(GitLabUrlParser.TryParseRemoteUrl(url!, out var uri));
         }
 
         [Theory]

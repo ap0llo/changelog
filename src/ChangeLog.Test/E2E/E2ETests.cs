@@ -270,7 +270,7 @@ namespace Grynwald.ChangeLog.Test.E2E
         [InlineData(new string[] { "changelog.settings.json", "custom.settings.json" }, "custom.settings.json", "custom.settings.json")]
         [InlineData(new string[] { ".config/changelog/settings.json", "custom.settings.json" }, "custom.settings.json", "custom.settings.json")]
         [InlineData(new string[] { "changelog.settings.json", ".config/changelog/settings.json", "custom.settings.json" }, "custom.settings.json", "custom.settings.json")]
-        public async Task The_expected_configuration_file_is_used(string[] configurationFilesOnDisk, string? configurationFileParameter, string expectedConfigurationFile)
+        public async Task The_expected_configuration_file_is_used(string[] configurationFilesOnDisk, string? configurationFileParameter, string? expectedConfigurationFile)
         {
             // ARRANGE
             using var temporaryDirectory = new TemporaryDirectory();
