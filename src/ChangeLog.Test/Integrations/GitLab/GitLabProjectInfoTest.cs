@@ -121,9 +121,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Host_must_not_be_null_or_whitespace(string host)
+        public void Host_must_not_be_null_or_whitespace(string? host)
         {
-            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo(host, "user", "repo"));
+            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo(host!, "user", "repo"));
         }
 
         [Theory]
@@ -131,9 +131,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Namespace_must_not_be_null_or_whitespace(string @namespace)
+        public void Namespace_must_not_be_null_or_whitespace(string? @namespace)
         {
-            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo("example.com", @namespace, "repo"));
+            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo("example.com", @namespace!, "repo"));
         }
 
         [Theory]
@@ -141,9 +141,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Project_must_not_be_null_or_whitespace(string project)
+        public void Project_must_not_be_null_or_whitespace(string? project)
         {
-            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo("example.com", "user", project));
+            Assert.Throws<ArgumentException>(() => new GitLabProjectInfo("example.com", "user", project!));
         }
     }
 }

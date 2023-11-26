@@ -54,12 +54,12 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("\t")]
-        public void Namespace_must_not_be_null_or_whitespace(string @namespace)
+        public void Namespace_must_not_be_null_or_whitespace(string? @namespace)
         {
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new GitNote(TestGitIds.Id1, @namespace: @namespace, "message"));
+            var ex = Record.Exception(() => new GitNote(TestGitIds.Id1, @namespace: @namespace!, "message"));
 
             // ASSERT
             var argumentException = Assert.IsType<ArgumentException>(ex);

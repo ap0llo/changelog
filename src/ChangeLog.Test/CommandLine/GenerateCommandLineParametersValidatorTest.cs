@@ -13,12 +13,12 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void RepositoryPath_may_be_empty(string repositoryPath)
+        public void RepositoryPath_may_be_empty(string? repositoryPath)
         {
             // ARRANGE
             var parameters = new GenerateCommandLineParameters()
             {
-                RepositoryPath = repositoryPath
+                RepositoryPath = repositoryPath!
             };
 
             var validator = new GenerateCommandLineParametersValidator();
@@ -86,7 +86,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void CurrentVersion_may_be_empty(string value)
+        public void CurrentVersion_may_be_empty(string? value)
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
@@ -136,7 +136,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void VersionRange_may_be_empty(string value)
+        public void VersionRange_may_be_empty(string? value)
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
@@ -186,7 +186,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void GitHubAccessToken_may_be_empty(string value)
+        public void GitHubAccessToken_may_be_empty(string? value)
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
@@ -209,7 +209,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void GitLabAccessToken_may_be_empty(string value)
+        public void GitLabAccessToken_may_be_empty(string? value)
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();
@@ -232,7 +232,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void ConfigurationFilePath_may_be_empty(string path)
+        public void ConfigurationFilePath_may_be_empty(string? path)
         {
             // ARRANGE
             using var repositoryDirectory = new TemporaryDirectory();

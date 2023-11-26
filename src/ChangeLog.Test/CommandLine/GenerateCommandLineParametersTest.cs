@@ -65,7 +65,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void CommandLineParameters_returns_null_if_output_path_is_null_or_empty(string outputPath)
+        public void CommandLineParameters_returns_null_if_output_path_is_null_or_empty(string? outputPath)
         {
             // ARRANGE
             var sut = new GenerateCommandLineParameters()

@@ -40,7 +40,7 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitLab
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void CreateClient_succeeds_if_no_access_token_is_configured(string accessToken)
+        public void CreateClient_succeeds_if_no_access_token_is_configured(string? accessToken)
         {
             // ARRANGE
             var configuration = new ChangeLogConfiguration();

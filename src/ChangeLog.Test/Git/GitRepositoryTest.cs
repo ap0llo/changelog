@@ -46,9 +46,9 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Repository_path_must_not_be_null_or_whitespace(string repositoryPath)
+        public void Repository_path_must_not_be_null_or_whitespace(string? repositoryPath)
         {
-            Assert.Throws<ArgumentException>(() => new GitRepository(repositoryPath));
+            Assert.Throws<ArgumentException>(() => new GitRepository(repositoryPath!));
         }
 
         [Fact]
@@ -263,13 +263,13 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("\t")]
-        public void TryGetCommit_throws_ArgumentException_if_id_is_null_or_whitespace(string id)
+        public void TryGetCommit_throws_ArgumentException_if_id_is_null_or_whitespace(string? id)
         {
             // ARRANGE
             using var sut = new GitRepository(m_WorkingDirectory);
 
             // ACT 
-            var ex = Record.Exception(() => sut.TryGetCommit(id));
+            var ex = Record.Exception(() => sut.TryGetCommit(id!));
 
             // ASSERT
             Assert.NotNull(ex);

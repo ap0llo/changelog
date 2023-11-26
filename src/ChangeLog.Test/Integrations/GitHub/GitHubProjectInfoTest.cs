@@ -53,9 +53,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Host_must_not_be_null_or_whitespace(string host)
+        public void Host_must_not_be_null_or_whitespace(string? host)
         {
-            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo(host, "user", "repo"));
+            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo(host!, "user", "repo"));
         }
 
         [Theory]
@@ -63,9 +63,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void User_must_not_be_null_or_whitespace(string user)
+        public void User_must_not_be_null_or_whitespace(string? user)
         {
-            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo("example.com", user, "repo"));
+            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo("example.com", user!, "repo"));
         }
 
         [Theory]
@@ -73,9 +73,9 @@ namespace Grynwald.ChangeLog.Test.Integrations.GitHub
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Project_must_not_be_null_or_whitespace(string project)
+        public void Project_must_not_be_null_or_whitespace(string? project)
         {
-            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo("example.com", "user", project));
+            Assert.Throws<ArgumentException>(() => new GitHubProjectInfo("example.com", "user", project!));
         }
     }
 }

@@ -35,9 +35,9 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Name_must_not_be_null_or_whitespace(string name)
+        public void Name_must_not_be_null_or_whitespace(string? name)
         {
-            Assert.Throws<ArgumentException>(() => new GitTag(name, TestGitIds.Id1));
+            Assert.Throws<ArgumentException>(() => new GitTag(name!, TestGitIds.Id1));
         }
 
         [Fact]

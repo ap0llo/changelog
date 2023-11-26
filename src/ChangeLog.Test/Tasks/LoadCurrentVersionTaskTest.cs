@@ -72,7 +72,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public async Task Task_is_skipped_if_current_version_is_not_set(string currentVersion)
+        public async Task Task_is_skipped_if_current_version_is_not_set(string? currentVersion)
         {
             // ARRANGE
             var config = new ChangeLogConfiguration()

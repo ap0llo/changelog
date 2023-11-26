@@ -14,12 +14,12 @@ namespace Grynwald.ChangeLog.Test.Model
         [InlineData("")]
         [InlineData(" ")]
         [InlineData("\t")]
-        public void Text_must_not_be_null_or_whitespace(string text)
+        public void Text_must_not_be_null_or_whitespace(string? text)
         {
             // ARRANGE
 
             // ACT 
-            var ex = Record.Exception(() => new WebLinkTextElement(text, new Uri("https://example.com")));
+            var ex = Record.Exception(() => new WebLinkTextElement(text!, new Uri("https://example.com")));
 
             // ASSERT
             var argumentException = Assert.IsType<ArgumentException>(ex);

@@ -27,7 +27,7 @@ namespace Grynwald.ChangeLog.Test.Tasks
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public async Task Run_has_no_effect_when_the_version_range_setting_is_null_or_empty(string versionRange)
+        public async Task Run_has_no_effect_when_the_version_range_setting_is_null_or_empty(string? versionRange)
         {
             // ARRANGE
             var config = new ChangeLogConfiguration() { VersionRange = versionRange };

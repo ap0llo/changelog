@@ -27,9 +27,9 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Name_must_not_be_null_or_whitespace(string name)
+        public void Name_must_not_be_null_or_whitespace(string? name)
         {
-            Assert.Throws<ArgumentException>(() => new GitAuthor(name, "user@example.com"));
+            Assert.Throws<ArgumentException>(() => new GitAuthor(name!, "user@example.com"));
         }
 
         [Theory]
@@ -37,9 +37,9 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Email_must_not_be_null_or_whitespace(string email)
+        public void Email_must_not_be_null_or_whitespace(string? email)
         {
-            Assert.Throws<ArgumentException>(() => new GitAuthor("user", email));
+            Assert.Throws<ArgumentException>(() => new GitAuthor("user", email!));
         }
 
     }

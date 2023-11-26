@@ -104,7 +104,7 @@ namespace Grynwald.ChangeLog.Test.Filtering
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void Type_may_be_null_or_empty(string type)
+        public void Type_may_be_null_or_empty(string? type)
         {
             _ = new FilterExpression(type, "*");
         }
@@ -120,7 +120,7 @@ namespace Grynwald.ChangeLog.Test.Filtering
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void Scope_may_be_null_or_empty(string scope)
+        public void Scope_may_be_null_or_empty(string? scope)
         {
             _ = new FilterExpression("*", scope);
         }

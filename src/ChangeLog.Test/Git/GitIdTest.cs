@@ -46,12 +46,12 @@ namespace Grynwald.ChangeLog.Test.Git
         [InlineData("8badf00d", "8BADF00D")]
         // Full id must start with abbreviated id
         [InlineData("abcd1234abcd1234abcd1234abcd1234abcd1234", "cde5678")]
-        public void Constructor_throws_ArgumentException_if_input_is_not_a_valid_full_and_abbreviated_git_object_id(string id, string abbreviatedId)
+        public void Constructor_throws_ArgumentException_if_input_is_not_a_valid_full_and_abbreviated_git_object_id(string? id, string? abbreviatedId)
         {
             // ARRANGE
 
             // ACT
-            var ex = Record.Exception(() => new GitId(id, abbreviatedId));
+            var ex = Record.Exception(() => new GitId(id!, abbreviatedId!));
 
             // ASSERT
             Assert.NotNull(ex);

@@ -62,10 +62,10 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Description_must_not_be_null_or_whitespace(string description)
+        public void Description_must_not_be_null_or_whitespace(string? description)
         {
-            Assert.Throws<ArgumentException>(() => new CommitMessageHeader(CommitType.Feature, description));
-            Assert.Throws<ArgumentException>(() => new CommitMessageHeader(CommitType.Feature, description, "someScope"));
+            Assert.Throws<ArgumentException>(() => new CommitMessageHeader(CommitType.Feature, description!));
+            Assert.Throws<ArgumentException>(() => new CommitMessageHeader(CommitType.Feature, description!, "someScope"));
         }
     }
 }

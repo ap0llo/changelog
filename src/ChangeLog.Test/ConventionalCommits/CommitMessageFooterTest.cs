@@ -41,9 +41,9 @@ namespace Grynwald.ChangeLog.Test.ConventionalCommits
         [InlineData("")]
         [InlineData("  ")]
         [InlineData("\t")]
-        public void Value_must_not_be_null_or_whitespace(string value)
+        public void Value_must_not_be_null_or_whitespace(string? value)
         {
-            Assert.Throws<ArgumentException>(() => new CommitMessageFooter(new CommitMessageFooterName("name"), value));
+            Assert.Throws<ArgumentException>(() => new CommitMessageFooter(new CommitMessageFooterName("name"), value!));
         }
     }
 }
