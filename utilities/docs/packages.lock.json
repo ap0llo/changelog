@@ -88,8 +88,8 @@
       },
       "LibGit2Sharp": {
         "type": "Transitive",
-        "resolved": "0.27.2",
-        "contentHash": "TYIfwuumwmZFjxwRFz5y2MyTA8jc19MejSyRRTCS/TflhrdQPH7H84ueyCpY0+xkNWThEd+dCnkuf7XuH3tt+A==",
+        "resolved": "0.28.0",
+        "contentHash": "+VGXLAQovtTc41EkUXBKSuu40XcyuWUmQrslpd0CPMGkpnLTgQwoRLSSCRxLSPjYSi9SskyRUOLa9tjg/L108A==",
         "dependencies": {
           "LibGit2Sharp.NativeBinaries": "[2.0.320]"
         }
@@ -286,7 +286,7 @@
           "Grynwald.Utilities": "[1.6.122, )",
           "Grynwald.Utilities.Configuration": "[1.6.122, )",
           "Grynwald.Utilities.Logging": "[1.6.122, )",
-          "LibGit2Sharp": "[0.27.2, )",
+          "LibGit2Sharp": "[0.28.0, )",
           "Microsoft.Extensions.Configuration": "[7.0.0, )",
           "Microsoft.Extensions.Configuration.Binder": "[7.0.4, )",
           "Microsoft.Extensions.Configuration.EnvironmentVariables": "[7.0.0, )",
