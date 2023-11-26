@@ -32,7 +32,11 @@ To generate a change log from a git repository, run the `changelog generate` com
 changelog generate --repository <LOCALPATH>
 ```
 
-ℹ The repository path can be omitted when `changelog` is run from a directory within the git repository.
+The repository path can be omitted when `changelog` is run from a directory within the git repository.
+
+> [!IMPORTANT]  
+> changelog needs access to all commits in the git repository and can run into issues with shallow clones.
+> If you are running changelog in a CI system (like GitHub Actions or Azure Pipelines) make sure to configure your build to **not** use shallow clones.
 
 By default, the change log is saved to `changelog.md` in the repository.
 You can override the output path using the `--outputPath` parameter or in the configuration file (see [Configuration](./configuration.md)).
