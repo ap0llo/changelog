@@ -30,16 +30,13 @@
     <NoWarn>$(NoWarn),1591</NoWarn>
   </PropertyGroup>
 
-  <!-- Reference SourceLink (see https://github.com/dotnet/sourcelink) -->
+  <!-- Configure SourceLink (see https://github.com/dotnet/sourcelink) -->
   <PropertyGroup>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-  </ItemGroup>
-
+  
   <!--NuGet package properties -->
   <PropertyGroup>
     <Authors>Andreas Gruenwald</Authors>
