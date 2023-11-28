@@ -19,16 +19,16 @@
       },
       "Cake.Frosting": {
         "type": "Direct",
-        "requested": "[3.2.0, )",
-        "resolved": "3.2.0",
-        "contentHash": "KJLVrXkv0ytdruZkatlPeekpmASiDudNXy5wrYQCqeezcC2ObBaDR1gPk/W3vXKL1GkB9uobBb+0SkVdTfM78Q==",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "niEB/W5sed1aUZbIa4b4kmY42xlTqrweahCyVqqK8GyQ0GPb82RW/lLvkSv9o1l3GNwJjzmHsqPhkwcd9GJptw==",
         "dependencies": {
-          "Cake.Cli": "3.2.0",
-          "Cake.Common": "3.2.0",
-          "Cake.Core": "3.2.0",
-          "Cake.DotNetTool.Module": "3.2.0",
-          "Cake.NuGet": "3.2.0",
-          "Microsoft.Extensions.DependencyInjection": "7.0.0"
+          "Cake.Cli": "4.0.0",
+          "Cake.Common": "4.0.0",
+          "Cake.Core": "4.0.0",
+          "Cake.DotNetTool.Module": "4.0.0",
+          "Cake.NuGet": "4.0.0",
+          "Microsoft.Extensions.DependencyInjection": "8.0.0"
         }
       },
       "Cake.GitVersioning": {
@@ -66,27 +66,27 @@
       },
       "Cake.Cli": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "PzfO1lfgnH4XxzdOMn4v6FoMggyON8HtNYoNQk2FvWZyyPlIJ2a8G+wixrWJYnrhguLU/ey0f/5K0RW3n6E1Uw==",
+        "resolved": "4.0.0",
+        "contentHash": "0R8Lv66l3vvRnF7P90ono6J+/a5CvA5cnN0fXfNiOzYJHkwbaza35Xz4AWS30rpjfGu8Rtl5OCYi4qc0xCZJ0w==",
         "dependencies": {
           "Autofac": "7.1.0",
-          "Cake.Core": "3.2.0",
+          "Cake.Core": "4.0.0",
           "Spectre.Console": "0.47.0",
           "Spectre.Console.Cli": "0.47.0"
         }
       },
       "Cake.Common": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "yvSJkK7rxvm/m1Juvt+b7H2xK8LnYTSdRBeoP6uyXKVQPZPXq0YOgM4Zzh1QwmNprLCpxh2kDRnj0ENuvkNkVw==",
+        "resolved": "4.0.0",
+        "contentHash": "8yCfEyAFfyzfUQTEfhXQgWq6JubdOrLBoYYmWvM7sTKjvH4kW4ffJthvBCl+JEgSCAtK4WbsOaMR5S8VLyUrxw==",
         "dependencies": {
-          "Cake.Core": "3.2.0"
+          "Cake.Core": "4.0.0"
         }
       },
       "Cake.Core": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "tN4iFgwS2Y7VgnXJZ5mtB0CElCCADQDtiNkJRZzgykc61dLcJ3dyuXnjc7jO3KPQs2j+0IbciH1S8tR6FVzc2g==",
+        "resolved": "4.0.0",
+        "contentHash": "co363RHz4eAU+5jCYiBZziTd8V1KlVU/0xOmI441NHEYa7ybsEHzTUIeLT56GHvgqqrIX4LG6HcZtjzvCMdk2g==",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
           "Microsoft.Win32.Registry": "5.0.0"
@@ -94,10 +94,10 @@
       },
       "Cake.DotNetTool.Module": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "/0UPhU70AppSMUhi4gVn6iczeGJKft1zGX/UxbtrJSbl11b5u8UCsLC8Wx/F77VqwmUWSUsn+YLsb91saGoU1w==",
+        "resolved": "4.0.0",
+        "contentHash": "/Bj+mvz/Euv2cwMVvuNvQObHH+Zk6ZT7kY9uUgb/i2VT1CbYu9molP+NGg8igZlI+kSP0KTZJKWypkFEQbQl/Q==",
         "dependencies": {
-          "Cake.Core": "3.2.0"
+          "Cake.Core": "4.0.0"
         }
       },
       "Cake.FileHelpers": {
@@ -107,10 +107,10 @@
       },
       "Cake.NuGet": {
         "type": "Transitive",
-        "resolved": "3.2.0",
-        "contentHash": "W89Dz9eFZAQJaDrfYg6NudMl20YkfXs+/7Phhv20rlzWk2ttFkO3RF7I0istqq8n8vt5nkorYAHpJotJJNDH9g==",
+        "resolved": "4.0.0",
+        "contentHash": "gA4zpgnroDcAdcNsy1lGZ7VUwZCMgg8278If5CM5e19iflL7oxb+cCNQne6SgcrPK4vIbGhGL8v2xL60QzDdAA==",
         "dependencies": {
-          "Cake.Core": "3.2.0",
+          "Cake.Core": "4.0.0",
           "Newtonsoft.Json": "13.0.3",
           "NuGet.Common": "6.7.0",
           "NuGet.Frameworks": "6.7.0",
@@ -127,16 +127,16 @@
       },
       "Microsoft.Extensions.DependencyInjection": {
         "type": "Transitive",
-        "resolved": "7.0.0",
-        "contentHash": "elNeOmkeX3eDVG6pYVeV82p29hr+UKDaBhrZyWvWLw/EVZSYEkZlQdkp0V39k/Xehs2Qa0mvoCvkVj3eQxNQ1Q==",
+        "resolved": "8.0.0",
+        "contentHash": "V8S3bsm50ig6JSyrbcJJ8bW2b9QLGouz+G1miK3UTaOWmMtFwNNNzUf4AleyDWUmTrWMLNnFSLEQtxmxgNQnNQ==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0"
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
-        "resolved": "7.0.0",
-        "contentHash": "h3j/QfmFN4S0w4C2A6X7arXij/M/OVw3uQHSOFxnND4DyAzO1F9eMX7Eti7lU/OkSthEE0WzRsfT/Dmx86jzCw=="
+        "resolved": "8.0.0",
+        "contentHash": "cjWrLkJXK0rs4zofsK4bSdg+jhDLTaxrkXu4gS6Y7MAlCvRyNNgwY/lJi5RDlQOnSZweHqoyvgvbdvQsRIW+hg=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
