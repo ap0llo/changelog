@@ -1,5 +1,9 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
       "github>ap0llo/renovate-config"
-  ]
+  ],
+  "constraints": {
+    "dotnet": "7.0.400"
+  }
 }
