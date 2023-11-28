@@ -4,13 +4,13 @@
     "net6.0": {
       "ApprovalTests": {
         "type": "Direct",
-        "requested": "[5.9.0, )",
-        "resolved": "5.9.0",
-        "contentHash": "LECbm+8oMcI+H1xRDQjYnzEuAovUulF4Fh4jeO0Mw3JY6oXT8txPXStVYBOFgKz4ZexlXNOvwqfggRx2vpgygw==",
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "qNm4yAnakp/htELorGTXcjTO41WjK+JHMgjo2Bf+SlCvU4te3mMdW+1s4InpjaKRq2G/i/DZTh/ggZf2vgMXLw==",
         "dependencies": {
-          "ApprovalUtilities": "5.9.0",
-          "DiffEngine": "12.2.1",
-          "EmptyFiles": "4.5.0",
+          "ApprovalUtilities": "6.0.0",
+          "DiffEngine": "13.0.1",
+          "EmptyFiles": "5.0.0",
           "Microsoft.Win32.Registry": "5.0.0",
           "TextCopy": "6.2.1"
         }
@@ -120,8 +120,8 @@
       },
       "ApprovalUtilities": {
         "type": "Transitive",
-        "resolved": "5.9.0",
-        "contentHash": "2rKN7Rjcy8a3UtLgSSxe19chZ4RuOeeY0iiW6BO5lXrWJs9UtOmjxCc7yne3RCxR/M/xJ6boL6se1FQo0GwRJA==",
+        "resolved": "6.0.0",
+        "contentHash": "guH5K391EvRuJHdXt/n1nJLYq00ZUv/OTcr0OoHYrgAGDvZZSkH0jNuMAR0cJQRVp5vD7ZrapPu83Oy0wmln/Q==",
         "dependencies": {
           "System.Data.SqlClient": "4.8.5",
           "System.Management": "6.0.2"
@@ -150,17 +150,17 @@
       },
       "DiffEngine": {
         "type": "Transitive",
-        "resolved": "12.2.1",
-        "contentHash": "vFnI/YI5t7TG2gR/DZUiBluD9F0mQ7m9p2oW9O/pYzAui5Sngsp92W2KzM2PRlgXV2+utSpd+WCkkhx21ilq+w==",
+        "resolved": "13.0.1",
+        "contentHash": "5Q0zIgX9/53wLo+YsFxIQZ9Yvpdf8aJ145ZuRh4d9kJ4QOHESTqr0sulYm8sRZ3vYQbdV/RM2jMA2hoqpaaLrw==",
         "dependencies": {
-          "EmptyFiles": "4.5.0",
+          "EmptyFiles": "5.0.0",
           "System.Management": "6.0.2"
         }
       },
       "EmptyFiles": {
         "type": "Transitive",
-        "resolved": "4.5.0",
-        "contentHash": "utFjtKV+vPFPuOwSap9SH98RvdFGPW/xLlIkquj8qDQ+91P8P5V3+71in/lM0iSIYaeIDVhMFEOmxOxdSQf6Aw=="
+        "resolved": "5.0.0",
+        "contentHash": "HGmJfvJ+8htlyvHKdaN7olLch/U3nrYa0rJ0xK7mKNja4YANdhcQEHfHzT93ehgG9TAUSj1MJaXZIB62HHEuiQ=="
       },
       "FluentValidation": {
         "type": "Transitive",
@@ -1495,13 +1495,13 @@
     "net7.0": {
       "ApprovalTests": {
         "type": "Direct",
-        "requested": "[5.9.0, )",
-        "resolved": "5.9.0",
-        "contentHash": "LECbm+8oMcI+H1xRDQjYnzEuAovUulF4Fh4jeO0Mw3JY6oXT8txPXStVYBOFgKz4ZexlXNOvwqfggRx2vpgygw==",
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "qNm4yAnakp/htELorGTXcjTO41WjK+JHMgjo2Bf+SlCvU4te3mMdW+1s4InpjaKRq2G/i/DZTh/ggZf2vgMXLw==",
         "dependencies": {
-          "ApprovalUtilities": "5.9.0",
-          "DiffEngine": "12.2.1",
-          "EmptyFiles": "4.5.0",
+          "ApprovalUtilities": "6.0.0",
+          "DiffEngine": "13.0.1",
+          "EmptyFiles": "5.0.0",
           "Microsoft.Win32.Registry": "5.0.0",
           "TextCopy": "6.2.1"
         }
@@ -1611,8 +1611,8 @@
       },
       "ApprovalUtilities": {
         "type": "Transitive",
-        "resolved": "5.9.0",
-        "contentHash": "2rKN7Rjcy8a3UtLgSSxe19chZ4RuOeeY0iiW6BO5lXrWJs9UtOmjxCc7yne3RCxR/M/xJ6boL6se1FQo0GwRJA==",
+        "resolved": "6.0.0",
+        "contentHash": "guH5K391EvRuJHdXt/n1nJLYq00ZUv/OTcr0OoHYrgAGDvZZSkH0jNuMAR0cJQRVp5vD7ZrapPu83Oy0wmln/Q==",
         "dependencies": {
           "System.Data.SqlClient": "4.8.5",
           "System.Management": "6.0.2"
@@ -1641,17 +1641,17 @@
       },
       "DiffEngine": {
         "type": "Transitive",
-        "resolved": "12.2.1",
-        "contentHash": "vFnI/YI5t7TG2gR/DZUiBluD9F0mQ7m9p2oW9O/pYzAui5Sngsp92W2KzM2PRlgXV2+utSpd+WCkkhx21ilq+w==",
+        "resolved": "13.0.1",
+        "contentHash": "5Q0zIgX9/53wLo+YsFxIQZ9Yvpdf8aJ145ZuRh4d9kJ4QOHESTqr0sulYm8sRZ3vYQbdV/RM2jMA2hoqpaaLrw==",
         "dependencies": {
-          "EmptyFiles": "4.5.0",
+          "EmptyFiles": "5.0.0",
           "System.Management": "6.0.2"
         }
       },
       "EmptyFiles": {
         "type": "Transitive",
-        "resolved": "4.5.0",
-        "contentHash": "utFjtKV+vPFPuOwSap9SH98RvdFGPW/xLlIkquj8qDQ+91P8P5V3+71in/lM0iSIYaeIDVhMFEOmxOxdSQf6Aw=="
+        "resolved": "5.0.0",
+        "contentHash": "HGmJfvJ+8htlyvHKdaN7olLch/U3nrYa0rJ0xK7mKNja4YANdhcQEHfHzT93ehgG9TAUSj1MJaXZIB62HHEuiQ=="
       },
       "FluentValidation": {
         "type": "Transitive",
