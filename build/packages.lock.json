@@ -33,9 +33,9 @@
       },
       "Cake.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.6.133, )",
-        "resolved": "3.6.133",
-        "contentHash": "/xqsgx2aeXQxHod0LAIHBEQUVqSjTtKwytGKVZI9FXg5mLRCdqKz6QtU3QmLH+OoD36KHcTt/KcIUtKrqxy9kQ=="
+        "requested": "[3.6.146, )",
+        "resolved": "3.6.146",
+        "contentHash": "BuV0d/JMzkr+pm0m3bwkE0Z7n1bp0KOEEXSw+8V05ZwkhZVkiGrIQZgJpUC5KmmqY1KENYvA0MMc5B5B3xurHw=="
       },
       "Grynwald.SharedBuild": {
         "type": "Direct",
@@ -52,9 +52,9 @@
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
-        "requested": "[3.6.133, )",
-        "resolved": "3.6.133",
-        "contentHash": "VZWMd5YAeDxpjWjAP/X6bAxnRMiEf6tES/ITN0X5CHJgkWLLeHGmEALivmTAfYM6P+P/3Szy6VCITUAkqjcHVw=="
+        "requested": "[3.6.146, )",
+        "resolved": "3.6.146",
+        "contentHash": "W1eQ8hD9Y/cZ2+ilgxECl003xr1hybpN3fMxoTlMqg++BixETBMWzS4y9s08oHJKXgKtudsoxhITNOEf1OR66w=="
       },
       "Autofac": {
         "type": "Transitive",
