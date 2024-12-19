@@ -25,8 +25,8 @@ using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ## Building from source
 
-ChangeLog is a .NET Core application.
-Building it from source requires the .NET 7 SDK (at lease version 7.0.101 as specified in [global.json](./global.json)) and uses [Cake](https://cakebuild.net/) for the build.
+ChangeLog is a .NET application.
+Building it from source requires the .NET SDK (the SDK version is defined in [global.json](./global.json)) and uses [Cake](https://cakebuild.net/) for the build.
 
 To execute the default task, run
 
