@@ -39,15 +39,15 @@
       },
       "Grynwald.SharedBuild": {
         "type": "Direct",
-        "requested": "[2.4.20, )",
-        "resolved": "2.4.20",
-        "contentHash": "xC3F6/G3MOK4dnthSG+Avk5RSED+GAzTIqZcR6jfA9bnu9wdIR4PEbBYk0RC/z7KNQ/0sCTSoi7rISpbdp/dxg==",
+        "requested": "[3.0.10, )",
+        "resolved": "3.0.10",
+        "contentHash": "JDkwrmCn5aJavMc3YyVVM4iJH/VSOzusBFYcw8/XV/N4CdTTKIxdxhPHScnPCmdhGn780rigkD3kvqircJqriw==",
         "dependencies": {
-          "Cake.FileHelpers": "6.1.3",
-          "Cake.Frosting": "3.1.0",
-          "Cake.GitVersioning": "3.6.133",
+          "Cake.FileHelpers": "7.0.0",
+          "Cake.Frosting": "4.0.0",
+          "Cake.GitVersioning": "3.6.141",
           "Mono.Cecil": "0.11.5",
-          "Octokit": "7.1.0"
+          "Octokit": "13.0.1"
         }
       },
       "Nerdbank.GitVersioning": {
@@ -102,8 +102,8 @@
       },
       "Cake.FileHelpers": {
         "type": "Transitive",
-        "resolved": "6.1.3",
-        "contentHash": "KHQyol6oqxt++5K0WzsVXqIo34P2Igodceg4hQnv1QUkYkGcDUEb75208QLyCu5X0hWAfibT6NHTX2Fa18eKGA=="
+        "resolved": "7.0.0",
+        "contentHash": "5h2rBYgH8IvmrA8K+/Qd9p38VjHgHH1iAYJriKdlfE5BjogQ4gm3v6Df+dTU1TwL7nkjTV7huvquFTmak2zKqw=="
       },
       "Cake.NuGet": {
         "type": "Transitive",
@@ -218,8 +218,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "7.1.0",
-        "contentHash": "v2qhKBe1Zlssa4XOmpOXNDFBrOAMw2tBmr8L8YMSrEi+PlF/L/PboZcXHSkZuhIxIeOGxEFiwkuJLkvG4aHNHQ=="
+        "resolved": "13.0.1",
+        "contentHash": "tjXTa2FXzbd3n17VWpi8UXe05EIJqHcWJW8C2kukftIve00duWiZL8x4i1vlZQ0zQ4RbRANbRc7J5K7Co/1spQ=="
       },
       "Spectre.Console": {
         "type": "Transitive",
