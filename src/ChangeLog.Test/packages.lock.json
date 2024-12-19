@@ -469,8 +469,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "9.0.0",
-        "contentHash": "mQZMCTZavxd9IzTkRaRLxJtFE5uTOJ2Uia5KDwnHiBBFjvnG4BJf56RV1aPZsVdqiKlqRmxbLrkU8DVlmRDrSA=="
+        "resolved": "9.1.2",
+        "contentHash": "YKh5EYi+b2mV8eafANJkkZKKBCpI2MNPeSCTlKLYWqVGktOn/TBc7NZEcViPMSNw6R+glgmbkOetLc6LuNK5qQ=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -1468,7 +1468,7 @@
           "Microsoft.Extensions.Configuration.Json": "[8.0.0, )",
           "Microsoft.Extensions.Logging": "[8.0.0, )",
           "NuGet.Versioning": "[6.8.0, )",
-          "Octokit": "[9.0.0, )",
+          "Octokit": "[9.1.2, )",
           "Scriban": "[5.12.1, )",
           "Zio": "[0.16.2, )"
         }
@@ -1934,8 +1934,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "9.0.0",
-        "contentHash": "mQZMCTZavxd9IzTkRaRLxJtFE5uTOJ2Uia5KDwnHiBBFjvnG4BJf56RV1aPZsVdqiKlqRmxbLrkU8DVlmRDrSA=="
+        "resolved": "9.1.2",
+        "contentHash": "YKh5EYi+b2mV8eafANJkkZKKBCpI2MNPeSCTlKLYWqVGktOn/TBc7NZEcViPMSNw6R+glgmbkOetLc6LuNK5qQ=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -2922,7 +2922,7 @@
           "Microsoft.Extensions.Configuration.Json": "[8.0.0, )",
           "Microsoft.Extensions.Logging": "[8.0.0, )",
           "NuGet.Versioning": "[6.8.0, )",
-          "Octokit": "[9.0.0, )",
+          "Octokit": "[9.1.2, )",
           "Scriban": "[5.12.1, )",
           "Zio": "[0.16.2, )"
         }
@@ -3388,8 +3388,8 @@
       },
       "Octokit": {
         "type": "Transitive",
-        "resolved": "9.0.0",
-        "contentHash": "mQZMCTZavxd9IzTkRaRLxJtFE5uTOJ2Uia5KDwnHiBBFjvnG4BJf56RV1aPZsVdqiKlqRmxbLrkU8DVlmRDrSA=="
+        "resolved": "9.1.2",
+        "contentHash": "YKh5EYi+b2mV8eafANJkkZKKBCpI2MNPeSCTlKLYWqVGktOn/TBc7NZEcViPMSNw6R+glgmbkOetLc6LuNK5qQ=="
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -4376,7 +4376,7 @@
           "Microsoft.Extensions.Configuration.Json": "[8.0.0, )",
           "Microsoft.Extensions.Logging": "[8.0.0, )",
           "NuGet.Versioning": "[6.8.0, )",
-          "Octokit": "[9.0.0, )",
+          "Octokit": "[9.1.2, )",
           "Scriban": "[5.12.1, )",
           "Zio": "[0.16.2, )"
         }
