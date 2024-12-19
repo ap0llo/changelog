@@ -17,9 +17,12 @@
       },
       "CliWrap": {
         "type": "Direct",
-        "requested": "[3.6.4, )",
-        "resolved": "3.6.4",
-        "contentHash": "KVGVZlR0GWgN3Xr88oZMSzYu38TXIogwLz588e6wku3mIfg6lPchxpYWtZSZfurpTY63ANF61xWp8EZF3jkN4g=="
+        "requested": "[3.7.0, )",
+        "resolved": "3.7.0",
+        "contentHash": "2RgU3zmQDAD4S8Aq4igWRF31VzzH/zE6kdecLfeozoPZlibahBs9AGSqrk8B6U13K2A65dFRLg/0tNBtBaOH/A==",
+        "dependencies": {
+          "System.Management": "9.0.0"
+        }
       },
       "coverlet.collector": {
         "type": "Direct",
@@ -429,8 +432,8 @@
       },
       "System.CodeDom": {
         "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "CPc6tWO1LAer3IzfZufDBRL+UZQcj5uS207NHALQzP84Vp/z6wF0Aa0YZImOQY8iStY0A2zI/e3ihKNPfUm8XA=="
+        "resolved": "9.0.0",
+        "contentHash": "oTE5IfuMoET8yaZP/vdvy9xO47guAv/rOhe4DODuFBN3ySprcQOlXqO3j+e/H/YpKKR5sglrxRaZ2HYOhNJrqA=="
       },
       "System.Collections.Immutable": {
         "type": "Transitive",
@@ -459,10 +462,10 @@
       },
       "System.Management": {
         "type": "Transitive",
-        "resolved": "6.0.2",
-        "contentHash": "s6c9x2Kghd+ncEDnT6ApYVOacDXr/Y57oSUSx6wjegMOfKxhtrXn3PdASPNU59y3kB9OJ1yb3l5k6uKr3bhqew==",
+        "resolved": "9.0.0",
+        "contentHash": "bVh4xAMI5grY5GZoklKcMBLirhC8Lqzp63Ft3zXJacwGAlLyFdF4k0qz4pnKIlO6HyL2Z4zqmHm9UkzEo6FFsA==",
         "dependencies": {
-          "System.CodeDom": "6.0.0"
+          "System.CodeDom": "9.0.0"
         }
       },
       "System.Reflection.Metadata": {
