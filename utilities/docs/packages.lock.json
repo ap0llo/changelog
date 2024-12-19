@@ -4,9 +4,9 @@
     "net8.0": {
       "Markdig": {
         "type": "Direct",
-        "requested": "[0.33.0, )",
-        "resolved": "0.33.0",
-        "contentHash": "wwjLxuVZyzOUpQkwMnP2eVOgCZzjHqSNsTOWxLQ1S9J5UIk43vsrgwyUBg1x7AX1MlxWH65Uyfsojm4LBwN6iw=="
+        "requested": "[0.39.1, )",
+        "resolved": "0.39.1",
+        "contentHash": "QrH/Aq9A5P7fIdy4tEBQGqVvrJoEew9+jL0k2WlrmgD0yxXP0UUtdkhJWgpVgwT18R0ubpt9cyF+LQXbTUSOrg=="
       },
       "Nerdbank.GitVersioning": {
         "type": "Direct",
