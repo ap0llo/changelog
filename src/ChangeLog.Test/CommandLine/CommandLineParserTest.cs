@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Grynwald.ChangeLog.CommandLine;
 using Grynwald.ChangeLog.Configuration;
 using Xunit;
@@ -29,11 +28,7 @@ namespace Grynwald.ChangeLog.Test.CommandLine
 
         public static IEnumerable<object[]> TemplateNames()
         {
-#if NETCOREAPP3_1
-            foreach (var value in Enum.GetValues(typeof(ChangeLogConfiguration.TemplateName)).Cast<ChangeLogConfiguration.TemplateName>())
-#else
             foreach (var value in Enum.GetValues<ChangeLogConfiguration.TemplateName>())
-#endif
             {
                 yield return new object[] { value.ToString(), value };
                 yield return new object[] { value.ToString().ToLower(), value };
