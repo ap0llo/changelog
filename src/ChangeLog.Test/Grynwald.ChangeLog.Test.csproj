@@ -11,7 +11,7 @@
     <PackageReference Include="ApprovalTests" Version="6.0.0" />
     <PackageReference Include="CliWrap" Version="3.7.0" />
     <PackageReference Include="coverlet.collector" Version="6.0.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="Moq" Version="4.18.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="xunit" Version="2.9.2" />
@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="IO\_Resources\**\*.*"/>
-    <EmbeddedResource Include="IO\_Resources\**\*.*" LogicalName="%(RecursiveDir)%(FileName)%(Extension)"/>
+    <None Remove="IO\_Resources\**\*.*" />
+    <EmbeddedResource Include="IO\_Resources\**\*.*" LogicalName="%(RecursiveDir)%(FileName)%(Extension)" />
   </ItemGroup>
 
 
