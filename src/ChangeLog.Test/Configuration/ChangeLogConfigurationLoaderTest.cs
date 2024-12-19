@@ -95,7 +95,7 @@ namespace Grynwald.ChangeLog.Test.Configuration
             // visible in the test output.
             // (See https://twitter.com/bradwilson/status/1282374907670654976)
 
-            var x = Assert.Single(entryTypes.Where(kvp => new CommitType(kvp.Key) == expectedCommitType));
+            var x = Assert.Single(entryTypes, kvp => new CommitType(kvp.Key) == expectedCommitType);
 
             Assert.NotNull(x.Key);
             Assert.NotEmpty(x.Key);
