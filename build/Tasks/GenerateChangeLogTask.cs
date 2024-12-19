@@ -32,8 +32,7 @@ namespace Build
             {
                 Configuration = context.BuildSettings.Configuration,
                 NoBuild = true,
-                NoRestore = true,
-                Framework = "net6.0",
+                NoRestore = true
             };
 
             if (context.GitHub.TryGetAccessToken() is string accessToken)

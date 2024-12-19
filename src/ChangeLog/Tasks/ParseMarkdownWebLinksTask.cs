@@ -18,15 +18,8 @@ namespace Grynwald.ChangeLog.Tasks
     [BeforeTask(typeof(RenderTemplateTask))]
     internal sealed partial class ParseMarkdownWebLinksTask : SynchronousChangeLogTask
     {
-#if NET7_0_OR_GREATER
         [GeneratedRegex("^\\s*\\[(?<text>.*)\\]\\((?<destination>.+)\\)\\s*$", RegexOptions.Singleline)]
         private static partial Regex MarkdownLinkRegex();
-
-        // TODO: This field can be removed and usages can be replaced by a call to MarkdownLinkRegex(), once .NET 6 support is no removed
-        private static readonly Regex s_MarkdownLinkRegex = MarkdownLinkRegex();
-#else
-        private static readonly Regex s_MarkdownLinkRegex = new("^\\s*\\[(?<text>.*)\\]\\((?<destination>.+)\\)\\s*$", RegexOptions.Singleline);
-#endif
 
         private readonly ILogger<ParseMarkdownWebLinksTask> m_Logger;
 
@@ -46,7 +39,7 @@ namespace Grynwald.ChangeLog.Tasks
                 foreach (var footer in changeLogEntry.Footers)
                 {
                     if (footer.Value is PlainTextElement plainText &&
-                        s_MarkdownLinkRegex.Match(plainText.Text) is { Success: true } match &&
+                        MarkdownLinkRegex().Match(plainText.Text) is { Success: true } match &&
                         Uri.TryCreate(match.Groups["destination"].Value, UriKind.Absolute, out var destination) &&
                         destination.IsWebLink())
                     {
