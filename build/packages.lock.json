@@ -4,9 +4,9 @@
     "net8.0": {
       "Cake.BuildSystems.Module": {
         "type": "Direct",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "fM5SiJTlKYPN0+zpCfnniNWcidwd8xVneraydpcHCvskM+MXAmETp56X73kHtUlGN6cP4ojSMff/wQzSVTOAoQ=="
+        "requested": "[6.1.0, )",
+        "resolved": "6.1.0",
+        "contentHash": "jut5pVX5fz9gdRmZmXZVCAEmwEILgKi/vvxBDmG1klCUbktfOti1EHFETgZVeEFLGal/cQUmwljMwk1SRyreYQ=="
       },
       "Cake.DotNetLocalTools.Module": {
         "type": "Direct",
