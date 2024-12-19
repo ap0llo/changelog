@@ -1,0 +1,5 @@
+fix(github): Update Octokit to fix integer overflow while getting issue or PR web url
+
+GitHub's ids for PRs and issues now exceed int.MaxValue which caused an overflow exception in Octokit (which is sued to access the GitHub API)
+
+Pull-Request: #539
