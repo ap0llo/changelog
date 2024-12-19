@@ -55,10 +55,10 @@
       },
       "Autofac": {
         "type": "Transitive",
-        "resolved": "7.1.0",
-        "contentHash": "XCXmpxhOnuztTTRkzG+8B8KU8SR8WjBYwSntndjlsFR5lM3K/g43r9hUwewIPDBJwDrmZU3TjmNdH6s8IF3VFQ==",
+        "resolved": "8.2.0",
+        "contentHash": "T+4+W4byzyUOarCbIcFRbxpYKC+cndfQm/+VeWpB60P2MCN0JMsewUhZqvH5Ooe936HQjn5uHvEY9tq6BfbiIw==",
         "dependencies": {
-          "System.Diagnostics.DiagnosticSource": "4.7.1"
+          "System.Diagnostics.DiagnosticSource": "8.0.1"
         }
       },
       "CommandLineParser": {
@@ -277,8 +277,8 @@
       },
       "System.Diagnostics.DiagnosticSource": {
         "type": "Transitive",
-        "resolved": "4.7.1",
-        "contentHash": "j81Lovt90PDAq8kLpaJfJKV/rWdWuEk6jfV+MBkee33vzYLEUsy4gXK8laa9V2nZlLM9VM9yA/OOQxxPEJKAMw=="
+        "resolved": "8.0.1",
+        "contentHash": "vaoWjvkG1aenR2XdjaVivlCV9fADfgyhW5bZtXT23qaEea0lWiUljdQuze4E31vKM7ZWJaSUsbYIKE3rnzfZUg=="
       },
       "System.Reflection.Metadata": {
         "type": "Transitive",
@@ -333,7 +333,7 @@
       "grynwald.changelog": {
         "type": "Project",
         "dependencies": {
-          "Autofac": "[7.1.0, )",
+          "Autofac": "[8.2.0, )",
           "CommandLineParser": "[2.9.1, )",
           "FluentValidation": "[11.11.0, )",
           "GitLabApiClient": "[1.8.0, )",
