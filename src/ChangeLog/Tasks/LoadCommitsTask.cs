@@ -5,6 +5,7 @@ using Grynwald.ChangeLog.Git;
 using Grynwald.ChangeLog.Model;
 using Grynwald.ChangeLog.Pipeline;
 using Microsoft.Extensions.Logging;
+using NuGet.Versioning;
 
 namespace Grynwald.ChangeLog.Tasks
 {
@@ -34,30 +35,37 @@ namespace Grynwald.ChangeLog.Tasks
 
             m_Logger.LogInformation("Loading commits");
 
+            // For each version, determine all reachable commits
+            var commitsByVersion = new Dictionary<NuGetVersion, HashSet<GitCommit>>();
+            foreach (var versionInfo in changeLog.Versions)
+            {
+                m_Logger.LogDebug($"Getting all commits reachable from version '{versionInfo.Version}'");
+                var commits = m_Repository.GetCommits(null, versionInfo.Commit);
+                commitsByVersion.Add(versionInfo.Version, commits.ToHashSet());
+            }
+
             var sortedVersions = changeLog.Versions
-                .OrderByDescending(x => x.Version)
+                .OrderBy(x => x.Version)
                 .ToArray();
 
+            // For each version, remove all commits reachable by previous version
             for (var i = 0; i < sortedVersions.Length; i++)
             {
-                var current = sortedVersions[i];
-                var previous = i + 1 < sortedVersions.Length ? sortedVersions[i + 1] : null;
+                var currentVersionInfo = sortedVersions[i];
+                m_Logger.LogDebug($"Determining commits exclusive to version {currentVersionInfo.Version}");
+                var currentVersionCommits = commitsByVersion[currentVersionInfo.Version].ToHashSet();
 
-                IReadOnlyList<GitCommit> commits;
-                if (previous is null)
+                for (var j = 0; j < i; j++)
                 {
-                    m_Logger.LogDebug($"Adding all commits up to '{current.Commit.Id}' to version '{current.Version.Version}'");
-                    commits = m_Repository.GetCommits(null, current.Commit);
-                }
-                else
-                {
-                    m_Logger.LogDebug($"Adding commits between '{previous.Commit.Id}' and '{current.Commit.Id}' to version '{current.Version.Version}'");
-                    commits = m_Repository.GetCommits(previous.Commit, current.Commit);
+                    var previousVersionInfo = sortedVersions[j];
+                    currentVersionCommits.ExceptWith(commitsByVersion[previousVersionInfo.Version]);
                 }
 
-                foreach (var commit in commits)
+                m_Logger.LogDebug($"Adding {currentVersionCommits.Count} commit to version {currentVersionInfo.Version}");
+                foreach (var commit in currentVersionCommits)
                 {
-                    changeLog[current].Add(commit);
+                    m_Logger.LogDebug($"Adding commit {commit.Id} to version {currentVersionInfo.Version}");
+                    changeLog[currentVersionInfo].Add(commit);
                 }
             }
 
