@@ -1,0 +1,13 @@
+fix: Fix mapping between versions and commits (#564)
+
+An error in the way the commits included in a specific version was flawed causing a crash because the same commit was included in multiple versions.
+
+For any version, changelog determines the commits that belong to that version by getting all commits reachable from that version's latest commit and excluding the commits included in the previous version.
+Up until now, changelog was only examining the previous version, not all previous versions, which can lead to an error in certain git repositories.
+
+When determining the commits for a version (N,) changelog was only checking for the commits of latest previous version (N-1).
+If a commit was reachable from version N and and older previous version (e.g. N-2) but not from N-1, it was was included in both version N and N-2.
+
+With this fix, all previous versions will be evaluated to determine the commits.
+
+Pull-Request: #564
