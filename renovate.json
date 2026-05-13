@@ -4,6 +4,6 @@
       "github>ap0llo/renovate-config"
   ],
   "constraints": {
-    "dotnet": "8.0.100"
+    "dotnet": "10.0.300"
   }
 }
